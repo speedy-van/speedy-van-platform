@@ -4,7 +4,7 @@
   "buildCommand": "npx prisma generate",
   "builds": [
     {
-      "src": "dist/handler.js",
+      "src": "_api.js",
       "use": "@vercel/node",
       "config": {
         "includeFiles": ["node_modules/.prisma/**", "node_modules/@prisma/client/**"]
@@ -14,7 +14,7 @@
   "routes": [
     {
       "src": "/(.*)",
-      "dest": "dist/handler.js"
+      "dest": "_api.js"
     }
   ]
 }
