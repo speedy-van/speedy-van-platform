@@ -11,6 +11,10 @@ build/
 .env.local
 .env*.local
 
+# Scripts with secrets
+add-api-env.ps1
+add-web-env.ps1
+
 # Database
 *.db
 *.db-journal
@@ -37,3 +41,4 @@ npm-debug.log*
 
 # TypeScript
 *.tsbuildinfo
+.vercel

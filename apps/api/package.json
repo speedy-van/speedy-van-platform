@@ -11,7 +11,9 @@
   "dependencies": {
     "@hono/node-server": "^1.13.7",
     "@hono/zod-validator": "^0.4.1",
-    "@prisma/client": "^5.14.0",
+    "@neondatabase/serverless": "^0.10.4",
+    "@prisma/adapter-neon": "^5.22.0",
+    "@prisma/client": "^5.22.0",
     "bcryptjs": "^2.4.3",
     "hono": "^4.6.13",
     "jsonwebtoken": "^9.0.2",

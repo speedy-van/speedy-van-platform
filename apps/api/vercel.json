@@ -7,7 +7,7 @@
       "src": "_api.js",
       "use": "@vercel/node",
       "config": {
-        "includeFiles": ["node_modules/.prisma/**", "node_modules/@prisma/client/**"]
+        "includeFiles": ["node_modules/@prisma/client/**"]
       }
     }
   ],
