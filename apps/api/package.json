@@ -1,0 +1,36 @@
+{
+  "name": "@speedy-van/api",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "dotenv -e .env.local -- tsx watch src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "lint": "eslint src --ext .ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@hono/node-server": "^1.13.7",
+    "@hono/zod-validator": "^0.4.1",
+    "@speedy-van/config": "*",
+    "@speedy-van/db": "*",
+    "@speedy-van/shared": "*",
+    "bcryptjs": "^2.4.3",
+    "hono": "^4.6.13",
+    "jsonwebtoken": "^9.0.2",
+    "pdfkit": "^0.18.0",
+    "stripe": "^17.5.0",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
+    "@types/jsonwebtoken": "^9.0.7",
+    "@types/node": "^20.14.2",
+    "@types/pdfkit": "^0.17.6",
+    "@typescript-eslint/eslint-plugin": "^7.13.0",
+    "@typescript-eslint/parser": "^7.13.0",
+    "dotenv-cli": "^7.4.2",
+    "eslint": "^8.57.0",
+    "tsx": "^4.15.2",
+    "typescript": "^5.4.5"
+  }
+}

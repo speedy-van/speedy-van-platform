@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /driver/
+Disallow: /auth/
+Disallow: /api/
+Disallow: /track?*
+
+Sitemap: https://www.speedy-van.co.uk/sitemap.xml
