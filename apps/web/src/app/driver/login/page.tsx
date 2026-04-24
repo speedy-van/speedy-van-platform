@@ -1,10 +1,10 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { login, getUser } from "@/lib/auth-client";
 
-export default function DriverLoginPage() {
+function DriverLoginForm() {
   const router = useRouter();
   const params = useSearchParams();
   const returnUrl = params.get("returnUrl") ?? "/driver/dashboard";
@@ -107,5 +107,13 @@ export default function DriverLoginPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function DriverLoginPage() {
+  return (
+    <Suspense>
+      <DriverLoginForm />
+    </Suspense>
   );
 }

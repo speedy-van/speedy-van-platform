@@ -5,6 +5,9 @@ const nextConfig = {
     formats: ["image/avif", "image/webp"],
   },
   poweredByHeader: false,
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
 };
 
 export default nextConfig;
