@@ -11,15 +11,18 @@
   "dependencies": {
     "@hono/node-server": "^1.13.7",
     "@hono/zod-validator": "^0.4.1",
-    "@speedy-van/config": "*",
-    "@speedy-van/db": "*",
-    "@speedy-van/shared": "*",
+    "@prisma/client": "^5.14.0",
     "bcryptjs": "^2.4.3",
     "hono": "^4.6.13",
     "jsonwebtoken": "^9.0.2",
     "pdfkit": "^0.18.0",
     "stripe": "^17.5.0",
     "zod": "^3.23.8"
+  },
+  "optionalDependencies": {
+    "@speedy-van/config": "*",
+    "@speedy-van/db": "*",
+    "@speedy-van/shared": "*"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.6",
@@ -30,6 +33,7 @@
     "@typescript-eslint/parser": "^7.13.0",
     "dotenv-cli": "^7.4.2",
     "eslint": "^8.57.0",
+    "prisma": "^5.14.0",
     "tsx": "^4.15.2",
     "typescript": "^5.4.5"
   }
