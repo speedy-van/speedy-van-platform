@@ -1,17 +1,28 @@
 {
   "version": 2,
   "installCommand": "npm install",
-  "buildCommand": "npx prisma generate",
+  "buildCommand": "npm install --prefix . && npx prisma generate --schema=./prisma/schema.prisma",
   "builds": [
     {
       "src": "_api.js",
       "use": "@vercel/node",
       "config": {
-        "includeFiles": ["node_modules/@prisma/client/**"]
+        "includeFiles": ["node_modules/@prisma/client/**", "node_modules/.prisma/**"]
+      }
+    },
+    {
+      "src": "_debug.js",
+      "use": "@vercel/node",
+      "config": {
+        "includeFiles": ["node_modules/@prisma/client/**", "node_modules/.prisma/**"]
       }
     }
   ],
   "routes": [
+    {
+      "src": "/debug",
+      "dest": "_debug.js"
+    },
     {
       "src": "/(.*)",
       "dest": "_api.js"
