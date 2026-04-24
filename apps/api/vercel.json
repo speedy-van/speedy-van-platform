@@ -9,20 +9,9 @@
       "config": {
         "includeFiles": ["node_modules/@prisma/client/**", "node_modules/.prisma/**"]
       }
-    },
-    {
-      "src": "_debug.js",
-      "use": "@vercel/node",
-      "config": {
-        "includeFiles": ["node_modules/@prisma/client/**", "node_modules/.prisma/**"]
-      }
     }
   ],
   "routes": [
-    {
-      "src": "/debug",
-      "dest": "_debug.js"
-    },
     {
       "src": "/(.*)",
       "dest": "_api.js"
