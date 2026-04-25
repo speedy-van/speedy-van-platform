@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import Link from "next/link";
 import { ChatWindow } from "@/components/chat/ChatWindow";
 
@@ -45,6 +45,7 @@ interface TrackingEvent {
 
 interface BookingTrackData {
   reference: string;
+  bookingId?: string;
   status: string;
   serviceName: string;
   scheduledAt: string;
@@ -54,6 +55,7 @@ interface BookingTrackData {
   dropoffAddress?: string;
   driverName?: string;
   driverPhone?: string;
+  driverVanSize?: string;
   conversationId?: string;
   canCancel?: boolean;
   events: TrackingEvent[];
@@ -76,6 +78,8 @@ export default function TrackPage({
   const [cancelling, setCancelling] = useState(false);
   const [cancelError, setCancelError] = useState("");
   const [cancelSuccess, setCancelSuccess] = useState(false);
+  const [arrivalToast, setArrivalToast] = useState<string | null>(null);
+  const lastStatusRef = useRef<string | null>(null);
 
   const lookupBooking = useCallback(async (refVal: string, emailVal: string) => {
     setError("");
@@ -103,6 +107,38 @@ export default function TrackPage({
     e.preventDefault();
     await lookupBooking(ref, email);
   }
+
+  // Lightweight polling: while a booking is loaded and not in a terminal state,
+  // refetch every 30s so customers see status changes without reloading.
+  // Also surfaces a "pre-arrival" toast when status becomes EN_ROUTE/ARRIVED.
+  useEffect(() => {
+    if (!data || ["COMPLETED", "CANCELLED"].includes(data.status)) {
+      lastStatusRef.current = data?.status ?? null;
+      return;
+    }
+    // Fire toast on first status transition we observe
+    const prev = lastStatusRef.current;
+    if (prev && prev !== data.status) {
+      if (data.status === "EN_ROUTE") {
+        setArrivalToast("🚚 Your driver is on the way! Get your items ready by the door.");
+        try { navigator.vibrate?.([20, 40, 20]); } catch { /* ignore */ }
+      } else if (data.status === "ARRIVED") {
+        setArrivalToast("📍 Your driver has arrived.");
+        try { navigator.vibrate?.([20, 40, 20]); } catch { /* ignore */ }
+      }
+      // Auto-dismiss
+      const t = window.setTimeout(() => setArrivalToast(null), 8000);
+      lastStatusRef.current = data.status;
+      return () => window.clearTimeout(t);
+    }
+    lastStatusRef.current = data.status;
+
+    const interval = window.setInterval(() => {
+      if (document.hidden) return;
+      lookupBooking(data.reference, email);
+    }, 30_000);
+    return () => window.clearInterval(interval);
+  }, [data, email, lookupBooking]);
 
   async function handleCancel() {
     if (!data || !cancelReason.trim()) return;
@@ -135,6 +171,23 @@ export default function TrackPage({
 
   return (
     <div className="min-h-screen bg-slate-50 py-10 px-4">
+      {arrivalToast && (
+        <div
+          role="status"
+          aria-live="polite"
+          className="fixed top-4 inset-x-4 sm:left-1/2 sm:-translate-x-1/2 sm:max-w-md z-50 rounded-2xl bg-slate-900 text-white shadow-2xl px-4 py-3 flex items-start gap-3 animate-in slide-in-from-top duration-300"
+        >
+          <p className="flex-1 text-sm font-semibold">{arrivalToast}</p>
+          <button
+            type="button"
+            onClick={() => setArrivalToast(null)}
+            aria-label="Dismiss"
+            className="text-slate-400 hover:text-white text-lg leading-none"
+          >
+            ×
+          </button>
+        </div>
+      )}
       <div className="max-w-xl mx-auto space-y-6">
 
         {/* Header */}
@@ -261,24 +314,78 @@ export default function TrackPage({
                   <p className="text-slate-400 text-xs mb-0.5">To</p>
                   <p className="font-medium text-slate-900 text-xs leading-snug">{data.dropoffAddress ?? data.dropoffPostcode}</p>
                 </div>
-                {data.driverName && (
-                  <div className="col-span-2">
-                    <p className="text-slate-400 text-xs mb-0.5">Driver</p>
-                    <div className="flex items-center justify-between">
-                      <p className="font-medium text-slate-900">{data.driverName}</p>
-                      {data.driverPhone && (
-                        <a
-                          href={`tel:${data.driverPhone}`}
-                          className="flex items-center gap-1 text-xs bg-green-50 text-green-700 border border-green-200 rounded-lg px-2.5 py-1 font-medium hover:bg-green-100 transition"
-                        >
-                          Call driver
-                        </a>
-                      )}
-                    </div>
-                  </div>
-                )}
               </div>
             </div>
+
+            {/* Driver intro card — appears once a driver has been assigned */}
+            {data.driverName && ["ASSIGNED", "EN_ROUTE", "ARRIVED", "IN_PROGRESS"].includes(data.status) && (
+              <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-5">
+                <h2 className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3">Your driver</h2>
+                <div className="flex items-center gap-3">
+                  <div
+                    aria-hidden="true"
+                    className="h-12 w-12 rounded-full bg-gradient-to-br from-yellow-400 to-amber-500 flex items-center justify-center text-slate-900 font-bold text-lg shadow"
+                  >
+                    {data.driverName.trim().charAt(0).toUpperCase()}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-bold text-slate-900 truncate">{data.driverName}</p>
+                    {data.driverVanSize && (
+                      <p className="text-xs text-slate-500">
+                        Driving a {data.driverVanSize.toLowerCase()} van
+                      </p>
+                    )}
+                  </div>
+                </div>
+                <div className="mt-4 grid grid-cols-2 gap-2">
+                  {data.driverPhone && (
+                    <a
+                      href={`tel:${data.driverPhone}`}
+                      className="inline-flex items-center justify-center gap-1.5 rounded-xl bg-emerald-500 text-white text-sm font-semibold py-2.5 hover:bg-emerald-600 transition"
+                    >
+                      📞 Call
+                    </a>
+                  )}
+                  <button
+                    type="button"
+                    onClick={() => setShowChat(true)}
+                    className={`inline-flex items-center justify-center gap-1.5 rounded-xl bg-slate-900 text-white text-sm font-semibold py-2.5 hover:bg-slate-800 transition ${data.driverPhone ? "" : "col-span-2"}`}
+                  >
+                    💬 Message
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {/* Pre-arrival checklist */}
+            {["CONFIRMED", "ASSIGNED", "EN_ROUTE"].includes(data.status) && (
+              <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-5">
+                <h2 className="text-sm font-bold text-slate-900 mb-1">
+                  ✅ Get ready for your driver
+                </h2>
+                <p className="text-xs text-slate-500 mb-3">
+                  A few quick things to make the move smooth.
+                </p>
+                <ul className="space-y-2 text-sm text-slate-700">
+                  <li className="flex items-start gap-2">
+                    <span aria-hidden="true">📦</span>
+                    <span>Box up smaller items and label fragile boxes clearly.</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span aria-hidden="true">🚪</span>
+                    <span>Make sure the path to the door is clear and accessible.</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span aria-hidden="true">🅿️</span>
+                    <span>Reserve a parking spot near the entrance if possible.</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span aria-hidden="true">📱</span>
+                    <span>Keep your phone on — your driver may call when nearby.</span>
+                  </li>
+                </ul>
+              </div>
+            )}
 
             {/* Timeline */}
             {data.events.length > 0 && (

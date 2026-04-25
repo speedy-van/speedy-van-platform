@@ -2,7 +2,7 @@
 // Gracefully no-ops (returns 0) when OPENWEATHER_API_KEY is missing or the
 // upstream call fails.
 
-type WeatherCondition = "clear" | "rain" | "heavy_rain" | "snow" | "storm";
+export type WeatherCondition = "clear" | "rain" | "heavy_rain" | "snow" | "storm";
 
 function mapWeatherIdToCondition(id: number): WeatherCondition {
   if (id >= 200 && id < 300) return "storm";       // thunderstorm
@@ -39,5 +39,39 @@ export async function getWeatherSurcharge(
     return configValues["weather"]?.[condition] ?? 0;
   } catch {
     return 0;
+  }
+}
+
+/**
+ * Lightweight forecast lookup used by the public /weather/forecast route.
+ * Returns null when the API key is absent so the UI can hide the warning chip.
+ */
+export async function getWeatherForecast(
+  lat: number,
+  lng: number,
+): Promise<{ condition: WeatherCondition; description: string; iconUrl: string | null } | null> {
+  const key = process.env.OPENWEATHER_API_KEY;
+  if (!key) return null;
+
+  try {
+    const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lng}&appid=${key}&units=metric`;
+    const ctrl = new AbortController();
+    const timeout = setTimeout(() => ctrl.abort(), 3000);
+    const res = await fetch(url, { signal: ctrl.signal });
+    clearTimeout(timeout);
+    if (!res.ok) return null;
+    const json = (await res.json()) as {
+      weather?: { id: number; description?: string; icon?: string }[];
+    };
+    const w = json.weather?.[0];
+    if (!w || typeof w.id !== "number") return null;
+    const condition = mapWeatherIdToCondition(w.id);
+    return {
+      condition,
+      description: w.description ?? condition,
+      iconUrl: w.icon ? `https://openweathermap.org/img/wn/${w.icon}@2x.png` : null,
+    };
+  } catch {
+    return null;
   }
 }

@@ -3,9 +3,17 @@ import { PrismaNeon } from "@prisma/adapter-neon";
 import { Pool } from "@neondatabase/serverless";
 
 function createPrismaClient(): PrismaClient {
-  // Use Neon serverless driver when DATABASE_URL is set (avoids native binary in Lambda)
   const databaseUrl = process.env["DATABASE_URL"];
-  if (databaseUrl) {
+  // Use Neon serverless WebSocket adapter only on Vercel/serverless (Lambda),
+  // where the native Prisma binary cannot run. On local dev (Windows/macOS/Linux),
+  // the WebSocket connection is unreliable, so fall back to the standard
+  // Prisma client which connects over TCP with the native query engine.
+  const isServerless =
+    !!process.env["VERCEL"] ||
+    !!process.env["AWS_LAMBDA_FUNCTION_NAME"] ||
+    process.env["PRISMA_USE_NEON_ADAPTER"] === "1";
+
+  if (databaseUrl && isServerless) {
     const pool = new Pool({ connectionString: databaseUrl });
     const adapter = new PrismaNeon(pool);
     return new PrismaClient({

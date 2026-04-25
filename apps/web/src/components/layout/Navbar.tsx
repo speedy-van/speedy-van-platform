@@ -110,6 +110,17 @@ export function Navbar() {
               Login
             </Link>
           </li>
+          <li>
+            <a
+              href="tel:01202129746"
+              className="flex items-center gap-2 px-3 py-2 rounded-lg text-base font-semibold text-emerald-700 hover:bg-emerald-50 transition-colors"
+              onClick={() => setOpen(false)}
+              data-track-event="nav_call_click"
+              data-track-location="mobile_menu"
+            >
+              <span aria-hidden="true">📞</span> Call 01202 129746
+            </a>
+          </li>
         </ul>
         <div className="px-4 pb-4">
           <Link

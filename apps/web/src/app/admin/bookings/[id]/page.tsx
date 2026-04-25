@@ -10,7 +10,7 @@ import { ChatWindow } from "@/components/chat/ChatWindow";
 interface Driver { id: string; user: { name: string }; vanSize: string }
 interface TrackingEvent { id: string; type: string; message: string; isInternal: boolean; createdAt: string; lat?: number; lng?: number }
 interface StatusHistory { id: string; status: string; note?: string; createdAt: string }
-interface BookingItem { id: string; label: string; quantity: number; unitPrice: number; subtotal: number }
+interface BookingItem { id: string; name: string; quantity: number }
 interface DriverJob { id: string; status: string; driverPay?: number; driverPayStatus: string; driverPayNotes?: string }
 interface BookingDetail {
   id: string; reference: string; customerName: string; customerEmail: string; customerPhone?: string;
@@ -191,19 +191,15 @@ export default function BookingDetailPage() {
           <table className="min-w-full divide-y divide-slate-50">
             <thead className="bg-slate-50">
               <tr className="text-xs font-semibold text-slate-500 uppercase">
-                <th className="px-4 py-2 text-left">Label</th>
+                <th className="px-4 py-2 text-left">Item</th>
                 <th className="px-4 py-2 text-right">Qty</th>
-                <th className="px-4 py-2 text-right">Unit</th>
-                <th className="px-4 py-2 text-right">Subtotal</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-50">
               {booking.items.map((item) => (
                 <tr key={item.id}>
-                  <td className="px-4 py-2 text-sm text-slate-800">{item.label}</td>
+                  <td className="px-4 py-2 text-sm text-slate-800">{item.name}</td>
                   <td className="px-4 py-2 text-sm text-right">{item.quantity}</td>
-                  <td className="px-4 py-2 text-sm font-mono text-right">£{item.unitPrice.toFixed(2)}</td>
-                  <td className="px-4 py-2 text-sm font-mono font-semibold text-right">£{item.subtotal.toFixed(2)}</td>
                 </tr>
               ))}
             </tbody>

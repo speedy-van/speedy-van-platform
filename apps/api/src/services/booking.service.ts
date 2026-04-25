@@ -162,19 +162,51 @@ export async function confirmBooking(
     message: "Payment received",
   });
 
-  // Conversation between customer + admins
-  const admins = await db.user.findMany({ where: { role: "ADMIN", isActive: true } });
-  await db.conversation.create({
-    data: {
-      bookingId: booking.id,
-      participants: {
-        create: [
-          { userId: booking.userId, role: "CUSTOMER" },
-          ...admins.map((a) => ({ userId: a.id, role: "ADMIN" as const })),
-        ],
-      },
-    },
-  });
+  // Conversation between customer + admins (idempotent)
+  try {
+    const existingConversation = await db.conversation.findUnique({
+      where: { bookingId: booking.id },
+      select: { id: true, participants: { select: { userId: true } } },
+    });
+
+    const admins = await db.user.findMany({ where: { role: "ADMIN", isActive: true } });
+
+    // Build deduplicated participant list. Customer takes precedence over ADMIN role
+    // if the booking owner happens to also be an admin user.
+    const participantMap = new Map<string, "CUSTOMER" | "ADMIN">();
+    for (const a of admins) {
+      if (a.id) participantMap.set(a.id, "ADMIN");
+    }
+    if (booking.userId) participantMap.set(booking.userId, "CUSTOMER");
+
+    if (!existingConversation) {
+      await db.conversation.create({
+        data: {
+          bookingId: booking.id,
+          participants: {
+            create: Array.from(participantMap.entries()).map(([userId, role]) => ({
+              userId,
+              role,
+            })),
+          },
+        },
+      });
+    } else {
+      const existingUserIds = new Set(existingConversation.participants.map((p) => p.userId));
+      const toCreate = Array.from(participantMap.entries())
+        .filter(([userId]) => !existingUserIds.has(userId))
+        .map(([userId, role]) => ({
+          conversationId: existingConversation.id,
+          userId,
+          role,
+        }));
+      if (toCreate.length > 0) {
+        await db.conversationParticipant.createMany({ data: toCreate, skipDuplicates: true });
+      }
+    }
+  } catch (err) {
+    console.error("[booking] conversation setup failed:", err);
+  }
 
   // Auto-publish to job board
   await publishToJobBoard(booking.id).catch((err) =>
@@ -276,6 +308,7 @@ export async function getBookingForTracking(reference: string, email: string) {
 
   return {
     reference: booking.reference,
+    bookingId: booking.id,
     status: booking.status,
     serviceName: booking.serviceName,
     scheduledAt: booking.scheduledAt.toISOString(),
@@ -285,6 +318,7 @@ export async function getBookingForTracking(reference: string, email: string) {
     dropoffAddress: booking.dropoffAddress,
     driverName: booking.driver?.user.name,
     driverPhone: booking.driver?.user.phone ?? undefined,
+    driverVanSize: booking.driver?.vanSize ?? undefined,
     conversationId: booking.conversation?.id ?? undefined,
     canCancel: ["PENDING", "CONFIRMED"].includes(booking.status),
     events: booking.trackingEvents.map((e) => ({

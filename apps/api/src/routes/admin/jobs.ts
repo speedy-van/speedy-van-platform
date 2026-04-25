@@ -28,7 +28,7 @@ app.get(
         ...(bookingId ? { bookingId } : {}),
       },
       include: {
-        booking: { select: { reference: true, serviceName: true, scheduledAt: true, totalPrice: true } },
+        booking: { select: { id: true, reference: true, serviceName: true, scheduledAt: true, totalPrice: true, pickupAddress: true, dropoffAddress: true, customerName: true } },
         driver: { include: { user: { select: { name: true } } } },
       },
       orderBy: { createdAt: "desc" },

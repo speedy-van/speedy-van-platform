@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, FormEvent } from "react";
+import { useState, useRef, useEffect, useCallback, FormEvent } from "react";
 import { loadStripe } from "@stripe/stripe-js";
 import {
   Elements,
@@ -10,6 +10,9 @@ import {
 } from "@stripe/react-stripe-js";
 import { useBooking } from "@/lib/booking-store";
 import { useRouter } from "next/navigation";
+import { trackPurchase } from "@/lib/analytics";
+import { UpsellPanel, type UpsellSelection } from "./UpsellPanel";
+import { PriceExplainerLink } from "./PriceExplainerLink";
 
 const STRIPE_PK = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || "";
 const stripePromise = STRIPE_PK ? loadStripe(STRIPE_PK, { locale: "en-GB" }) : null;
@@ -74,6 +77,9 @@ function BookingSummary() {
         <span>Total</span>
         <span>£{state.clientTotal.toFixed(2)}</span>
       </div>
+      <div className="pt-1">
+        <PriceExplainerLink />
+      </div>
     </div>
   );
 }
@@ -94,10 +100,75 @@ function CheckoutForm({ onComplete }: CheckoutFormProps) {
   const [email, setEmail] = useState(state.customerEmail);
   const [phone, setPhone] = useState(state.customerPhone);
 
+  // Snapshot of upsells already baked into clientTotal at Step 3
+  const initialUpsellsRef = useRef<UpsellSelection>({
+    needsPacking: state.needsPacking,
+    needsAssembly: state.needsAssembly,
+    helpersCount: state.helpersCount,
+  });
+  // Original price before any upsell changes — used to restore when user deselects
+  const initialPriceRef = useRef<number>(state.clientTotal);
+  const [pricingUpdating, setPricingUpdating] = useState(false);
+  const [pricingError, setPricingError] = useState(false);
+
+  // Guard against duplicate purchase events
+  const purchaseTrackedRef = useRef(false);
+
+  // ─── Inactivity helper (25s no input → bottom sheet with Call / WhatsApp) ───
+  const [showHelper, setShowHelper] = useState(false);
+  const helperDismissedRef = useRef(false);
+  const inactivityTimerRef = useRef<number | null>(null);
+
+  const resetInactivityTimer = useCallback(() => {
+    if (helperDismissedRef.current || submitting) return;
+    if (inactivityTimerRef.current) {
+      window.clearTimeout(inactivityTimerRef.current);
+    }
+    inactivityTimerRef.current = window.setTimeout(() => {
+      setShowHelper(true);
+    }, 25_000);
+  }, [submitting]);
+
+  useEffect(() => {
+    // Re-check session-scoped dismissal so a re-mount doesn't re-trigger.
+    try {
+      if (sessionStorage.getItem("sv_pay_helper_dismissed") === "1") {
+        helperDismissedRef.current = true;
+        return;
+      }
+    } catch {
+      /* ignore */
+    }
+    resetInactivityTimer();
+    return () => {
+      if (inactivityTimerRef.current) window.clearTimeout(inactivityTimerRef.current);
+    };
+  }, [resetInactivityTimer]);
+
+  function dismissHelper() {
+    helperDismissedRef.current = true;
+    try {
+      sessionStorage.setItem("sv_pay_helper_dismissed", "1");
+    } catch {
+      /* ignore */
+    }
+    setShowHelper(false);
+    if (inactivityTimerRef.current) {
+      window.clearTimeout(inactivityTimerRef.current);
+      inactivityTimerRef.current = null;
+    }
+  }
+
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
     setError("");
 
+    if (pricingUpdating) {
+      return setError("Please wait — we're updating your price.");
+    }
+    if (pricingError) {
+      return setError("We couldn't update your price. Please toggle an option to retry.");
+    }
     if (!name.trim() || !email.trim() || !phone.trim()) {
       return setError("Please fill in all your details.");
     }
@@ -147,14 +218,16 @@ function CheckoutForm({ onComplete }: CheckoutFormProps) {
         throw new Error(createJson.error || "Failed to create booking.");
       }
 
-      const { bookingId, bookingRef, clientSecret } = createJson.data as {
+      const { bookingId, bookingRef, clientSecret, totalPrice } = createJson.data as {
         bookingId: string;
         bookingRef: string;
         clientSecret: string | null;
         totalPrice: number;
       };
 
-      dispatch({ type: "SET_BOOKING", bookingId, bookingRef, clientSecret: clientSecret || "", total: state.clientTotal });
+      // Server is the source of truth for the paid amount.
+      const finalAmount = typeof totalPrice === "number" ? totalPrice : state.clientTotal;
+      dispatch({ type: "SET_BOOKING", bookingId, bookingRef, clientSecret: clientSecret || "", total: finalAmount });
       dispatch({ type: "SET_CUSTOMER", name, email, phone });
 
       // 2. Confirm payment with Stripe if we have a clientSecret
@@ -185,6 +258,17 @@ function CheckoutForm({ onComplete }: CheckoutFormProps) {
         }
       }
 
+      // Fire purchase conversion (GA4 + Meta Pixel) exactly once with the
+      // server-confirmed paid amount.
+      if (!purchaseTrackedRef.current) {
+        purchaseTrackedRef.current = true;
+        try {
+          trackPurchase(bookingRef, finalAmount, state.serviceSlug);
+        } catch {
+          /* ignore tracking failures */
+        }
+      }
+
       onComplete(bookingRef);
       // Store email for booking detection popup
       try { localStorage.setItem("sv-customer-email", email.trim()); } catch { /* ignore */ }
@@ -196,7 +280,22 @@ function CheckoutForm({ onComplete }: CheckoutFormProps) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-5" noValidate>
+    <form
+      onSubmit={handleSubmit}
+      className="space-y-5"
+      noValidate
+      onKeyDown={resetInactivityTimer}
+      onFocusCapture={resetInactivityTimer}
+      onPointerDown={resetInactivityTimer}
+    >
+      {/* Upsell panel */}
+      <UpsellPanel
+        initial={initialUpsellsRef.current}
+        initialPrice={initialPriceRef.current}
+        onUpdatingChange={setPricingUpdating}
+        onPriceErrorChange={setPricingError}
+      />
+
       {/* Customer details */}
       <div className="bg-white rounded-2xl border border-slate-200 p-5 space-y-4">
         <h2 className="font-semibold text-slate-800">Your details</h2>
@@ -207,6 +306,7 @@ function CheckoutForm({ onComplete }: CheckoutFormProps) {
             value={name}
             onChange={(e) => setName(e.target.value)}
             required
+            autoComplete="name"
             className="w-full rounded-xl border border-slate-300 px-4 py-3 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-400 focus:border-transparent"
             placeholder="Jane Smith"
           />
@@ -218,6 +318,8 @@ function CheckoutForm({ onComplete }: CheckoutFormProps) {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
+            autoComplete="email"
+            inputMode="email"
             className="w-full rounded-xl border border-slate-300 px-4 py-3 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-400 focus:border-transparent"
             placeholder="jane@example.com"
           />
@@ -229,6 +331,8 @@ function CheckoutForm({ onComplete }: CheckoutFormProps) {
             value={phone}
             onChange={(e) => setPhone(e.target.value)}
             required
+            autoComplete="tel-national"
+            inputMode="tel"
             className="w-full rounded-xl border border-slate-300 px-4 py-3 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-400 focus:border-transparent"
             placeholder="+44 7700 900000"
           />
@@ -258,9 +362,20 @@ function CheckoutForm({ onComplete }: CheckoutFormProps) {
         </div>
       )}
 
+      {/* Trust strip */}
+      <ul
+        className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1.5 text-[11px] sm:text-xs text-slate-500"
+        aria-label="Trust signals"
+      >
+        <li className="inline-flex items-center gap-1"><span aria-hidden="true">🔒</span> Secure Stripe payment</li>
+        <li className="inline-flex items-center gap-1"><span aria-hidden="true">🛡️</span> Fully insured</li>
+        <li className="inline-flex items-center gap-1"><span aria-hidden="true">↩️</span> Free cancellation up to 24h</li>
+        <li className="inline-flex items-center gap-1"><span aria-hidden="true">⭐</span> 4.9/5 from 1,000+ moves</li>
+      </ul>
+
       <button
         type="submit"
-        disabled={submitting || (!stripe && !!stripePromise)}
+        disabled={submitting || pricingUpdating || pricingError || (!stripe && !!stripePromise)}
         className="btn-primary w-full py-3.5 rounded-xl font-semibold text-sm disabled:opacity-50 disabled:cursor-not-allowed"
       >
         {submitting ? (
@@ -268,10 +383,63 @@ function CheckoutForm({ onComplete }: CheckoutFormProps) {
             <span className="h-4 w-4 animate-spin rounded-full border-2 border-slate-900 border-t-transparent" />
             Processing…
           </span>
+        ) : pricingUpdating ? (
+          "Updating price…"
         ) : (
           `Pay £${state.clientTotal.toFixed(2)} & Confirm Booking`
         )}
       </button>
+
+      {/* Inactivity helper bottom sheet */}
+      {showHelper && (
+        <div
+          className="fixed inset-x-0 bottom-0 z-50 px-3 pb-3 sm:flex sm:justify-center sm:items-end"
+          role="dialog"
+          aria-labelledby="pay-helper-title"
+        >
+          <div className="mx-auto w-full max-w-md rounded-2xl bg-white shadow-2xl border border-slate-200 p-4 animate-in slide-in-from-bottom duration-300">
+            <div className="flex items-start gap-3">
+              <span className="text-2xl" aria-hidden>
+                💬
+              </span>
+              <div className="flex-1 min-w-0">
+                <p id="pay-helper-title" className="text-sm font-bold text-slate-900">
+                  Need help with payment?
+                </p>
+                <p className="text-xs text-slate-600 mt-0.5">
+                  Our team is here to help — just one tap away.
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={dismissHelper}
+                aria-label="Dismiss"
+                className="-mt-1 -mr-1 h-8 w-8 rounded-full text-slate-400 hover:bg-slate-100"
+              >
+                ×
+              </button>
+            </div>
+            <div className="mt-3 grid grid-cols-2 gap-2">
+              <a
+                href="tel:01202129746"
+                onClick={dismissHelper}
+                className="inline-flex items-center justify-center gap-2 rounded-xl bg-slate-900 text-white text-sm font-semibold py-3 hover:bg-slate-800"
+              >
+                📞 Call us
+              </a>
+              <a
+                href="https://wa.me/message/J6EO772GDPHFO1"
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={dismissHelper}
+                className="inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-500 text-white text-sm font-semibold py-3 hover:bg-emerald-600"
+              >
+                💬 WhatsApp
+              </a>
+            </div>
+          </div>
+        </div>
+      )}
     </form>
   );
 }
@@ -290,7 +458,10 @@ export function Step4Payment() {
       <div>
         <button
           type="button"
-          onClick={() => dispatch({ type: "SET_STEP", step: 3 })}
+          onClick={() => {
+            dispatch({ type: "RESET_UPSELLS" });
+            dispatch({ type: "SET_STEP", step: 3 });
+          }}
           className="text-sm text-slate-500 hover:text-slate-700 flex items-center gap-1 mb-4"
         >
           ← Back

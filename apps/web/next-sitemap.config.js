@@ -1,11 +1,25 @@
 /** @type {import('next-sitemap').IConfig} */
 module.exports = {
-  siteUrl: "https://www.speedy-van.co.uk",
+  siteUrl: "https://www.speedyvan.uk",
   generateRobotsTxt: false, // we have our own robots.txt
   sitemapSize: 5000,
   changefreq: "weekly",
   priority: 0.7,
-  exclude: ["/admin/*", "/driver/*", "/auth/*", "/api/*", "/track"],
+  exclude: [
+    "/admin",
+    "/admin/*",
+    "/driver",
+    "/driver/*",
+    "/auth",
+    "/auth/*",
+    "/api",
+    "/api/*",
+    "/track",
+    "/jobs",
+    "/privacy",
+    "/terms",
+    "/cookies",
+  ],
   additionalPaths: async () => {
     const areaSlugues = [
       "glasgow", "glasgow-west-end", "glasgow-southside", "paisley",
@@ -27,11 +41,6 @@ module.exports = {
     return [
       { loc: "/", priority: 1.0, changefreq: "daily" },
       { loc: "/book", priority: 0.9, changefreq: "daily" },
-      { loc: "/track", priority: 0.5, changefreq: "weekly" },
-      { loc: "/jobs", priority: 0.4, changefreq: "daily" },
-      { loc: "/privacy", priority: 0.3, changefreq: "monthly" },
-      { loc: "/terms", priority: 0.3, changefreq: "monthly" },
-      { loc: "/cookies", priority: 0.2, changefreq: "monthly" },
       ...areaSlugues.map((slug) => ({
         loc: `/areas/${slug}`,
         priority: 0.8,
@@ -42,6 +51,7 @@ module.exports = {
         priority: 0.8,
         changefreq: "weekly",
       })),
+      { loc: "/services/european-removals", priority: 0.8, changefreq: "weekly" },
     ];
   },
 };

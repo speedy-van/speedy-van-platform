@@ -3,9 +3,14 @@
 import {
   createContext,
   useContext,
+  useEffect,
   useReducer,
+  useRef,
   type ReactNode,
 } from "react";
+
+const STORAGE_KEY = "sv_booking_draft_v1";
+const STORAGE_TTL_MS = 24 * 60 * 60 * 1000; // 24h
 
 // ─── Types ─────────────────────────────────────────────────────────────────
 
@@ -22,6 +27,12 @@ export interface SelectedItem {
   itemId?: string;
   name: string;
   quantity: number;
+}
+
+export interface PriceLineItem {
+  label: string;
+  amount: number;
+  type: string;
 }
 
 export interface BookingState {
@@ -57,6 +68,7 @@ export interface BookingState {
   clientSecret: string; // from /booking/create
   bookingId: string;
   bookingRef: string;
+  priceBreakdown: PriceLineItem[];
 
   // Navigation
   step: 1 | 2 | 3 | 4;
@@ -86,6 +98,7 @@ const INITIAL: BookingState = {
   clientSecret: "",
   bookingId: "",
   bookingRef: "",
+  priceBreakdown: [],
   step: 1,
 };
 
@@ -109,8 +122,10 @@ type Action =
   | { type: "SET_ASSEMBLY"; value: boolean }
   | { type: "SET_CUSTOMER"; name: string; email: string; phone: string }
   | { type: "SET_PRICE"; total: number }
+  | { type: "SET_BREAKDOWN"; items: PriceLineItem[] }
   | { type: "SET_BOOKING"; bookingId: string; bookingRef: string; clientSecret: string; total: number }
   | { type: "SET_STEP"; step: 1 | 2 | 3 | 4 }
+  | { type: "RESET_UPSELLS" }
   | { type: "RESET" };
 
 function reducer(state: BookingState, action: Action): BookingState {
@@ -130,8 +145,10 @@ function reducer(state: BookingState, action: Action): BookingState {
     case "SET_HELPERS": return { ...state, helpersCount: action.count };
     case "SET_PACKING": return { ...state, needsPacking: action.value };
     case "SET_ASSEMBLY": return { ...state, needsAssembly: action.value };
+    case "RESET_UPSELLS": return { ...state, needsPacking: false, needsAssembly: false, helpersCount: 0 };
     case "SET_CUSTOMER": return { ...state, customerName: action.name, customerEmail: action.email, customerPhone: action.phone };
     case "SET_PRICE": return { ...state, clientTotal: action.total };
+    case "SET_BREAKDOWN": return { ...state, priceBreakdown: action.items };
     case "SET_BOOKING": return { ...state, bookingId: action.bookingId, bookingRef: action.bookingRef, clientSecret: action.clientSecret, clientTotal: action.total };
     case "SET_STEP": return { ...state, step: action.step };
     case "RESET": return INITIAL;
@@ -150,6 +167,80 @@ const BookingContext = createContext<BookingContextValue | null>(null);
 
 export function BookingProvider({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(reducer, INITIAL);
+  const hydrated = useRef(false);
+
+  // Hydrate from localStorage once on mount
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) {
+        hydrated.current = true;
+        return;
+      }
+      const parsed = JSON.parse(raw) as { savedAt: number; state: BookingState };
+      if (Date.now() - parsed.savedAt > STORAGE_TTL_MS) {
+        localStorage.removeItem(STORAGE_KEY);
+      } else if (parsed.state) {
+        // Don't restore the booking confirmation tail (server-side ids).
+        const draft = {
+          ...parsed.state,
+          clientSecret: "",
+          bookingId: "",
+          bookingRef: "",
+        };
+        // Replay as discrete actions so reducer stays the source of truth.
+        if (draft.serviceSlug) dispatch({ type: "SET_SERVICE", slug: draft.serviceSlug, name: draft.serviceName });
+        if (draft.serviceVariant) dispatch({ type: "SET_VARIANT", variant: draft.serviceVariant });
+        if (draft.pickup) dispatch({ type: "SET_PICKUP", value: draft.pickup });
+        if (draft.dropoff) dispatch({ type: "SET_DROPOFF", value: draft.dropoff });
+        if (draft.pickupFloor) dispatch({ type: "SET_PICKUP_FLOOR", value: draft.pickupFloor });
+        if (draft.pickupHasLift) dispatch({ type: "SET_PICKUP_LIFT", value: true });
+        if (draft.dropoffFloor) dispatch({ type: "SET_DROPOFF_FLOOR", value: draft.dropoffFloor });
+        if (draft.dropoffHasLift) dispatch({ type: "SET_DROPOFF_LIFT", value: true });
+        if (draft.distanceMiles) dispatch({ type: "SET_DISTANCE", value: draft.distanceMiles });
+        if (draft.items?.length) dispatch({ type: "SET_ITEMS", items: draft.items });
+        if (draft.selectedDate) dispatch({ type: "SET_DATE", date: draft.selectedDate });
+        if (draft.selectedTimeSlot) dispatch({ type: "SET_SLOT", slot: draft.selectedTimeSlot });
+        if (draft.helpersCount) dispatch({ type: "SET_HELPERS", count: draft.helpersCount });
+        if (draft.needsPacking) dispatch({ type: "SET_PACKING", value: true });
+        if (draft.needsAssembly) dispatch({ type: "SET_ASSEMBLY", value: true });
+        if (draft.customerName || draft.customerEmail || draft.customerPhone) {
+          dispatch({
+            type: "SET_CUSTOMER",
+            name: draft.customerName,
+            email: draft.customerEmail,
+            phone: draft.customerPhone,
+          });
+        }
+        if (draft.clientTotal) dispatch({ type: "SET_PRICE", total: draft.clientTotal });
+        if (draft.step && draft.step >= 1 && draft.step <= 4) dispatch({ type: "SET_STEP", step: draft.step });
+      }
+    } catch {
+      /* ignore */
+    } finally {
+      hydrated.current = true;
+    }
+  }, []);
+
+  // Persist on every change after hydration. Skip after a successful booking.
+  useEffect(() => {
+    if (!hydrated.current) return;
+    if (typeof window === "undefined") return;
+    if (state.bookingRef) {
+      try { localStorage.removeItem(STORAGE_KEY); } catch { /* ignore */ }
+      return;
+    }
+    try {
+      localStorage.setItem(
+        STORAGE_KEY,
+        JSON.stringify({ savedAt: Date.now(), state })
+      );
+    } catch {
+      /* ignore quota */
+    }
+  }, [state]);
+
   return (
     <BookingContext.Provider value={{ state, dispatch }}>
       {children}

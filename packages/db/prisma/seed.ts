@@ -94,6 +94,19 @@ async function main() {
 
   console.log(`✓ ${services.length} services created`);
 
+  // ── Service availability flags (admin-controlled) ──────────────────────────
+  const flagSlugs = ["rubbish-removal", "same-day-delivery"];
+  await Promise.all(
+    flagSlugs.map((slug) =>
+      prisma.serviceFlag.upsert({
+        where: { slug },
+        update: {},
+        create: { slug, enabled: true, mode: null },
+      }),
+    ),
+  );
+  console.log(`✓ ${flagSlugs.length} service flags ensured`);
+
   // ── Areas ────────────────────────────────────────────────────────────────────
   const areaData = [
     { slug: "central-london", name: "Central London", region: "London", description: "Expert moves in the heart of the capital." },

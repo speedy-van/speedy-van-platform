@@ -23,7 +23,8 @@ export default async function handler(req: IncomingMessage, res: ServerResponse)
 
   const request = new Request(url, {
     method: req.method ?? "GET",
-    headers: req.headers as HeadersInit,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    headers: req.headers as any,
     body: body && body.length > 0 ? body : null,
   });
 

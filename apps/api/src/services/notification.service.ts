@@ -85,3 +85,17 @@ export async function notifyChatMessage(
     },
   });
 }
+
+export async function notifyNewEuropeanEnquiry(enquiry: {
+  id: string;
+  customerName: string;
+  toCountry: string;
+}): Promise<void> {
+  await notifyAllAdmins(
+    "EUROPEAN_ENQUIRY",
+    `🇪🇺 New European enquiry: Scotland → ${enquiry.toCountry}`,
+    `${enquiry.customerName} requested a European removals quote`,
+    `/admin/enquiries`,
+    { enquiryId: enquiry.id },
+  );
+}

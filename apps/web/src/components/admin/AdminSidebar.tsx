@@ -7,7 +7,9 @@ import { logout, getUser } from "@/lib/auth-client";
 const NAV = [
   { label: "Dashboard", icon: "▦", href: "/admin" },
   { label: "Bookings", icon: "📅", href: "/admin/bookings" },
+  { label: "Enquiries", icon: "🇪🇺", href: "/admin/enquiries" },
   { label: "Drivers", icon: "👤", href: "/admin/drivers" },
+  { label: "Services", icon: "📦", href: "/admin/services" },
   { label: "Pricing", icon: "£", href: "/admin/pricing" },
   { label: "Job Board", icon: "📋", href: "/admin/jobs" },
   { label: "Visitors", icon: "👁", href: "/admin/visitors" },

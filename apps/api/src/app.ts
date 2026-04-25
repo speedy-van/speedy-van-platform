@@ -14,6 +14,10 @@ import stripeRoutes from "./routes/stripe";
 import driverRoutes from "./routes/driver";
 import trackingRoutes from "./routes/tracking";
 import chatRoutes, { bookingMessagesApp } from "./routes/chat";
+import weatherRoutes from "./routes/weather";
+import serviceFlagsRoutes from "./routes/service-flags";
+import waitlistRoutes from "./routes/waitlist";
+import enquiryRoutes from "./routes/enquiry";
 
 import adminBookingsRoutes from "./routes/admin/bookings";
 import adminDriversRoutes from "./routes/admin/drivers";
@@ -23,6 +27,8 @@ import adminContentRoutes from "./routes/admin/content";
 import adminAnalyticsRoutes from "./routes/admin/analytics";
 import adminVisitorsRoutes from "./routes/admin/visitors";
 import adminNotificationsRoutes from "./routes/admin/notifications";
+import adminServiceFlagsRoutes from "./routes/admin/service-flags";
+import adminEnquiriesRoutes from "./routes/admin/enquiries";
 
 const app = new Hono();
 
@@ -50,6 +56,10 @@ app.route("/driver", driverRoutes);
 app.route("/tracking", trackingRoutes);
 app.route("/chat", chatRoutes);
 app.route("/chat", bookingMessagesApp);
+app.route("/weather", weatherRoutes);
+app.route("/service-flags", serviceFlagsRoutes);
+app.route("/waitlist", waitlistRoutes);
+app.route("/enquiry", enquiryRoutes);
 
 app.route("/admin/bookings", adminBookingsRoutes);
 app.route("/admin/drivers", adminDriversRoutes);
@@ -59,5 +69,7 @@ app.route("/admin/content", adminContentRoutes);
 app.route("/admin/analytics", adminAnalyticsRoutes);
 app.route("/admin/visitors", adminVisitorsRoutes);
 app.route("/admin/notifications", adminNotificationsRoutes);
+app.route("/admin/service-flags", adminServiceFlagsRoutes);
+app.route("/admin/enquiries", adminEnquiriesRoutes);
 
 export default app;

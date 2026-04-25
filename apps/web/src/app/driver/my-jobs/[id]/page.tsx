@@ -149,6 +149,42 @@ export default function MyJobDetailPage() {
     setUploadingProof(false);
   }
 
+  async function handleCameraCapture(file: File) {
+    if (!file) return;
+    if (file.size > 8 * 1024 * 1024) {
+      showToast("Photo too large (max 8MB)", false);
+      return;
+    }
+    setUploadingProof(true);
+    try {
+      const dataUrl = await new Promise<string>((resolve, reject) => {
+        const r = new FileReader();
+        r.onload = () => resolve(String(r.result ?? ""));
+        r.onerror = () => reject(r.error);
+        r.readAsDataURL(file);
+      });
+      // strip "data:image/...;base64,"
+      const base64 = dataUrl.includes(",") ? dataUrl.split(",")[1] : dataUrl;
+      const token = sessionStorage.getItem("sv-auth-token");
+      const res = await fetch(`${API_BASE}/driver/my-jobs/${id}/photo`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ image: base64, type: "proof_of_delivery" }),
+      });
+      const json = await res.json();
+      if (json.success) {
+        showToast("Photo uploaded!");
+        try { navigator.vibrate?.(20); } catch { /* ignore */ }
+        await fetchJob();
+      } else {
+        showToast(json.error ?? "Upload failed", false);
+      }
+    } catch {
+      showToast("Could not read photo", false);
+    }
+    setUploadingProof(false);
+  }
+
   const inProgressStatuses = new Set(["ACCEPTED", "DRIVER_EN_ROUTE", "ARRIVED_PICKUP", "LOADING", "IN_TRANSIT", "ARRIVED_DROPOFF", "UNLOADING"]);
   const maps = (addr: string) => `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(addr)}`;
 
@@ -280,20 +316,44 @@ export default function MyJobDetailPage() {
 
         {/* Upload proof (only when completed without proof) */}
         {job.status === "COMPLETED" && !job.proofImageUrl && (
-          <form onSubmit={handleProofSubmit} className="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 space-y-3">
+          <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 space-y-3">
             <p className="text-sm font-bold text-slate-700">Upload Proof of Delivery</p>
-            <input
-              type="url"
-              value={proofUrl}
-              onChange={(e) => setProofUrl(e.target.value)}
-              placeholder="Paste image URL"
-              required
-              className="w-full px-4 py-2.5 text-sm border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-            <button type="submit" disabled={uploadingProof} className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl text-sm disabled:opacity-50 min-h-[48px]">
-              {uploadingProof ? "Saving…" : "Save Photo"}
-            </button>
-          </form>
+
+            {/* Camera capture (mobile-first) */}
+            <label className="flex flex-col items-center justify-center gap-2 w-full bg-blue-50 border-2 border-dashed border-blue-300 rounded-xl py-6 cursor-pointer hover:bg-blue-100 transition-colors">
+              <span className="text-3xl" aria-hidden="true">📷</span>
+              <span className="text-sm font-bold text-blue-700">Take a photo</span>
+              <span className="text-xs text-blue-600">or pick one from your gallery</span>
+              <input
+                type="file"
+                accept="image/*"
+                capture="environment"
+                disabled={uploadingProof}
+                onChange={(e) => {
+                  const f = e.target.files?.[0];
+                  if (f) void handleCameraCapture(f);
+                }}
+                className="sr-only"
+              />
+            </label>
+
+            {/* Fallback URL */}
+            <div className="flex items-center gap-2 text-xs text-slate-400">
+              <span className="h-px flex-1 bg-slate-200" /> or paste a URL <span className="h-px flex-1 bg-slate-200" />
+            </div>
+            <form onSubmit={handleProofSubmit} className="space-y-2">
+              <input
+                type="url"
+                value={proofUrl}
+                onChange={(e) => setProofUrl(e.target.value)}
+                placeholder="Paste image URL"
+                className="w-full px-4 py-2.5 text-sm border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+              <button type="submit" disabled={uploadingProof || !proofUrl.trim()} className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl text-sm disabled:opacity-50 min-h-[48px]">
+                {uploadingProof ? "Saving…" : "Save URL"}
+              </button>
+            </form>
+          </div>
         )}
 
         {/* Chat with customer/admin */}

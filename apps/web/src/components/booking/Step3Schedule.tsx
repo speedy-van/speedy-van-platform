@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { useBooking } from "@/lib/booking-store";
 import type { TimeSlot } from "@/lib/booking-store";
+import { WeatherChip } from "./WeatherChip";
 
 interface SlotData {
   slot: "morning" | "afternoon" | "evening";
@@ -86,6 +87,7 @@ export function Step3Schedule() {
       const json = await res.json();
       if (json.success && json.data) {
         setPricing(json.data as PricingResult);
+        dispatch({ type: "SET_BREAKDOWN", items: (json.data.staticLineItems ?? []) as { label: string; amount: number; type: string }[] });
         // Pre-select cheapest slot if none selected
         if (!state.selectedDate && json.data.days?.length > 0) {
           const firstDay = json.data.days[0];
@@ -108,6 +110,14 @@ export function Step3Schedule() {
   const selectedSlotData = selectedDayData?.slots.find((s) => s.slot === state.selectedTimeSlot);
   const currentPrice = selectedSlotData?.price ?? pricing?.staticSubtotal ?? 0;
 
+  // Keep clientTotal in sync as the user changes day/slot so the live price
+  // bar and price-drop toast both react instantly.
+  useEffect(() => {
+    if (currentPrice > 0 && currentPrice !== state.clientTotal) {
+      dispatch({ type: "SET_PRICE", total: currentPrice });
+    }
+  }, [currentPrice, state.clientTotal, dispatch]);
+
   function handleContinue() {
     if (!state.selectedDate) return setError("Please select a date.");
     setError("");
@@ -127,6 +137,9 @@ export function Step3Schedule() {
         </button>
         <h1 className="text-2xl font-bold text-slate-900 mb-1">Choose a date & time</h1>
         <p className="text-slate-600 text-sm">Prices vary by date — green is cheapest, red is peak.</p>
+        <div className="mt-3">
+          <WeatherChip lat={state.pickup?.lat} lng={state.pickup?.lng} />
+        </div>
       </div>
 
       {/* Price breakdown */}

@@ -33,7 +33,7 @@ export default function LoginPage() {
 
         <p className="mt-6 text-center text-sm text-slate-600">
           Don&apos;t have an account?{" "}
-          <a href="tel:+442012345678" className="font-semibold text-primary-600 hover:text-primary-500 transition-colors">
+          <a href="tel:01202129746" className="font-semibold text-primary-600 hover:text-primary-500 transition-colors">
             Call us to get started
           </a>
         </p>

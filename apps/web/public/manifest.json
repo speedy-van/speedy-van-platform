@@ -1,0 +1,45 @@
+{
+  "name": "SpeedyVan – Man and Van Scotland",
+  "short_name": "SpeedyVan",
+  "description": "Scotland's trusted man and van service. Book online in minutes.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0F172A",
+  "theme_color": "#FACC15",
+  "categories": ["business", "lifestyle", "utilities"],
+  "lang": "en-GB",
+  "icons": [
+    {
+      "src": "/logo.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Book a move",
+      "short_name": "Book",
+      "url": "/book",
+      "description": "Start a new booking"
+    },
+    {
+      "name": "Track booking",
+      "short_name": "Track",
+      "url": "/track"
+    },
+    {
+      "name": "Driver portal",
+      "short_name": "Driver",
+      "url": "/driver/dashboard"
+    }
+  ]
+}

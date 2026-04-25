@@ -147,3 +147,127 @@ export async function sendNewMessage(
     ),
   );
 }
+
+// ─── European removals enquiries ─────────────────────────────────────────────
+
+const escapeHtml = (s: string): string =>
+  s
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+
+const ADMIN_ENQUIRY_EMAIL =
+  process.env.ADMIN_ENQUIRY_EMAIL ?? SITE.supportEmail ?? `support@${SITE.domain}`;
+
+interface EuropeanEnquiryEmailData {
+  customerName: string;
+  customerEmail: string;
+  customerPhone: string;
+  fromAddress: string;
+  propertyType: string;
+  bedrooms: number;
+  toCountry: string;
+  toCity: string;
+  preferredDate: Date | null;
+  flexibleDate: boolean;
+  flexibleMonth: string | null;
+  needsPacking: boolean;
+  needsStorage: boolean;
+  notes: string | null;
+}
+
+export async function sendEuropeanEnquiryConfirmation(
+  enquiry: EuropeanEnquiryEmailData,
+): Promise<void> {
+  await send(
+    enquiry.customerEmail,
+    "We've received your European move enquiry",
+    baseTemplate(
+      "Thanks — your enquiry is in",
+      `<p>Hi ${escapeHtml(enquiry.customerName)},</p>
+       <p>Thank you for contacting Speedy Van about your move from
+       <strong>Scotland to ${escapeHtml(enquiry.toCity)}, ${escapeHtml(enquiry.toCountry)}</strong>.</p>
+       <p>One of our European removals specialists will review your details and
+       send you a detailed, fixed-price quote <strong>within 24 hours</strong>.</p>
+       <p>If anything is urgent, you can reply to this email or call us on
+       <strong>01202 129746</strong>.</p>`,
+    ),
+  );
+}
+
+export async function sendEuropeanEnquiryAdminAlert(
+  enquiry: EuropeanEnquiryEmailData,
+): Promise<void> {
+  const fmtDate = enquiry.preferredDate
+    ? enquiry.preferredDate.toUTCString()
+    : enquiry.flexibleDate
+    ? `Flexible${enquiry.flexibleMonth ? ` (${escapeHtml(enquiry.flexibleMonth)})` : ""}`
+    : "—";
+
+  const row = (k: string, v: string): string =>
+    `<tr><td style="padding:4px 8px;color:#475569;font-weight:600;width:160px;">${k}</td><td style="padding:4px 8px;color:#0f172a;">${v}</td></tr>`;
+
+  await send(
+    ADMIN_ENQUIRY_EMAIL,
+    `🇪🇺 New European Move Enquiry — ${enquiry.toCountry}`,
+    baseTemplate(
+      "New European removals enquiry",
+      `<p>A new European removals enquiry has just been submitted.</p>
+       <table style="border-collapse:collapse;width:100%;font-size:14px;">
+         ${row("Customer", escapeHtml(enquiry.customerName))}
+         ${row("Email", `<a href="mailto:${escapeHtml(enquiry.customerEmail)}">${escapeHtml(enquiry.customerEmail)}</a>`)}
+         ${row("Phone", `<a href="tel:${escapeHtml(enquiry.customerPhone)}">${escapeHtml(enquiry.customerPhone)}</a>`)}
+         ${row("From", escapeHtml(enquiry.fromAddress))}
+         ${row("Property", `${escapeHtml(enquiry.propertyType)}${enquiry.bedrooms > 0 ? ` · ${enquiry.bedrooms} bedroom${enquiry.bedrooms === 1 ? "" : "s"}` : ""}`)}
+         ${row("Destination", `${escapeHtml(enquiry.toCity)}, ${escapeHtml(enquiry.toCountry)}`)}
+         ${row("Preferred date", fmtDate)}
+         ${row("Packing", enquiry.needsPacking ? "Yes" : "No")}
+         ${row("Storage", enquiry.needsStorage ? "Yes" : "No")}
+         ${row("Notes", enquiry.notes ? escapeHtml(enquiry.notes).replace(/\n/g, "<br>") : "—")}
+       </table>
+       <p style="margin-top:24px;">
+         <a href="https://www.speedy-van.co.uk/admin/enquiries"
+            style="background:#facc15;color:#0f172a;padding:10px 16px;border-radius:6px;text-decoration:none;font-weight:700;">
+           Open in admin →
+         </a>
+       </p>`,
+    ),
+  );
+}
+
+export async function sendEuropeanEnquiryQuote(quote: {
+  customerEmail: string;
+  customerName: string;
+  toCountry: string;
+  toCity: string;
+  quotedPrice: number;
+  adminNotes?: string | null;
+}): Promise<void> {
+  await send(
+    quote.customerEmail,
+    `Your European move quote — Scotland → ${quote.toCity}, ${quote.toCountry}`,
+    baseTemplate(
+      "Your quote is ready",
+      `<p>Hi ${escapeHtml(quote.customerName)},</p>
+       <p>Thanks for your patience. Based on the details you shared, here is our
+       fixed-price quote for your move from Scotland to
+       <strong>${escapeHtml(quote.toCity)}, ${escapeHtml(quote.toCountry)}</strong>:</p>
+       <p style="font-size:28px;font-weight:800;color:#0f172a;margin:16px 0;">
+         £${quote.quotedPrice.toFixed(2)}
+       </p>
+       <p style="color:#475569;font-size:13px;">
+         Includes packing materials, transport, customs handling and
+         goods-in-transit insurance.
+       </p>
+       ${
+         quote.adminNotes
+           ? `<p><strong>Notes:</strong><br>${escapeHtml(quote.adminNotes).replace(/\n/g, "<br>")}</p>`
+           : ""
+       }
+       <p>To accept this quote or ask any questions, simply reply to this email
+       or call us on <strong>01202 129746</strong>.</p>`,
+    ),
+  );
+}

@@ -21,6 +21,8 @@ export default function ContentPage() {
   const [success, setSuccess] = useState("");
   const [error, setError] = useState("");
   const [edits, setEdits] = useState<Record<string, string>>({});
+  const [showAdd, setShowAdd] = useState(false);
+  const [draft, setDraft] = useState({ section: "", key: "", value: "", type: "text" });
 
   const fetchContent = useCallback(async () => {
     setLoading(true);
@@ -60,6 +62,30 @@ export default function ContentPage() {
     setSaving(false);
   }
 
+  async function createItem() {
+    setError(""); setSuccess("");
+    const section = draft.section.trim();
+    const key = draft.key.trim();
+    if (!section || !key) {
+      setError("Section and key are required.");
+      return;
+    }
+    setSaving(true);
+    const res = await api.put("/admin/content", {
+      section, key, value: draft.value, type: draft.type,
+    });
+    if (res.success) {
+      setSuccess("Created.");
+      setShowAdd(false);
+      setTab(section);
+      setDraft({ section: "", key: "", value: "", type: "text" });
+      await fetchContent();
+    } else {
+      setError(res.error ?? "Failed to create");
+    }
+    setSaving(false);
+  }
+
   const sections = Object.keys(grouped);
 
   return (
@@ -67,8 +93,74 @@ export default function ContentPage() {
       {error && <div className="bg-red-50 border border-red-200 text-red-700 rounded-lg px-4 py-3 text-sm">{error}</div>}
       {success && <div className="bg-emerald-50 border border-emerald-200 text-emerald-700 rounded-lg px-4 py-3 text-sm">{success}</div>}
 
+      <div className="flex items-center justify-between">
+        <p className="text-sm text-slate-500">
+          Edit copy that appears across the site. Group entries by <span className="font-mono text-slate-700">section</span> and reference them by <span className="font-mono text-slate-700">key</span>.
+        </p>
+        <button
+          type="button"
+          onClick={() => setShowAdd((v) => !v)}
+          className="text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-lg px-3 py-1.5"
+        >
+          {showAdd ? "Cancel" : "+ New entry"}
+        </button>
+      </div>
+
+      {showAdd && (
+        <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-5 space-y-3">
+          <h2 className="text-sm font-semibold text-slate-900">Create content entry</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <input
+              value={draft.section}
+              onChange={(e) => setDraft((d) => ({ ...d, section: e.target.value }))}
+              placeholder="Section (e.g. home_hero)"
+              className="px-3 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+            <input
+              value={draft.key}
+              onChange={(e) => setDraft((d) => ({ ...d, key: e.target.value }))}
+              placeholder="Key (e.g. headline)"
+              className="px-3 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+            <select
+              value={draft.type}
+              onChange={(e) => setDraft((d) => ({ ...d, type: e.target.value }))}
+              className="px-3 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              <option value="text">Text</option>
+              <option value="html">HTML</option>
+              <option value="markdown">Markdown</option>
+              <option value="json">JSON</option>
+            </select>
+          </div>
+          <textarea
+            value={draft.value}
+            onChange={(e) => setDraft((d) => ({ ...d, value: e.target.value }))}
+            placeholder="Value"
+            rows={3}
+            className="w-full px-3 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-y"
+          />
+          <div className="flex justify-end">
+            <button
+              type="button"
+              onClick={createItem}
+              disabled={saving}
+              className="text-sm font-semibold text-white bg-emerald-600 hover:bg-emerald-700 rounded-lg px-4 py-2 disabled:opacity-50"
+            >
+              {saving ? "Saving…" : "Create"}
+            </button>
+          </div>
+        </div>
+      )}
+
       {loading ? (
         <div className="flex items-center justify-center h-48"><div className="h-8 w-8 border-2 border-blue-500 border-t-transparent rounded-full animate-spin" /></div>
+      ) : sections.length === 0 ? (
+        <div className="bg-white rounded-xl border border-dashed border-slate-300 p-10 text-center">
+          <p className="text-3xl mb-2" aria-hidden>📝</p>
+          <p className="text-sm font-semibold text-slate-900">No content entries yet</p>
+          <p className="text-xs text-slate-500 mt-1">Click <strong>+ New entry</strong> above to add your first piece of content.</p>
+        </div>
       ) : (
         <>
           <div className="flex gap-1 border-b border-slate-200 overflow-x-auto">

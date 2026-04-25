@@ -24,6 +24,7 @@ const STATUSES = ["", "PENDING", "CONFIRMED", "ASSIGNED", "IN_PROGRESS", "COMPLE
 export default function BookingsPage() {
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
   const [q, setQ] = useState("");
   const [status, setStatus] = useState("");
   const [page, setPage] = useState(1);
@@ -32,13 +33,16 @@ export default function BookingsPage() {
 
   const fetch = useCallback(async () => {
     setLoading(true);
+    setError("");
     const params = new URLSearchParams({ limit: String(limit), page: String(page) });
     if (q) params.set("q", q);
     if (status) params.set("status", status);
-    const res = await api.get<{ items: Booking[]; total: number }>(`/admin/bookings?${params}`);
-    if (res.success && res.data) {
-      setBookings(res.data.items ?? []);
-      setTotal(res.data.total ?? 0);
+    const res = await api.get<Booking[]>(`/admin/bookings?${params}`);
+    if (res.success && res.data != null) {
+      setBookings(Array.isArray(res.data) ? res.data : []);
+      setTotal(res.pagination?.total ?? 0);
+    } else if (!res.success) {
+      setError(res.error ?? "Failed to load bookings");
     }
     setLoading(false);
   }, [q, status, page]);
@@ -49,6 +53,12 @@ export default function BookingsPage() {
 
   return (
     <div className="space-y-4">
+      {error && (
+        <div className="flex items-center gap-3 px-4 py-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-700">
+          <span className="font-semibold">Error:</span> {error}
+          <button onClick={fetch} className="ml-auto text-xs font-medium underline hover:no-underline">Retry</button>
+        </div>
+      )}
       {/* Filters */}
       <div className="flex flex-wrap gap-3">
         <input

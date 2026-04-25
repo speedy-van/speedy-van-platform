@@ -17,5 +17,14 @@ export function errorHandler(err: Error, c: Context): Response {
     return c.json(fail("Resource not found", "NOT_FOUND"), 404);
   }
 
-  return c.json(fail("Internal server error", "INTERNAL_ERROR"), 500);
+  console.error(err.stack);
+  const isDev = process.env.NODE_ENV !== "production";
+  return c.json(
+    fail(
+      isDev ? `Internal server error: ${err.message}` : "Internal server error",
+      "INTERNAL_ERROR",
+      isDev ? { stack: err.stack } : undefined,
+    ),
+    500,
+  );
 }

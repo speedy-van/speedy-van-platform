@@ -3,6 +3,11 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { AREAS, getAreaBySlug } from "@/lib/areas";
 import { SERVICES } from "@/lib/services";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { buildBreadcrumbSchema } from "@/lib/seo/schemas";
+
+const SITE_URL = "https://speedyvan.uk";
+const OG_IMAGE = `${SITE_URL}/og-image.jpg`;
 
 interface Props {
   params: { slug: string };
@@ -16,12 +21,32 @@ export function generateMetadata({ params }: Props): Metadata {
   const area = getAreaBySlug(params.slug);
   if (!area) return { title: "Area Not Found" };
 
+  const canonical = `${SITE_URL}/areas/${params.slug}`;
+
   return {
     title: `${area.headline} | SpeedyVan`,
     description: area.metaDescription,
+    alternates: {
+      canonical,
+    },
     openGraph: {
       title: `${area.headline} | SpeedyVan`,
       description: area.metaDescription,
+      url: canonical,
+      images: [
+        {
+          url: OG_IMAGE,
+          width: 1200,
+          height: 630,
+          alt: `${area.headline} – SpeedyVan`,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${area.headline} | SpeedyVan`,
+      description: area.metaDescription,
+      images: [OG_IMAGE],
     },
   };
 }
@@ -37,6 +62,14 @@ export default function AreaPage({ params }: Props) {
 
   return (
     <>
+      <JsonLd
+        id={`area-breadcrumb-${params.slug}`}
+        data={buildBreadcrumbSchema([
+          { name: "Home", url: "/" },
+          { name: "Areas", url: "/#areas" },
+          { name: area.name, url: `/areas/${params.slug}` },
+        ])}
+      />
       {/* Hero */}
       <section className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white py-16 lg:py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -97,7 +130,7 @@ export default function AreaPage({ params }: Props) {
               ))}
             </div>
             <div className="mt-8">
-              <a href="tel:+442012345678" className="btn-primary text-base px-8 py-4">
+              <a href="tel:01202129746" className="btn-primary text-base px-8 py-4">
                 Get a Quote for {area.name}
               </a>
             </div>
@@ -224,10 +257,10 @@ export default function AreaPage({ params }: Props) {
           </p>
           <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
             <a
-              href="tel:+442012345678"
+              href="tel:01202129746"
               className="inline-flex items-center justify-center gap-2 rounded-lg bg-slate-900 px-8 py-4 font-bold text-white hover:bg-slate-800 transition-colors"
             >
-              020 1234 5678
+              01202 129746
             </a>
             <a
               href="mailto:hello@speedyvan.co.uk"

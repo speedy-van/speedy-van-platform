@@ -6,7 +6,7 @@
   "rewrites": [
     {
       "source": "/api/(.*)",
-      "destination": "https://api.speedy-van.co.uk/api/$1"
+      "destination": "https://api.speedyvan.uk/api/$1"
     }
   ]
 }

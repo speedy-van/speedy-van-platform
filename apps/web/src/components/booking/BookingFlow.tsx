@@ -1,11 +1,15 @@
 "use client";
 
+import { Suspense } from "react";
 import Link from "next/link";
 import { BookingProvider, useBooking } from "@/lib/booking-store";
 import { Step1Service } from "./Step1Service";
 import { Step2Addresses } from "./Step2Addresses";
 import { Step3Schedule } from "./Step3Schedule";
 import { Step4Payment } from "./Step4Payment";
+import { LivePriceBar } from "./LivePriceBar";
+import { PriceDropToast } from "./PriceDropToast";
+import { SearchParamsInitializer } from "./SearchParamsInitializer";
 
 const STEPS = [
   { n: 1, label: "Service" },
@@ -59,8 +63,29 @@ function StepIndicator() {
 
 function FlowContent() {
   const { state } = useBooking();
+  const progressPct = Math.min(100, Math.round(((state.step - 1) / (STEPS.length - 1)) * 100));
   return (
     <div className="min-h-screen bg-slate-50">
+      {/* Pre-fill from ?service= URL param */}
+      <Suspense fallback={null}>
+        <SearchParamsInitializer />
+      </Suspense>
+
+      {/* Top progress bar */}
+      <div
+        className="fixed top-0 inset-x-0 z-50 h-1 bg-slate-200/60"
+        role="progressbar"
+        aria-valuenow={progressPct}
+        aria-valuemin={0}
+        aria-valuemax={100}
+        aria-label={`Booking progress: step ${state.step} of ${STEPS.length}`}
+      >
+        <div
+          className="h-full bg-primary-400 transition-all duration-500 ease-out"
+          style={{ width: `${progressPct}%` }}
+        />
+      </div>
+
       {/* Header */}
       <header className="sticky top-0 z-40 bg-white border-b border-slate-200">
         <div className="max-w-3xl mx-auto px-4 h-16 flex items-center justify-between gap-4">
@@ -73,12 +98,14 @@ function FlowContent() {
       </header>
 
       {/* Content */}
-      <main className="max-w-3xl mx-auto px-4 py-8">
+      <main className="max-w-3xl mx-auto px-4 py-8 pb-28 md:pb-8">
         {state.step === 1 && <Step1Service />}
         {state.step === 2 && <Step2Addresses />}
         {state.step === 3 && <Step3Schedule />}
         {state.step === 4 && <Step4Payment />}
       </main>
+      <LivePriceBar />
+      <PriceDropToast />
     </div>
   );
 }

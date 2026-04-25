@@ -34,10 +34,10 @@ export default function AdminDashboard() {
   useEffect(() => {
     Promise.all([
       api.get<Overview>("/admin/analytics/overview"),
-      api.get<{ items: Booking[] }>("/admin/bookings?limit=10"),
+      api.get<Booking[]>("/admin/bookings?limit=10"),
     ]).then(([ov, bk]) => {
       if (ov.success && ov.data) setOverview(ov.data);
-      if (bk.success && bk.data) setBookings(bk.data.items ?? []);
+      if (bk.success && bk.data) setBookings(bk.data);
     }).catch(() => {}).finally(() => setLoading(false));
   }, []);
 

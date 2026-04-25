@@ -3,7 +3,7 @@
 const API_BASE =
   process.env.NODE_ENV === "development"
     ? "http://localhost:4000"
-    : (process.env.NEXT_PUBLIC_API_URL ?? "https://api.speedy-van.co.uk");
+    : (process.env.NEXT_PUBLIC_API_URL ?? "https://api.speedyvan.uk");
 
 export interface ApiResponse<T = unknown> {
   success: boolean;
@@ -29,11 +29,26 @@ async function request<T>(
     if (token) headers["Authorization"] = `Bearer ${token}`;
   }
 
-  const res = await fetch(url, { ...options, headers });
-  const data = await res.json();
+  let res: Response;
+  try {
+    res = await fetch(url, { ...options, headers });
+  } catch {
+    return { success: false, error: "Could not reach the server. Please check your connection." };
+  }
+
+  let data: ApiResponse<T>;
+  try {
+    data = await res.json();
+  } catch {
+    return { success: false, error: `Invalid response from server (${res.status})` };
+  }
 
   if (!res.ok) {
-    throw new Error(data.error || `API error: ${res.status}`);
+    return {
+      success: false,
+      error: data.error || `API error: ${res.status}`,
+      code: data.code,
+    };
   }
 
   return data;

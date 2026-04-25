@@ -3,6 +3,15 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { SERVICES, getServiceBySlug } from "@/lib/services";
 import { AREAS } from "@/lib/areas";
+import { JsonLd } from "@/components/seo/JsonLd";
+import {
+  buildBreadcrumbSchema,
+  buildServiceSchema,
+} from "@/lib/seo/schemas";
+import { WhatsAppPhotoQuoteButton } from "@/components/WhatsAppPhotoQuoteButton";
+
+const SITE_URL = "https://speedyvan.uk";
+const OG_IMAGE = `${SITE_URL}/og-image.jpg`;
 
 interface Props {
   params: { slug: string };
@@ -16,12 +25,32 @@ export function generateMetadata({ params }: Props): Metadata {
   const service = getServiceBySlug(params.slug);
   if (!service) return { title: "Service Not Found" };
 
+  const canonical = `${SITE_URL}/services/${params.slug}`;
+
   return {
     title: `${service.name} | SpeedyVan`,
     description: service.metaDescription,
+    alternates: {
+      canonical,
+    },
     openGraph: {
       title: `${service.name} | SpeedyVan`,
       description: service.metaDescription,
+      url: canonical,
+      images: [
+        {
+          url: OG_IMAGE,
+          width: 1200,
+          height: 630,
+          alt: `${service.name} – SpeedyVan`,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${service.name} | SpeedyVan`,
+      description: service.metaDescription,
+      images: [OG_IMAGE],
     },
   };
 }
@@ -32,9 +61,21 @@ export default function ServicePage({ params }: Props) {
 
   // Show a selection of areas (first 10) for cross-linking
   const featuredAreas = AREAS.slice(0, 10);
+  const canonical = `${SITE_URL}/services/${params.slug}`;
 
   return (
     <>
+      <JsonLd
+        id={`service-jsonld-${params.slug}`}
+        data={[
+          buildBreadcrumbSchema([
+            { name: "Home", url: "/" },
+            { name: "Services", url: "/#services" },
+            { name: service.name, url: `/services/${params.slug}` },
+          ]),
+          buildServiceSchema(service.name, service.metaDescription, canonical),
+        ]}
+      />
       {/* Hero */}
       <section className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white py-16 lg:py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -71,11 +112,20 @@ export default function ServicePage({ params }: Props) {
             <p className="mt-6 text-lg text-slate-300 leading-relaxed">
               {service.longDescription}
             </p>
-            <div className="mt-8 flex items-center gap-4">
-              <a href="tel:+442012345678" className="btn-primary text-base px-8 py-4">
-                Book {service.name}
+            <div className="mt-8 flex flex-wrap items-center gap-3">
+              <Link
+                href={`/book?service=${params.slug}`}
+                className="btn-primary text-base px-8 py-4"
+              >
+                Book {service.name} Online
+              </Link>
+              <a
+                href="tel:01202129746"
+                className="inline-flex items-center justify-center gap-2 rounded-lg border border-white/30 px-5 py-4 text-sm font-semibold text-slate-200 transition-colors hover:bg-white/5 hover:text-white focus-visible:outline-none"
+              >
+                📞 Call for quote
               </a>
-              <p className="text-slate-400 text-sm">
+              <p className="w-full sm:w-auto text-slate-400 text-sm">
                 From{" "}
                 <span className="text-white font-bold text-xl">
                   £{service.startingFrom}
@@ -139,12 +189,16 @@ export default function ServicePage({ params }: Props) {
                 <p className="text-slate-600 text-sm mt-1">
                   Transparent pricing · No hidden fees
                 </p>
-                <a
-                  href="tel:+442012345678"
-                  className="mt-4 btn-primary w-full text-center"
+                <Link
+                  href={`/book?service=${params.slug}`}
+                  className="mt-4 btn-primary w-full text-center block"
                 >
-                  Get an Instant Quote
-                </a>
+                  Book Online Now
+                </Link>
+                <WhatsAppPhotoQuoteButton
+                  serviceName={service.name}
+                  className="mt-3"
+                />
               </div>
             </div>
           </div>
@@ -206,7 +260,7 @@ export default function ServicePage({ params }: Props) {
             href="/#areas"
             className="text-sm font-medium text-primary-600 hover:text-primary-700 transition-colors"
           >
-            View all 39 areas →
+            View all Scottish areas →
           </Link>
         </div>
       </section>
@@ -245,17 +299,17 @@ export default function ServicePage({ params }: Props) {
             Professional service · Instant quotes · 7 days a week
           </p>
           <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
-            <a
-              href="tel:+442012345678"
+            <Link
+              href={`/book?service=${params.slug}`}
               className="inline-flex items-center justify-center gap-2 rounded-lg bg-slate-900 px-8 py-4 font-bold text-white hover:bg-slate-800 transition-colors"
             >
-              020 1234 5678
-            </a>
+              Book {service.name} Online
+            </Link>
             <a
-              href="mailto:hello@speedyvan.co.uk"
+              href="tel:01202129746"
               className="btn-secondary border-slate-900 text-slate-900 px-8 py-4"
             >
-              Email Us
+              📞 01202 129746
             </a>
           </div>
         </div>

@@ -77,4 +77,43 @@ app.post("/directions", zValidator("json", DirectionsSchema), async (c) => {
   }
 });
 
+// Reverse geocode: lat/lng → nearest address + postcode
+app.get("/reverse", async (c) => {
+  if (!MAPBOX_TOKEN) {
+    return c.json(fail("Geocoding not configured", "MAPBOX_NOT_CONFIGURED"), 503);
+  }
+  const lat = Number(c.req.query("lat"));
+  const lng = Number(c.req.query("lng"));
+  if (!Number.isFinite(lat) || !Number.isFinite(lng)) {
+    return c.json(fail("Invalid coordinates", "INVALID_COORDS"), 400);
+  }
+  const url =
+    `https://api.mapbox.com/geocoding/v5/mapbox.places/${lng},${lat}.json` +
+    `?country=gb&types=address,postcode,place&limit=1&access_token=${MAPBOX_TOKEN}`;
+  try {
+    const res = await fetch(url);
+    if (!res.ok) return c.json(fail("Reverse geocoding failed", "MAPBOX_ERROR"), 502);
+    const json = (await res.json()) as {
+      features?: {
+        place_name?: string;
+        center?: [number, number];
+        context?: { id: string; text: string }[];
+      }[];
+    };
+    const f = json.features?.[0];
+    if (!f) return c.json(fail("No address found", "NO_ADDRESS"), 404);
+    const postcodeCtx = f.context?.find((x) => x.id.startsWith("postcode"));
+    const result: GeocodeResult = {
+      address: f.place_name ?? "",
+      postcode: postcodeCtx?.text ?? "",
+      lat: f.center?.[1] ?? lat,
+      lng: f.center?.[0] ?? lng,
+    };
+    return c.json(ok(result));
+  } catch (err) {
+    console.error("[geocode/reverse]", err);
+    return c.json(fail("Reverse geocoding error", "MAPBOX_ERROR"), 502);
+  }
+});
+
 export default app;
