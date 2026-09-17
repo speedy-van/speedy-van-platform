@@ -91,8 +91,8 @@ export function PriceExplainerLink() {
             </div>
 
             <p className="mt-4 text-[11px] text-slate-500 leading-relaxed">
-              Includes fully insured transport, professional driver, and standard fuel.
-              VAT included where applicable.
+              Includes transport, professional driver time, standard fuel and
+              goods-in-transit cover. VAT included where applicable.
             </p>
 
             <button

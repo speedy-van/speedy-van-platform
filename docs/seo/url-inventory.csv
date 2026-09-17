@@ -1,0 +1,48 @@
+url,type,indexable,source,status_after_local_build,notes
+https://www.speedyvan.uk/,home,yes,static page,200,Canonical primary homepage
+https://www.speedyvan.uk/pricing,pricing,yes,static page,200,New guide-pricing page
+https://www.speedyvan.uk/privacy,legal,yes,static page,200,Included in sitemap
+https://www.speedyvan.uk/terms,legal,yes,static page,200,Included in sitemap
+https://www.speedyvan.uk/cookies,legal,yes,static page,200,Included in sitemap
+https://www.speedyvan.uk/areas/glasgow,area,yes,AREAS,200,Area page
+https://www.speedyvan.uk/areas/glasgow-west-end,area,yes,AREAS,200,Area page
+https://www.speedyvan.uk/areas/glasgow-southside,area,yes,AREAS,200,Area page
+https://www.speedyvan.uk/areas/paisley,area,yes,AREAS,200,Area page
+https://www.speedyvan.uk/areas/edinburgh,area,yes,AREAS,200,Area page
+https://www.speedyvan.uk/areas/edinburgh-leith,area,yes,AREAS,200,Area page
+https://www.speedyvan.uk/areas/edinburgh-south,area,yes,AREAS,200,Area page
+https://www.speedyvan.uk/areas/livingston,area,yes,AREAS,200,Area page
+https://www.speedyvan.uk/areas/dundee,area,yes,AREAS,200,Area page
+https://www.speedyvan.uk/areas/perth,area,yes,AREAS,200,Area page
+https://www.speedyvan.uk/areas/kirkcaldy,area,yes,AREAS,200,Area page
+https://www.speedyvan.uk/areas/dunfermline,area,yes,AREAS,200,Area page
+https://www.speedyvan.uk/areas/st-andrews,area,yes,AREAS,200,Area page
+https://www.speedyvan.uk/areas/aberdeen,area,yes,AREAS,200,Area page
+https://www.speedyvan.uk/areas/inverurie,area,yes,AREAS,200,Area page
+https://www.speedyvan.uk/areas/inverness,area,yes,AREAS,200,Area page
+https://www.speedyvan.uk/areas/fort-william,area,yes,AREAS,200,Area page
+https://www.speedyvan.uk/areas/stirling,area,yes,AREAS,200,Area page
+https://www.speedyvan.uk/areas/falkirk,area,yes,AREAS,200,Area page
+https://www.speedyvan.uk/areas/hamilton,area,yes,AREAS,200,Area page
+https://www.speedyvan.uk/areas/east-kilbride,area,yes,AREAS,200,Area page
+https://www.speedyvan.uk/areas/motherwell,area,yes,AREAS,200,Area page
+https://www.speedyvan.uk/areas/ayr,area,yes,AREAS,200,Area page
+https://www.speedyvan.uk/areas/kilmarnock,area,yes,AREAS,200,Area page
+https://www.speedyvan.uk/areas/oban,area,yes,AREAS,200,Area page
+https://www.speedyvan.uk/areas/dumfries,area,yes,AREAS,200,Area page
+https://www.speedyvan.uk/areas/galashiels,area,yes,AREAS,200,Area page
+https://www.speedyvan.uk/services/man-and-van,service,yes,SERVICES,200,Canonical for man and van/man with a van/van and man
+https://www.speedyvan.uk/services/flat-removals,service,yes,SERVICES,200,New SEO page mapped to man-and-van booking
+https://www.speedyvan.uk/services/small-moves,service,yes,SERVICES,200,New SEO page mapped to man-and-van booking
+https://www.speedyvan.uk/services/house-removal,service,yes,SERVICES,200,House and full-house removals
+https://www.speedyvan.uk/services/long-distance-removals,service,yes,SERVICES,200,New intercity/long-distance removals page
+https://www.speedyvan.uk/services/office-removal,service,yes,SERVICES,200,Office/business/commercial relocation
+https://www.speedyvan.uk/services/student-move,service,yes,SERVICES,200,Student moves
+https://www.speedyvan.uk/services/furniture-delivery,service,yes,SERVICES,200,Furniture removals collection and delivery
+https://www.speedyvan.uk/services/ikea-delivery,service,yes,SERVICES,200,IKEA collection/delivery/assembly help
+https://www.speedyvan.uk/services/piano-moving,service,yes,SERVICES,200,Piano moving enquiries
+https://www.speedyvan.uk/services/same-day-delivery,service,yes,SERVICES,200,Same-day item transport
+https://www.speedyvan.uk/services/packing-service,service,yes,SERVICES,200,Packing support
+https://www.speedyvan.uk/services/european-removals,service,yes,static page,200,Canonical corrected to primary hostname
+https://www.speedyvan.uk/services/rubbish-removal,service,no,SERVICES,200 noindex,Excluded from sitemap/public service grids
+https://www.speedyvan.uk/services/not-a-real-service,invalid,no,notFound,404,Verified genuine 404 locally

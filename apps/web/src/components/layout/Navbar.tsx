@@ -7,7 +7,7 @@ import { Logo } from "./Logo";
 const NAV_LINKS = [
   { href: "/#services", label: "Services" },
   { href: "/#areas", label: "Areas" },
-  { href: "/#pricing", label: "Pricing" },
+  { href: "/pricing", label: "Pricing" },
   { href: "/#how-it-works", label: "How It Works" },
 ];
 
@@ -112,13 +112,13 @@ export function Navbar() {
           </li>
           <li>
             <a
-              href="tel:01202129746"
+              href="tel:07909032889"
               className="flex items-center gap-2 px-3 py-2 rounded-lg text-base font-semibold text-emerald-700 hover:bg-emerald-50 transition-colors"
               onClick={() => setOpen(false)}
               data-track-event="nav_call_click"
               data-track-location="mobile_menu"
             >
-              <span aria-hidden="true">📞</span> Call 01202 129746
+              <span aria-hidden="true">📞</span> Call 07909 032889
             </a>
           </li>
         </ul>

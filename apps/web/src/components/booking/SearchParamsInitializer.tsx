@@ -3,7 +3,7 @@
 import { useEffect, useRef } from "react";
 import { useSearchParams } from "next/navigation";
 import { useBooking } from "@/lib/booking-store";
-import { SERVICES } from "@/lib/services";
+import { SERVICES, getBookableService } from "@/lib/services";
 
 /**
  * Reads `?service=<slug>` from the URL on mount and pre-selects that service,
@@ -28,8 +28,14 @@ export function SearchParamsInitializer() {
     const match = SERVICES.find((s) => s.slug === slug);
     if (!match) return;
 
+    const bookableService = getBookableService(match);
+
     ran.current = true;
-    dispatch({ type: "SET_SERVICE", slug: match.slug, name: match.name });
+    dispatch({
+      type: "SET_SERVICE",
+      slug: bookableService.slug,
+      name: bookableService.name,
+    });
     dispatch({ type: "SET_STEP", step: 2 });
   }, [searchParams, state.serviceSlug, dispatch]);
 

@@ -70,7 +70,7 @@ export const AREAS: Area[] = [
     postcode: "PA1–PA3",
     headline: "Man and Van in Paisley",
     description:
-      "Paisley's mix of tenement flats and modern housing estates makes it one of the busiest areas for our Renfrewshire team. Fast, affordable, and locally trusted.",
+      "Paisley's mix of tenement flats and modern housing estates makes it one of the busiest areas for our Renfrewshire team. Local moves, furniture deliveries, and flat moves can be planned around access and parking.",
     highlights: [
       "Town centre and Foxbar coverage",
       "Close links to Glasgow Airport corridor",
@@ -78,7 +78,7 @@ export const AREAS: Area[] = [
     ],
     nearbyAreas: ["glasgow", "glasgow-west-end", "johnstone", "renfrew"],
     metaDescription:
-      "Trusted man and van hire in Paisley. Affordable local removals and deliveries across Renfrewshire.",
+      "Man and van services in Paisley for local removals, flat moves and furniture deliveries across Renfrewshire.",
   },
   // ── Edinburgh & Lothians ──────────────────────────────────────────────────
   {
@@ -96,7 +96,7 @@ export const AREAS: Area[] = [
     ],
     nearbyAreas: ["edinburgh-leith", "edinburgh-south", "livingston", "glasgow"],
     metaDescription:
-      "Trusted man and van services in Edinburgh. Tenement flat specialists, New Town expertise, and same-day availability.",
+      "Man and van services in Edinburgh for tenement flats, New Town moves, furniture delivery and same-day enquiries.",
   },
   {
     slug: "edinburgh-leith",
@@ -178,7 +178,7 @@ export const AREAS: Area[] = [
     highlights: [
       "Riverside and town centre coverage",
       "Cross-Scotland removal routes",
-      "Flexible same-day slots available",
+      "Flexible booking enquiries",
     ],
     nearbyAreas: ["dundee", "stirling", "st-andrews", "pitlochry"],
     metaDescription:
@@ -216,7 +216,7 @@ export const AREAS: Area[] = [
     ],
     nearbyAreas: ["kirkcaldy", "edinburgh", "livingston", "alloa"],
     metaDescription:
-      "Trusted man and van hire in Dunfermline. West Fife removals and delivery across all postcodes.",
+      "Man and van services in Dunfermline for West Fife removals, furniture delivery and local moving support.",
   },
   {
     slug: "st-andrews",
@@ -286,7 +286,7 @@ export const AREAS: Area[] = [
     ],
     nearbyAreas: ["fort-william", "aviemore", "nairn", "dingwall"],
     metaDescription:
-      "Trusted man and van hire in Inverness. Highland capital specialists, city and rural coverage. Free quote.",
+      "Man and van services in Inverness for city moves, rural routes, furniture delivery and Highland removals.",
   },
   {
     slug: "fort-william",
@@ -372,7 +372,7 @@ export const AREAS: Area[] = [
     ],
     nearbyAreas: ["glasgow", "hamilton", "glasgow-southside", "strathaven"],
     metaDescription:
-      "Trusted man and van hire in East Kilbride. Full EK coverage and fast Glasgow links. Book online today.",
+      "Man and van services in East Kilbride with EK coverage, Glasgow links and online quote options.",
   },
   {
     slug: "motherwell",
@@ -424,7 +424,7 @@ export const AREAS: Area[] = [
     ],
     nearbyAreas: ["ayr", "glasgow", "irvine", "cumnock"],
     metaDescription:
-      "Trusted man and van hire in Kilmarnock. East Ayrshire removals and deliveries. Free instant quote.",
+      "Man and van services in Kilmarnock for East Ayrshire removals, furniture delivery and local moves.",
   },
   {
     slug: "oban",
@@ -476,7 +476,7 @@ export const AREAS: Area[] = [
     ],
     nearbyAreas: ["edinburgh", "hawick", "jedburgh", "peebles"],
     metaDescription:
-      "Trusted man and van hire in Galashiels and the Scottish Borders. Edinburgh and rural routes covered.",
+      "Man and van services in Galashiels and the Scottish Borders for local, rural and Edinburgh-linked routes.",
   },
 ];
 

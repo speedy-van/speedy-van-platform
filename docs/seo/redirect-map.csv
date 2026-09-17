@@ -1,0 +1,5 @@
+source_host,target_host,status,path_query_preserved,implemented_in
+speedyvan.uk,www.speedyvan.uk,308,yes,apps/web/src/middleware.ts
+speedy-van.co.uk,www.speedyvan.uk,308,yes,apps/web/src/middleware.ts
+www.speedy-van.co.uk,www.speedyvan.uk,308,yes,apps/web/src/middleware.ts
+www.speedyvan.uk,www.speedyvan.uk,none,n/a,primary host

@@ -1,0 +1,13 @@
+keyword,uk_monthly_search_volume,competition,canonical_url,implementation_note
+man with a van,18100,HIGH,/services/man-and-van,Primary synonym covered in service copy
+man and van,9900,HIGH,/services/man-and-van,Primary canonical page and homepage H1
+van and man,9900,HIGH,/services/man-and-van,Synonym mapped to same canonical page
+same day delivery,9900,HIGH,/services/same-day-delivery,Kept as delivery intent, not home-move intent
+house removals,3600,MEDIUM,/services/house-removal,Expanded to full-house and whole-home removals
+furniture removals,880,MEDIUM,/services/furniture-delivery,Expanded to collection and delivery intent
+office removals,390,LOW,/services/office-removal,Expanded to business and commercial relocation
+long distance removals,210,MEDIUM,/services/long-distance-removals,New canonical page for intercity transport
+student moves,140,HIGH,/services/student-move,Student halls/shared-flat coverage retained
+furniture collection and delivery,110,HIGH,/services/furniture-delivery,Synonym mapped to furniture delivery page
+flat removals,90,MEDIUM,/services/flat-removals,New canonical page for flats/apartments/studios
+small moves,90,MEDIUM,/services/small-moves,New canonical page for small/partial/bulky-item moves

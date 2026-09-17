@@ -7,40 +7,27 @@ import { AREAS } from "@/lib/areas";
 import { InstantQuoteCalculator } from "@/components/InstantQuoteCalculator";
 import { PostcodeCheck } from "@/components/PostcodeCheck";
 import { LiveAvailability } from "@/components/LiveAvailability";
-import { TestimonialsCarousel } from "@/components/TestimonialsCarousel";
 import { ServiceComparison } from "@/components/ServiceComparison";
 import { FaqSearch } from "@/components/FaqSearch";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { buildLocalBusinessSchema, buildFaqSchema } from "@/lib/seo/schemas";
 import TypingHeroHeading from "@/components/TypingHeroHeading";
+import { SITE_OG_IMAGE, SITE_URL } from "@/lib/seo/constants";
 
 export const metadata: Metadata = {
   title: "SpeedyVan | Man and Van, Removals & Delivery Across Scotland",
   description:
-    "Scotland's trusted man and van service. House moves, office relocations, and furniture deliveries across Glasgow, Edinburgh, Dundee, Aberdeen, and beyond. Fixed prices, fully insured, book online in minutes.",
-  keywords: [
-    "man and van Scotland",
-    "removals Glasgow",
-    "removals Edinburgh",
-    "removals Dundee",
-    "removals Aberdeen",
-    "removal company Scotland",
-    "man with van Glasgow",
-    "man with van Edinburgh",
-    "house removal Scotland",
-    "office removals Scotland",
-    "furniture delivery Scotland",
-    "van hire Scotland",
-  ],
+    "Man and van, removals, office moves and furniture delivery across Glasgow, Edinburgh, Dundee, Aberdeen and beyond. Fixed prices and online booking.",
+  alternates: { canonical: SITE_URL },
   openGraph: {
     title: "SpeedyVan | Man and Van & Removals Across Scotland",
     description:
-      "Scotland's trusted man and van service. House moves, office relocations, and furniture deliveries across Glasgow, Edinburgh, Dundee, Aberdeen, Stirling, and beyond. Fixed prices, fully insured.",
+      "Man and van, removals, office moves and furniture delivery across Scotland with online quotes and booking.",
     type: "website",
-    url: "https://speedyvan.uk",
+    url: SITE_URL,
     images: [
       {
-        url: "https://speedyvan.uk/og-image.jpg",
+        url: SITE_OG_IMAGE,
         width: 1200,
         height: 630,
         alt: "SpeedyVan – Man and Van & Removals Across Scotland",
@@ -52,10 +39,10 @@ export const metadata: Metadata = {
 // ─── Static data ──────────────────────────────────────────────────────────────
 
 const TRUST_STATS = [
-  { value: "4.9", label: "Customer rating", suffix: "★" },
-  { value: "1,000+", label: "Successful moves" },
-  { value: "27+", label: "Scottish towns covered" },
-  { value: "100%", label: "Fully insured" },
+  { value: "Online", label: "Instant quote flow" },
+  { value: "Scotland", label: "Service coverage" },
+  { value: "Cover", label: "Goods in transit" },
+  { value: "7 days", label: "Availability planning" },
 ];
 
 const HOW_IT_WORKS = [
@@ -93,7 +80,7 @@ const PRICING_TIERS = [
     icon: "🚐",
     capacity: "2–3 rooms",
     price: 55,
-    features: ["Up to 350 cubic ft", "2 people included", "Great for flat moves", "Most popular choice"],
+    features: ["Up to 350 cubic ft", "2 people included", "Great for flat moves", "Useful for busy access"],
     popular: true,
   },
   {
@@ -114,34 +101,28 @@ const PRICING_TIERS = [
   },
 ];
 
-const TESTIMONIALS = [
+const money = new Intl.NumberFormat("en-GB", {
+  style: "currency",
+  currency: "GBP",
+  maximumFractionDigits: 0,
+});
+
+const MOVE_DECISION_POINTS = [
   {
-    name: "Sarah T.",
-    location: "Glasgow West End",
-    rating: 5,
-    text: "Absolutely brilliant service! The driver arrived 10 minutes early, was dead careful with all my belongings, and even helped reassemble my bed frame. Will definitely use SpeedyVan again — moving in Glasgow has never been this easy.",
-    service: "House Removal",
+    title: "Access and parking",
+    body: "Tell us about stairs, lifts, loading bays, permits, narrow streets and long carrying distances before the quote is confirmed.",
   },
   {
-    name: "James R.",
-    location: "Edinburgh New Town",
-    rating: 5,
-    text: "Used SpeedyVan for an office relocation over the weekend. Everything went smoothly — out on Saturday evening, back at desks Monday morning. Highly recommend for business moves in Edinburgh.",
-    service: "Office Removal",
+    title: "Load size",
+    body: "A few boxes, a studio, a full house and an office move need different van and crew planning. Photos help with bulky items.",
   },
   {
-    name: "Caitlin M.",
-    location: "Dundee Waterfront",
-    rating: 5,
-    text: "Booked same-day for an IKEA collection and assembly. The team built my entire bedroom in two hours. Incredible value — no flat-pack stress. Five stars from Dundee!",
-    service: "IKEA Delivery & Assembly",
+    title: "Timing",
+    body: "Weekend, month-end, same-day and long-distance moves need more planning than flexible weekday jobs.",
   },
   {
-    name: "Tom W.",
-    location: "Hamilton, Lanarkshire",
-    rating: 5,
-    text: "Moved from Hamilton to Aberdeen — a long way, but SpeedyVan handled it perfectly. Everything arrived in exactly the same condition as it left. Great communication throughout the whole journey.",
-    service: "House Removal",
+    title: "Service fit",
+    body: "Man and van suits small moves; house removals fit full homes; furniture delivery is best for single bulky items.",
   },
 ];
 
@@ -149,7 +130,7 @@ const FAQS = [
   {
     question: "How do I get a quote?",
     answer:
-      "Click 'Book Now' above and fill in your move details. You'll receive an instant price online. For complex or larger moves, call us on 01202 129746 and we'll prepare a detailed quote within the hour.",
+      "Click 'Book Now' above and fill in your move details. You'll receive an instant price online. For complex or larger moves, call us on 07909 032889 and we'll prepare a detailed quote within the hour.",
   },
   {
     question: "How far in advance do I need to book?",
@@ -243,20 +224,21 @@ export default function HomePage() {
 
             <p className="hero-fade-up hero-fade-up-3 mt-4 sm:mt-6 text-base sm:text-xl text-slate-300 leading-relaxed max-w-2xl">
               House moves, office removals, single items, furniture delivery and
-              same-day transport — from £45/hr. Fixed prices available. Fully insured.
+              same-day transport — from {money.format(45)}/hr. Fixed prices
+              available. Goods-in-transit cover included as standard.
             </p>
 
             {/* Urgency badge */}
             <div className="hero-fade-up hero-fade-up-4 mt-6 sm:mt-10 mb-3 inline-flex items-center gap-2 rounded-full bg-emerald-500/15 border border-emerald-400/40 px-3 py-1.5 text-[11px] sm:text-xs font-bold uppercase tracking-wide text-emerald-300 urgency-pulse">
               <span className="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-pulse" aria-hidden="true" />
-              Available now · Same-day service
+              Same-day enquiries · Capacity checked before confirmation
             </div>
 
             <div id="get-quote" className="hero-fade-up hero-fade-up-4 flex flex-col sm:flex-row sm:items-start gap-3 sm:gap-4">
               {/* Primary: Call now */}
               <div className="flex flex-col">
                 <a
-                  href="tel:01202129746"
+                  href="tel:07909032889"
                   data-track-event="call_click"
                   data-track-location="hero_primary"
                   className="cta-pulse inline-flex items-center justify-center gap-2 rounded-lg bg-primary-400 px-7 sm:px-9 py-4 sm:py-5 text-lg sm:text-xl font-extrabold text-slate-900 shadow-lg shadow-primary-400/20 transition-colors hover:bg-primary-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900"
@@ -264,11 +246,11 @@ export default function HomePage() {
                   <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                   </svg>
-                  Call Now 01202 129746
+                  Call Now 07909 032889
                 </a>
                 <span className="mt-2 inline-flex items-center gap-2 self-center sm:self-start rounded-full bg-slate-900/60 ring-1 ring-primary-400/40 px-3 py-1 text-xs font-semibold text-white shadow-sm">
                   <span className="inline-flex items-center rounded-md bg-primary-400 text-slate-900 px-2 py-0.5 text-[11px] font-extrabold">
-                    From £45
+                    From {money.format(45)}
                   </span>
                   <span className="text-slate-100">Instant quote on call</span>
                 </span>
@@ -302,10 +284,10 @@ export default function HomePage() {
               aria-label="Trust signals"
             >
               {[
-                "⭐ 4.9/5 Rating",
-                "1,000+ Moves",
-                "Fully Insured",
-                "30+ Scottish Towns",
+                "Online Quotes",
+                "Scottish Coverage",
+                "Goods-in-Transit Cover",
+                "Homes, Flats & Offices",
               ].map((badge, i) => (
                 <li
                   key={badge}
@@ -333,7 +315,7 @@ export default function HomePage() {
       </section>
 
       {/* ── Trust bar ─────────────────────────────────────────────────────── */}
-      <section className="bg-primary-400 relative z-10" aria-label="Trust statistics">
+      <section className="bg-primary-400 relative z-10" aria-label="Service highlights">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <ul
             className="grid grid-cols-2 md:grid-cols-4 gap-y-5 md:gap-y-0"
@@ -350,14 +332,6 @@ export default function HomePage() {
               >
                 <span className="flex items-baseline justify-center gap-1 text-3xl md:text-4xl font-extrabold text-slate-900 leading-none tracking-tight tabular-nums">
                   {stat.value}
-                  {stat.suffix && (
-                    <span
-                      aria-hidden="true"
-                      className="text-2xl md:text-3xl text-slate-900 inline-block animate-spin [animation-duration:4s]"
-                    >
-                      {stat.suffix}
-                    </span>
-                  )}
                 </span>
                 <span className="mt-1.5 text-[11px] sm:text-xs font-semibold uppercase tracking-wider text-slate-800/80">
                   {stat.label}
@@ -392,13 +366,13 @@ export default function HomePage() {
             className="reveal-stagger grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
             role="list"
           >
-            {SERVICES.map((service) => (
+            {SERVICES.filter((service) => service.indexable !== false).map((service) => (
               <li key={service.slug}>
                 <ServiceImageCard
                   slug={service.slug}
                   title={service.name}
                   description={service.description}
-                  price={`From £${service.startingFrom}`}
+                  price={`From ${money.format(service.startingFrom)}`}
                   imagePath={getServiceImage(service.slug)}
                   href={`/services/${service.slug}`}
                   variant="homepage"
@@ -414,7 +388,7 @@ export default function HomePage() {
                 <ServiceImageCard
                   slug="european-removals"
                   title="European Removals"
-                  description="Moving abroad? Door-to-door removals to 20+ European countries — fully insured, customs handled."
+                  description="Moving abroad? Door-to-door removals to Europe with packing options and paperwork support."
                   price="Get a free quote"
                   imagePath="/images/services/house-removal.jpg"
                   href="/services/european-removals"
@@ -572,7 +546,7 @@ export default function HomePage() {
                   {tier.capacity}
                 </p>
                 <div className="mt-4 mb-6">
-                  <span className="text-4xl font-extrabold">£{tier.price}</span>
+                  <span className="text-4xl font-extrabold">{money.format(tier.price)}</span>
                   <span className={`text-sm ${tier.popular ? "text-slate-700" : "text-slate-400"}`}>
                     /hr
                   </span>
@@ -626,88 +600,29 @@ export default function HomePage() {
       {/* ── Service comparison ─────────────────────────────────────────── */}
       <ServiceComparison />
 
-      {/* ── Testimonials ──────────────────────────────────────────────────── */}
-      <section
-        className="py-20 bg-white"
-        aria-labelledby="testimonials-heading"
-      >
+      {/* ── Move planning ─────────────────────────────────────────────────── */}
+      <section className="py-20 bg-white" aria-labelledby="planning-heading">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 id="testimonials-heading" className="section-heading">
-              Trusted by Thousands
+            <h2 id="planning-heading" className="section-heading">
+              What Makes a Quote Accurate?
             </h2>
             <p className="section-subheading mx-auto">
-              Don&apos;t just take our word for it. Here&apos;s what real SpeedyVan
-              customers have to say.
+              A better quote starts with the details that change the work on
+              move day.
             </p>
           </div>
 
-          <TestimonialsCarousel items={TESTIMONIALS} />
-
-          {/* Verified-reviews credibility row */}
-          <div className="mt-10 flex flex-col items-center gap-3 text-center">
-            <div className="inline-flex items-center gap-3 rounded-full border border-slate-200 bg-slate-50 px-4 py-2">
-              <span className="text-xs font-medium text-slate-600">
-                Verified reviews on
-              </span>
-              <a
-                href="https://g.page/speedyvan/review"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 text-sm font-semibold text-slate-900 hover:text-primary-600 transition-colors"
-                aria-label="Read SpeedyVan reviews on Google"
-              >
-                <svg
-                  className="w-4 h-4"
-                  viewBox="0 0 48 48"
-                  aria-hidden="true"
-                >
-                  <path
-                    fill="#EA4335"
-                    d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"
-                  />
-                  <path
-                    fill="#4285F4"
-                    d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"
-                  />
-                  <path
-                    fill="#FBBC05"
-                    d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"
-                  />
-                  <path
-                    fill="#34A853"
-                    d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"
-                  />
-                </svg>
-                Google Reviews
-                <svg
-                  className="w-3.5 h-3.5 opacity-60"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  aria-hidden="true"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M14 5l7 7m0 0l-7 7m7-7H3"
-                  />
-                </svg>
-              </a>
-            </div>
-            <p className="text-sm text-slate-600">
-              Had a great experience?{" "}
-              <a
-                href="https://g.page/speedyvan/review"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="font-semibold text-primary-600 hover:text-primary-700 underline-offset-2 hover:underline"
-              >
-                Leave us a review →
-              </a>
-            </p>
-          </div>
+          <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5" role="list">
+            {MOVE_DECISION_POINTS.map((point) => (
+              <li key={point.title} className="rounded-xl border border-slate-200 bg-slate-50 p-5">
+                <h3 className="font-bold text-slate-900">{point.title}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-slate-600">
+                  {point.body}
+                </p>
+              </li>
+            ))}
+          </ul>
         </div>
       </section>
 
@@ -738,12 +653,12 @@ export default function HomePage() {
             Ready for a Stress-Free Move?
           </h2>
           <p className="mt-4 text-lg text-slate-700 max-w-2xl mx-auto">
-            Join over 1,000 satisfied customers. Get your free, no-obligation
-            quote in minutes.
+            Get a free, no-obligation quote for a local move, full-house
+            removal, furniture delivery, or office relocation.
           </p>
           <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
             <a
-              href="tel:01202129746"
+              href="tel:07909032889"
               data-track-event="call_click"
               data-track-location="footer_cta"
               className="inline-flex items-center justify-center gap-2 rounded-lg bg-slate-900 px-8 py-4 font-bold text-white text-base hover:bg-slate-800 transition-colors"
@@ -751,15 +666,15 @@ export default function HomePage() {
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
               </svg>
-              01202 129746
+              07909 032889
             </a>
             <a
-              href="mailto:hello@speedyvan.co.uk"
+              href="mailto:hello@speedyvan.uk"
               data-track-event="email_click"
               data-track-location="footer_cta"
               className="inline-flex items-center justify-center gap-2 rounded-lg border-2 border-slate-900 px-8 py-4 font-bold text-slate-900 text-base hover:bg-slate-900 hover:text-white transition-colors"
             >
-              hello@speedyvan.co.uk
+              hello@speedyvan.uk
             </a>
           </div>
         </div>

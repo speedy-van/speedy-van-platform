@@ -7,7 +7,10 @@ import Link from "next/link";
 // Per-service CSS gradient fallbacks used when the image fails to load.
 const GRADIENT_FALLBACKS: Record<string, string> = {
   "man-and-van":        "from-[#1e3a5f] to-[#2d5f8a]",
+  "flat-removals":      "from-[#283852] to-[#3f628a]",
+  "small-moves":        "from-[#24515c] to-[#3f7b86]",
   "house-removal":      "from-[#2d4a2a] to-[#4a7a44]",
+  "long-distance-removals": "from-[#34354f] to-[#59618d]",
   "office-removal":     "from-[#3a3a5c] to-[#5a5a8a]",
   "student-move":       "from-[#5c3a1e] to-[#8a6a3d]",
   "furniture-delivery": "from-[#1e4a5c] to-[#3a7a8a]",

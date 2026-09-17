@@ -109,8 +109,8 @@ export function LocationPersonalization() {
 
   const title =
     slug && location !== "Scotland"
-      ? `Serving ${location} today — same-day slots available`
-      : `Serving ${location} — same-day slots available`;
+      ? `Serving ${location} today — same-day enquiries reviewed`
+      : `Serving ${location} — same-day enquiries reviewed`;
   const href = slug ? `/areas/${slug}` : "/book";
 
   return (

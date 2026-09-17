@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { SERVICES, getServiceBySlug } from "@/lib/services";
+import { SERVICES, getBookableService, getServiceBySlug } from "@/lib/services";
 import { AREAS } from "@/lib/areas";
 import { JsonLd } from "@/components/seo/JsonLd";
 import {
@@ -9,13 +9,17 @@ import {
   buildServiceSchema,
 } from "@/lib/seo/schemas";
 import { WhatsAppPhotoQuoteButton } from "@/components/WhatsAppPhotoQuoteButton";
-
-const SITE_URL = "https://speedyvan.uk";
-const OG_IMAGE = `${SITE_URL}/og-image.jpg`;
+import { SITE_OG_IMAGE, absoluteUrl } from "@/lib/seo/constants";
 
 interface Props {
   params: { slug: string };
 }
+
+const money = new Intl.NumberFormat("en-GB", {
+  style: "currency",
+  currency: "GBP",
+  maximumFractionDigits: 0,
+});
 
 export function generateStaticParams() {
   return SERVICES.map((service) => ({ slug: service.slug }));
@@ -25,11 +29,15 @@ export function generateMetadata({ params }: Props): Metadata {
   const service = getServiceBySlug(params.slug);
   if (!service) return { title: "Service Not Found" };
 
-  const canonical = `${SITE_URL}/services/${params.slug}`;
+  const canonical = absoluteUrl(`/services/${params.slug}`);
 
   return {
     title: `${service.name} | SpeedyVan`,
     description: service.metaDescription,
+    robots:
+      service.indexable === false
+        ? { index: false, follow: true }
+        : { index: true, follow: true },
     alternates: {
       canonical,
     },
@@ -39,7 +47,7 @@ export function generateMetadata({ params }: Props): Metadata {
       url: canonical,
       images: [
         {
-          url: OG_IMAGE,
+          url: SITE_OG_IMAGE,
           width: 1200,
           height: 630,
           alt: `${service.name} – SpeedyVan`,
@@ -50,7 +58,7 @@ export function generateMetadata({ params }: Props): Metadata {
       card: "summary_large_image",
       title: `${service.name} | SpeedyVan`,
       description: service.metaDescription,
-      images: [OG_IMAGE],
+      images: [SITE_OG_IMAGE],
     },
   };
 }
@@ -59,9 +67,11 @@ export default function ServicePage({ params }: Props) {
   const service = getServiceBySlug(params.slug);
   if (!service) notFound();
 
-  // Show a selection of areas (first 10) for cross-linking
+  const bookableService = getBookableService(service);
+  const bookingSlug = bookableService.slug;
+  const bookingName = bookableService.name;
   const featuredAreas = AREAS.slice(0, 10);
-  const canonical = `${SITE_URL}/services/${params.slug}`;
+  const canonical = absoluteUrl(`/services/${params.slug}`);
 
   return (
     <>
@@ -73,7 +83,12 @@ export default function ServicePage({ params }: Props) {
             { name: "Services", url: "/#services" },
             { name: service.name, url: `/services/${params.slug}` },
           ]),
-          buildServiceSchema(service.name, service.metaDescription, canonical),
+          buildServiceSchema(
+            service.name,
+            service.metaDescription,
+            canonical,
+            service.startingFrom
+          ),
         ]}
       />
       {/* Hero */}
@@ -114,13 +129,13 @@ export default function ServicePage({ params }: Props) {
             </p>
             <div className="mt-8 flex flex-wrap items-center gap-3">
               <Link
-                href={`/book?service=${params.slug}`}
+                href={`/book?service=${bookingSlug}`}
                 className="btn-primary text-base px-8 py-4"
               >
-                Book {service.name} Online
+                Book {bookingName} Online
               </Link>
               <a
-                href="tel:01202129746"
+                href="tel:07909032889"
                 className="inline-flex items-center justify-center gap-2 rounded-lg border border-white/30 px-5 py-4 text-sm font-semibold text-slate-200 transition-colors hover:bg-white/5 hover:text-white focus-visible:outline-none"
               >
                 📞 Call for quote
@@ -128,7 +143,7 @@ export default function ServicePage({ params }: Props) {
               <p className="w-full sm:w-auto text-slate-400 text-sm">
                 From{" "}
                 <span className="text-white font-bold text-xl">
-                  £{service.startingFrom}
+                  {money.format(service.startingFrom)}
                 </span>
               </p>
             </div>
@@ -184,13 +199,13 @@ export default function ServicePage({ params }: Props) {
                   Starting from
                 </p>
                 <p className="text-4xl font-extrabold text-slate-900">
-                  £{service.startingFrom}
+                  {money.format(service.startingFrom)}
                 </p>
                 <p className="text-slate-600 text-sm mt-1">
                   Transparent pricing · No hidden fees
                 </p>
                 <Link
-                  href={`/book?service=${params.slug}`}
+                  href={`/book?service=${bookingSlug}`}
                   className="mt-4 btn-primary w-full text-center block"
                 >
                   Book Online Now
@@ -272,7 +287,9 @@ export default function ServicePage({ params }: Props) {
             Other Services
           </h2>
           <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4" role="list">
-            {SERVICES.filter((s) => s.slug !== service.slug).map((other) => (
+            {SERVICES.filter(
+              (s) => s.slug !== service.slug && s.indexable !== false
+            ).map((other) => (
               <li key={other.slug}>
                 <Link
                   href={`/services/${other.slug}`}
@@ -300,16 +317,16 @@ export default function ServicePage({ params }: Props) {
           </p>
           <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
             <Link
-              href={`/book?service=${params.slug}`}
+              href={`/book?service=${bookingSlug}`}
               className="inline-flex items-center justify-center gap-2 rounded-lg bg-slate-900 px-8 py-4 font-bold text-white hover:bg-slate-800 transition-colors"
             >
-              Book {service.name} Online
+              Book {bookingName} Online
             </Link>
             <a
-              href="tel:01202129746"
+              href="tel:07909032889"
               className="btn-secondary border-slate-900 text-slate-900 px-8 py-4"
             >
-              📞 01202 129746
+              📞 07909 032889
             </a>
           </div>
         </div>

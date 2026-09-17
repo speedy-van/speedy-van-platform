@@ -1,7 +1,7 @@
 {
   "name": "SpeedyVan – Man and Van Scotland",
   "short_name": "SpeedyVan",
-  "description": "Scotland's trusted man and van service. Book online in minutes.",
+  "description": "Man and van, removals and furniture delivery across Scotland. Book online in minutes.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",

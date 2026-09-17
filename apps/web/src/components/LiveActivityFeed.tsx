@@ -3,18 +3,15 @@
 import { useEffect, useState } from "react";
 
 /**
- * Live activity indicator — small bottom-left toast.
- * Cycles through realistic-looking messages to build social proof.
+ * Small bottom-left moving tip.
  * Lightweight: no network calls, pure client-side rotation.
  */
 const MESSAGES: { text: string; icon: string }[] = [
-  { text: "Sarah just booked a move in Glasgow", icon: "📦" },
-  { text: "2 bookings in the last hour", icon: "🔥" },
-  { text: "Driver available near Edinburgh", icon: "🚐" },
-  { text: "James got a quote for Aberdeen", icon: "💬" },
-  { text: "Same-day slot opened in Dundee", icon: "⚡" },
-  { text: "5-star review from Rachel · Stirling", icon: "⭐" },
-  { text: "3 vans on the road right now", icon: "🛣️" },
+  { text: "Add stair and parking notes before booking", icon: "📦" },
+  { text: "Measure sofas, beds and wardrobes before collection", icon: "📏" },
+  { text: "Book early for weekend and month-end moves", icon: "📅" },
+  { text: "Use photos for bulky furniture quotes", icon: "🛋️" },
+  { text: "Long routes work best with a written quote", icon: "🛣️" },
 ];
 
 export function LiveActivityFeed() {

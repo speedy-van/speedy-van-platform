@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { GlobalProviders } from "@/components/layout/GlobalProviders";
 import { ServiceWorkerRegister } from "@/components/layout/ServiceWorkerRegister";
+import { SITE_OG_IMAGE, SITE_URL } from "@/lib/seo/constants";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -11,41 +12,21 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL(
-    process.env["NEXT_PUBLIC_BASE_URL"] ?? "https://speedyvan.uk"
-  ),
+  metadataBase: new URL(process.env["NEXT_PUBLIC_BASE_URL"] ?? SITE_URL),
   title: {
     default: "SpeedyVan | Man and Van & Removals Across Scotland",
     template: "%s | SpeedyVan Scotland",
   },
   description:
-    "Scotland's trusted man and van service. House moves, office relocations, and furniture deliveries across Glasgow, Edinburgh, Dundee, Aberdeen, Stirling, Inverness, and beyond. Fixed prices, fully insured, book online in minutes.",
-  keywords: [
-    "man and van Scotland",
-    "removals Scotland",
-    "removal company Scotland",
-    "man with van Glasgow",
-    "man with van Edinburgh",
-    "removals Glasgow",
-    "removals Edinburgh",
-    "removals Dundee",
-    "removals Aberdeen",
-    "removals Inverness",
-    "house removal Scotland",
-    "office removals Scotland",
-    "furniture delivery Scotland",
-    "van hire Scotland",
-    "moving company Scotland",
-    "Scottish removals",
-  ],
+    "Man and van, removals, office moves and furniture delivery across Glasgow, Edinburgh, Dundee, Aberdeen, Stirling, Inverness and beyond. Fixed prices and online booking.",
   openGraph: {
     type: "website",
     siteName: "SpeedyVan",
     locale: "en_GB",
-    url: "https://speedyvan.uk",
+    url: SITE_URL,
     images: [
       {
-        url: "https://speedyvan.uk/og-image.jpg",
+        url: SITE_OG_IMAGE,
         width: 1200,
         height: 630,
         alt: "SpeedyVan – Man and Van & Removals Across Scotland",
@@ -56,8 +37,8 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "SpeedyVan | Man and Van & Removals Across Scotland",
     description:
-      "Scotland's trusted man and van service. House moves, office relocations, and furniture deliveries across Glasgow, Edinburgh, Dundee, Aberdeen, and beyond.",
-    images: ["https://speedyvan.uk/og-image.jpg"],
+      "Man and van, removals, office moves and furniture delivery across Scotland with online quotes and booking.",
+    images: [SITE_OG_IMAGE],
   },
   robots: {
     index: true,
@@ -68,7 +49,7 @@ export const metadata: Metadata = {
     },
   },
   alternates: {
-    canonical: "https://speedyvan.uk",
+    canonical: SITE_URL,
   },
   manifest: "/manifest.json",
   icons: {
