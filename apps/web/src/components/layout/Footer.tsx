@@ -6,7 +6,7 @@ import { AREAS } from "@/lib/areas";
 const QUICK_LINKS = [
   { href: "/auth/login", label: "Log in" },
   { href: "/#how-it-works", label: "How it works" },
-  { href: "/#pricing", label: "Pricing" },
+  { href: "/pricing", label: "Pricing" },
   { href: "/#faq", label: "FAQ" },
 ];
 
@@ -21,9 +21,9 @@ export function Footer() {
           <div className="lg:col-span-1">
             <Logo variant="mono" />
             <p className="mt-4 text-sm text-slate-400 leading-relaxed">
-              Scotland&rsquo;s trusted man and van service — covering 27+ towns
-              and cities. Professional drivers, transparent pricing, and no
-              nasty surprises.
+              Man and van, removals and furniture delivery across Scotland.
+              Online quotes, transparent pricing, and job details checked
+              before dispatch.
             </p>
             <div className="mt-6 flex gap-4">
               <a
@@ -58,7 +58,7 @@ export function Footer() {
                 </svg>
               </a>
               <a
-                href="https://wa.me/message/J6EO772GDPHFO1"
+                href="https://wa.me/447909032889"
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Chat with SpeedyVan on WhatsApp"
@@ -77,7 +77,7 @@ export function Footer() {
               Services
             </h3>
             <ul className="space-y-2" role="list">
-              {SERVICES.map((service) => (
+              {SERVICES.filter((service) => service.indexable !== false).map((service) => (
                 <li key={service.slug}>
                   <Link
                     href={`/services/${service.slug}`}
@@ -139,16 +139,16 @@ export function Footer() {
                 Contact
               </p>
               <a
-                href="tel:01202129746"
+                href="tel:07909032889"
                 className="text-sm text-slate-400 hover:text-white transition-colors block"
               >
-                01202 129746
+                07909 032889
               </a>
               <a
-                href="mailto:hello@speedyvan.co.uk"
+                href="mailto:hello@speedyvan.uk"
                 className="text-sm text-slate-400 hover:text-white transition-colors block"
               >
-                hello@speedyvan.co.uk
+                hello@speedyvan.uk
               </a>
             </div>
           </div>

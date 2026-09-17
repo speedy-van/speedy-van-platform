@@ -6,17 +6,24 @@ import {
   EUROPEAN_COUNTRIES,
   INDICATIVE_PRICES,
 } from "@/lib/european";
+import { SITE_LEGAL_NAME, SITE_URL, absoluteUrl } from "@/lib/seo/constants";
+
+const money = new Intl.NumberFormat("en-GB", {
+  style: "currency",
+  currency: "GBP",
+  maximumFractionDigits: 0,
+});
 
 export const metadata: Metadata = {
   title: "European Removals from Scotland | Speedy Van",
   description:
-    "Door-to-door European removals from Scotland to France, Germany, Spain, Netherlands, Ireland and 15+ more countries. Full packing, customs handled, fully insured. Get a free quote within 24 hours.",
-  alternates: { canonical: "https://www.speedy-van.co.uk/services/european-removals" },
+    "Door-to-door European removals from Scotland to France, Germany, Spain, Netherlands, Ireland and more. Packing options, customs paperwork support and written quotes.",
+  alternates: { canonical: absoluteUrl("/services/european-removals") },
   openGraph: {
     title: "European Removals from Scotland — Speedy Van",
     description:
-      "Door-to-door international moves to 20+ European countries. Full packing, customs handled, fully insured.",
-    url: "https://www.speedy-van.co.uk/services/european-removals",
+      "Door-to-door international moves from Scotland to Europe with packing options and customs paperwork support.",
+    url: absoluteUrl("/services/european-removals"),
     type: "website",
   },
 };
@@ -34,13 +41,13 @@ const FEATURES = [
   },
   {
     icon: "📋",
-    title: "Customs Handled",
-    body: "We handle all customs paperwork, declarations and post-Brexit documentation.",
+    title: "Customs Paperwork Support",
+    body: "We help plan the inventory and documentation needed for post-Brexit personal-effects moves.",
   },
   {
     icon: "🛡️",
-    title: "International Insurance",
-    body: "Comprehensive goods-in-transit cover for the full journey, every kilometre.",
+    title: "Cover Confirmed in Writing",
+    body: "Insurance and declared-value requirements are confirmed as part of the written quote.",
   },
   {
     icon: "🇪🇺",
@@ -62,8 +69,8 @@ const STEPS = [
   },
   {
     n: 2,
-    title: "Get a free fixed-price quote",
-    body: "We'll review your details and email a detailed, transparent quote within 24 hours.",
+    title: "Get a written quote",
+    body: "We'll review your details and send a clear quote covering route, volume, timing and any extra support.",
   },
   {
     n: 3,
@@ -84,11 +91,11 @@ const FAQS = [
   },
   {
     q: "Do you handle customs paperwork after Brexit?",
-    a: "Yes. We complete all customs declarations, transit documents and the inventory paperwork required for personal effects entering the EU. You don't need to deal with customs forms yourself.",
+    a: "We help prepare the inventory and paperwork required for personal effects entering the EU. Requirements vary by country, so the exact support is confirmed in your quote.",
   },
   {
     q: "Is my stuff insured during the journey?",
-    a: "Every European move includes goods-in-transit insurance covering the full international journey. Higher-value items can be declared for additional cover — just mention them in your enquiry.",
+    a: "Cover depends on the route, carrier arrangement and declared value. Mention higher-value items in your enquiry so the quote can set out the available options.",
   },
   {
     q: "Can you move just a few items, not a full house?",
@@ -96,11 +103,11 @@ const FAQS = [
   },
   {
     q: "Do you offer storage if my new place isn't ready?",
-    a: "Yes — we offer short and long-term storage in the UK or at the destination. Tick the storage box on the enquiry form and we'll include it in your quote.",
+    a: "Storage can be included where available through the route plan. Tick the storage box on the enquiry form and we'll confirm options in your quote.",
   },
   {
     q: "What about pianos, motorbikes or other large items?",
-    a: "We move pianos, motorbikes, large artwork, antiques and oversized furniture across Europe regularly. Mention them in the notes and we'll plan the right equipment and crew.",
+    a: "Large or specialist items must be declared in the enquiry notes. We will confirm whether they can be moved safely, what equipment is needed, and whether extra cover is available.",
   },
 ];
 
@@ -111,11 +118,11 @@ export default function EuropeanRemovalsPage() {
       "@type": "Service",
       name: "European Removals from Scotland",
       description:
-        "Door-to-door international removals from Scotland to 20+ European countries with full packing, customs handling and insurance.",
+        "Door-to-door international removals from Scotland to Europe with packing options, customs paperwork support and written quotes.",
       provider: {
         "@type": "MovingCompany",
-        name: "Speedy Van",
-        url: "https://www.speedy-van.co.uk",
+        name: SITE_LEGAL_NAME,
+        url: SITE_URL,
       },
       areaServed: [
         { "@type": "Country", name: "France" },
@@ -159,7 +166,7 @@ export default function EuropeanRemovalsPage() {
           </h1>
           <p className="mt-6 text-lg sm:text-xl text-slate-300 max-w-3xl mx-auto">
             Door-to-door international moves to <strong className="text-white">20+ European countries</strong>.
-            Full packing, customs handled, fully insured — quoted in 24 hours.
+            Packing options, customs paperwork support and a written quote before you commit.
           </p>
           <div className="mt-8 flex flex-wrap justify-center gap-3">
             <Link
@@ -169,18 +176,18 @@ export default function EuropeanRemovalsPage() {
               Get a Free Quote ↓
             </Link>
             <a
-              href="tel:01202129746"
+              href="tel:07909032889"
               className="inline-flex items-center gap-2 rounded-lg border border-white/20 bg-white/5 px-7 py-4 text-base font-bold text-white backdrop-blur transition-colors hover:bg-white/10"
             >
-              📞 01202 129746
+              📞 07909 032889
             </a>
           </div>
           <div className="mt-10 grid grid-cols-2 sm:grid-cols-4 gap-4 max-w-3xl mx-auto text-center">
             {[
               { v: "20+", l: "Countries" },
-              { v: "24h", l: "Quote turnaround" },
-              { v: "100%", l: "Insured" },
-              { v: "10+", l: "Years experience" },
+              { v: "Quote", l: "In writing" },
+              { v: "Cover", l: "Confirmed by route" },
+              { v: "Door", l: "To door" },
             ].map((s) => (
               <div key={s.l} className="rounded-xl border border-white/10 bg-white/5 px-3 py-4 backdrop-blur">
                 <div className="text-2xl sm:text-3xl font-extrabold text-primary-300">{s.v}</div>
@@ -199,7 +206,8 @@ export default function EuropeanRemovalsPage() {
               Everything sorted, end-to-end
             </h2>
             <p className="mt-3 text-slate-600 max-w-2xl mx-auto">
-              From your Scottish doorstep to your new European home — we plan, pack, drive and clear customs.
+              From your Scottish doorstep to your new European home — we plan route, packing options,
+              paperwork and delivery timing.
             </p>
           </div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
@@ -281,7 +289,7 @@ export default function EuropeanRemovalsPage() {
             </h2>
             <p className="mt-3 text-slate-600">
               Starting prices for a typical 1-bedroom move. Your final quote depends on volume,
-              packing, customs and timing — sent within 24 hours of your enquiry.
+              packing, customs paperwork, access and timing.
             </p>
           </div>
           <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
@@ -297,7 +305,7 @@ export default function EuropeanRemovalsPage() {
                   <tr key={p.destination}>
                     <td className="px-5 py-3 font-semibold">{p.destination}</td>
                     <td className="px-5 py-3 text-right font-bold text-slate-900">
-                      £{p.fromPrice.toLocaleString()}
+                      {money.format(p.fromPrice)}
                     </td>
                   </tr>
                 ))}

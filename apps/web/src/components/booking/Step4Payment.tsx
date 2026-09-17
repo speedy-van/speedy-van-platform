@@ -19,7 +19,7 @@ const stripePromise = STRIPE_PK ? loadStripe(STRIPE_PK, { locale: "en-GB" }) : n
 const API_BASE =
   process.env.NODE_ENV === "development"
     ? "http://localhost:4000"
-    : (process.env.NEXT_PUBLIC_API_URL ?? "https://api.speedy-van.co.uk");
+    : (process.env.NEXT_PUBLIC_API_URL ?? "https://api.speedyvan.uk");
 
 const CARD_STYLE = {
   hidePostalCode: true,
@@ -368,9 +368,9 @@ function CheckoutForm({ onComplete }: CheckoutFormProps) {
         aria-label="Trust signals"
       >
         <li className="inline-flex items-center gap-1"><span aria-hidden="true">🔒</span> Secure Stripe payment</li>
-        <li className="inline-flex items-center gap-1"><span aria-hidden="true">🛡️</span> Fully insured</li>
+        <li className="inline-flex items-center gap-1"><span aria-hidden="true">🛡️</span> Goods-in-transit cover</li>
         <li className="inline-flex items-center gap-1"><span aria-hidden="true">↩️</span> Free cancellation up to 24h</li>
-        <li className="inline-flex items-center gap-1"><span aria-hidden="true">⭐</span> 4.9/5 from 1,000+ moves</li>
+        <li className="inline-flex items-center gap-1"><span aria-hidden="true">✓</span> Quote checked before dispatch</li>
       </ul>
 
       <button
@@ -421,14 +421,14 @@ function CheckoutForm({ onComplete }: CheckoutFormProps) {
             </div>
             <div className="mt-3 grid grid-cols-2 gap-2">
               <a
-                href="tel:01202129746"
+                href="tel:07909032889"
                 onClick={dismissHelper}
                 className="inline-flex items-center justify-center gap-2 rounded-xl bg-slate-900 text-white text-sm font-semibold py-3 hover:bg-slate-800"
               >
                 📞 Call us
               </a>
               <a
-                href="https://wa.me/message/J6EO772GDPHFO1"
+                href="https://wa.me/447909032889"
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={dismissHelper}

@@ -5,13 +5,17 @@ import { AREAS, getAreaBySlug } from "@/lib/areas";
 import { SERVICES } from "@/lib/services";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { buildBreadcrumbSchema } from "@/lib/seo/schemas";
-
-const SITE_URL = "https://speedyvan.uk";
-const OG_IMAGE = `${SITE_URL}/og-image.jpg`;
+import { SITE_LEGAL_NAME, SITE_OG_IMAGE, SITE_URL, absoluteUrl } from "@/lib/seo/constants";
 
 interface Props {
   params: { slug: string };
 }
+
+const money = new Intl.NumberFormat("en-GB", {
+  style: "currency",
+  currency: "GBP",
+  maximumFractionDigits: 0,
+});
 
 export function generateStaticParams() {
   return AREAS.map((area) => ({ slug: area.slug }));
@@ -21,7 +25,7 @@ export function generateMetadata({ params }: Props): Metadata {
   const area = getAreaBySlug(params.slug);
   if (!area) return { title: "Area Not Found" };
 
-  const canonical = `${SITE_URL}/areas/${params.slug}`;
+  const canonical = absoluteUrl(`/areas/${params.slug}`);
 
   return {
     title: `${area.headline} | SpeedyVan`,
@@ -35,7 +39,7 @@ export function generateMetadata({ params }: Props): Metadata {
       url: canonical,
       images: [
         {
-          url: OG_IMAGE,
+          url: SITE_OG_IMAGE,
           width: 1200,
           height: 630,
           alt: `${area.headline} – SpeedyVan`,
@@ -46,7 +50,7 @@ export function generateMetadata({ params }: Props): Metadata {
       card: "summary_large_image",
       title: `${area.headline} | SpeedyVan`,
       description: area.metaDescription,
-      images: [OG_IMAGE],
+      images: [SITE_OG_IMAGE],
     },
   };
 }
@@ -64,11 +68,36 @@ export default function AreaPage({ params }: Props) {
     <>
       <JsonLd
         id={`area-breadcrumb-${params.slug}`}
-        data={buildBreadcrumbSchema([
-          { name: "Home", url: "/" },
-          { name: "Areas", url: "/#areas" },
-          { name: area.name, url: `/areas/${params.slug}` },
-        ])}
+        data={[
+          buildBreadcrumbSchema([
+            { name: "Home", url: "/" },
+            { name: "Areas", url: "/#areas" },
+            { name: area.name, url: `/areas/${params.slug}` },
+          ]),
+          {
+            "@context": "https://schema.org",
+            "@type": "Service",
+            name: `${area.name} man and van and removals`,
+            description: area.metaDescription,
+            url: absoluteUrl(`/areas/${params.slug}`),
+            provider: {
+              "@type": "MovingCompany",
+              "@id": `${SITE_URL}/#organization`,
+              name: SITE_LEGAL_NAME,
+              url: SITE_URL,
+            },
+            areaServed: {
+              "@type": "AdministrativeArea",
+              name: area.name,
+              address: {
+                "@type": "PostalAddress",
+                postalCode: area.postcode,
+                addressRegion: area.region,
+                addressCountry: "GB",
+              },
+            },
+          },
+        ]}
       />
       {/* Hero */}
       <section className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white py-16 lg:py-24">
@@ -130,7 +159,7 @@ export default function AreaPage({ params }: Props) {
               ))}
             </div>
             <div className="mt-8">
-              <a href="tel:01202129746" className="btn-primary text-base px-8 py-4">
+              <a href="tel:07909032889" className="btn-primary text-base px-8 py-4">
                 Get a Quote for {area.name}
               </a>
             </div>
@@ -145,7 +174,7 @@ export default function AreaPage({ params }: Props) {
             Services Available in {area.name}
           </h2>
           <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4" role="list">
-            {SERVICES.map((service) => (
+            {SERVICES.filter((service) => service.indexable !== false).map((service) => (
               <li key={service.slug}>
                 <Link
                   href={`/services/${service.slug}`}
@@ -156,7 +185,9 @@ export default function AreaPage({ params }: Props) {
                     <p className="font-semibold text-sm text-slate-900 group-hover:text-primary-700 truncate">
                       {service.name}
                     </p>
-                    <p className="text-xs text-slate-500">From £{service.startingFrom}</p>
+                    <p className="text-xs text-slate-500">
+                      From {money.format(service.startingFrom)}
+                    </p>
                   </div>
                 </Link>
               </li>
@@ -174,33 +205,31 @@ export default function AreaPage({ params }: Props) {
             </h2>
             <div className="prose prose-slate max-w-none">
               <p className="text-slate-600 leading-relaxed mb-4">
-                SpeedyVan has been operating in {area.name} since 2018, building
-                a reputation for punctuality, care, and fair pricing. Our{" "}
-                local drivers
-                know every access restriction, parking rule, and loading bay in{" "}
-                {area.name}.
+                Moving in {area.name} works best when access is clear before
+                the van arrives. Tell us about stairs, lifts, parking limits,
+                loading bays, narrow streets, and any timed handover so we can
+                recommend the right vehicle, crew size, and time allowance.
               </p>
               <p className="text-slate-600 leading-relaxed mb-4">
                 Whether you&apos;re moving a single piece of furniture or
-                relocating your entire business, our {area.name} team brings the
-                same commitment to every job: professional equipment, insured
-                vehicles, and a friendly, hard-working crew.
+                relocating a full home or business, our {area.name} quote is
+                based on the real job details: volume, access, mileage, crew
+                time, parking, and any packing or dismantling support you need.
               </p>
               <p className="text-slate-600 leading-relaxed">
-                All SpeedyVan drivers in {area.name} are DBS-checked,
-                fully-insured, and trained in safe manual handling. Our vans are
-                maintained to the highest standard with regular safety checks.
+                You can start online for straightforward moves, or call the
+                team if the job has unusual access, heavy items, a long route,
+                or several collection and delivery points.
               </p>
             </div>
 
             <ul className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-4" role="list">
               {[
-                "DBS-checked, vetted drivers",
-                "Goods-in-transit insurance included",
-                "No hidden fees or surcharges",
-                "7-day availability, including bank holidays",
+                "Goods-in-transit cover included as standard",
+                "Clear quote before booking",
+                "Access and parking details checked",
                 "Same-day bookings when available",
-                "5-star rated on Google Reviews",
+                "Useful for homes, flats, furniture, and business moves",
               ].map((point) => (
                 <li key={point} className="flex items-center gap-3 text-slate-700">
                   <svg
@@ -257,13 +286,13 @@ export default function AreaPage({ params }: Props) {
           </p>
           <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
             <a
-              href="tel:01202129746"
+              href="tel:07909032889"
               className="inline-flex items-center justify-center gap-2 rounded-lg bg-slate-900 px-8 py-4 font-bold text-white hover:bg-slate-800 transition-colors"
             >
-              01202 129746
+              07909 032889
             </a>
             <a
-              href="mailto:hello@speedyvan.co.uk"
+              href="mailto:hello@speedyvan.uk"
               className="btn-secondary border-slate-900 text-slate-900 px-8 py-4"
             >
               Email Us

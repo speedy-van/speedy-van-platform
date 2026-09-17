@@ -1,8 +1,10 @@
-import Script from "next/script";
-
 interface JsonLdProps {
   data: Record<string, unknown> | Record<string, unknown>[];
   id?: string;
+}
+
+function serializeJsonLd(data: JsonLdProps["data"]): string {
+  return JSON.stringify(data).replace(/</g, "\\u003c");
 }
 
 /**
@@ -11,11 +13,10 @@ interface JsonLdProps {
  */
 export function JsonLd({ data, id = "json-ld" }: JsonLdProps) {
   return (
-    <Script
+    <script
       id={id}
       type="application/ld+json"
-      strategy="afterInteractive"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }}
+      dangerouslySetInnerHTML={{ __html: serializeJsonLd(data) }}
     />
   );
 }

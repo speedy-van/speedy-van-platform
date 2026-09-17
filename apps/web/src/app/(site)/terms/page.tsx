@@ -46,9 +46,9 @@ export default function TermsPage() {
             </li>
             <li>
               <strong>Email:</strong>{" "}
-              <a href="mailto:support@speedy-van.co.uk">support@speedy-van.co.uk</a>
+              <a href="mailto:support@speedyvan.uk">support@speedyvan.uk</a>
             </li>
-            <li><strong>Phone:</strong> 01202 129746</li>
+            <li><strong>Phone:</strong> 07909 032889</li>
           </ul>
 
           <h2>2. Services we provide</h2>
@@ -202,8 +202,8 @@ export default function TermsPage() {
 
           <h2>8. Driver conduct</h2>
           <p>
-            Our drivers are professional, fully insured and DBS-checked where
-            applicable. They will:
+            Our drivers are professional, insured for the work they accept, and
+            expected to follow safe manual-handling practices. They will:
           </p>
           <ul>
             <li>Arrive within the agreed time window.</li>
@@ -227,7 +227,7 @@ export default function TermsPage() {
           <h2>10. Complaints and dispute resolution</h2>
           <p>
             If you are unhappy with any part of our service, please email{" "}
-            <a href="mailto:support@speedy-van.co.uk">support@speedy-van.co.uk</a>{" "}
+            <a href="mailto:support@speedyvan.uk">support@speedyvan.uk</a>{" "}
             within 7 days of completion. We aim to acknowledge complaints
             within 2 business days and resolve them within 14 business days.
             If a dispute cannot be resolved, you may refer it to an alternative

@@ -1,8 +1,11 @@
 import { AREAS } from "@/lib/areas";
-
-const SITE_URL = "https://speedyvan.uk";
-const OG_IMAGE = `${SITE_URL}/og-image.jpg`;
-const PHONE = "+44 1202 129746";
+import {
+  SITE_LEGAL_NAME,
+  SITE_OG_IMAGE,
+  SITE_PHONE_E164,
+  SITE_URL,
+  absoluteUrl,
+} from "@/lib/seo/constants";
 
 type Schema = Record<string, unknown>;
 
@@ -11,14 +14,15 @@ export function buildLocalBusinessSchema(): Schema {
     "@context": "https://schema.org",
     "@type": "LocalBusiness",
     "@id": `${SITE_URL}/#organization`,
-    name: "SpeedyVan",
+    name: SITE_LEGAL_NAME,
+    alternateName: "SpeedyVan",
     url: SITE_URL,
-    telephone: PHONE,
-    image: OG_IMAGE,
-    logo: OG_IMAGE,
+    telephone: SITE_PHONE_E164,
+    image: SITE_OG_IMAGE,
+    logo: SITE_OG_IMAGE,
     priceRange: "££",
     description:
-      "Scotland's trusted man and van service. House moves, office relocations, and furniture deliveries across Glasgow, Edinburgh, Dundee, Aberdeen, Stirling, Inverness and beyond.",
+      "Man and van, house removals, office relocations, furniture delivery and small moves across Glasgow, Edinburgh, Dundee, Aberdeen, Stirling, Inverness and beyond.",
     address: {
       "@type": "PostalAddress",
       addressCountry: "GB",
@@ -28,17 +32,10 @@ export function buildLocalBusinessSchema(): Schema {
       "@type": "City",
       name: area.name,
     })),
-    aggregateRating: {
-      "@type": "AggregateRating",
-      ratingValue: "4.9",
-      reviewCount: "127",
-      bestRating: "5",
-      worstRating: "1",
-    },
     sameAs: [
       "https://www.facebook.com/share/1Dd8NQPV4f/?mibextid=wwXIfr",
       "https://www.tiktok.com/@speedyvan0",
-      "https://wa.me/message/J6EO772GDPHFO1",
+      "https://wa.me/447909032889",
     ],
   };
 }
@@ -70,7 +67,7 @@ export function buildBreadcrumbSchema(
       "@type": "ListItem",
       position: index + 1,
       name: item.name,
-      item: item.url.startsWith("http") ? item.url : `${SITE_URL}${item.url}`,
+      item: absoluteUrl(item.url),
     })),
   };
 }
@@ -78,18 +75,19 @@ export function buildBreadcrumbSchema(
 export function buildServiceSchema(
   name: string,
   description: string,
-  url: string
+  url: string,
+  startingFrom?: number
 ): Schema {
-  return {
+  const schema: Schema = {
     "@context": "https://schema.org",
     "@type": "Service",
     name,
     description,
-    url: url.startsWith("http") ? url : `${SITE_URL}${url}`,
+    url: absoluteUrl(url),
     provider: {
       "@type": "LocalBusiness",
       "@id": `${SITE_URL}/#organization`,
-      name: "SpeedyVan",
+      name: SITE_LEGAL_NAME,
       url: SITE_URL,
     },
     areaServed: AREAS.map((area) => ({
@@ -97,4 +95,15 @@ export function buildServiceSchema(
       name: area.name,
     })),
   };
+
+  if (typeof startingFrom === "number") {
+    schema.offers = {
+      "@type": "Offer",
+      price: startingFrom,
+      priceCurrency: "GBP",
+      url: absoluteUrl(url),
+    };
+  }
+
+  return schema;
 }

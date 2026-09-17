@@ -1,6 +1,9 @@
 export const SERVICE_IMAGES: Record<string, string> = {
   "man-and-van":        "/images/services/man-and-van.jpg",
+  "flat-removals":      "/images/services/student-move.jpg",
+  "small-moves":        "/images/services/man-and-van.jpg",
   "house-removal":      "/images/services/house-removal.jpg",
+  "long-distance-removals": "/images/services/house-removal.jpg",
   "office-removal":     "/images/services/office-removal.jpg",
   "student-move":       "/images/services/student-move.jpg",
   "furniture-delivery": "/images/services/furniture-delivery.jpg",

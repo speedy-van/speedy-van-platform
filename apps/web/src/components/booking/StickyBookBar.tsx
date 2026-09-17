@@ -3,6 +3,12 @@
 import Link from "next/link";
 import { haptic } from "@/lib/haptic";
 
+const money = new Intl.NumberFormat("en-GB", {
+  style: "currency",
+  currency: "GBP",
+  maximumFractionDigits: 0,
+});
+
 export function StickyBookBar() {
   return (
     <div
@@ -14,11 +20,11 @@ export function StickyBookBar() {
         <div className="flex-1 min-w-0">
           <p className="text-[11px] font-semibold uppercase tracking-wide text-emerald-600 leading-tight">
             <span className="inline-block w-1.5 h-1.5 rounded-full bg-emerald-500 mr-1 align-middle animate-pulse" />
-            Available now
+            Online quote
           </p>
           <p className="text-sm font-bold text-slate-900 truncate">
             <span className="inline-flex items-center rounded-md bg-primary-400/90 text-slate-900 px-1.5 py-0.5 text-xs font-extrabold mr-1">
-              From £45
+              From {money.format(45)}
             </span>
             Instant quote
           </p>
@@ -34,12 +40,12 @@ export function StickyBookBar() {
             Book online
           </Link>
           <a
-            href="tel:01202129746"
+            href="tel:07909032889"
             data-track-event="call_click"
             data-track-location="sticky_bar"
             onClick={() => haptic(10)}
             className="cta-pulse inline-flex items-center justify-center gap-2 rounded-lg bg-slate-900 px-4 py-2.5 text-sm font-bold text-white shadow-sm hover:bg-slate-800 transition-colors"
-            aria-label="Call 01202 129746"
+            aria-label="Call 07909 032889"
           >
             <svg
               className="w-4 h-4"

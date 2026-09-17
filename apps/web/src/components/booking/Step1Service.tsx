@@ -8,6 +8,12 @@ import { ServiceImageCard } from "@/components/shared/ServiceImageCard";
 import { getServiceImage } from "@/lib/service-images";
 import { CallUsPopup } from "./CallUsPopup";
 
+const money = new Intl.NumberFormat("en-GB", {
+  style: "currency",
+  currency: "GBP",
+  maximumFractionDigits: 0,
+});
+
 export function Step1Service() {
   const { state, dispatch } = useBooking();
   const { flags } = useServiceFlags();
@@ -20,6 +26,7 @@ export function Step1Service() {
     slug === "rubbish-removal" || slug === "same-day-delivery";
 
   const visibleServices = SERVICES.filter((s) => {
+    if (s.bookable === false) return false;
     if (!isFlagged(s.slug)) return true;
     const flag = flags.get(s.slug);
     if (!flag) return true;
@@ -58,7 +65,7 @@ export function Step1Service() {
               <ServiceImageCard
                 slug={s.slug}
                 title={s.name}
-                price={popupOnly ? "Phone booking" : `From £${s.startingFrom}`}
+                price={popupOnly ? "Phone booking" : `From ${money.format(s.startingFrom)}`}
                 imagePath={getServiceImage(s.slug)}
                 isSelected={state.serviceSlug === s.slug}
                 onClick={() => choose(s.slug, s.name)}
