@@ -18,6 +18,14 @@ export function errorHandler(err: Error, c: Context): Response {
     return c.json(fail("Payments are not configured on this server", "STRIPE_NOT_CONFIGURED"), 503);
   }
 
+  if (err.message === "PRICING_CONFIG_UNAVAILABLE") {
+    return c.json(fail("We could not load prices. Please try again shortly.", "PRICING_CONFIG_UNAVAILABLE"), 503);
+  }
+
+  if (err.message === "SELECTED_SLOT_UNAVAILABLE") {
+    return c.json(fail("Your selected date or time is no longer available. Please choose another slot.", "SELECTED_SLOT_UNAVAILABLE"), 409);
+  }
+
   if (err.message === "NOT_FOUND") {
     return c.json(fail("Resource not found", "NOT_FOUND"), 404);
   }

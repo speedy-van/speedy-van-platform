@@ -45,7 +45,7 @@ Choose the API input explicitly. For Git, use root `apps/api` with outside-root 
 
 1. Record the approved merge SHA and last known good web/API deployment IDs.
 2. Release API changes to `speedy-van-api` before or alongside the web. Recovery expects the additive `isPaid` tracking field; older APIs fail closed.
-3. Release web to `speedy-van-web`, using the verified project ID in `production-domain-map.md`. Do not use the stale duplicate project.
+3. Release web to `speedy-van-web`, using the verified project ID in `production-domain-map.md`, root `apps/web`, outside-root files enabled and `apps/web/vercel.json`. The old dashboard build/output/install overrides are cleared. Do not use the stale duplicate project. Rebuild from source with production environment variables; never promote a locally compiled test-API bundle.
 4. Keep `https://www.speedyvan.uk` as the primary origin. Do not change DNS, payment callback origins or authentication origins as part of this branch.
 5. Verify real canonical/OG URLs, 47 sitemap entries, one-hop permanent HTTPS legacy-host redirects, query preservation, API/method bypass, private-route HTTP noindex and real invalid-route 404s.
 6. Recheck seven service CTAs and original-slug booking intent. Confirm public content is present in initial HTML.

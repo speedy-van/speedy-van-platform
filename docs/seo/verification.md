@@ -1,6 +1,6 @@
 # Verification of the repair branch
 
-Executed 21 September 2026 on `fix/organic-search-and-booking-2026-09-21`, based on `e43ffc760b57b5d70b655760ee4877f1f759a85a`. These results describe this branch; no web/API deployment was performed for this implementation.
+Executed 21 September 2026 on `fix/organic-search-and-booking-2026-09-21`, based on `e43ffc760b57b5d70b655760ee4877f1f759a85a`. These results describe the local branch checks. Subsequent cloud preview and production release states are recorded separately below; a successful build is not a completed transaction or ranking result.
 
 ## Executed checks
 
@@ -12,7 +12,7 @@ Executed 21 September 2026 on `fix/organic-search-and-booking-2026-09-21`, based
 | `npm run typecheck` | Passed | API, iOS admin, web, config, database and shared packages |
 | `npm run typecheck -w apps/web` after adding route type generation | Passed | `next typegen` plus TypeScript; works without previously generated route types |
 | `npm run lint` | Passed | API and web; no ESLint errors or warnings. Next reports its separate `next lint` deprecation notice |
-| `npm run test:regression` | 81 passed, 0 failed | 19 booking, 13 analytics, 29 payment/API, 13 service-worker/driver, 1 schema and 6 deployment/handler checks |
+| `npm run test:regression` | 93 passed, 0 failed | 19 booking, 13 analytics, 29 payment/API, 13 service-worker/driver, 1 schema 6 deployment/handler and 12 pricing-configuration/availability checks |
 | API standalone source build and isolated install | Passed | Current workspace sources bundled; pinned runtime install, Prisma generation and actual handler health checks outside the repository |
 | `NEXT_PUBLIC_API_URL=http://127.0.0.1:4000 npm run build` | Passed | Database package, Next 15.5.25 web production build (75 static pages) and API TypeScript build |
 | Production preview HTTP/HTML QA | 428 passed, 0 failed | All 47 sitemap pages plus private, invalid, redirect, method and preview-host probes |
@@ -56,11 +56,15 @@ Assertions cover:
 
 The owner authorised production deployment after the initial PR was published. Reinspection found that the old API configuration selected a precompiled `_api.js`, so source changes alone would not update the deployed API. The branch now supports a source-based Git build and a reproducible isolated CLI upload. An actual invocation of the official Vercel Node builder exposed extensionless ESM and workspace entry-point problems in a direct TypeScript build. The corrected `vercel-build` hook bundles current API/workspace sources into CommonJS before Vercel traces the runtime dependencies. The emitted Lambda was materialised outside the repository and ran successfully on Node 24: six root/prefixed health checks returned 200, two unconfigured database checks returned the intended 503, and PDF creation worked. Its 53 source hashes, Prisma engines and font assets are recorded in [api-deployment-verification.json](api-deployment-verification.json). This is local platform-builder verification, not a cloud deployment. Live read-only probes confirmed `/health` returned 200 while `/api/health` returned 404 before this repair was deployed.
 
-The existing rollback points are web `4CnN8XEktZw8716F6iX95EbCfgp3` and API `4mQDCapaoV3vtVeHYnbkyEVMQQNC`. Both projects were still disconnected from Git during inspection. Vercel's Redeploy dialogue explicitly reuses the existing source and therefore does not install this branch. No old-source redeployment was submitted.
+The existing rollback points are web `4CnN8XEktZw8716F6iX95EbCfgp3` and API `4mQDCapaoV3vtVeHYnbkyEVMQQNC`. Both projects were disconnected from Git during the initial inspection. They were connected after the owner approved repository access. Vercel's Redeploy dialogue explicitly reuses the existing source and therefore does not install this branch. No old-source redeployment was submitted.
 
 Search Console Performance and Page indexing were still processing at 15:06 UTC. [measurement-plan.md](measurement-plan.md) and [measurement-baseline-2026-09-21.json](measurement-baseline-2026-09-21.json) record the separate pre-release search sample and the unavailable account metrics. Performance was rechecked at 15:15 UTC and remained in processing. A release timestamp must be recorded after a verified deployment, not inferred from a GitHub commit.
 
-The Vercel plugin was connected during the release attempt, but this session did not expose its callable deployment tools. The dashboard remains authenticated; connecting the disconnected Git source reached GitHub Mobile two-factor verification, whose request timed out. Authentication completion remains the release blocker. No new deployment, DNS change or old-source redeployment was submitted.
+GitHub authentication and the approved selected-repository access were completed. Both existing Vercel projects are now Git-connected. The connector credential cannot access the required team, so the authorised authenticated dashboard was used. API preview `FC1aEQSyBp9dsTn2bWS9Hmchw1Ka` from `bd9b9945329de45be8356d39c215b84b61e47b57` reached Ready and its build log confirms bundling current source. Web preview `5vfwWqDtJMM7NqtqyWKk6qcbNZ9k` failed because the repository-root build could not detect the workspace-local Next dependency. The web root is now `apps/web`, API root is `apps/api`, outside-root access remains enabled, and application-specific build configuration repairs this mismatch. Direct browser access to the API preview was rejected with `ERR_BLOCKED_BY_CLIENT`; no bypass was attempted. These observations are preview/build evidence, not a production release claim.
+
+Automatic approval review rejected saving a production-branch/automatic-domain-assignment settings change. The unsaved form was restored; production tracking remains `main`. The release instead uses the supported preview-to-production dashboard workflow, which rebuilds with production environment variables according to the [current platform documentation](https://vercel.com/docs/deployments/promoting-a-deployment). No DNS change was made.
+
+Integrated QA also identified and repaired two pricing fallbacks: a failed configuration read must return an unavailable response rather than default prices, and a missing date/time slot must fail rather than return a static subtotal. The shared error envelope remains unchanged; configured read failure uses HTTP 503 and unavailable slots use HTTP 409. Tests exercise the actual pricing and error-handling code without live database or payment operations.
 
 ## Dependency findings and compatibility
 

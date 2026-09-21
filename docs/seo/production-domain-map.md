@@ -4,8 +4,8 @@ Verified 21 September 2026 through authenticated hosting inspection, repository 
 
 | Role | Project | ID | Root / output |
 | --- | --- | --- | --- |
-| Public web and web admin | `speedy-van-web` | `prj_OkJrabaUpBmsMqNibYZc5cgnIqFg` | Repository root; `apps/web/.next` |
-| Web, driver and iOS API | `speedy-van-api` | `prj_QjawXiV1uA0WAOB0eb7x379ydY3f` | Separate API project; `apps/api` source |
+| Public web and web admin | `speedy-van-web` | `prj_OkJrabaUpBmsMqNibYZc5cgnIqFg` | `apps/web`; `.next` (corrected during cloud release) |
+| Web, driver and iOS API | `speedy-van-api` | `prj_QjawXiV1uA0WAOB0eb7x379ydY3f` | `apps/api`; current-source Vercel Node function |
 
 Primary origin: `https://www.speedyvan.uk`. API origin: `https://api.speedyvan.uk`. Do not release to the stale duplicate `speedy-van-co-uk-web`.
 
@@ -17,11 +17,11 @@ Primary origin: `https://www.speedyvan.uk`. API origin: `https://api.speedyvan.u
 - Implementation base: latest production-branch commit `e43ffc760b57b5d70b655760ee4877f1f759a85a` (ownership documentation; parent is the deployed commit).
 - Repair branch: `fix/organic-search-and-booking-2026-09-21`.
 - The source metadata identifies the deployment association; it does not independently prove that an uploaded bundle contained no uncommitted files. Inspected live routes and relevant source structure agree.
-- Vercel Git auto-deployment was not connected when inspected. Creating the repair branch/PR is not a deployment.
-- Last known good API deployment: `4mQDCapaoV3vtVeHYnbkyEVMQQNC`, uploaded through the CLI on 26 April 2026. The API project currently has an empty root directory because its historical uploads contained only the API artefact. Its include-outside-root setting is enabled and its Node version is 24.
+- Both existing projects were connected to the exact repository after the owner approved its selected-repository access on 21 September 2026. The original production deployments predate this connection. Production branch tracking remains `main`; no branch-tracking or automatic-domain-assignment change was saved.
+- Last known good API deployment: `4mQDCapaoV3vtVeHYnbkyEVMQQNC`, uploaded through the CLI on 26 April 2026. The API project originally had an empty root directory because its historical uploads contained only the API artefact. The authorised Git release now uses `apps/api`. Its include-outside-root setting is enabled and its Node version is 24.
 - Installed workspace uses npm and `package-lock.json`. This branch uses npm shallow installation to keep React peers local to the web and mobile workspaces. It does not use the older public repository's pnpm layout or `apps/web-v2`.
-- Hosting Node version: 24. Existing install command: `npm install`.
-- Verified web build command: `npx prisma generate --schema=packages/db/prisma/schema.prisma && npm run build -w packages/db && npm run build -w apps/web`.
+- Hosting Node version: 24. The historical web install command was `npm install`; the application-root configuration now uses the committed lockfile through `npm --prefix ../.. ci --include=dev`.
+- Historical web build command: `npx prisma generate --schema=packages/db/prisma/schema.prisma && npm run build -w packages/db && npm run build -w apps/web`. The first cloud preview failed framework detection with the shallow workspace layout. The corrected project root is `apps/web`, outside-root files remain enabled, and the old dashboard build/output/install overrides have been cleared. `apps/web/vercel.json` now defines the root-aware Prisma/database build followed by the web build and preserves the API rewrite.
 - Active framework at the base: Next 14.2.35 / React 18. This branch applies a security-motivated Next 15.5.25 / React 19 web upgrade, retains npm/Tailwind and leaves the mobile application's React 18 dependency contract unchanged.
 - Root `vercel.json` rewrites `/api/(.*)` to `https://api.speedyvan.uk/api/$1`. API and browser-only route responsibilities must remain distinct.
 
