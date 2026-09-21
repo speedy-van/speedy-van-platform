@@ -38,6 +38,8 @@ See [production-domain-map.md](production-domain-map.md). The active repository 
 | `/book/review/*` inherits indexable metadata | Source defect in active checkout | Booking layout and private-route HTTP noindex coverage added |
 | Consent changes do not update all analytics consumers | Source defect in active checkout | Reactive consent and one shared event dispatcher implemented |
 | Validated payment can be confused with another booking | Source defect in active checkout | Exact intent/booking/reference/amount/currency binding and transactional confirmation added |
+| API deployment selects a stale precompiled bundle | Source deployment defect | Build current TypeScript or the reproducible standalone artefact; no longer select tracked `_api.js` |
+| API host `/api/health` returns 404 while `/health` returns 200 | Still present live before release | Adapter repair accepts both paths and preserves request methods, queries and raw webhook bodies |
 
 ## Implemented on this branch
 

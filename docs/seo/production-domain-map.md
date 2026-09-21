@@ -18,6 +18,7 @@ Primary origin: `https://www.speedyvan.uk`. API origin: `https://api.speedyvan.u
 - Repair branch: `fix/organic-search-and-booking-2026-09-21`.
 - The source metadata identifies the deployment association; it does not independently prove that an uploaded bundle contained no uncommitted files. Inspected live routes and relevant source structure agree.
 - Vercel Git auto-deployment was not connected when inspected. Creating the repair branch/PR is not a deployment.
+- Last known good API deployment: `4mQDCapaoV3vtVeHYnbkyEVMQQNC`, uploaded through the CLI on 26 April 2026. The API project currently has an empty root directory because its historical uploads contained only the API artefact. Its include-outside-root setting is enabled and its Node version is 24.
 - Installed workspace uses npm and `package-lock.json`. This branch uses npm shallow installation to keep React peers local to the web and mobile workspaces. It does not use the older public repository's pnpm layout or `apps/web-v2`.
 - Hosting Node version: 24. Existing install command: `npm install`.
 - Verified web build command: `npx prisma generate --schema=packages/db/prisma/schema.prisma && npm run build -w packages/db && npm run build -w apps/web`.
@@ -46,3 +47,7 @@ The standalone API Prisma schema is synchronised with the existing canonical sch
 ## Release dependency
 
 The API project needs its own release for payment validation, cancellation and webhook changes. Releasing only the web does not install the backend safeguards. Preview verification requires non-production API/database/Stripe credentials configured through the existing deployment workflow; no production secrets are stored in this branch.
+
+The old API `vercel.json` selected the tracked precompiled `_api.js`; it did not rebuild the changed TypeScript source. This is repaired with a small CommonJS bootstrap and a `vercel-build` hook that regenerates Prisma and bundles the current TypeScript/workspace source. The official builder and emitted Node 24 Lambda were exercised locally; direct unbundled TypeScript proved unsuitable for the existing workspace module configuration. For a Git deployment, set the API project root to `apps/api` and retain include-outside-root so the workspace packages and root lockfile are available. For the existing standalone upload workflow, run `npm run build:standalone -w apps/api`, deploy its isolated output to the existing API project, and retain the empty project root. Do not mix these two root configurations. The standalone build records source hashes and does not read the old bundle.
+
+The request adapter now accepts both original root routes and the web rewrite's `/api/*` routes, preserving queries, methods and raw webhook bytes. Before release, live `/health` was HTTP 200 and `/api/health` was HTTP 404. Production `DATABASE_URL`, `NEXTAUTH_SECRET`, `STRIPE_SECRET_KEY` and `STRIPE_WEBHOOK_SECRET` entries were present in the authenticated settings; their values were not revealed or copied.

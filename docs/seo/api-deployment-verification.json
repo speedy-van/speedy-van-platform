@@ -1,0 +1,164 @@
+{
+  "builder": "@vercel/node@13.0.1",
+  "builderUtils": "@vercel/build-utils@14.10.1",
+  "runtime": "nodejs24.x",
+  "handler": "apps/api/api-entry.cjs",
+  "fileCount": 522,
+  "sourceCount": 53,
+  "sourceManifest": {
+    "packages/config/src/index.ts": "46e53768a79ea46a11b51746ee9e36ed9f079518ed4486184072755436c25e65",
+    "packages/config/src/pricing.ts": "da7652c11399ebb22c4cd881a12733ea3482df0cf65b522bdb949d86844cf60d",
+    "packages/config/src/site.ts": "c2c29c34be26ede1612f536e30d14549904d4b3394699dbe7ae9c610ca04ff5b",
+    "packages/db/src/index.ts": "49f0387c005e822c1bfb4461cc25cde09ebeb51661d25333443229ba889b1661",
+    "packages/shared/src/_nanoid.ts": "c4bece408284cbbcb15df9a9f14f1609e0805640db83ec919e54640dd1538da5",
+    "packages/shared/src/constants.ts": "de8c6cd79f77a2603806282cbe9d3a7d98b952bbc66fa527173043ee43310fe5",
+    "packages/shared/src/index.ts": "16860679f0fc3cd6282e9ff5b4b439e9be94e9897b440ab0a39988ebb4ee62f2",
+    "packages/shared/src/response.ts": "99995156f708a3db8c635de91a4bce4a3aafd5d998ccdeedb7cbc8e84684a5e0",
+    "packages/shared/src/types.ts": "efdeaa9919727db5757da278b6e732eed9bc89d797965dc31a066a08824edff1",
+    "packages/shared/src/utils.ts": "3ad9773217bc2068a2775765085acf208b6dbef6fa6b641ee9f39184f177ed63",
+    "packages/shared/src/validations.ts": "bf6b835af7858e913c5ea6845033fb1077411697e180b81108bd3535b5017175",
+    "apps/api/src/app.ts": "15857cc82131d16bfe4d6f9fe3a1649afb4dbbf72b14fd6a625a6ee914a74ec6",
+    "apps/api/src/handler.ts": "6ef6149be0f00092dc9f1005b18c93d804575e88cb7800e33de8777634c22bae",
+    "apps/api/src/lib/database-config.ts": "1742703d9fa8014ac1065be8520308ca68d86b5d8ca3d6997fbff5470e0009f5",
+    "apps/api/src/lib/dev-proxy.ts": "9bac3f317b06ab3e7821c3a41e5c1a0121c981006ec80d73a450c1b59e428095",
+    "apps/api/src/lib/jwt.ts": "741152a6443d46cf4b14d7522d34a3c15681dad18e00d9049884ebfd887948a5",
+    "apps/api/src/lib/payment-validation.ts": "ac04b7310c3831165b72193237372e99af51ce4bd8c4e06bb22049afcac4ee17",
+    "apps/api/src/lib/pusher.ts": "57d5e7d05c643b76c3ffa34b3abbc75b6f496c244175af400bbcdbb0b6046969",
+    "apps/api/src/lib/stripe.ts": "21282d6277fc536ada4c83f870bd6391df5d5b09b54383ae5ee78861b92d84f4",
+    "apps/api/src/middleware/auth.ts": "eb21f05d342bc117f83f11850ac47c177cfc887becb771d21ff731371026cff7",
+    "apps/api/src/middleware/error.ts": "c33ec2ed47879a8d8378f9cad51b6665f355b1425d7180b48b1f57639f5d9b85",
+    "apps/api/src/routes/admin/analytics.ts": "bd5881bdc10615df8e0df02c0f78d7c793959836122f32767c1febed2bee0787",
+    "apps/api/src/routes/admin/bookings.ts": "4a7b0cd683663d5d1d3091db72e8e1a311db66550274cd2815e3159fc5ce12ba",
+    "apps/api/src/routes/admin/content.ts": "e5a03b4aa94f3184765c5848a8a58fd663678423bcfb4ef144bcc18345d8c449",
+    "apps/api/src/routes/admin/drivers.ts": "11a0e21b250168f90bb000d279629278190ff64cd82ec764f3ec5a5ff7e4f18f",
+    "apps/api/src/routes/admin/enquiries.ts": "eb50ef9a2f1eaf412926c86beb91e6ff437764c0656ca918babd27364f15bb47",
+    "apps/api/src/routes/admin/images.ts": "dbe63e0bab6e496d56869a551beabe88c8df6e1ffe9eb5977c9270449b026122",
+    "apps/api/src/routes/admin/jobs.ts": "b41b3815e3b65e4dad2c894dd3498e6df840599b3730233b20997b8df02d184c",
+    "apps/api/src/routes/admin/notifications.ts": "05b914de56dcef035aba6463b36eadb3318436b076869923b43d0f69da7077cd",
+    "apps/api/src/routes/admin/pricing.ts": "e1beb01e0ae3cc1af6e256ccdf01f9eacd6dcaa57025f05354b7497c33877d90",
+    "apps/api/src/routes/admin/service-flags.ts": "b7775e0c0fd1c3f2daddf25b0497dfac1261f8408267e020036c728659c966a4",
+    "apps/api/src/routes/admin/visitors.ts": "4ac0ab82fc33f5b1b3ea48cf3e7ec4fe7dd1d66289c05974825c9168a9b0e83c",
+    "apps/api/src/routes/auth.ts": "f1c71a04b3f14170f99a2eac0b48ec62bf6e76b12be1a88b3bab4fd13c59522a",
+    "apps/api/src/routes/booking.ts": "691b31c7ba8a0469427b27ec839f926d266b37654af379769c17d06513b1ff80",
+    "apps/api/src/routes/chat.ts": "f4ef66d08fa975e486879143621524ad3e27bca0ce09b3bb4c80c142fd5cc38b",
+    "apps/api/src/routes/driver.ts": "88612e75ffc936b97d7fe99b0d4db6ad79fc1e06f32fc8f1d84fe984ec2177e4",
+    "apps/api/src/routes/enquiry.ts": "4d6cabff1ce9c09c8dc7d5d8ead2b7af516d5727c3a1d353d44293abc9908697",
+    "apps/api/src/routes/geocode.ts": "e4ab47b0917e61759cf006b4178dfe442164d18c1508495a440677e5c9664e5d",
+    "apps/api/src/routes/health.ts": "9294c8f379b8cc0f40e2212b424178331ecd5c6367bcb3b6b486a8ccc4a20d5f",
+    "apps/api/src/routes/items.ts": "448c07a1d57799681082f4cab1b7a1b2daf8cca38573bd8872617f430ac01272",
+    "apps/api/src/routes/pricing.ts": "08871ac7a21332ec1603c42d16140a40bd7b829455f55c6f051d24b7e61ce8e6",
+    "apps/api/src/routes/service-flags.ts": "3357508fc706b0ddf457aad48ca85027aa769483975f595c480731488737b428",
+    "apps/api/src/routes/stripe.ts": "2d046c1fffaf4d2150a2bab0ba35baced32c4c4b934d70693e177d9f7929c6b2",
+    "apps/api/src/routes/tracking.ts": "3542a85fac1d224f6694e82a8cc23ad663a888a81d6f75823fb8d54ff8fe8395",
+    "apps/api/src/routes/waitlist.ts": "7828e7033eec58aed0de628d1bebaad7df01470232ef2082335014a5d2a2fd75",
+    "apps/api/src/routes/weather.ts": "0bb4031c674e8fa43c407eab3f7c3e7c320ad5458ad5fd098516fe04dd8fe3a7",
+    "apps/api/src/services/booking.service.ts": "e6aa32e27836cb1b3210c262cc4cbec83e408a5bc09f1c52b0b1ba50bedefe05",
+    "apps/api/src/services/email.service.ts": "4f1afd31f0823dad9b49ef078e284ebf56c31dfec8da5f569801a99818fbfdb4",
+    "apps/api/src/services/job.service.ts": "246eaa1ac51525073776804e701fa365497c807820d713aea40ab3cee9cc140e",
+    "apps/api/src/services/notification.service.ts": "d6e31d46b8ac2f5087e49e9726e6db250912db37837c5453198b71f736dff203",
+    "apps/api/src/services/pricing.service.ts": "870aa8c38338f660dcd717bfd83ad0fca7630628ca9b015d0f5b45a14f4a5986",
+    "apps/api/src/services/tracking.service.ts": "2662bf1959f31ef9b66d83cea6c132125227060a67321c7624491e5a067b41f9",
+    "apps/api/src/services/weather.service.ts": "46bbb1d3b4bfa2282579f66a3b410fdd0f465f7d611b2d4d4e2b2917a9ea696c"
+  },
+  "paymentValidatorIncluded": true,
+  "workspaceSourcesBundled": true,
+  "prismaFiles": [
+    "node_modules/.prisma/client/default.d.ts",
+    "node_modules/.prisma/client/default.js",
+    "node_modules/.prisma/client/edge.d.ts",
+    "node_modules/.prisma/client/edge.js",
+    "node_modules/.prisma/client/index-browser.js",
+    "node_modules/.prisma/client/index.d.ts",
+    "node_modules/.prisma/client/index.js",
+    "node_modules/.prisma/client/libquery_engine-debian-openssl-3.0.x.so.node",
+    "node_modules/.prisma/client/libquery_engine-rhel-openssl-3.0.x.so.node",
+    "node_modules/.prisma/client/package.json",
+    "node_modules/.prisma/client/query_engine_bg.js",
+    "node_modules/.prisma/client/query_engine_bg.wasm",
+    "node_modules/.prisma/client/schema.prisma",
+    "node_modules/.prisma/client/wasm-edge-light-loader.mjs",
+    "node_modules/.prisma/client/wasm-worker-loader.mjs",
+    "node_modules/.prisma/client/wasm.d.ts",
+    "node_modules/.prisma/client/wasm.js"
+  ],
+  "pdfFontFiles": [
+    "apps/api/node_modules/pdfkit/js/data/Courier-Bold.afm",
+    "apps/api/node_modules/pdfkit/js/data/Courier-BoldOblique.afm",
+    "apps/api/node_modules/pdfkit/js/data/Courier-Oblique.afm",
+    "apps/api/node_modules/pdfkit/js/data/Courier.afm",
+    "apps/api/node_modules/pdfkit/js/data/Helvetica-Bold.afm",
+    "apps/api/node_modules/pdfkit/js/data/Helvetica-BoldOblique.afm",
+    "apps/api/node_modules/pdfkit/js/data/Helvetica-Oblique.afm",
+    "apps/api/node_modules/pdfkit/js/data/Helvetica.afm",
+    "apps/api/node_modules/pdfkit/js/data/Symbol.afm",
+    "apps/api/node_modules/pdfkit/js/data/Times-Bold.afm",
+    "apps/api/node_modules/pdfkit/js/data/Times-BoldItalic.afm",
+    "apps/api/node_modules/pdfkit/js/data/Times-Italic.afm",
+    "apps/api/node_modules/pdfkit/js/data/Times-Roman.afm",
+    "apps/api/node_modules/pdfkit/js/data/ZapfDingbats.afm",
+    "apps/api/node_modules/pdfkit/js/data/sRGB_IEC61966_2_1.icc"
+  ],
+  "obsoleteBundleIncluded": false,
+  "smokeChecks": [
+    {
+      "route": "/",
+      "status": 200
+    },
+    {
+      "route": "/health",
+      "status": 200
+    },
+    {
+      "route": "/api",
+      "status": 200
+    },
+    {
+      "route": "/api/",
+      "status": 200
+    },
+    {
+      "route": "/api/health",
+      "status": 200
+    },
+    {
+      "route": "/api/health?probe=1",
+      "status": 200
+    },
+    {
+      "route": "/booking/check?email=fixture%40example.invalid",
+      "status": 503,
+      "code": "DATABASE_NOT_CONFIGURED"
+    },
+    {
+      "route": "/api/booking/check?email=fixture%40example.invalid",
+      "status": 503,
+      "code": "DATABASE_NOT_CONFIGURED"
+    }
+  ],
+  "pdfFontRuntime": true,
+  "bootstrapRawBodyConfig": true,
+  "databaseConfigured": false,
+  "externalPaymentConfigured": false,
+  "pipeline": [
+    "npm ci --include=dev",
+    "prisma generate --schema=./prisma/schema.prisma",
+    "node scripts/build-server.cjs",
+    "@vercel/node@13.0.1 traces api-entry.cjs and the freshly generated handler"
+  ],
+  "localPreparation": "Isolated monorepo copy with the existing locked dependencies; only the builder install step was skipped. The real vercel-build hook, native dependency trace, Lambda materialisation and runtime were executed.",
+  "rejectedApproach": "Direct src/handler.ts compilation retained ESNext extensionless imports and failed to start with ERR_MODULE_NOT_FOUND. The release deployment configuration uses a CommonJS bootstrap and fresh source bundling instead.",
+  "sourceApplicationTypeScriptConfigChanged": false,
+  "databaseWritesPerformed": false,
+  "livePaymentsPerformed": false,
+  "deploymentPerformed": false,
+  "regressionTests": {
+    "apiBuild": {
+      "passed": 6,
+      "failed": 0
+    },
+    "apiTypecheck": "passed",
+    "diffCheck": "passed",
+    "existingApiBuild": "passed"
+  },
+  "scope": "Local verification of the official Vercel Node builder output from current source; not a deployment or a full remote install, and not live database or payment integration testing."
+}

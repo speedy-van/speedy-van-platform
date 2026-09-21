@@ -12,7 +12,8 @@ Executed 21 September 2026 on `fix/organic-search-and-booking-2026-09-21`, based
 | `npm run typecheck` | Passed | API, iOS admin, web, config, database and shared packages |
 | `npm run typecheck -w apps/web` after adding route type generation | Passed | `next typegen` plus TypeScript; works without previously generated route types |
 | `npm run lint` | Passed | API and web; no ESLint errors or warnings. Next reports its separate `next lint` deprecation notice |
-| `npm run test:regression` | 75 passed, 0 failed | 19 booking, 13 analytics, 29 payment/API, 13 service-worker/driver and 1 schema consistency checks |
+| `npm run test:regression` | 81 passed, 0 failed | 19 booking, 13 analytics, 29 payment/API, 13 service-worker/driver, 1 schema and 6 deployment/handler checks |
+| API standalone source build and isolated install | Passed | Current workspace sources bundled; pinned runtime install, Prisma generation and actual handler health checks outside the repository |
 | `NEXT_PUBLIC_API_URL=http://127.0.0.1:4000 npm run build` | Passed | Database package, Next 15.5.25 web production build (75 static pages) and API TypeScript build |
 | Production preview HTTP/HTML QA | 428 passed, 0 failed | All 47 sitemap pages plus private, invalid, redirect, method and preview-host probes |
 | Keyword map validation | Passed | 162 unique phrases; five sampled queries, 157 inferred; 16 existing/new hub targets; volumes unavailable |
@@ -49,6 +50,17 @@ Assertions cover:
 - Analytics tests cover consent changes, cross-tab updates, unavailable storage, query stripping, private-route suppression, one application dispatch, per-provider purchase deduplication and failed provider calls. They do not establish delivery to the configured GA4/Meta accounts.
 - Service-worker/driver tests cover cache eligibility, failed/offline responses, exact API paths, authenticated traffic, return-destination restrictions and preserving login/protected-route destinations.
 - Schema regression ensures the standalone API deployment copy matches the existing canonical shared schema. The API copy had omitted already-existing service flags, waitlist and European-enquiry models and the enquiry notification enum. Synchronisation fixes client generation; it does not introduce a database migration.
+- Deployment regression ensures Vercel rebuilds the current TypeScript through a CommonJS bootstrap rather than deploying the tracked legacy `_api.js`. It also exercises `/api` path normalisation, preserved root routes, encoded queries and unchanged raw Stripe webhook bodies. The isolated standalone artefact served `/health`, `/api/health` and `/api` with HTTP 200; a database-dependent route returned an explicit 503 with no database configured.
+
+## Release preparation follow-up
+
+The owner authorised production deployment after the initial PR was published. Reinspection found that the old API configuration selected a precompiled `_api.js`, so source changes alone would not update the deployed API. The branch now supports a source-based Git build and a reproducible isolated CLI upload. An actual invocation of the official Vercel Node builder exposed extensionless ESM and workspace entry-point problems in a direct TypeScript build. The corrected `vercel-build` hook bundles current API/workspace sources into CommonJS before Vercel traces the runtime dependencies. The emitted Lambda was materialised outside the repository and ran successfully on Node 24: six root/prefixed health checks returned 200, two unconfigured database checks returned the intended 503, and PDF creation worked. Its 53 source hashes, Prisma engines and font assets are recorded in [api-deployment-verification.json](api-deployment-verification.json). This is local platform-builder verification, not a cloud deployment. Live read-only probes confirmed `/health` returned 200 while `/api/health` returned 404 before this repair was deployed.
+
+The existing rollback points are web `4CnN8XEktZw8716F6iX95EbCfgp3` and API `4mQDCapaoV3vtVeHYnbkyEVMQQNC`. Both projects were still disconnected from Git during inspection. Vercel's Redeploy dialogue explicitly reuses the existing source and therefore does not install this branch. No old-source redeployment was submitted.
+
+Search Console Performance and Page indexing were still processing at 15:06 UTC. [measurement-plan.md](measurement-plan.md) and [measurement-baseline-2026-09-21.json](measurement-baseline-2026-09-21.json) record the separate pre-release search sample and the unavailable account metrics. Performance was rechecked at 15:15 UTC and remained in processing. A release timestamp must be recorded after a verified deployment, not inferred from a GitHub commit.
+
+The Vercel plugin was connected during the release attempt, but this session did not expose its callable deployment tools. The dashboard remains authenticated; connecting the disconnected Git source reached GitHub Mobile two-factor verification, whose request timed out. Authentication completion remains the release blocker. No new deployment, DNS change or old-source redeployment was submitted.
 
 ## Dependency findings and compatibility
 

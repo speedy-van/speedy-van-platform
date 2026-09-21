@@ -1,6 +1,6 @@
 # Review, release and rollback
 
-Updated 21 September 2026. This branch is prepared for review and local integration; it does not deploy either application.
+Updated 21 September 2026. The owner subsequently authorised production deployment. The source branch and the hosting release are separate operations; record actual deployment results before marking this checklist complete.
 
 ## Pull safely
 
@@ -40,6 +40,8 @@ In a second terminal, run `python scripts/seo-local-qa.py --base-url http://loca
 - Resolve remaining deployment-scope security advisories recorded in `verification.md`; do not treat mobile tooling findings as proof of website exploitation.
 
 ## Coordinated release
+
+Choose the API input explicitly. For Git, use root `apps/api` with outside-root files enabled. For the historical standalone CLI workflow, first run `npm run build:standalone -w apps/api`, then deploy `apps/api/dist/standalone` to the existing API project with its empty root. This output contains current source bundles, a locked runtime dependency tree and Prisma schema. Never deploy the tracked legacy `_api.js`, and never reuse web assets built with the local test API origin.
 
 1. Record the approved merge SHA and last known good web/API deployment IDs.
 2. Release API changes to `speedy-van-api` before or alongside the web. Recovery expects the additive `isPaid` tracking field; older APIs fail closed.

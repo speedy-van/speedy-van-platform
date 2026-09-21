@@ -1,0 +1,600 @@
+{
+  "schema_version": 1,
+  "record_type": "pre_deployment_baseline",
+  "recorded_date": "2026-09-21",
+  "prepared_at_utc": "2026-09-21T15:12:40.650Z",
+  "primary_origin": "https://www.speedyvan.uk",
+  "deployment": {
+    "status": "not_deployed",
+    "web_deployed_at_utc": null,
+    "api_deployed_at_utc": null,
+    "web_commit": null,
+    "api_commit": null,
+    "comparison_anchor_utc": null,
+    "source": "Lead agent confirmed no release before baseline preparation."
+  },
+  "search_console": {
+    "property": "sc-domain:speedyvan.uk",
+    "aggregate_checked_at_utc": "2026-09-21T15:06:00Z",
+    "timestamp_precision": "minute",
+    "source": "Authenticated observation by lead agent in the owner-selected account.",
+    "performance_status": "processing_data",
+    "page_indexing_aggregate_status": "processing_data",
+    "clicks": null,
+    "impressions": null,
+    "ctr": null,
+    "average_position": null,
+    "indexed_pages": null,
+    "non_indexed_pages": null,
+    "null_means": "Unavailable, not zero.",
+    "earlier_sitemap_observation": {
+      "source": "docs/seo/audit.md",
+      "status": "success",
+      "discovered_urls": 45,
+      "indexed_count": null,
+      "note": "Not refreshed in this pass; discovered URLs are not an indexed-page count."
+    },
+    "earlier_url_inspection_observations": {
+      "source": "docs/seo/audit.md and docs/seo/growth-plan.md; observations on 21 September 2026, not refreshed in this pass.",
+      "rows": [
+        {
+          "path": "/services/man-and-van",
+          "state": "URL unknown to Google",
+          "last_crawl_display": "N/A"
+        },
+        {
+          "path": "/services/furniture-delivery",
+          "state": "Discovered - currently not indexed",
+          "last_crawl_display": "N/A"
+        },
+        {
+          "path": "/services/house-removal",
+          "state": "Discovered - currently not indexed",
+          "last_crawl_display": "N/A"
+        },
+        {
+          "path": "/services/flat-removals",
+          "state": "Indexed in earlier inspection",
+          "last_crawl_display": "Not carried into this baseline"
+        },
+        {
+          "path": "/services/office-removal",
+          "state": "Discovered - currently not indexed",
+          "last_crawl_display": "N/A"
+        },
+        {
+          "path": "/services/small-moves",
+          "state": "Indexed in earlier inspection",
+          "last_crawl_display": "Not carried into this baseline"
+        },
+        {
+          "path": "/services/long-distance-removals",
+          "state": "Indexed in earlier inspection",
+          "last_crawl_display": "Not carried into this baseline"
+        }
+      ],
+      "note": "These individual inspections are not a complete-site indexing report."
+    },
+    "performance_rechecked_at_utc": "2026-09-21T15:15:29Z",
+    "performance_recheck_status": "processing_data"
+  },
+  "serp_method": {
+    "provider": "HYPD; Google data combined with third-party aggregated data",
+    "country": "United Kingdom",
+    "language": "English",
+    "device_requested": "mobile",
+    "requested_item_types": [
+      "organic"
+    ],
+    "requested_page": 1,
+    "requested_page_size": 10,
+    "rank_field": "rank_group",
+    "parsing": "Filter nested items by type=organic; exclude local packs, adverts and other blocks.",
+    "owned_hosts": [
+      "speedyvan.uk",
+      "www.speedyvan.uk",
+      "speedy-van.co.uk",
+      "www.speedy-van.co.uk"
+    ],
+    "geographic_precision": "Country-level request; city names occur only in query text. No city-coordinate or map-pack position was measured.",
+    "personalisation": "No user-session controls verified beyond provider parameters.",
+    "absence_rule": "Record null position and not observed within the actual returned organic set; never substitute rank 11 or 100.",
+    "search_volume": null,
+    "limitations": [
+      "Point-in-time sample, not Search Console average position or universal ranking.",
+      "Nine-result responses are reported as nine.",
+      "The apex homepage in the brand result does not itself establish the currently selected canonical.",
+      "Search results can change with time, location, device and search history.",
+      "No sample is evidence of a ranking response to the unreleased code."
+    ]
+  },
+  "serp_samples": [
+    {
+      "query": "man and van Glasgow",
+      "intent": "man_and_van",
+      "target_url": "https://www.speedyvan.uk/services/man-and-van",
+      "query_source": "auditor-selected; not an observed Search Console query",
+      "requested_at_utc": "2026-09-21T15:09:21.304Z",
+      "provider_timestamp_utc": "2026-09-21 15:09:25 +00:00",
+      "provider_result_id": "c7e1355f-e42d-4b0b-9958-e3cac9081e9d",
+      "search_engine_domain": "google.com",
+      "provider_location_code": 2826,
+      "provider_language_code": "en",
+      "organic_results_examined": 10,
+      "domain_observation": "not_observed_in_returned_organic_results",
+      "best_observed_organic_rank": null,
+      "matching_results": [],
+      "organic_results": [
+        {
+          "organic_rank": 1,
+          "url": "https://quickmanandvan.co.uk/man-and-van/amp/glasgow"
+        },
+        {
+          "organic_rank": 2,
+          "url": "https://manwithvanglasgow.com/"
+        },
+        {
+          "organic_rank": 3,
+          "url": "https://www.reddit.com/r/glasgow/comments/1eqb1c1/man_with_van/"
+        },
+        {
+          "organic_rank": 4,
+          "url": "https://www.facebook.com/manwithavanstuart/"
+        },
+        {
+          "organic_rank": 5,
+          "url": "https://www.comparethemanandvan.co.uk/man-and-van-glasgow"
+        },
+        {
+          "organic_rank": 6,
+          "url": "https://www.manwithavanglasgow.com/"
+        },
+        {
+          "organic_rank": 7,
+          "url": "https://glasgowvanman.com/"
+        },
+        {
+          "organic_rank": 8,
+          "url": "https://www.glasgowmanwithvan.co.uk/"
+        },
+        {
+          "organic_rank": 9,
+          "url": "https://www.checkatrade.com/Search/Man-And-A-Van/in/City-Of-Glasgow"
+        },
+        {
+          "organic_rank": 10,
+          "url": "https://glasgowmanwithavan.com/"
+        }
+      ]
+    },
+    {
+      "query": "furniture delivery Glasgow",
+      "intent": "furniture_delivery",
+      "target_url": "https://www.speedyvan.uk/services/furniture-delivery",
+      "query_source": "auditor-selected; not an observed Search Console query",
+      "requested_at_utc": "2026-09-21T15:09:21.305Z",
+      "provider_timestamp_utc": "2026-09-21 15:09:24 +00:00",
+      "provider_result_id": "3a6c7402-b3d5-4f31-af86-7ce9df4b3b13",
+      "search_engine_domain": "google.com",
+      "provider_location_code": 2826,
+      "provider_language_code": "en",
+      "organic_results_examined": 10,
+      "domain_observation": "not_observed_in_returned_organic_results",
+      "best_observed_organic_rank": null,
+      "matching_results": [],
+      "organic_results": [
+        {
+          "organic_rank": 1,
+          "url": "https://www.shiply.com/large-item-delivery/cheap-furniture-delivery/glasgow-cheap-furniture-delivery"
+        },
+        {
+          "organic_rank": 2,
+          "url": "https://portadelivery.co.uk/furniture-courier-glasgow"
+        },
+        {
+          "organic_rank": 3,
+          "url": "https://foxcouriersglasgow.com/man-with-a-van/large-items-delivery/"
+        },
+        {
+          "organic_rank": 4,
+          "url": "https://www.reddit.com/r/glasgow/comments/16zqkag/any_furniture_delivery_service_recommendations/"
+        },
+        {
+          "organic_rank": 5,
+          "url": "https://www.choicefurnituresuperstore.co.uk/Furniture-in-Glasgow.html?srsltid=AU7gw4UOKfOWwVxqktg_A_6CqE2fHpNMh2TxzXIvnA83mK-FazEH1QYg"
+        },
+        {
+          "organic_rank": 6,
+          "url": "https://www.courier-glasgow.co.uk/"
+        },
+        {
+          "organic_rank": 7,
+          "url": "https://www.cfrcltd.org.uk/glasgow-and-paisley-pick-ups/"
+        },
+        {
+          "organic_rank": 8,
+          "url": "https://www.facebook.com/groups/556989814084783/posts/993919487058478/"
+        },
+        {
+          "organic_rank": 9,
+          "url": "https://www.anyvan.com/courier-services/furniture-couriers"
+        },
+        {
+          "organic_rank": 10,
+          "url": "https://josephjamesfurnitureoutlet.com/pages/free-branded-furniture-delivery-in-glasgow-central-scotland?srsltid=AU7gw4UQtbACg5XwU2Xw5b5vYK1O7YG-CbgnWAEzzjb59oAVO2yDmQbN"
+        }
+      ]
+    },
+    {
+      "query": "house removals Edinburgh",
+      "intent": "house_removals",
+      "target_url": "https://www.speedyvan.uk/services/house-removal",
+      "query_source": "auditor-selected; not an observed Search Console query",
+      "requested_at_utc": "2026-09-21T15:09:37.059Z",
+      "provider_timestamp_utc": "2026-09-21 15:09:40 +00:00",
+      "provider_result_id": "afb924bd-4ed5-42e0-8de3-0ca3d740c046",
+      "search_engine_domain": "google.com",
+      "provider_location_code": 2826,
+      "provider_language_code": "en",
+      "organic_results_examined": 9,
+      "domain_observation": "not_observed_in_returned_organic_results",
+      "best_observed_organic_rank": null,
+      "matching_results": [],
+      "organic_results": [
+        {
+          "organic_rank": 1,
+          "url": "https://www.broughtonremovals.com/"
+        },
+        {
+          "organic_rank": 2,
+          "url": "https://kerrsremovals.co.uk/"
+        },
+        {
+          "organic_rank": 3,
+          "url": "https://www.clockworkremovals.co.uk/locations/edinburgh/"
+        },
+        {
+          "organic_rank": 4,
+          "url": "https://www.castle-removals.co.uk/"
+        },
+        {
+          "organic_rank": 5,
+          "url": "https://www.whiteandcompany.co.uk/removals-edinburgh/"
+        },
+        {
+          "organic_rank": 6,
+          "url": "https://www.britannia-movers.co.uk/branch/britannia-edinburgh"
+        },
+        {
+          "organic_rank": 7,
+          "url": "https://www.trustedtrader.scot/Edinburgh/Edinburgh-Ideal-Remo-0000773.html"
+        },
+        {
+          "organic_rank": 8,
+          "url": "https://www.move-store.co.uk/"
+        },
+        {
+          "organic_rank": 9,
+          "url": "https://www.checkatrade.com/Search/Removals-Storage/in/Edinburgh"
+        }
+      ]
+    },
+    {
+      "query": "flat removals Glasgow",
+      "intent": "flat_removals",
+      "target_url": "https://www.speedyvan.uk/services/flat-removals",
+      "query_source": "auditor-selected; not an observed Search Console query",
+      "requested_at_utc": "2026-09-21T15:09:37.059Z",
+      "provider_timestamp_utc": "2026-09-21 15:09:45 +00:00",
+      "provider_result_id": "d42f568d-9870-47bf-9257-035841ade437",
+      "search_engine_domain": "google.com",
+      "provider_location_code": 2826,
+      "provider_language_code": "en",
+      "organic_results_examined": 10,
+      "domain_observation": "not_observed_in_returned_organic_results",
+      "best_observed_organic_rank": null,
+      "matching_results": [],
+      "organic_results": [
+        {
+          "organic_rank": 1,
+          "url": "https://www.thehomeremovalscompany.co.uk/"
+        },
+        {
+          "organic_rank": 2,
+          "url": "https://www.glasgowhomeremovals.com/"
+        },
+        {
+          "organic_rank": 3,
+          "url": "https://www.pickfords.co.uk/removals-and-storage-glasgow"
+        },
+        {
+          "organic_rank": 4,
+          "url": "https://www.checkatrade.com/Search/House-Removal/in/Glasgow"
+        },
+        {
+          "organic_rank": 5,
+          "url": "https://www.clockworkremovals.co.uk/locations/glasgow/"
+        },
+        {
+          "organic_rank": 6,
+          "url": "https://www.scotremovals.com/"
+        },
+        {
+          "organic_rank": 7,
+          "url": "https://www.reallymoving.com/removals/directory/glasgow"
+        },
+        {
+          "organic_rank": 8,
+          "url": "https://www.aimovers.org.uk/scotland/glasgow/mover"
+        },
+        {
+          "organic_rank": 9,
+          "url": "https://www.reddit.com/r/glasgow/comments/vmno8b/removal_company_recommends/"
+        },
+        {
+          "organic_rank": 10,
+          "url": "https://harthomeremovals.co.uk/"
+        }
+      ]
+    },
+    {
+      "query": "office removals Glasgow",
+      "intent": "office_removals",
+      "target_url": "https://www.speedyvan.uk/services/office-removal",
+      "query_source": "auditor-selected; not an observed Search Console query",
+      "requested_at_utc": "2026-09-21T15:09:37.059Z",
+      "provider_timestamp_utc": "2026-09-21 15:09:40 +00:00",
+      "provider_result_id": "5daaaa61-3939-4140-a012-7c4cc0511d85",
+      "search_engine_domain": "google.com",
+      "provider_location_code": 2826,
+      "provider_language_code": "en",
+      "organic_results_examined": 10,
+      "domain_observation": "not_observed_in_returned_organic_results",
+      "best_observed_organic_rank": null,
+      "matching_results": [],
+      "organic_results": [
+        {
+          "organic_rank": 1,
+          "url": "https://www.sterlingsinclairremovals.co.uk/office-furniture-removals/"
+        },
+        {
+          "organic_rank": 2,
+          "url": "https://www.clockworkremovals.co.uk/locations/glasgow/"
+        },
+        {
+          "organic_rank": 3,
+          "url": "https://www.greenmoveuk.com/business-moves-glasgow"
+        },
+        {
+          "organic_rank": 4,
+          "url": "https://rhtgroup.co.uk/commercial-removals/office-removals/office-relocation-scotland/office-removals-glasgow-scotland/"
+        },
+        {
+          "organic_rank": 5,
+          "url": "https://www.pickfords.co.uk/removals-and-storage-glasgow"
+        },
+        {
+          "organic_rank": 6,
+          "url": "https://hellovans.com/office-removal/glasgow/"
+        },
+        {
+          "organic_rank": 7,
+          "url": "https://www.amcremovalsltd.co.uk/glasgow-removals/"
+        },
+        {
+          "organic_rank": 8,
+          "url": "https://www.constantinescotland.co.uk/commercial-removals/office-removals/"
+        },
+        {
+          "organic_rank": 9,
+          "url": "https://purdieworldwide.co.uk/office-removals-glasgow/"
+        },
+        {
+          "organic_rank": 10,
+          "url": "https://www.move-store.co.uk/office-removals-glasgow/"
+        }
+      ]
+    },
+    {
+      "query": "small moves Glasgow",
+      "intent": "small_moves",
+      "target_url": "https://www.speedyvan.uk/services/small-moves",
+      "query_source": "auditor-selected; not an observed Search Console query",
+      "requested_at_utc": "2026-09-21T15:09:53.608Z",
+      "provider_timestamp_utc": "2026-09-21 15:09:58 +00:00",
+      "provider_result_id": "9fd0165f-9931-4d99-a312-4da2cc5501e5",
+      "search_engine_domain": "google.com",
+      "provider_location_code": 2826,
+      "provider_language_code": "en",
+      "organic_results_examined": 10,
+      "domain_observation": "not_observed_in_returned_organic_results",
+      "best_observed_organic_rank": null,
+      "matching_results": [],
+      "organic_results": [
+        {
+          "organic_rank": 1,
+          "url": "https://manwithvanglasgow.com/"
+        },
+        {
+          "organic_rank": 2,
+          "url": "https://www.clockworkremovals.co.uk/locations/glasgow/"
+        },
+        {
+          "organic_rank": 3,
+          "url": "https://www.glasgowmovers.co.uk/"
+        },
+        {
+          "organic_rank": 4,
+          "url": "https://www.checkatrade.com/Search/House-Removal/in/Glasgow"
+        },
+        {
+          "organic_rank": 5,
+          "url": "https://www.pickfords.co.uk/removals-and-storage-glasgow"
+        },
+        {
+          "organic_rank": 6,
+          "url": "https://yourmanwithavan.com/branches/glasgow-lanarkshire/"
+        },
+        {
+          "organic_rank": 7,
+          "url": "https://www.peachyremovals.com/"
+        },
+        {
+          "organic_rank": 8,
+          "url": "https://www.mybuilder.com/moving-services/moving-tradespeople/glasgow"
+        },
+        {
+          "organic_rank": 9,
+          "url": "https://www.facebook.com/p/Little-Large-Removals-100063525070309/?locale=en_GB"
+        },
+        {
+          "organic_rank": 10,
+          "url": "https://fastandcheapremoval.com/"
+        }
+      ]
+    },
+    {
+      "query": "long distance removals Scotland",
+      "intent": "long_distance_removals",
+      "target_url": "https://www.speedyvan.uk/services/long-distance-removals",
+      "query_source": "auditor-selected; not an observed Search Console query",
+      "requested_at_utc": "2026-09-21T15:09:53.608Z",
+      "provider_timestamp_utc": "2026-09-21 15:09:57 +00:00",
+      "provider_result_id": "8923831f-d861-43d4-9650-b6c8f80eb286",
+      "search_engine_domain": "google.com",
+      "provider_location_code": 2826,
+      "provider_language_code": "en",
+      "organic_results_examined": 9,
+      "domain_observation": "not_observed_in_returned_organic_results",
+      "best_observed_organic_rank": null,
+      "matching_results": [],
+      "organic_results": [
+        {
+          "organic_rank": 1,
+          "url": "https://www.caledoniaremovals.co.uk/news/removal-companies-scotland-to-england-caledonia-removals"
+        },
+        {
+          "organic_rank": 2,
+          "url": "https://1stmovers.co.uk/nationwide-moves/england-to-scotland-removals/"
+        },
+        {
+          "organic_rank": 3,
+          "url": "https://www.removalservicesscotland.co.uk/"
+        },
+        {
+          "organic_rank": 4,
+          "url": "https://www.whiteandcompany.co.uk/removals-scotland/"
+        },
+        {
+          "organic_rank": 5,
+          "url": "https://www.pickfords.co.uk/removals-and-storage-Scotland"
+        },
+        {
+          "organic_rank": 6,
+          "url": "https://scottish-removals.co.uk/"
+        },
+        {
+          "organic_rank": 7,
+          "url": "https://www.amcremovalsltd.co.uk/"
+        },
+        {
+          "organic_rank": 8,
+          "url": "https://www.thehomeremovalscompany.co.uk/"
+        },
+        {
+          "organic_rank": 9,
+          "url": "https://www.getamover.co.uk/movers/scotland/"
+        }
+      ]
+    },
+    {
+      "query": "speedy van",
+      "intent": "brand",
+      "target_url": "https://www.speedyvan.uk/",
+      "query_source": "auditor-selected; not an observed Search Console query",
+      "requested_at_utc": "2026-09-21T15:09:53.608Z",
+      "provider_timestamp_utc": "2026-09-21 15:09:57 +00:00",
+      "provider_result_id": "6860a1aa-274d-4160-9fa4-b98a29743004",
+      "search_engine_domain": "google.com",
+      "provider_location_code": 2826,
+      "provider_language_code": "en",
+      "organic_results_examined": 9,
+      "domain_observation": "observed",
+      "best_observed_organic_rank": 1,
+      "matching_results": [
+        {
+          "organic_rank": 1,
+          "url": "https://speedyvan.uk/"
+        }
+      ],
+      "organic_results": [
+        {
+          "organic_rank": 1,
+          "url": "https://speedyvan.uk/"
+        },
+        {
+          "organic_rank": 2,
+          "url": "https://find-and-update.company-information.service.gov.uk/company/16446979"
+        },
+        {
+          "organic_rank": 3,
+          "url": "https://uk.trustpilot.com/review/speedy-van.co.uk"
+        },
+        {
+          "organic_rank": 4,
+          "url": "https://www.speedyservices.com/media-gallery/depot-and-van?srsltid=AU7gw4XQLyYY7zEm6RMH0SSRtmlj4Lb0qNC7uz1ok3N-uTvUuQ0FJKe1"
+        },
+        {
+          "organic_rank": 5,
+          "url": "https://speedyfreight.com/vehicles/"
+        },
+        {
+          "organic_rank": 6,
+          "url": "https://euroturktr.com/en/services/speedy-van/"
+        },
+        {
+          "organic_rank": 7,
+          "url": "https://www.facebook.com/p/Speedy-van-man-100063915138142/"
+        },
+        {
+          "organic_rank": 8,
+          "url": "https://www.shutterstock.com/search/speedy-van"
+        },
+        {
+          "organic_rank": 9,
+          "url": "https://smartnspeedyvanservices.co.uk/"
+        }
+      ]
+    }
+  ],
+  "prior_same_day_sample": {
+    "source": "docs/seo/growth-plan.md",
+    "query": "man and van",
+    "observation": "Not found in first 10 UK/English/mobile organic results; not re-sampled in this fixed eight-query set."
+  },
+  "commercial_baseline": {
+    "status": "unavailable",
+    "organic_landing_sessions": null,
+    "qualified_organic_calls": null,
+    "organic_quote_starts": null,
+    "unique_confirmed_organic_bookings": null,
+    "confirmed_organic_revenue_gbp": null,
+    "source_observations": [
+      "The repair branch contains consent-aware dispatch and purchase deduplication.",
+      "Step4Payment calls trackPurchase after the confirmation path; provider receipt was not verified.",
+      "trackBookingStart exists but no consumer call was found. Existing quote_click events are CTA interactions, not verified quote starts."
+    ],
+    "access_limits": [
+      "No usable Search Console query or aggregate export at 15:06Z.",
+      "GA4 property identity, configured tags, received events and attribution settings not verified by this measurement pass.",
+      "No qualified call dataset, reconciled organic booking dataset or verified Google Business Profile performance access.",
+      "No live payments, bookings, calls or analytics events created for this baseline."
+    ]
+  },
+  "outcome_targets": {
+    "numeric_targets": null,
+    "reason": "Wait for complete reliable traffic/conversion data and confirmed operating capacity.",
+    "guaranteed_ranking": false
+  },
+  "measurement_plan": "docs/seo/measurement-plan.md"
+}
