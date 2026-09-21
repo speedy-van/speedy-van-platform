@@ -1,5 +1,7 @@
 "use client";
 
+import { trackAnalyticsEvent } from "@/lib/analytics";
+
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -72,23 +74,12 @@ const TRIGGER_PATHS = [
 ];
 
 function track(items: string[], total: number) {
-  if (typeof window === "undefined") return;
-  const w = window as Window & {
-    gtag?: (...args: unknown[]) => void;
-    dataLayer?: unknown[];
-  };
-  try {
-    w.gtag?.("event", "item_popup_click", {
-      event_category: "engagement",
-      items: items.join(","),
-      estimated_total: total,
-    });
-  } catch { /* ignore */ }
-  try {
-    w.dataLayer?.push({ event: "item_popup_click", items, estimated_total: total });
-  } catch { /* ignore */ }
+  trackAnalyticsEvent("item_popup_click", {
+    event_category: "engagement",
+    items: items.join(","),
+    estimated_total: total,
+  });
 }
-
 export function SofaItemPopup() {
   const pathname = usePathname();
   const [visible, setVisible] = useState(false);

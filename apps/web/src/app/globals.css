@@ -4,6 +4,7 @@
 
 html {
   scroll-behavior: smooth;
+  scroll-padding-top: 5rem;
 }
 
 @layer base {
@@ -16,6 +17,11 @@ html {
   h1, h2, h3, h4, h5, h6 {
     @apply font-bold tracking-tight;
   }
+}
+
+.mobile-nav-menu {
+  max-height: calc(100vh - 4rem);
+  max-height: calc(100dvh - 4rem);
 }
 
 @layer components {
@@ -156,6 +162,7 @@ details[open] summary .chevron {
 }
 
 .hero-gradient-text {
+  color: #FBBF24;
   background-image: linear-gradient(
     90deg,
     #D97706 0%,
@@ -168,9 +175,14 @@ details[open] summary .chevron {
   background-position: 0% 50%;
   -webkit-background-clip: text;
   background-clip: text;
-  color: transparent;
-  -webkit-text-fill-color: transparent;
   animation: heroGradientFlow 6s ease-in-out infinite;
+}
+
+@supports (background-clip: text) or (-webkit-background-clip: text) {
+  .hero-gradient-text {
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+  }
 }
 
 .hero-gradient-text--shimmer {
@@ -196,6 +208,14 @@ details[open] summary .chevron {
   animation:
     heroShimmer 3.5s linear infinite,
     heroGradientFlow 6s ease-in-out infinite;
+}
+
+@media (forced-colors: active) {
+  .hero-gradient-text {
+    background: none;
+    color: CanvasText;
+    -webkit-text-fill-color: CanvasText;
+  }
 }
 
 .hero-typing-caret {
@@ -256,10 +276,8 @@ details[open] summary .chevron {
 
 /* Staggered fade-up for hero content */
 .hero-fade-up {
-  opacity: 0;
-  transform: translate3d(0, 14px, 0);
-  animation: heroFadeUp 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-  will-change: transform, opacity;
+  opacity: 1;
+  animation: heroFadeUp 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 .hero-fade-up-1 { animation-delay: 0.05s; }
 .hero-fade-up-2 { animation-delay: 0.20s; }
@@ -268,8 +286,10 @@ details[open] summary .chevron {
 .hero-fade-up-5 { animation-delay: 0.65s; }
 
 @keyframes heroFadeUp {
+  from {
+    transform: translate3d(0, 14px, 0);
+  }
   to {
-    opacity: 1;
     transform: translate3d(0, 0, 0);
   }
 }
@@ -385,8 +405,8 @@ details[open] summary .chevron {
 }
 
 .booking-search-input::placeholder {
-  color: rgba(255, 255, 255, 0.35);
-  -webkit-text-fill-color: rgba(255, 255, 255, 0.35);
+  color: rgba(255, 255, 255, 0.65);
+  -webkit-text-fill-color: rgba(255, 255, 255, 0.65);
 }
 
 .booking-search-input::-webkit-search-cancel-button {
@@ -417,6 +437,10 @@ details[open] summary .chevron {
 /* ── Scroll reveal (used with ScrollReveal client component) ────────── */
 .reveal,
 .reveal-stagger > * {
+  opacity: 1;
+}
+.reveal.reveal-pending,
+.reveal-stagger > .reveal-pending {
   opacity: 0;
   transform: translate3d(0, 16px, 0);
   transition: opacity 0.55s cubic-bezier(0.22, 1, 0.36, 1),
@@ -424,9 +448,12 @@ details[open] summary .chevron {
   will-change: opacity, transform;
 }
 .reveal.is-visible,
-.reveal-stagger > .is-visible {
+.reveal-stagger > .is-visible,
+.reveal.reveal-pending:focus-within,
+.reveal-stagger > .reveal-pending:focus-within {
   opacity: 1;
   transform: translate3d(0, 0, 0);
+  will-change: auto;
 }
 .reveal-stagger > *:nth-child(1)  { transition-delay: 0.00s; }
 .reveal-stagger > *:nth-child(2)  { transition-delay: 0.06s; }
@@ -516,19 +543,27 @@ details[open] summary .chevron {
 
 /* ── FAQ smooth open/close ─────────────────────────────────────────── */
 details.faq-item > div {
-  overflow: hidden;
-  max-height: 0;
-  opacity: 0;
-  transition: max-height 0.35s ease, opacity 0.35s ease, padding 0.35s ease;
-}
-details.faq-item[open] > div {
-  max-height: 600px;
-  opacity: 1;
+  overflow-wrap: anywhere;
 }
 
 /* Respect reduced motion */
 @media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    transition-delay: 0ms !important;
+    scroll-behavior: auto !important;
+  }
   .hero-road-lines,
+  .hero-service-card,
+  .animate-flip,
+  .animate-slide-up,
   .cta-pulse,
   .urgency-pulse,
   .trust-badge,
@@ -547,14 +582,19 @@ details.faq-item[open] > div {
   }
   .hero-fade-up,
   .reveal,
-  .reveal-stagger > * {
+  .reveal-stagger > *,
+  .reveal.reveal-pending,
+  .reveal-stagger > .reveal-pending {
     opacity: 1;
     transform: none;
   }
+  .hero-service-card:hover,
+  .group:hover .card-arrow,
+  .card-lift:hover .card-arrow,
   .card-lift:hover,
   .tier-lift:hover,
   .testimonial-lift:hover {
-    transform: none;
+    transform: none !important;
   }
 }
 
@@ -563,4 +603,3 @@ details.faq-item[open] > div {
   .hero-road { opacity: 0.12; height: 80px; }
   .hero-road-lines { animation-duration: 8s; }
 }
-

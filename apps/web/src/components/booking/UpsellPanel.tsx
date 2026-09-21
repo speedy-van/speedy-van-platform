@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useBooking } from "@/lib/booking-store";
+import { trackAnalyticsEvent } from "@/lib/analytics";
 
 const API_BASE =
   process.env.NODE_ENV === "development"
@@ -26,21 +27,7 @@ export interface UpsellPanelProps {
 }
 
 function track(name: string, payload: Record<string, unknown> = {}) {
-  if (typeof window === "undefined") return;
-  const w = window as Window & {
-    gtag?: (...args: unknown[]) => void;
-    dataLayer?: unknown[];
-  };
-  try {
-    w.gtag?.("event", name, { event_category: "upsell", ...payload });
-  } catch {
-    /* ignore */
-  }
-  try {
-    w.dataLayer?.push({ event: name, ...payload });
-  } catch {
-    /* ignore */
-  }
+  trackAnalyticsEvent(name, { event_category: "upsell", ...payload });
 }
 
 interface SlotData { slot: string; price: number }

@@ -1,159 +1,72 @@
-# Verification
+# Verification of the repair branch
 
-Date: 2026-09-19
+Executed 21 September 2026 on `fix/organic-search-and-booking-2026-09-21`, based on `e43ffc760b57b5d70b655760ee4877f1f759a85a`. These results describe this branch; no web/API deployment was performed for this implementation.
 
-## Local Private Preview
+## Executed checks
 
-Preview URL:
+| Check | Result | Scope |
+| --- | --- | --- |
+| Clean dependency installation | Passed | npm shallow workspace layout; React 19 web and React 18 mobile peers resolved separately |
+| `npm ci --dry-run --ignore-scripts --no-audit --no-fund` | Passed | Manifest/lockfile installation consistency |
+| `npx prisma generate --schema=packages/db/prisma/schema.prisma` | Passed | Prisma 5.22; code generation only, no database operation |
+| `npm run typecheck` | Passed | API, iOS admin, web, config, database and shared packages |
+| `npm run typecheck -w apps/web` after adding route type generation | Passed | `next typegen` plus TypeScript; works without previously generated route types |
+| `npm run lint` | Passed | API and web; no ESLint errors or warnings. Next reports its separate `next lint` deprecation notice |
+| `npm run test:regression` | 75 passed, 0 failed | 19 booking, 13 analytics, 29 payment/API, 13 service-worker/driver and 1 schema consistency checks |
+| `NEXT_PUBLIC_API_URL=http://127.0.0.1:4000 npm run build` | Passed | Database package, Next 15.5.25 web production build (75 static pages) and API TypeScript build |
+| Production preview HTTP/HTML QA | 428 passed, 0 failed | All 47 sitemap pages plus private, invalid, redirect, method and preview-host probes |
+| Keyword map validation | Passed | 162 unique phrases; five sampled queries, 157 inferred; 16 existing/new hub targets; volumes unavailable |
+| `git diff --check` | Passed | Whitespace consistency |
 
-```text
-http://localhost:3002
+The web build deliberately used a local test API origin. No production booking, database migration, seed, payment, refund or analytics event was triggered. A real preview must be rebuilt with its intended non-production API configuration before interactive checkout testing.
+
+## Reproducible page evidence
+
+[verification-results.json](verification-results.json) records all 428 assertions, initial-HTML titles/H1s/canonicals and timestamp. [url-inventory.csv](url-inventory.csv) lists the exact branch URLs and dispositions. Run the maintained script against a running production build:
+
+```sh
+npm run start -w apps/web -- --hostname 127.0.0.1
+python scripts/seo-local-qa.py --base-url http://127.0.0.1:3002
 ```
 
-Current preview process:
+Here the server and HTTP checker were launched as child processes of one local runner because each command environment has an isolated loopback network. No public preview was deployed. A normal local machine can use two terminals. The older script's print-only browser checks and expired hard-coded date were replaced with explicit HTTP assertions; old screenshot claims are not carried forward.
 
-```text
-PID 43764
-```
+Assertions cover:
 
-This is local only. Nothing was deployed.
+- 47 unique canonical-primary sitemap entries: seven static/hub pages, 27 areas and 13 services; no fabricated modification dates, private routes or unsupported waste route.
+- Every sitemap page: HTTP 200, one self-canonical, one useful initial-HTML H1, useful description, one brand suffix, page-specific Open Graph URL and indexable metadata/headers.
+- Seven core service pages linked from both the homepage and service hub, with crawlable booking links and canonical Service entity IDs.
+- All existing areas linked from the area hub; hourly GBP unit specification and stable homepage WebSite entity.
+- Real 404/noindex for invalid service, area and arbitrary paths.
+- Booking, booking review, login, driver login, tracking and jobs: no inherited public canonical and noindex in both metadata and HTTP headers.
+- Three legacy HTTPS hosts: a single 308 for public GET/HEAD preserving encoded path/query; API and mutation-method bypass.
+- Preview-host HTTP noindex and correct private-prefix boundaries.
 
-## Commands Run
+## High-risk behaviour evidence
 
-```text
-npm run typecheck -w apps/web
-npm run build -w apps/web
-npm run lint -w apps/web
-python scripts/seo-local-qa.py
-git ls-remote https://github.com/speedy-van/sv.git refs/heads/main
-```
+- Booking tests exercise corrupt/expired drafts, service aliases, inventory preservation, quote invalidation, malformed/empty quote data, currency, payment status, confirmation retry, cancelled booking handling, navigation locks and verified recovery. They do not establish browser rendering.
+- Payment tests execute the actual service/route code with mocked persistence and provider calls. They validate intent ownership/amount/currency, transactional first-payment effects, replay, progressed/cancelled states, customer cancellation eligibility, refund failures, current refund reconciliation and real Stripe test-signature verification.
+- Analytics tests cover consent changes, cross-tab updates, unavailable storage, query stripping, private-route suppression, one application dispatch, per-provider purchase deduplication and failed provider calls. They do not establish delivery to the configured GA4/Meta accounts.
+- Service-worker/driver tests cover cache eligibility, failed/offline responses, exact API paths, authenticated traffic, return-destination restrictions and preserving login/protected-route destinations.
+- Schema regression ensures the standalone API deployment copy matches the existing canonical shared schema. The API copy had omitted already-existing service flags, waitlist and European-enquiry models and the enquiry notification enum. Synchronisation fixes client generation; it does not introduce a database migration.
 
-Results:
+## Dependency findings and compatibility
 
-| Command | Result |
-| --- | --- |
-| `npm run typecheck -w apps/web` | Passed |
-| `npm run build -w apps/web` | Passed; 73 static pages generated |
-| `npm run lint -w apps/web` | Passed with no ESLint warnings or errors after lint-only cleanup |
-| `python scripts/seo-local-qa.py` | Passed |
-| `git ls-remote ... refs/heads/main` | Confirmed public `main` at `688632f9948c5189438e50f4d1f61f938d1850a4` |
+The original production dependency audit reported 41 findings, including four critical. Security updates include Next 15.5.25, React/React DOM 19.2.8 for the web, NextAuth 4.24.15, Hono 4.13.8 or compatible later 4.x, the 1.x Node adapter fix, and PostCSS 8.5.28. The unused competing sitemap package was removed. The lockfile was rebuilt to isolate web/mobile React peers without a mobile SDK migration; npm and the existing UI libraries remain in use.
 
-The first build attempt during the session failed with `EPERM` because an existing `next start` process was holding `.next/trace`. That process was stopped and the build then passed.
+Current `npm audit --omit=dev --workspace apps/web --workspace apps/api --json`: **0 findings**. This is the dependency advisory result for that selected scope, not proof that the application has no security defects.
 
-## Lint Cleanup
+Current all-workspace production audit: **25 findings: 14 moderate, 10 high, one critical**, confined to the retained mobile/Expo dependency tree. The critical finding is its `tar` dependency. npm proposes an Expo 57 major upgrade; that mobile release requires its own native build/device verification and was not forced into the website repair. See [dependency-audit.json](dependency-audit.json) for package paths and suggested fixes. Keep this outstanding work visible; do not report the whole repository as vulnerability-free.
 
-`next lint` is now clean. The cleanup removed unused imports/state, converted type-only imports, stabilised the driver job fetch callback dependency and kept existing image behaviour where switching to `next/image` would have risked changing dynamic proof-image handling.
+Primary references: [Next image-optimisation advisory](https://github.com/vercel/next.js/security/advisories/GHSA-2xp9-vwfh-vxw4), [Next 15 compatibility guide](https://nextjs.org/docs/app/guides/upgrading/version-15), [NextAuth advisory](https://github.com/nextauthjs/next-auth/security/advisories/GHSA-x445-f3h2-j279), [npm installation strategies](https://docs.npmjs.com/cli/v11/commands/npm-install/#install-strategy).
 
-## Browser Tooling
+## Release gates not executed here
 
-The in-app Browser skill was attempted but the Node REPL bridge failed with:
+- **Visual/mobile browser QA:** the authenticated cloud browser rejected the local preview origin with `ERR_BLOCKED_BY_CLIENT`. No bypass or substitute standalone browser was used. Check 360px/768px/desktop, no-JavaScript presentation, keyboard focus, overflow and reduced motion before release. Source fixes and HTTP checks do not certify WCAG AA.
+- **Real integration:** no Stripe test-mode payment or actual Neon transaction/concurrency test was run. Verify success, 3-D Secure, decline, retries, webhook replay, recovery, cancellation/refund and dependent admin/driver/mobile flows in a non-production environment. API and web must be released together in the documented order.
+- **External services:** configured analytics receipt, GA4 Enhanced Measurement settings, notification/email delivery and managed Google Business Profile ownership remain unverified.
+- **Operational claims:** existing prices, minima, insurance, hours, capacity, specialist equipment and wider/ferry coverage need business confirmation.
+- **Performance:** no field p75 LCP/INP/CLS measurement is available and no Lighthouse score is presented as field INP. Targets remain LCP <2.5s, INP <200ms and CLS <0.1.
+- **Search outcomes:** Search Console performance was processing. Accepted sitemap/indexing requests are not completed indexing, and neither this build nor these test counts prove ranking gains.
 
-```text
-sandboxCwd must use the file URI scheme
-```
-
-Independent QA was therefore run with installed Python Playwright 1.62.0.
-
-## Local Metadata Checks
-
-| Path | Status | Title | Canonical | Robots |
-| --- | --- | --- | --- | --- |
-| `/` | 200 | `SpeedyVan | Man and Van, Removals & Delivery Across Scotland` | `https://www.speedyvan.uk` | `index, follow` |
-| `/privacy` | 200 | `Privacy Policy | SpeedyVan` | `https://www.speedyvan.uk/privacy` | `index, follow` |
-| `/terms` | 200 | `Terms & Conditions | SpeedyVan` | `https://www.speedyvan.uk/terms` | `index, follow` |
-| `/cookies` | 200 | `Cookie Policy | SpeedyVan` | `https://www.speedyvan.uk/cookies` | `index, follow` |
-| `/services/man-and-van` | 200 | `Man and Van | SpeedyVan` | `https://www.speedyvan.uk/services/man-and-van` | `index, follow` |
-| `/services/house-removal` | 200 | `House Removals | SpeedyVan` | `https://www.speedyvan.uk/services/house-removal` | `index, follow` |
-| `/areas/glasgow` | 200 | `Man and Van in Glasgow | SpeedyVan` | `https://www.speedyvan.uk/areas/glasgow` | `index, follow` |
-| `/areas/edinburgh` | 200 | `Man and Van in Edinburgh | SpeedyVan` | `https://www.speedyvan.uk/areas/edinburgh` | `index, follow` |
-| `/book` | 200 | `Book Your Van | SpeedyVan` | none | `noindex, nofollow` |
-| `/auth/login` | 200 | `Sign In | SpeedyVan` | none | `noindex, nofollow` |
-| `/services/not-a-real-service` | 404 | default not-found title | none | `noindex` |
-| `/areas/not-a-real-area` | 404 | default not-found title | none | `noindex` |
-
-## Sitemap And Robots
-
-Local `http://localhost:3002/sitemap.xml`:
-
-| Check | Result |
-| --- | --- |
-| URL count | 45 |
-| URLs on `https://www.speedyvan.uk` | 45 |
-| Contains `speedy-van.co.uk` | 0 |
-| Contains `rubbish-removal` | 0 |
-
-Local `robots.txt`:
-
-```text
-User-Agent: *
-Allow: /
-Disallow: /admin/
-Disallow: /driver/
-Disallow: /auth/
-Disallow: /api/
-
-Sitemap: https://www.speedyvan.uk/sitemap.xml
-```
-
-## Redirect Checks
-
-| Local request | Result |
-| --- | --- |
-| `Host: speedy-van.co.uk` `/services/man-and-van?utm_source=test` | 308 to `https://www.speedyvan.uk/services/man-and-van?utm_source=test` |
-| `Host: speedy-van.co.uk` `/api/health` | No redirect; 404 from app |
-| `POST Host: speedy-van.co.uk` `/services/man-and-van` | No redirect; 405 from app |
-| `Host: www.speedyvan.uk` `/services/man-and-van` | 200 |
-
-## Playwright QA
-
-Script:
-
-```text
-python scripts/seo-local-qa.py
-```
-
-Key passing checks:
-
-- Home desktop and mobile: no horizontal overflow.
-- Service page: `Plan Your Man and Van` present.
-- Service page: leaked internal SEO phrases absent.
-- Service booking CTA points to `/book?service=man-and-van`.
-- Glasgow area page: practical move advice present.
-- Glasgow area page: booking CTA present.
-- `/book?service=man-and-van`: prefilled service advances to details.
-- Empty address validation shows `Please enter a pickup address.`
-- Postcode invalid state works.
-- Out-of-coverage state works.
-- Pricing failure state shows `Quote unavailable` and `Retry quote`.
-- Repeated payment submit guard: submit button shows `Processing...`, is disabled, and only one `/booking/create` request is observed.
-- Payment failure state shows the server error message.
-
-Screenshots written to `.screens/`:
-
-```text
-seo-home-desktop-2026-09-19.png
-seo-home-mobile-2026-09-19.png
-seo-service-man-and-van-desktop-2026-09-19.png
-seo-area-glasgow-mobile-2026-09-19.png
-seo-book-validation-2026-09-19.png
-seo-book-payment-failure-2026-09-19.png
-```
-
-## Unverified
-
-- Live deployment of these local fixes.
-- Search Console validation.
-- GA4 funnel impact.
-- Google organic rankings.
-- Local-pack ranking.
-- Google Business Profile state.
-- Field Core Web Vitals.
-- Payment return from a real provider session; no live charge was created.
-
-## Performance And Measurement Notes
-
-- No performance code was changed.
-- Mobile QA at 390px and desktop QA at 1366px found no horizontal overflow on tested pages.
-- Field Core Web Vitals were unavailable; no p75 LCP, INP or CLS claim is made.
-- Existing consent and purchase tracking contracts were inspected, not replaced.
-- Analytics events were not duplicated or newly introduced.
+Use [release-checklist.md](release-checklist.md) for local integration, coordinated release, rollback and the Copilot handoff prompt.

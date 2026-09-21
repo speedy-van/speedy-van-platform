@@ -17,7 +17,7 @@ export interface JourneyFieldsProps {
 }
 
 function hasUsableCoordinates(point: AddressResult | null): point is AddressResult {
-  return Boolean(point && Number.isFinite(point.lat) && Number.isFinite(point.lng) && point.lat !== 0 && point.lng !== 0);
+  return Boolean(point && Number.isFinite(point.lat) && Math.abs(point.lat) <= 90 && Number.isFinite(point.lng) && Math.abs(point.lng) <= 180 && (point.lat !== 0 || point.lng !== 0));
 }
 
 export function JourneyFields({ onBack, onContinue }: JourneyFieldsProps) {
@@ -35,6 +35,7 @@ export function JourneyFields({ onBack, onContinue }: JourneyFieldsProps) {
     if (!hasRouteInputs) {
       setRoute(null);
       setRouteError("");
+      setLoadingDistance(false);
       return;
     }
 
@@ -214,7 +215,7 @@ export function JourneyFields({ onBack, onContinue }: JourneyFieldsProps) {
         >
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
-              <h2 className="text-base font-black text-white">Route confirmed</h2>
+              <h2 className="text-base font-black text-white">{route ? "Route confirmed" : "Calculating route"}</h2>
               <p className="mt-0.5 text-sm text-amber-300/80">
                 {loadingDistance
                   ? "Calculating distance..."

@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { haptic } from "@/lib/haptic";
 
@@ -47,7 +48,7 @@ export function StickyBookBar() {
             aria-label="Call us on 07909 032889"
             className="transition-transform hover:scale-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 rounded-full"
           >
-            <img src="/call-icon.png" alt="Call us" width={44} height={44} />
+            <Image src="/call-icon.png" alt="" width={44} height={44} sizes="44px" />
           </a>
         </div>
       </div>

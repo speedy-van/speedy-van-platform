@@ -1,36 +1,17 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
-import { SERVICES, getBookableService } from "@/lib/services";
+import { SERVICES, getBookableService, getServicePriceLabel } from "@/lib/services";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { buildBreadcrumbSchema } from "@/lib/seo/schemas";
-import { SITE_OG_IMAGE, absoluteUrl } from "@/lib/seo/constants";
+import { buildPageMetadata } from "@/lib/seo/metadata";
 
-const money = new Intl.NumberFormat("en-GB", {
-  style: "currency",
-  currency: "GBP",
-  maximumFractionDigits: 0,
-});
-
-export const metadata: Metadata = {
+export const metadata: Metadata = buildPageMetadata({
   title: "Moving Prices in Scotland",
   description:
     "Guide prices for man and van, house removals, flat moves, furniture delivery, office removals and long-distance moves across Scotland. Get a confirmed quote online.",
-  alternates: { canonical: absoluteUrl("/pricing") },
-  openGraph: {
-    title: "Moving Prices in Scotland | SpeedyVan",
-    description:
-      "Guide prices for Scottish man and van, removals and delivery services, with confirmed quotes before booking.",
-    url: absoluteUrl("/pricing"),
-    images: [
-      {
-        url: SITE_OG_IMAGE,
-        width: 1200,
-        height: 630,
-        alt: "SpeedyVan moving prices in Scotland",
-      },
-    ],
-  },
-};
+  path: "/pricing",
+});
 
 const PRICE_FACTORS = [
   "Pickup and drop-off postcodes",
@@ -83,7 +64,7 @@ export default function PricingPage() {
               aria-label="Call us on 07909 032889"
               className="transition-transform hover:scale-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 rounded-full"
             >
-              <img src="/call-icon.png" alt="Call us" width={52} height={52} />
+              <Image src="/call-icon.png" alt="" width={52} height={52} sizes="52px" />
             </a>
           </div>
         </div>
@@ -149,7 +130,7 @@ export default function PricingPage() {
                         {service.description}
                       </td>
                       <td className="px-4 py-4 sm:px-6 align-top text-right font-bold text-amber-400">
-                        {money.format(service.startingFrom)}
+                        {getServicePriceLabel(service)}
                       </td>
                     </tr>
                   );

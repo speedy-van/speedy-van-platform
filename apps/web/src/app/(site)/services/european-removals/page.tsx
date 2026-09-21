@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { JsonLd } from "@/components/seo/JsonLd";
 import EuropeanEnquiryForm from "@/components/european/EuropeanEnquiryForm";
@@ -190,7 +191,7 @@ export default function EuropeanRemovalsPage() {
               aria-label="Call us on 07909 032889"
               className="transition-transform hover:scale-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 rounded-full"
             >
-              <img src="/call-icon.png" alt="Call us" width={52} height={52} />
+              <Image src="/call-icon.png" alt="" width={52} height={52} sizes="52px" />
             </a>
           </div>
           <div className="mt-10 grid grid-cols-2 sm:grid-cols-4 gap-4 max-w-3xl mx-auto text-center">

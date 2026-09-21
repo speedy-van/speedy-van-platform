@@ -1,166 +1,67 @@
-# SEO Audit Evidence
+# Organic search and conversion repair
 
-Date: 2026-09-19
+Evidence date: 21 September 2026. Implementation branch: `fix/organic-search-and-booking-2026-09-21`.
 
-## 2026-09-21 Production Update
+## What is preventing discovery
 
-The production website is now verified on Vercel project `speedy-van-web` (`prj_OkJrabaUpBmsMqNibYZc5cgnIqFg`), not the stale duplicate `speedy-van-co-uk-web`.
+The site is not wholly absent from Google. In the inspected UK mobile third-party sample, the brand query returned the apex homepage at position 1. The domain was absent from the first 10 results for `man and van`, `man and van Glasgow` and `furniture delivery Glasgow`, and the first nine for `house removals Edinburgh`. These are individual samples, not universal positions or Search Console averages.
 
-Current live project map is maintained in `docs/deployment-projects.md`.
+Authenticated Search Console inspection of the primary hostname found:
 
-## Starting Constraints
-
-- `AGENTS.md` was checked first as requested. No project `AGENTS.md` exists in `c:\SpeedyVan`; the only match was inside `node_modules/recharts` and was not applicable.
-- The working tree already contained many unpublished changes across web, API, assets, admin and iOS files. They were preserved; no reset, checkout or revert was used.
-- No deployment or live hosting change was made.
-
-## Checkpoint
-
-| Item | Value |
-| --- | --- |
-| Current branch | `seo-production-execution-2026-09-17` |
-| Local HEAD | `ce37317993e7b967a8eb09a4f49bb8d6c3e31b3b` |
-| Public GitHub `main` checked with `git ls-remote` | `688632f9948c5189438e50f4d1f61f938d1850a4` |
-| Active app conclusion | `apps/web` is the active local equivalent and inferred production app |
-| Preview | `http://localhost:3002` |
-| Deployment | Not performed |
-
-## Production Application Proof
-
-Active production-serving app is `apps/web`, not `apps/web-v2`.
-
-Evidence:
-
-- Root `vercel.json` builds `apps/web` and outputs `apps/web/.next`.
-- `.vercel/project.json` now identifies project `speedy-van-web` with project id `prj_OkJrabaUpBmsMqNibYZc5cgnIqFg`.
-- The local workspace does not contain `apps/web-v2`.
-- Live HTML on `https://www.speedyvan.uk/` references App Router chunks under `/_next/static/chunks/app/(site)/...`, matching `apps/web/src/app/(site)`.
-- Public headers do not expose the exact deployed commit. Production commit and deployment branch remain unverified.
-
-## Verified Active Equivalents
-
-| Requested path | Active local equivalent | Verified symbols and contracts |
+| Priority page | Inspected state | Last crawl |
 | --- | --- | --- |
-| `apps/web/src/lib/seo.ts` | `apps/web/src/lib/seo/constants.ts` and `apps/web/src/lib/seo/schemas.ts` | `SITE_URL`, `absoluteUrl`, JSON-LD builders |
-| `apps/web-v2/src/lib/site.ts` | `packages/config/src/site.ts` | `SITE.url` is `https://www.speedyvan.uk` |
-| `apps/web-v2/src/lib/services-data.ts` | `apps/web/src/lib/services.ts` | `SERVICES`, `getServiceBySlug`, `getBookableService`; no `getService` in active app |
-| `apps/web-v2/src/lib/areas-data.ts` | `apps/web/src/lib/areas.ts` | `AREAS`, `getAreaBySlug`; no `getArea` in active app |
-| `apps/web-v2/src/app/layout.tsx` | `apps/web/src/app/layout.tsx` | `RootLayout`, `Metadata`, `Viewport` from `next` |
-| `apps/web-v2/src/app/robots.ts` | `apps/web/src/app/robots.ts` | `MetadataRoute` from `next` |
-| `apps/web-v2/src/app/sitemap.ts` | `apps/web/src/app/sitemap.ts` | `MetadataRoute` from `next` |
-| `apps/web-v2/src/app/services/[slug]/page.tsx` | `apps/web/src/app/(site)/services/[slug]/page.tsx` | `Metadata` from `next`; `notFound` from `next/navigation`; `Props = { params: { slug: string } }` |
-| `apps/web-v2/src/app/areas/[slug]/page.tsx` | `apps/web/src/app/(site)/areas/[slug]/page.tsx` | `Metadata` from `next`; `notFound` from `next/navigation`; `Props = { params: { slug: string } }` |
+| `/services/man-and-van` | URL unknown to Google | Not available |
+| `/services/house-removal` | Discovered, currently not indexed | Not available |
+| `/services/furniture-delivery` | Discovered, currently not indexed | Not available |
+| `/services/office-removal` | Discovered, currently not indexed | Not available |
 
-No active `buildMetadata` helper exists in `apps/web`; metadata is built in each App Router page plus `layout.tsx`.
+The equivalent apex URLs were also unknown in that inspection. Glasgow and other service pages had indexed results in earlier inspections. The primary sitemap was accepted with 45 discovered URLs. Six indexing requests had been accepted earlier in the session; acceptance is not indexing completion. Search Console performance was still processing, so no reliable click, impression, CTR or organic-booking baseline is claimed. No manual action or security warning was shown in the inspected account.
 
-## Shared Contracts Found
+This supports two distinct findings: some important landing pages are not indexed, and the sampled generic queries do not show the site prominently. It does not establish a penalty, a specific backlink deficit or a guaranteed reason Google has not selected each page. Adding a Search Console property alone does not produce rankings.
 
-- Booking state and persistence: `apps/web/src/lib/booking-store.tsx`.
-- Service prefill: `apps/web/src/components/booking/SearchParamsInitializer.tsx` reads `?service=`.
-- Booking steps: `Step1Service`, `Step2Addresses`, `Step3Schedule`, `Step4Payment`.
-- Pricing: browser requests `/pricing/calculate`; local development API base is `http://localhost:4000`.
-- Payment and booking: `/booking/create`, `/booking/confirm`, Stripe Elements, and `trackPurchase`.
-- Coverage and postcode UX: `apps/web/src/components/PostcodeCheck.tsx`.
-- Consent and analytics: `CookieConsent`, `AnalyticsPixels`, `trackPurchase`.
+## Production ownership
 
-No new hook or shared contract was invented.
+See [production-domain-map.md](production-domain-map.md). The active repository is `speedy-van/speedy-van-platform`, with `apps/web` serving the website and `apps/api` serving the separate API. The older `speedy-van/sv` snapshot is not the implementation base. No applicable tracked `AGENTS.md` was found. A clean isolated checkout preserved unpublished work on the owner's computer.
 
-## Business Facts Ledger
+## Revalidation of earlier observations
 
-| Fact or claim | Source checked | Confidence | Status used in local changes | Review need |
-| --- | --- | --- | --- | --- |
-| Primary public host is `https://www.speedyvan.uk` | Live homepage, robots, sitemap, local config | High | Used for canonical, sitemap and redirect targets | Recheck after deployment |
-| Business phone `07909 032889` | Existing site config and visible site contact surfaces | Medium | Preserved; not changed | Owner should verify before release |
-| Contact email `hello@speedyvan.uk` | Existing site config and footer | Medium | Preserved; not changed | Owner should verify before release |
-| Service area is Scotland-wide with key cities | Existing `AREAS`, live sitemap and visible content | Medium | Preserved; area pages strengthened | Verify actual operational coverage boundaries |
-| Goods-in-transit cover exists | Existing public copy | Medium | Kept as a trust statement without expanding limits | Owner should confirm policy and limits |
-| £50,000 insurance statement | Existing public copy | Low | Removed/softened where touched | Needs written evidence before reuse |
-| Same-day availability | Existing marketing copy | Medium | Kept conditional: when capacity allows | Verify operational cut-off and capacity rules |
-| From-prices | Existing service/pricing data and quote flow | Medium | Explained as guide/starting prices, not guaranteed final quote | Reconcile with pricing authority before release |
-| Google Business Profile details | Not accessible in this environment | Unavailable | No live GBP changes made | GBP owner access required |
-| Search Console indexation/canonical state | Not accessible in this environment | Unavailable | Not claimed | Search Console access required |
-| GA4 organic funnel outcomes | HYPD returned no GA4 account summaries | Unavailable | Not claimed | GA4 access required |
+| Earlier observation | Current classification | Evidence or action |
+| --- | --- | --- |
+| Old www domain permanently redirects to primary www | Already correct | Live public-page path/query checks |
+| Two apex HTTPS roots use temporary 307 redirects | Already fixed earlier in this session | Hosting ownership corrected; existing middleware now supplies one 308 for tested public paths |
+| Primary sitemap contains 45 useful HTTP 200 pages | Already correct on live site | Live HTML/sitemap inspection; this branch adds two useful hubs, making 47 |
+| Legal pages canonicalise to old host | Already fixed on live site | Current live canonical inspection; this branch additionally fixes page-specific social metadata |
+| Brand suffix duplicated in titles | Already fixed on live site | Current titles; local assertions check one suffix |
+| Customer copy exposes SEO commentary | Already fixed on live site | Current service HTML; content in this branch is practical service guidance |
+| Unknown service/area slugs return real 404 | Already correct | Kept and covered by local HTTP assertions |
+| Localhost/old-origin sitemap and `/booking/track` generator | Source-only in obsolete snapshot | Not defects attributed to the active live application; active generator and unused dependency reviewed |
+| `/book/review/*` inherits indexable metadata | Source defect in active checkout | Booking layout and private-route HTTP noindex coverage added |
+| Consent changes do not update all analytics consumers | Source defect in active checkout | Reactive consent and one shared event dispatcher implemented |
+| Validated payment can be confused with another booking | Source defect in active checkout | Exact intent/booking/reference/amount/currency binding and transactional confirmation added |
 
-## Live Findings
+## Implemented on this branch
 
-These are live observations from 2026-09-19 before deployment of the local fixes:
+- Two server-rendered hubs, `/services` and `/areas`, link the existing 12 indexable domestic services and 27 areas; no mass postcode or city/service pages.
+- Seven core services have distinct suitability, crew, access, preparation, exclusions, pricing basis, booking steps and relevant links. Flat/small-move CTAs preserve room-inventory intent.
+- Glasgow and Edinburgh guidance covers tenements, stairs, lifts, loading, parking and route planning. No invented jobs, branches, testimonials or local fleet claims.
+- Public metadata aligns canonical, Open Graph and Twitter values. WebSite, MovingCompany, Service and BreadcrumbList identifiers remain stable; hourly prices state their unit.
+- Booking, review, tracking, jobs, auth and driver paths receive noindex protection. Robots permits crawlers to read HTML noindex; API restrictions and authentication remain separate.
+- Direct booking entry is usable; corrupt drafts, expired quotes, empty dates and unavailable prices fail safely. Existing bedroom, room and item inventory is preserved.
+- Checkout prevents duplicate submission, validates the server quote, reuses live payment sessions, requires backend confirmation and protects unresolved checkout from editing/reload-driven new payments.
+- API confirmation validates payment ownership and amount, deduplicates durable effects, preserves progressed/cancelled states and exposes retryable webhook failures. Cancellation does not falsely report an unsuccessful refund.
+- Optional analytics respects consent changes; clicks are not recorded as qualified leads. Purchase events are validated and deduplicated per provider.
+- Public content remains visible without JavaScript. Navigation, skip link, reduced motion, footer contrast and local image optimisation were improved without replacing the design.
+- Service-worker caching excludes private/query-bearing/error responses. Driver return destinations are restricted to supported local routes.
+- Web/API security dependency updates are included. See [verification.md](verification.md) for actual audit results and remaining mobile-package work.
 
-- `https://www.speedyvan.uk/` returns 200 on Vercel and is the primary public site.
-- Old hosts redirect to the primary host, but hop counts vary by scheme and host.
-- Live root canonical is already `https://www.speedyvan.uk`.
-- Live `robots.txt` points to `https://www.speedyvan.uk/sitemap.xml` and disallows `/admin/`, `/driver/`, `/auth/`, and `/api/`.
-- Live sitemap has 45 URLs, all on `https://www.speedyvan.uk`, and excludes `rubbish-removal`.
-- Live legal pages `/privacy`, `/terms`, and `/cookies` still expose stale `https://speedy-van.co.uk/...` canonicals.
-- Live service and legal titles duplicate the brand suffix in places, for example `Man and Van | SpeedyVan | SpeedyVan Scotland`.
-- Live `/book` and `/auth/login` are `noindex,nofollow` but inherit a homepage canonical.
-- Live invalid service and area URLs return 404 and noindex but also inherit default homepage-like metadata.
-- Live `Man and Van` copy still contains internal SEO wording such as `one strong service page` and `synonyms`.
-- Live area pages use generic geography copy for key cities where local practical proof is needed.
+These are branch changes, not a claim that the live deployment has received them.
 
-## External Demand Evidence
+## Business evidence limits
 
-HYPD Google Ads access was available for account `2427152166` in GBP and Europe/London timezone.
+Existing site configuration supplies phone, email, social links, services, area names and guide prices. Their presence in source is not independent operational verification. Existing price amounts are preserved; final quotes come from the server. Minimum charges, insurance limits, hours, individual-date capacity, specialist equipment and ferry/non-Scottish routes still need operational evidence before stronger claims are published.
 
-Highest-volume UK query demand observed:
+The authenticated business-profile surface opened a create-profile flow; ownership of an existing managed Google Business Profile was not established. No profile, branch, review or office was invented. No outreach or paid ranking links were used.
 
-- `man with a van`: 18,100 monthly searches.
-- `man and van`: 9,900.
-- `van and man`: 9,900.
-- `same day delivery`: 9,900.
-- `house removals`: 3,600.
-- `man and van glasgow`: 1,900.
-- `furniture collection`: 1,900.
+## Acceptance and outcomes
 
-GA4 was unavailable through HYPD (`accountSummaries: []`). Search Console was not available as a callable connector. SERP samples from HYPD are third-party snapshots, not official Google ranking proof.
-
-## Prioritised Local Fixes
-
-1. Canonical consistency:
-   - Removed root layout canonical inheritance.
-   - Forced legal canonicals through `absoluteUrl(...)`.
-   - Normalised title templates to avoid duplicate brand suffixes.
-
-2. Non-indexable flow protection:
-   - `/book`, `/auth/login`, `/book/confirmation`, `/track`, and `/jobs` keep noindex intent without inheriting homepage canonical.
-
-3. Service detail content:
-   - Removed visible internal SEO commentary from `Man and Van`.
-   - Added practical planning content to service detail pages.
-   - Added related-service decision links without changing booking mappings.
-
-4. Area proof:
-   - Added practical move advice for Glasgow and Edinburgh.
-   - Added online booking CTAs to area detail pages while preserving phone and email paths.
-
-5. Structured data:
-   - Changed local business and service provider type to `MovingCompany`.
-   - Changed `areaServed` entries from `City` to `AdministrativeArea` to avoid mislabelling towns and neighbourhoods.
-
-6. Redirect safety:
-   - Host redirects now bypass `/api` and non-GET/HEAD requests locally to avoid breaking API, pricing, booking, payment or future webhook flows.
-
-7. Payment safety:
-   - Added a synchronous repeated-submit guard in `Step4Payment` with `useRef`, while keeping the existing disabled UI and error handling.
-
-## Compatibility Notes
-
-- Customer booking state was preserved: no reducer action names, storage key, or draft shape were changed.
-- Pricing payload shape was preserved.
-- Payment endpoints and Stripe handling were preserved.
-- Driver and admin routes were not functionally changed by SEO work.
-- Middleware now avoids redirecting `/api` and non-GET/HEAD requests.
-- SEO-only service pages still map to existing bookable services through `getBookableService`.
-
-## Local Fixes vs Ranking Outcomes
-
-Local fixes are verified in the production build and local private preview. They are not deployed.
-
-Unverified outcomes:
-
-- Google rankings.
-- Search Console canonical state after deployment.
-- Organic traffic or conversion lift.
-- GBP/local-pack visibility.
-- GA4 funnel metrics.
-
-Those require deployment plus external measurement access.
+[verification.md](verification.md) records executed checks and unavailable checks. [release-checklist.md](release-checklist.md) covers coordinated web/API release and rollback. [growth-plan.md](growth-plan.md) separates 30/60/90-day work from measured outcomes. No code change, sitemap submission, indexing request or technical score guarantees first place.

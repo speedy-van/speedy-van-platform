@@ -1,14 +1,13 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { absoluteUrl } from "@/lib/seo/constants";
+import { buildPageMetadata } from "@/lib/seo/metadata";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildPageMetadata({
   title: "Terms & Conditions",
   description:
     "SpeedyVan terms and conditions for man and van, removal and delivery services across Scotland — booking, payment, cancellation, liability and customer responsibilities.",
-  robots: { index: true, follow: true },
-  alternates: { canonical: absoluteUrl("/terms") },
-};
+  path: "/terms",
+});
 
 const LAST_UPDATED = "April 2026";
 

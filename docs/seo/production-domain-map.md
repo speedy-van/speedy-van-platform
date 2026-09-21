@@ -1,102 +1,48 @@
-# Production Domain Map
+# Production domain and source map
 
-Date: 2026-09-21
+Verified 21 September 2026 through authenticated hosting inspection, repository metadata and live public requests.
 
-## Primary Host
-
-Primary indexable hostname:
-
-```text
-https://www.speedyvan.uk
-```
-
-## Live Host Behaviour
-
-| Host tested | Live behaviour observed | Notes |
-| --- | --- | --- |
-| `https://www.speedyvan.uk/` | 200 on Vercel | Primary public site |
-| `https://speedyvan.uk/` | Redirects to `https://www.speedyvan.uk/` | One hop observed |
-| `https://www.speedy-van.co.uk/` | Redirects to `https://www.speedyvan.uk/` | One hop observed |
-| `https://speedy-van.co.uk/` | Redirects to primary through host normalisation | Two hops observed |
-| `http://speedy-van.co.uk/` | Redirects to primary through protocol and host normalisation | Three hops observed |
-
-## Active Application Evidence
-
-Local configuration:
-
-```text
-vercel.json buildCommand: npm run build -w apps/web
-vercel.json outputDirectory: apps/web/.next
-.vercel/project.json projectName: speedy-van-web
-.vercel/project.json projectId: prj_OkJrabaUpBmsMqNibYZc5cgnIqFg
-```
-
-Live HTML evidence:
-
-```text
-/_next/static/chunks/app/(site)/...
-```
-
-That matches `apps/web/src/app/(site)`.
-
-`apps/web-v2` is not present in this local workspace, so the active local equivalents are all under `apps/web` or shared packages.
-
-## Vercel Project Ownership
-
-| Role | Vercel project | Project ID | Production domains |
+| Role | Project | ID | Root / output |
 | --- | --- | --- | --- |
-| Public website and web admin (`/admin`) | `speedy-van-web` | `prj_OkJrabaUpBmsMqNibYZc5cgnIqFg` | `www.speedyvan.uk`, `speedyvan.uk`, `speedy-van.co.uk`, `www.speedy-van.co.uk` |
-| API used by web, driver portal, and iOS admin | `speedy-van-api` | `prj_QjawXiV1uA0WAOB0eb7x379ydY3f` | `api.speedyvan.uk` |
+| Public web and web admin | `speedy-van-web` | `prj_OkJrabaUpBmsMqNibYZc5cgnIqFg` | Repository root; `apps/web/.next` |
+| Web, driver and iOS API | `speedy-van-api` | `prj_QjawXiV1uA0WAOB0eb7x379ydY3f` | Separate API project; `apps/api` source |
 
-Do not deploy the production website to `speedy-van-co-uk-web`. That project is a stale duplicate and only owns the generated `speedy-van-co-uk-web.vercel.app` hostname.
+Primary origin: `https://www.speedyvan.uk`. API origin: `https://api.speedyvan.uk`. Do not release to the stale duplicate `speedy-van-co-uk-web`.
 
-Latest verified production deployment for `www.speedyvan.uk`:
+## Source and build
 
-```text
-Vercel project: speedy-van-web
-Deployment id: dpl_4CnN8XEktZw8716F6iX95EbCfgp3
-Status: Ready
-Verified: 2026-09-21
-```
+- Repository: `https://github.com/speedy-van/speedy-van-platform`.
+- Production deployment: `4CnN8XEktZw8716F6iX95EbCfgp3`, Ready and Current when inspected.
+- Deployment source metadata: `seo-production-execution-2026-09-17`, commit `5bcc46c180d62db1b8a211ef4db227fb167cce0a`.
+- Implementation base: latest production-branch commit `e43ffc760b57b5d70b655760ee4877f1f759a85a` (ownership documentation; parent is the deployed commit).
+- Repair branch: `fix/organic-search-and-booking-2026-09-21`.
+- The source metadata identifies the deployment association; it does not independently prove that an uploaded bundle contained no uncommitted files. Inspected live routes and relevant source structure agree.
+- Vercel Git auto-deployment was not connected when inspected. Creating the repair branch/PR is not a deployment.
+- Installed workspace uses npm and `package-lock.json`. This branch uses npm shallow installation to keep React peers local to the web and mobile workspaces. It does not use the older public repository's pnpm layout or `apps/web-v2`.
+- Hosting Node version: 24. Existing install command: `npm install`.
+- Verified web build command: `npx prisma generate --schema=packages/db/prisma/schema.prisma && npm run build -w packages/db && npm run build -w apps/web`.
+- Active framework at the base: Next 14.2.35 / React 18. This branch applies a security-motivated Next 15.5.25 / React 19 web upgrade, retains npm/Tailwind and leaves the mobile application's React 18 dependency contract unchanged.
+- Root `vercel.json` rewrites `/api/(.*)` to `https://api.speedyvan.uk/api/$1`. API and browser-only route responsibilities must remain distinct.
 
-## Repository Evidence
+## Host behaviour
 
-| Source | Value | Status |
+| HTTPS host | Intended public GET/HEAD response | Ownership |
 | --- | --- | --- |
-| Local branch | `seo-production-execution-2026-09-17` | confirmed locally |
-| Local HEAD | `5bcc46c1 feat: add admin iOS app and production updates` | confirmed locally |
-| Public GitHub `main` | `688632f9948c5189438e50f4d1f61f938d1850a4` | confirmed with `git ls-remote` |
-| Production deployed commit | unknown | not exposed by public headers and not available through authenticated hosting access |
+| `www.speedyvan.uk` | Serve primary canonical page | Production web project |
+| `speedyvan.uk` | One 308 to the same primary path/query | Web project plus middleware |
+| `speedy-van.co.uk` | One 308 to the same primary path/query | Web project plus middleware |
+| `www.speedy-van.co.uk` | One 308 to the same primary path/query | Web project plus middleware |
 
-## Remaining Unknowns
+Earlier in this session, two apex hosting redirect rules were replaced with production-project attachment, allowing the existing middleware to return the permanent path-preserving redirect. Twenty live checks passed then. This branch does not change hosting or DNS. An HTTP request can still receive an additional platform HTTP-to-HTTPS hop.
 
-The following could not be proven from public access alone:
+`/api`, `/api/*` and non-GET/HEAD requests bypass hostname redirection. This preserves API, booking, payment, auth callbacks, webhooks and mobile contracts. Private HTML and `.vercel.app` previews receive HTTP noindex independently. Noindex is not authentication.
 
-- Exact Git commit associated with Vercel's uploaded source bundle.
-- Whether public GitHub `main` is intentionally stale or no longer the production source.
+## Canonical configuration
 
-## Local Redirect Implementation
+`packages/config/src/site.ts` supplies `SITE.url`; `apps/web/src/lib/seo/constants.ts` supplies `absoluteUrl`. Public metadata, schema and the single App Router sitemap generator use this origin. `apps/web/src/app/robots.ts` publishes the same sitemap. No preview/localhost origin is added to the sitemap.
 
-Implemented in:
+The standalone API Prisma schema is synchronised with the existing canonical schema in `packages/db/prisma/schema.prisma`. A regression check prevents future drift. No database model was invented and no migration, push or seed was run.
 
-```text
-apps/web/src/middleware.ts
-```
+## Release dependency
 
-Local behaviour after fixes:
-
-- `speedyvan.uk`, `speedy-van.co.uk`, and `www.speedy-van.co.uk` redirect with 308 to `https://www.speedyvan.uk`.
-- Path and query string are preserved.
-- `/api` and `/api/*` are not host-redirected.
-- Non-GET/HEAD requests are not host-redirected.
-
-The `/api` and non-GET/HEAD bypass is intentional to preserve pricing, booking, payment and webhook compatibility.
-
-## Rollback Notes
-
-To roll back only the SEO host changes:
-
-1. Revert `apps/web/src/middleware.ts`.
-2. Revert `apps/web/src/app/layout.tsx` metadata changes.
-3. Revert legal page canonical changes.
-4. Keep unpublished unrelated work intact.
+The API project needs its own release for payment validation, cancellation and webhook changes. Releasing only the web does not install the backend safeguards. Preview verification requires non-production API/database/Stripe credentials configured through the existing deployment workflow; no production secrets are stored in this branch.

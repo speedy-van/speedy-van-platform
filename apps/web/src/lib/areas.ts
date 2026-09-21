@@ -11,11 +11,13 @@ export interface Area {
   moveAdvice?: {
     title: string;
     body: string;
+    source?: { label: string; href: string };
   }[];
+  faqs?: { question: string; answer: string }[];
 }
 
 export const AREAS: Area[] = [
-  // ── Greater Glasgow ──────────────────────────────────────────────────────
+  // Greater Glasgow
   {
     slug: "glasgow",
     name: "Glasgow",
@@ -23,29 +25,51 @@ export const AREAS: Area[] = [
     postcode: "G1–G78",
     headline: "Man and Van in Glasgow",
     description:
-      "Glasgow's tenement flats, West End townhouses, and Southside communities are well known to our local team. Friendly, efficient, and always on time.",
+      "Arrange a man and van, flat removal or furniture delivery in Glasgow with a quote based on your items and both addresses. For a tenement move in the West End or Southside, tell us about the close, floor, stair turns and where a van can load. Larger house and office moves need the complete inventory and access details before the plan is confirmed.",
     highlights: [
-      "West End and Southside coverage",
-      "Tenement stairwell experience",
-      "Competitive flat-rate pricing",
+      "Tenement and shared-stair access planning",
+      "Furniture collections and smaller moves",
+      "Home and office removal enquiries"
     ],
-    nearbyAreas: ["edinburgh", "paisley", "hamilton", "east-kilbride"],
+    nearbyAreas: ["glasgow-west-end", "glasgow-southside", "paisley", "hamilton"],
     metaDescription:
-      "Reliable man and van hire in Glasgow. Tenement specialists, West End and Southside coverage. Free instant quote.",
+      "Man and van in Glasgow for flat moves, furniture collection and home removals. Share your items, stairs, parking and both addresses for a tailored quote.",
     moveAdvice: [
       {
-        title: "Tenement and close access",
-        body: "Tell us the floor, stair width, close entry and any tight turns before the quote is confirmed. Photos help with sofas, wardrobes and appliances.",
+        title: "Tenement stairs and close entrances",
+        body: "For a West End or Southside flat, include the floor, number of stair flights and the tightest turn between the room and the street. Send photos of large furniture beside doorways or landings if access is uncertain. A two-person lift and a one-person load need different plans."
       },
       {
-        title: "Parking and loading",
-        body: "Central, West End and Southside streets can have controlled bays or short loading windows. Check current Glasgow City Council parking guidance before move day if a dispensation or suspension may be needed.",
+        title: "Parking near the collection address",
+        body: "Check the signs and loading restrictions at each property before choosing a time. If a bay needs to be reserved or a restriction affects the move, discuss the arrangements with the relevant council or building manager in advance. Do not assume a resident permit provides permission for a removal van."
       },
       {
-        title: "Cross-city routes",
-        body: "Moves across the M8, M74 and Clyde crossings work best with realistic timing, especially at commuter hours, match days and month-end handovers.",
+        title: "Cross-city and onward moves",
+        body: "Give the delivery address as well as the collection postcode. A local furniture run, a move between the West End and Southside, and a Glasgow-to-Edinburgh journey require different route and timing plans. Include key handovers and additional stops in the quote."
       },
+      {
+        title: "Student rooms and shared homes",
+        body: "Separate the belongings being moved from your housemates' items. Halls or managed flats may have designated entrances, lift reservations or time slots. Confirm those arrangements and label the boxes before collection."
+      }
     ],
+    faqs: [
+      {
+        question: "Can you quote a Glasgow tenement move without a lift?",
+        answer: "Yes. Include the floor at both addresses, photos of tight turns and the largest item dimensions. The crew and handling must be suitable for the stairs; no item should be assumed to fit without checking."
+      },
+      {
+        question: "Is a short Glasgow move always a small job?",
+        answer: "No. A short drive can still involve a full furniture load, several flights of stairs or a long carry from the loading space. The quote takes those details into account alongside the route."
+      },
+      {
+        question: "Can you collect furniture from a Glasgow seller?",
+        answer: "Furniture collection can be quoted using the seller's address, item dimensions, destination and agreed collection window. Confirm the item is paid for and ready to release, and check it fits the delivery access."
+      },
+      {
+        question: "Do you offer moves from Glasgow to Edinburgh?",
+        answer: "You can request a quote for a Scottish intercity move. Include the complete inventory and access at both properties; the collection date, route and delivery arrangements need confirmation before booking."
+      }
+    ]
   },
   {
     slug: "glasgow-west-end",
@@ -54,15 +78,14 @@ export const AREAS: Area[] = [
     postcode: "G11, G12, G13, G20",
     headline: "Man and Van in Glasgow West End",
     description:
-      "From Byres Road tenements to Hyndland villas, Glasgow's West End is one of the city's most sought-after — and challenging — areas to move in. Our team knows every stairwell and parking restriction.",
+      "Moving furniture through a West End tenement needs a clear route from the room to the van. For collections around Byres Road, Hyndland or Partick, include stair turns, entry arrangements and loading access. Student rooms and larger homes can need different vehicles and crew, even on the same street.",
     highlights: [
-      "Byres Road and Great Western Road coverage",
-      "Hyndland and Partick specialists",
-      "Student move packages for Glasgow University",
+      "Tenement furniture and flat moves",
+      "Student rooms and shared homes",
+      "Stairs and loading details included in the quote"
     ],
     nearbyAreas: ["glasgow", "glasgow-southside", "partick", "anniesland"],
-    metaDescription:
-      "Man and van services in Glasgow West End. Tenement and villa specialists covering Byres Road, Hyndland, and Partick.",
+    metaDescription: "Man and van in Glasgow West End for furniture, student rooms and flat moves. Plan stair access, parking and collections around your item list."
   },
   {
     slug: "glasgow-southside",
@@ -71,15 +94,14 @@ export const AREAS: Area[] = [
     postcode: "G41, G42, G43, G44, G45",
     headline: "Man and Van in Glasgow Southside",
     description:
-      "Shawlands, Pollokshields, Mount Florida — the Southside is a mosaic of vibrant communities. Our team handles everything from ground-floor flats to detached sandstone villas.",
+      "Request a quote for furniture, flat or house moves in Glasgow Southside, around Shawlands, Pollokshields and Mount Florida. Provide the full addresses and item list, and describe shared stairs, garden paths or any long carry between the door and a loading space.",
     highlights: [
-      "Shawlands and Pollokshields coverage",
-      "Sandstone villa move specialists",
-      "Weekend availability including Sundays",
+      "Flat and house removal enquiries",
+      "Furniture collection and delivery",
+      "Crew planned around items and access"
     ],
     nearbyAreas: ["glasgow", "east-kilbride", "rutherglen", "hamilton"],
-    metaDescription:
-      "Expert man and van hire in Glasgow Southside. Shawlands, Pollokshields, and Mount Florida specialists.",
+    metaDescription: "Man and van and removals in Glasgow Southside. Request a quote for flat moves, furniture collections and house moves using your addresses and inventory."
   },
   {
     slug: "paisley",
@@ -88,17 +110,16 @@ export const AREAS: Area[] = [
     postcode: "PA1–PA3",
     headline: "Man and Van in Paisley",
     description:
-      "Paisley's mix of tenement flats and modern housing estates makes it one of the busiest areas for our Renfrewshire team. Local moves, furniture deliveries, and flat moves can be planned around access and parking.",
+      "Plan a Paisley move around the furniture, boxes and access at each property. A tenement flat, a house and a storage collection can have different loading needs. For a local journey or a route towards Glasgow, include every stop and the time access will be available.",
     highlights: [
-      "Town centre and Foxbar coverage",
-      "Close links to Glasgow Airport corridor",
-      "Affordable local move rates",
+      "Local and Glasgow-linked route enquiries",
+      "Flats, homes and storage collections",
+      "Loading and parking details reviewed"
     ],
     nearbyAreas: ["glasgow", "glasgow-west-end", "johnstone", "renfrew"],
-    metaDescription:
-      "Man and van services in Paisley for local removals, flat moves and furniture deliveries across Renfrewshire.",
+    metaDescription: "Man and van in Paisley for flat moves, furniture delivery and home removals. Include both addresses, access and your item list when requesting a quote."
   },
-  // ── Edinburgh & Lothians ──────────────────────────────────────────────────
+  // Edinburgh & Lothians
   {
     slug: "edinburgh",
     name: "Edinburgh",
@@ -106,29 +127,55 @@ export const AREAS: Area[] = [
     postcode: "EH1–EH17",
     headline: "Man and Van in Edinburgh",
     description:
-      "From New Town Georgian townhouses to Leith waterfront apartments, Edinburgh's historic architecture requires specialist care. Our Edinburgh team brings the experience and the padding.",
+      "Plan an Edinburgh move with the stairs, parking and building access included from the start. A New Town flat, an Old Town address or a Leith apartment can need a different loading plan even with the same furniture. Request man and van, house removals or furniture delivery using both addresses, your inventory and the dates that work for you.",
     highlights: [
-      "New Town and Old Town specialists",
-      "Tenement flat expertise — no lift, no problem",
-      "Festival season and all-year availability",
+      "Flat, studio and tenement move planning",
+      "Furniture collections and home removals",
+      "Parking and building access considered"
     ],
     nearbyAreas: ["edinburgh-leith", "edinburgh-south", "livingston", "glasgow"],
     metaDescription:
-      "Man and van services in Edinburgh for tenement flats, New Town moves, furniture delivery and same-day enquiries.",
+      "Man and van and removals in Edinburgh for flats, houses and furniture. Plan stairs, lifts and parking, then request a quote for your items and route.",
     moveAdvice: [
       {
-        title: "Old Town and New Town access",
-        body: "Shared stairs, basement flats, cobbles and narrow streets can change the crew time. Tell us about closes, entry systems and any lift limits.",
+        title: "Shared stairs, basements and large furniture",
+        body: "For an Old Town or New Town property, describe the route from each room to the street. Basement steps, half-landings and narrow entrance doors can affect a sofa or wardrobe even when the van has enough space. Include floor numbers and useful access photos."
       },
       {
-        title: "Controlled parking",
-        body: "Many Edinburgh streets use controlled parking or loading restrictions. Check City of Edinburgh Council parking guidance before move day if the van needs extended loading time.",
+        title: "Parking for a removal van",
+        body: "Edinburgh Council distinguishes between parking dispensations and suspended parking bays. A dispensation may be needed for longer loading on a single yellow line, while reserving a bay uses a different application. Check the council's current conditions, notice periods and charges before agreeing the move time.",
+        source: {
+          label: "Edinburgh Council parking dispensations and suspensions",
+          href: "https://www.edinburgh.gov.uk/parking-spaces/dispensations-suspensions"
+        }
       },
       {
-        title: "Busy calendar periods",
-        body: "Festival periods, student move dates and month-end key handovers can add traffic pressure, so earlier booking and flexible timings help keep the quote realistic.",
+        title: "Leith apartments and managed buildings",
+        body: "If a building has a concierge, service lift or loading entrance, check the moving arrangements in advance. Tell us the lift dimensions, any booking window and whether the van must use a different entrance from residents."
       },
+      {
+        title: "Dates, keys and collection windows",
+        body: "Give your key handover time and any restrictions from the landlord, halls or storage facility. During busy city events or student move periods, check access and the available date before making dependent arrangements."
+      }
     ],
+    faqs: [
+      {
+        question: "Can you move an Edinburgh flat with stairs?",
+        answer: "Stair access can be included in the assessment. Give the floor, number of flights, narrow turns and largest items at both properties so the crew and handling requirements are understood before confirmation."
+      },
+      {
+        question: "Who arranges parking for an Edinburgh removal?",
+        answer: "Discuss parking with the team before booking and agree who will make any required application. A parking space or council permission is not automatically included in a removal quote."
+      },
+      {
+        question: "Can I book a small Edinburgh student move?",
+        answer: "Request a quote for your boxes, suitcases and any furniture. Include the halls or flat address, collection window, floor and destination. Different room sizes and access arrangements can require different quotes."
+      },
+      {
+        question: "Can you quote a house removal as well as man and van?",
+        answer: "Yes. Provide the furniture and boxes from every room, plus garage or storage items, and describe the access at both addresses. Larger loads, packing or dismantling should be included in the enquiry from the start."
+      }
+    ]
   },
   {
     slug: "edinburgh-leith",
@@ -137,15 +184,14 @@ export const AREAS: Area[] = [
     postcode: "EH6, EH7",
     headline: "Man and Van in Leith, Edinburgh",
     description:
-      "Leith's waterfront regeneration has brought a wave of new residents to its converted warehouses and shore-side flats. Our team navigates the Shore and the Links with ease.",
+      "For a move in Leith, check whether the collection uses a shared stair, a lift or a managed loading entrance. Tell us about the building rules and the size of the largest furniture before requesting a man and van or removal quote. Include any retailer or private-seller collection as a separate stop.",
     highlights: [
-      "Waterfront and converted warehouse moves",
-      "Shore area parking solutions",
-      "Close to Ocean Terminal — IKEA deliveries covered",
+      "Flats and shared-stair access",
+      "Furniture and private-seller collections",
+      "Loading entrances and lift limits checked"
     ],
     nearbyAreas: ["edinburgh", "edinburgh-south", "musselburgh", "portobello"],
-    metaDescription:
-      "Man and van hire in Leith, Edinburgh. Waterfront and converted warehouse specialists. Book online today.",
+    metaDescription: "Man and van in Leith, Edinburgh, for flat moves and furniture collections. Request a quote with your item list, lift or stair details and both addresses."
   },
   {
     slug: "edinburgh-south",
@@ -154,15 +200,14 @@ export const AREAS: Area[] = [
     postcode: "EH9, EH10, EH16",
     headline: "Man and Van in South Edinburgh",
     description:
-      "Morningside, Marchmont, Bruntsfield — Edinburgh's southern suburbs are home to some of the city's finest flats and family homes. Our team treats every one with care.",
+      "Moving from a room, flat or family home in South Edinburgh starts with a complete item list. For addresses around Morningside, Marchmont or Bruntsfield, describe the stairs, entry system and loading point. If housemates have different destinations, list each stop before asking for a quote.",
     highlights: [
-      "Morningside and Marchmont coverage",
-      "Family home and flat removal specialists",
-      "Student move season packages",
+      "Shared flats and student rooms",
+      "Furniture and family-home moves",
+      "Collection and destination access planning"
     ],
     nearbyAreas: ["edinburgh", "edinburgh-leith", "penicuik", "dalkeith"],
-    metaDescription:
-      "Expert man and van hire in South Edinburgh. Morningside, Marchmont, and Bruntsfield specialists.",
+    metaDescription: "Man and van in South Edinburgh for student rooms, flats and home moves. Share your furniture, boxes, stairs and destination for a tailored quote."
   },
   {
     slug: "livingston",
@@ -171,17 +216,16 @@ export const AREAS: Area[] = [
     postcode: "EH54",
     headline: "Man and Van in Livingston",
     description:
-      "Livingston's new town layout, wide roads, and modern housing estates make for straightforward but busy moving work. Our West Lothian team is reliable and on time.",
+      "For Livingston collections and deliveries, give the actual loading entrance as well as the postal address. Estate roads, parking courts and paths can affect the distance from the van to the door. Include your full furniture list when requesting a local move or a route elsewhere in Scotland.",
     highlights: [
-      "New town estate coverage",
-      "Easy motorway access across Central Scotland",
-      "Competitive rates for local moves",
+      "Home and furniture moving enquiries",
+      "Parking courts and access routes considered",
+      "Local and intercity quotes"
     ],
     nearbyAreas: ["edinburgh", "falkirk", "bathgate", "linlithgow"],
-    metaDescription:
-      "Reliable man and van hire in Livingston. West Lothian removals and deliveries. Get a free instant quote.",
+    metaDescription: "Man and van in Livingston for home moves and furniture delivery. Request a quote based on the items, route, parking and access at both properties."
   },
-  // ── Tayside & Fife ───────────────────────────────────────────────────────
+  // Tayside & Fife
   {
     slug: "dundee",
     name: "Dundee",
@@ -189,15 +233,14 @@ export const AREAS: Area[] = [
     postcode: "DD1–DD5",
     headline: "Man and Van in Dundee",
     description:
-      "Dundee's waterfront revival, student population, and mix of tenement and modern flats keep our Tayside team busy year-round. Reliable service across every postcode.",
+      "Request a Dundee moving quote for a student room, flat, furniture collection or larger home. Include the floor and lift access at both addresses, together with any halls check-in slot or storage opening time. The inventory and access determine the van and crew required.",
     highlights: [
-      "Waterfront and city-centre coverage",
-      "University of Dundee and Abertay student moves",
-      "Same-day and next-day availability",
+      "Student and shared-flat moves",
+      "Furniture and home removal enquiries",
+      "Halls and storage access times considered"
     ],
     nearbyAreas: ["perth", "kirkcaldy", "st-andrews", "arbroath"],
-    metaDescription:
-      "Professional man and van hire in Dundee. Waterfront, city centre, and student move specialists.",
+    metaDescription: "Man and van in Dundee for student rooms, flat moves and furniture delivery. Share your inventory, dates and access details to check your options."
   },
   {
     slug: "perth",
@@ -206,15 +249,14 @@ export const AREAS: Area[] = [
     postcode: "PH1, PH2",
     headline: "Man and Van in Perth",
     description:
-      "The Fair City's mix of Victorian stone villas, modern estates, and riverside apartments makes for varied and rewarding moving work. Our Perth team is experienced and punctual.",
+      "For a Perth move, list the furniture and boxes and explain how the van can reach each property. A town-centre flat and a property outside town may need different loading arrangements. Include any narrow approach, stairs or long carry so the route can be assessed before booking.",
     highlights: [
-      "Riverside and town centre coverage",
-      "Cross-Scotland removal routes",
-      "Flexible booking enquiries",
+      "Furniture and household moves",
+      "Town and surrounding-route enquiries",
+      "Vehicle access reviewed before confirmation"
     ],
     nearbyAreas: ["dundee", "stirling", "st-andrews", "pitlochry"],
-    metaDescription:
-      "Man and van services in Perth. Local experts covering the Fair City and surrounding Perthshire areas.",
+    metaDescription: "Man and van in Perth for furniture collections, flat moves and home removals. Get a quote using your item list, route and loading access."
   },
   {
     slug: "kirkcaldy",
@@ -223,15 +265,14 @@ export const AREAS: Area[] = [
     postcode: "KY1, KY2",
     headline: "Man and Van in Kirkcaldy",
     description:
-      "The Lang Toun's mix of seafront properties, modern housing, and tenement flats are all familiar to our Fife team. Competitive prices, professional service.",
+      "Arrange a quote for a Kirkcaldy collection or move using both addresses and the items you need transported. For flats, include the floor and shared-stair access; for houses, include paths and the nearest legal loading space. Storage and private-seller collections need agreed handover times.",
     highlights: [
-      "Seafront and town centre coverage",
-      "Budget-friendly rates",
-      "Quick response for local moves",
+      "Flat and house moving enquiries",
+      "Storage and furniture collections",
+      "Access and handover times considered"
     ],
     nearbyAreas: ["dunfermline", "dundee", "st-andrews", "glenrothes"],
-    metaDescription:
-      "Affordable man and van hire in Kirkcaldy. Fife removals and deliveries. Book online today.",
+    metaDescription: "Man and van in Kirkcaldy for furniture, flat and house moves. Request a quote with your inventory, collection and delivery details."
   },
   {
     slug: "dunfermline",
@@ -240,15 +281,14 @@ export const AREAS: Area[] = [
     postcode: "KY11, KY12",
     headline: "Man and Van in Dunfermline",
     description:
-      "Dunfermline's historic city centre, Carnegie legacy estates, and modern housing developments across West Fife are all within our service area.",
+      "Plan a Dunfermline removal around the full inventory and access at each address. If the destination is across the Forth or elsewhere in Scotland, include the delivery time and any extra stop in the enquiry. Furniture size, stairs and loading distance help determine the handling required.",
     highlights: [
-      "Town centre and new estates covered",
-      "Cross-Forth Bridge routes to Edinburgh",
-      "Affordable local removal rates",
+      "Local and longer-route enquiries",
+      "Furniture and household moves",
+      "Collection and delivery planned together"
     ],
     nearbyAreas: ["kirkcaldy", "edinburgh", "livingston", "alloa"],
-    metaDescription:
-      "Man and van services in Dunfermline for West Fife removals, furniture delivery and local moving support.",
+    metaDescription: "Man and van in Dunfermline for furniture delivery and household moves. Share your route, item list and access requirements for a quote."
   },
   {
     slug: "st-andrews",
@@ -257,17 +297,16 @@ export const AREAS: Area[] = [
     postcode: "KY16",
     headline: "Man and Van in St Andrews",
     description:
-      "St Andrews' student population, golf tourism, and historic stone properties require a careful, professional approach. Our team handles everything from student moves to fine home relocations.",
+      "For a St Andrews student or household move, include all boxes and furniture and check when both properties can be accessed. Halls, shared flats and storage facilities may have collection windows or loading rules. Put those details in the enquiry so the move can be planned around them.",
     highlights: [
-      "University of St Andrews student moves",
-      "Historic and stone property care",
-      "Golf week and Festival bookings welcome",
+      "Student rooms and shared flats",
+      "Furniture and household collections",
+      "Check-in and collection times considered"
     ],
     nearbyAreas: ["dundee", "kirkcaldy", "cupar", "anstruther"],
-    metaDescription:
-      "Man and van hire in St Andrews. Student moves, historic property specialists, and flexible booking.",
+    metaDescription: "Man and van in St Andrews for student rooms, shared flats and furniture moves. Request a quote based on your items, dates and access."
   },
-  // ── Grampian ─────────────────────────────────────────────────────────────
+  // Grampian
   {
     slug: "aberdeen",
     name: "Aberdeen",
@@ -275,15 +314,14 @@ export const AREAS: Area[] = [
     postcode: "AB10–AB25",
     headline: "Man and Van in Aberdeen",
     description:
-      "The Granite City's oil and gas industry drives constant residential movement. From Union Street granite tenements to Cults and Bieldside family homes, our Aberdeen team knows the city inside out.",
+      "Request an Aberdeen moving quote with the exact collection and destination addresses. Include shared stairs, lifts, loading restrictions and any large furniture that needs an access check. For a longer journey, provide the full load and delivery requirements before the route is confirmed.",
     highlights: [
-      "Oil and gas industry relocation experience",
-      "City centre tenement expertise",
-      "North Deeside and Westhill coverage",
+      "Flat and household move enquiries",
+      "Furniture collection and delivery",
+      "Longer routes assessed by address"
     ],
     nearbyAreas: ["inverurie", "stonehaven", "elgin", "banchory"],
-    metaDescription:
-      "Professional man and van hire in Aberdeen. Granite City specialists covering all AB postcodes. Book today.",
+    metaDescription: "Man and van in Aberdeen for flat moves, furniture and home removals. Share both addresses, your inventory and access details to check availability."
   },
   {
     slug: "inverurie",
@@ -292,17 +330,16 @@ export const AREAS: Area[] = [
     postcode: "AB51",
     headline: "Man and Van in Inverurie",
     description:
-      "Inverurie and the Garioch area have grown rapidly as Aberdeen commuter belt towns. Our team covers all the new housing developments and surrounding rural properties with efficiency.",
+      "For an Inverurie collection or removal, tell us about the approach to the property, parking and any turning space. A route towards Aberdeen or another town needs the complete item list and delivery details. Rural access and extra stops should be discussed before a booking is confirmed.",
     highlights: [
-      "Commuter belt new-build coverage",
-      "Aberdeen city runs every day",
-      "Rural property access experience",
+      "Furniture and household moving enquiries",
+      "Aberdeen-linked routes by quote",
+      "Property approach and turning space reviewed"
     ],
     nearbyAreas: ["aberdeen", "huntly", "oldmeldrum", "kintore"],
-    metaDescription:
-      "Man and van services in Inverurie and Garioch. Aberdeen commuter belt specialists. Get a free quote.",
+    metaDescription: "Man and van enquiries in Inverurie for furniture and home moves. Share both addresses, the load and vehicle access details for a route-based quote."
   },
-  // ── Highlands ─────────────────────────────────────────────────────────────
+  // Highlands
   {
     slug: "inverness",
     name: "Inverness",
@@ -310,15 +347,14 @@ export const AREAS: Area[] = [
     postcode: "IV1–IV3",
     headline: "Man and Van in Inverness",
     description:
-      "As the capital of the Highlands, Inverness is growing fast. From Crown and Merkinch to Culloden and Balloch, our Highland team covers the whole city and surrounding villages.",
+      "Plan an Inverness move with the full load and both property access routes in mind. Include any stairs, long driveway, narrow approach or restrictions on vehicle size. For a longer Highland journey, confirm the complete route and available date before making arrangements.",
     highlights: [
-      "Full city coverage and Highland villages",
-      "Long-distance Scotland-wide routes",
-      "Rural access experience",
+      "Home, flat and furniture enquiries",
+      "Longer Highland routes by assessment",
+      "Van access and delivery times considered"
     ],
     nearbyAreas: ["fort-william", "aviemore", "nairn", "dingwall"],
-    metaDescription:
-      "Man and van services in Inverness for city moves, rural routes, furniture delivery and Highland removals.",
+    metaDescription: "Man and van enquiries in Inverness for furniture and household moves. Request a quote with your route, item list, preferred date and access details."
   },
   {
     slug: "fort-william",
@@ -327,17 +363,16 @@ export const AREAS: Area[] = [
     postcode: "PH33",
     headline: "Man and Van in Fort William",
     description:
-      "The outdoor capital of the UK is a unique place to move. Our team handles everything from town centre flats to remote rural properties across Lochaber and the Great Glen.",
+      "For Fort William and surrounding-route enquiries, provide both full addresses and describe access from the road to each door. Narrow approaches, turning space and loading distance can affect the vehicle and crew needed. Longer or remote journeys need route confirmation before booking.",
     highlights: [
-      "Lochaber and Great Glen coverage",
-      "Remote and rural property access",
-      "Long-distance Highland routes",
+      "Furniture and home moving enquiries",
+      "Longer journeys assessed before booking",
+      "Approach roads and loading space considered"
     ],
     nearbyAreas: ["inverness", "oban", "mallaig", "spean-bridge"],
-    metaDescription:
-      "Man and van hire in Fort William and Lochaber. Rural and remote access specialists across the Highlands.",
+    metaDescription: "Man and van enquiries in Fort William for furniture and home moves. Share your route, inventory and vehicle access to check suitability and availability."
   },
-  // ── Central Scotland ──────────────────────────────────────────────────────
+  // Central Scotland
   {
     slug: "stirling",
     name: "Stirling",
@@ -345,15 +380,14 @@ export const AREAS: Area[] = [
     postcode: "FK7, FK8, FK9",
     headline: "Man and Van in Stirling",
     description:
-      "Stirling's historic castle rock, expanding suburbs, and student population make it a vibrant moving hub at the heart of Scotland. Our Central Scotland team is ideally placed to serve you.",
+      "Request a Stirling quote for a student room, flat, furniture collection or household move. Include floors, lift availability and the nearest loading point, together with any key handover or halls access window. For a route outside the city, add the full destination address.",
     highlights: [
-      "City centre and castle area expertise",
-      "University of Stirling student moves",
-      "Central Scotland hub — routes north and south",
+      "Student rooms and flat moves",
+      "Household and furniture enquiries",
+      "Local and intercity route planning"
     ],
     nearbyAreas: ["falkirk", "alloa", "perth", "glasgow"],
-    metaDescription:
-      "Reliable man and van hire in Stirling. Central Scotland specialists, student moves, and house removals.",
+    metaDescription: "Man and van in Stirling for student moves, furniture and home removals. Request a quote using both addresses, your inventory and access requirements."
   },
   {
     slug: "falkirk",
@@ -362,15 +396,14 @@ export const AREAS: Area[] = [
     postcode: "FK1, FK2",
     headline: "Man and Van in Falkirk",
     description:
-      "Falkirk's Kelpies, Helix Park, and growing residential areas sit at the M9/M80 interchange — perfect for fast moves across Central Scotland. Competitive pricing, reliable team.",
+      "For a Falkirk removal or furniture collection, share the complete item list and both addresses. A short journey can still need extra loading time if stairs, parking or a long path are involved. Include those details and any onward stop when asking for your quote.",
     highlights: [
-      "M9/M80 corridor — fast Central Scotland routes",
-      "Grangemouth and Bo'ness coverage",
-      "Budget-friendly local moves",
+      "Furniture collections and small moves",
+      "House and flat removal enquiries",
+      "Route and loading details reviewed"
     ],
     nearbyAreas: ["stirling", "livingston", "alloa", "glasgow"],
-    metaDescription:
-      "Affordable man and van hire in Falkirk. Central Scotland removals covering FK postcodes. Book today.",
+    metaDescription: "Man and van in Falkirk for furniture collections, flat moves and home removals. Check your options using the full route, inventory and access details."
   },
   {
     slug: "hamilton",
@@ -379,15 +412,14 @@ export const AREAS: Area[] = [
     postcode: "ML3",
     headline: "Man and Van in Hamilton",
     description:
-      "Hamilton and Lanarkshire are home to our head office. We know every street in Hamilton, Blantyre, and Larkhall — and we deliver the fastest response times in the area.",
+      "Arrange a quote for a Hamilton furniture collection, flat move or house removal. List everything being moved and explain the loading access, stairs and parking at both addresses. For a route elsewhere in Lanarkshire or beyond, provide the full destination and your preferred date.",
     highlights: [
-      "Head office in Hamilton — fastest response",
-      "Full Lanarkshire coverage",
-      "Same-day moves available",
+      "Hamilton and Lanarkshire route enquiries",
+      "Furniture, flats and home moves",
+      "Inventory and access-based quotes"
     ],
     nearbyAreas: ["glasgow", "east-kilbride", "motherwell", "strathaven"],
-    metaDescription:
-      "Man and van hire in Hamilton, Lanarkshire. Local experts with same-day availability. Get a free quote.",
+    metaDescription: "Man and van in Hamilton for furniture delivery, flat moves and house removals. Request a quote with your addresses, dates and item list."
   },
   {
     slug: "east-kilbride",
@@ -396,15 +428,14 @@ export const AREAS: Area[] = [
     postcode: "G74, G75",
     headline: "Man and Van in East Kilbride",
     description:
-      "Scotland's first post-war new town has evolved into one of the country's largest towns. Our team navigates EK's road network with ease, covering every village and estate.",
+      "For an East Kilbride move, give the entrance and nearest loading point as well as the address. Parking courts, paths, steps and building lifts can change the carrying distance. Include all furniture and boxes so the van and crew can be assessed for your route.",
     highlights: [
-      "Full East Kilbride coverage",
-      "Fast links to Glasgow Southside",
-      "New town estate expertise",
+      "Flat and home moving enquiries",
+      "Furniture collection and delivery",
+      "Parking courts and carrying distances considered"
     ],
     nearbyAreas: ["glasgow", "hamilton", "glasgow-southside", "strathaven"],
-    metaDescription:
-      "Man and van services in East Kilbride with EK coverage, Glasgow links and online quote options.",
+    metaDescription: "Man and van in East Kilbride for furniture, flat and household moves. Request a quote based on your inventory, route and loading access."
   },
   {
     slug: "motherwell",
@@ -413,17 +444,16 @@ export const AREAS: Area[] = [
     postcode: "ML1",
     headline: "Man and Van in Motherwell",
     description:
-      "Motherwell and Wishaw are at the heart of North Lanarkshire. Our team covers both towns and surrounding communities with competitive pricing and a friendly approach.",
+      "Request a Motherwell moving quote with the full collection and delivery addresses, furniture list and box estimate. Include steps, shared stairs, lifts and any restrictions on parking. If the move also involves storage or another collection, add it before the route is quoted.",
     highlights: [
-      "Motherwell and Wishaw coverage",
-      "North Lanarkshire wide service",
-      "Affordable rates for local moves",
+      "Furniture and household moving enquiries",
+      "Flat moves and storage transfers",
+      "Extra stops included in route planning"
     ],
     nearbyAreas: ["hamilton", "glasgow", "east-kilbride", "airdrie"],
-    metaDescription:
-      "Affordable man and van hire in Motherwell. North Lanarkshire removals across all ML postcodes.",
+    metaDescription: "Man and van in Motherwell for furniture collections and home moves. Share your item list, addresses and access details for a tailored quote."
   },
-  // ── West Scotland ─────────────────────────────────────────────────────────
+  // West Scotland
   {
     slug: "ayr",
     name: "Ayr",
@@ -431,15 +461,14 @@ export const AREAS: Area[] = [
     postcode: "KA7, KA8",
     headline: "Man and Van in Ayr",
     description:
-      "Ayr and the Burns Country are well served by our Ayrshire team. From the town centre seafront flats to Alloway's private estates, we handle every move with care.",
+      "For an Ayr furniture collection or home move, describe the rooms, items and access at both properties. Include stairs and the distance to a suitable loading point. If the journey involves another Ayrshire town or a longer Scottish route, provide every address before confirmation.",
     highlights: [
-      "Ayr town centre and seafront coverage",
-      "Alloway and Prestwick service",
-      "Kilmarnock and wider Ayrshire routes",
+      "Furniture and household removal enquiries",
+      "Ayrshire-linked routes by quote",
+      "Stairs and loading access considered"
     ],
     nearbyAreas: ["kilmarnock", "troon", "prestwick", "glasgow"],
-    metaDescription:
-      "Man and van hire in Ayr and Ayrshire. Seafront, Alloway, and Prestwick specialists. Book your move today.",
+    metaDescription: "Man and van in Ayr for furniture delivery and household moves. Request a quote with your items, both addresses and access requirements."
   },
   {
     slug: "kilmarnock",
@@ -448,15 +477,14 @@ export const AREAS: Area[] = [
     postcode: "KA1, KA3",
     headline: "Man and Van in Kilmarnock",
     description:
-      "Kilmarnock's town centre, Onthank, and the surrounding East Ayrshire villages are all within our service area. Punctual, professional, and great value.",
+      "Plan a Kilmarnock move using the actual furniture, boxes and route you need. Tell us about shared stairs, tight doorways and where the van can load at each address. For collections from a seller or storage unit, confirm when the goods will be ready for release.",
     highlights: [
-      "Town centre and East Ayrshire coverage",
-      "Budget-friendly removals",
-      "Fast turnaround for local jobs",
+      "Small moves and household enquiries",
+      "Furniture and storage collections",
+      "Collection times and access reviewed"
     ],
     nearbyAreas: ["ayr", "glasgow", "irvine", "cumnock"],
-    metaDescription:
-      "Man and van services in Kilmarnock for East Ayrshire removals, furniture delivery and local moves.",
+    metaDescription: "Man and van in Kilmarnock for small moves, furniture and household removals. Share the item list, route and access details to request a quote."
   },
   {
     slug: "oban",
@@ -465,17 +493,16 @@ export const AREAS: Area[] = [
     postcode: "PA34",
     headline: "Man and Van in Oban",
     description:
-      "The Gateway to the Isles requires a team comfortable with scenic but challenging routes. We cover Oban, Argyll, and can arrange ferry-side deliveries for island moves.",
+      "For an Oban removal enquiry, provide the exact collection and delivery addresses, inventory and vehicle access details. Confirm longer journeys with the team before booking. If a route involves an island or ferry, mention it at the enquiry stage so suitability and availability can be checked separately.",
     highlights: [
-      "Oban and Argyll coverage",
-      "Island and ferry connection experience",
-      "Long-distance Highland and island routes",
+      "Furniture and household move enquiries",
+      "Longer routes assessed before confirmation",
+      "Ferry-dependent enquiries reviewed separately"
     ],
     nearbyAreas: ["fort-william", "inveraray", "lochgilphead", "campbeltown"],
-    metaDescription:
-      "Man and van hire in Oban and Argyll. Island move experience, Highland routes, and ferry-side delivery.",
+    metaDescription: "Man and van enquiries in Oban for furniture and household moves. Confirm your route, access and any ferry requirement before booking."
   },
-  // ── Borders & South West ──────────────────────────────────────────────────
+  // Borders & South West
   {
     slug: "dumfries",
     name: "Dumfries",
@@ -483,15 +510,14 @@ export const AREAS: Area[] = [
     postcode: "DG1, DG2",
     headline: "Man and Van in Dumfries",
     description:
-      "Queen of the South's mix of market town properties, rural estates, and riverside homes make Dumfries a rewarding area to work. Our team covers all of Dumfries and Galloway.",
+      "For a Dumfries move, describe both property access routes along with the load. Include narrow approaches, turning space, steps and any long carry from the van. Routes outside Scotland need separate confirmation; provide both full postcodes when making the enquiry.",
     highlights: [
-      "Dumfries and Galloway wide coverage",
-      "Rural and estate property access",
-      "Cross-border routes to England available",
+      "Household and furniture moving enquiries",
+      "Rural access details considered",
+      "Longer routes confirmed before booking"
     ],
     nearbyAreas: ["carlisle", "ayr", "kilmarnock", "stranraer"],
-    metaDescription:
-      "Man and van hire in Dumfries and Galloway. Rural specialists, cross-border routes, and local removals.",
+    metaDescription: "Man and van enquiries in Dumfries for furniture and home moves. Request a quote using the full route, inventory and property access details."
   },
   {
     slug: "galashiels",
@@ -500,18 +526,17 @@ export const AREAS: Area[] = [
     postcode: "TD1",
     headline: "Man and Van in Galashiels",
     description:
-      "The Scottish Borders' largest town and the hub of the Borders Railway corridor. Our team serves Galashiels, Hawick, Jedburgh, and the surrounding towns with the same reliable service.",
+      "Request a Galashiels moving quote with the full item list, addresses and preferred date. Explain shared stairs, parking, access from the road and any extra stop. For a journey towards Edinburgh or another Borders town, include destination access and handover arrangements.",
     highlights: [
-      "Full Scottish Borders coverage",
-      "Borders Railway corridor — Edinburgh runs",
-      "Rural and market town expertise",
+      "Furniture, flat and household enquiries",
+      "Borders and Edinburgh-linked routes by quote",
+      "Destination access and timings considered"
     ],
     nearbyAreas: ["edinburgh", "hawick", "jedburgh", "peebles"],
-    metaDescription:
-      "Man and van services in Galashiels and the Scottish Borders for local, rural and Edinburgh-linked routes.",
-  },
+    metaDescription: "Man and van in Galashiels for furniture and household moves. Share your route, load and access details to check options for your preferred date."
+  }
 ];
 
 export function getAreaBySlug(slug: string): Area | undefined {
-  return AREAS.find((a) => a.slug === slug);
+  return AREAS.find((area) => area.slug === slug);
 }

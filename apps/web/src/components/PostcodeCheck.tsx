@@ -1,5 +1,7 @@
 "use client";
 
+import { trackAnalyticsEvent } from "@/lib/analytics";
+
 import { useEffect, useMemo, useState } from "react";
 import { UseMyLocationButton } from "./UseMyLocationButton";
 import { OutOfAreaWaitlistPopup } from "./OutOfAreaWaitlistPopup";
@@ -12,23 +14,8 @@ const SCOTLAND_PREFIXES = [
 ];
 
 function track(name: string, payload: Record<string, unknown> = {}) {
-  if (typeof window === "undefined") return;
-  const w = window as Window & {
-    gtag?: (...args: unknown[]) => void;
-    dataLayer?: unknown[];
-  };
-  try {
-    w.gtag?.("event", name, { event_category: "engagement", ...payload });
-  } catch {
-    /* ignore */
-  }
-  try {
-    w.dataLayer?.push({ event: name, ...payload });
-  } catch {
-    /* ignore */
-  }
+  trackAnalyticsEvent(name, { event_category: "engagement", ...payload });
 }
-
 function extractArea(postcode: string): string | null {
   const m = postcode.trim().toUpperCase().match(/^([A-Z]{1,2})/);
   return m ? m[1] : null;

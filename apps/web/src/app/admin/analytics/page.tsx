@@ -22,7 +22,6 @@ const fmtDay = (s: unknown) => {
   return d.toLocaleDateString("en-GB", { day: "numeric", month: "short" });
 };
 
-const chartStyle = { background: "rgba(255,255,255,0.04)", boxShadow: "0 0 0 1px rgba(245,158,11,0.15), 0 8px 32px rgba(0,0,0,0.4)" };
 
 export default function AnalyticsPage() {
   const [bookingsPerDay, setBookingsPerDay] = useState<DayCount[]>([]);

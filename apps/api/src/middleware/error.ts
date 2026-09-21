@@ -1,12 +1,17 @@
 import type { Context } from "hono";
 import { ZodError } from "zod";
 import { fail } from "@speedy-van/shared";
+import { PaymentValidationError } from "../lib/payment-validation";
 
 export function errorHandler(err: Error, c: Context): Response {
   console.error(`[API Error] ${c.req.method} ${c.req.path}:`, err.message);
 
   if (err instanceof ZodError) {
     return c.json(fail("Validation failed", "VALIDATION_ERROR", err.flatten()), 400);
+  }
+
+  if (err instanceof PaymentValidationError) {
+    return c.json(fail(err.message, err.code), err.status);
   }
 
   if (err.message === "STRIPE_NOT_CONFIGURED") {

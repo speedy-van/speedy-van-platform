@@ -14,7 +14,8 @@ export interface ServiceCatalogItem {
   description: string;
   url: string;
   startingFrom?: number | null;
-  bookingDetail: string;
+  bookingUrl: string;
+  priceUnit?: "hour";
 }
 
 export function buildLocalBusinessSchema(): Schema {
@@ -48,59 +49,64 @@ export function buildLocalBusinessSchema(): Schema {
   };
 }
 
+export function buildWebsiteSchema(): Schema {
+  return {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "@id": `${SITE_URL}/#website`,
+    name: SITE_LEGAL_NAME,
+    alternateName: "SpeedyVan",
+    url: SITE_URL,
+    inLanguage: "en-GB",
+    publisher: { "@id": `${SITE_URL}/#organization` },
+  };
+}
+
+function buildGuideOffer(url: string, price: number, priceUnit?: "hour"): Schema {
+  const amount = new Intl.NumberFormat("en-GB", {
+    style: "currency", currency: "GBP", maximumFractionDigits: 0,
+  }).format(price);
+
+  return {
+    "@type": "Offer",
+    url,
+    priceCurrency: "GBP",
+    description: `Guide price from ${amount}${priceUnit === "hour" ? " per hour" : ""}. The final quote depends on the route, load, access and date.`,
+    ...(priceUnit === "hour"
+      ? { priceSpecification: {
+          "@type": "UnitPriceSpecification",
+          price,
+          priceCurrency: "GBP",
+          unitCode: "HUR",
+          unitText: "hour",
+        } }
+      : { price }),
+  };
+}
+
 export function buildServiceCatalogSchema(items: ServiceCatalogItem[]): Schema {
   return {
     "@context": "https://schema.org",
     "@type": "OfferCatalog",
     "@id": `${SITE_URL}/#service-catalog`,
-    name: "SpeedyVan moving service options",
-    description:
-      "House removals, furniture delivery, storage transport, office relocations and flexible man-and-van help across Scotland.",
-    url: SITE_URL,
-    itemListElement: items.map((item, index) => {
+    name: "Moving services across Scotland",
+    url: absoluteUrl("/services"),
+    itemListElement: items.map((item) => {
       const url = absoluteUrl(item.url);
-      const offer: Schema = {
-        "@type": "Offer",
-        position: index + 1,
-        name: item.name,
-        url,
-        priceCurrency: "GBP",
+      const service = buildServiceSchema(item.name, item.description, url);
+      delete service["@context"];
+      return {
+        ...(typeof item.startingFrom === "number"
+          ? buildGuideOffer(url, item.startingFrom, item.priceUnit)
+          : { "@type": "Offer", url }),
         itemOffered: {
-          "@type": "Service",
-          "@id": `${url}#service`,
-          name: item.name,
-          description: item.description,
-          serviceType: item.name,
-          provider: {
-            "@type": "MovingCompany",
-            "@id": `${SITE_URL}/#organization`,
-            name: SITE_LEGAL_NAME,
-            url: SITE_URL,
-          },
-          areaServed: AREAS.map((area) => ({
-            "@type": "AdministrativeArea",
-            name: area.name,
-          })),
-          additionalProperty: [
-            {
-              "@type": "PropertyValue",
-              name: "Booking flow",
-              value: item.bookingDetail,
-            },
-          ],
+          ...service,
           potentialAction: {
             "@type": "ReserveAction",
-            target: url,
+            target: absoluteUrl(item.bookingUrl),
           },
         },
       };
-
-      if (typeof item.startingFrom === "number") {
-        offer.price = item.startingFrom;
-        offer.description = `${item.description} From £${item.startingFrom}. ${item.bookingDetail}.`;
-      }
-
-      return offer;
     }),
   };
 }
@@ -141,11 +147,13 @@ export function buildServiceSchema(
   name: string,
   description: string,
   url: string,
-  startingFrom?: number
+  startingFrom?: number,
+  priceUnit?: "hour"
 ): Schema {
   const schema: Schema = {
     "@context": "https://schema.org",
     "@type": "Service",
+    "@id": `${absoluteUrl(url)}#service`,
     name,
     description,
     url: absoluteUrl(url),
@@ -162,12 +170,7 @@ export function buildServiceSchema(
   };
 
   if (typeof startingFrom === "number") {
-    schema.offers = {
-      "@type": "Offer",
-      price: startingFrom,
-      priceCurrency: "GBP",
-      url: absoluteUrl(url),
-    };
+    schema.offers = buildGuideOffer(absoluteUrl(url), startingFrom, priceUnit);
   }
 
   return schema;

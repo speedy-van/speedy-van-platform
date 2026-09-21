@@ -1,7 +1,10 @@
 "use client";
 
+import { trackAnalyticsEvent } from "@/lib/analytics";
+
 import { useEffect, useState } from "react";
 import type { FormEvent } from "react";
+import Image from "next/image";
 import Link from "next/link";
 
 const SEEN_KEY = "sv_exit_intent_seen";
@@ -14,23 +17,8 @@ interface LockedQuote {
 }
 
 function track(name: string, payload: Record<string, unknown> = {}) {
-  if (typeof window === "undefined") return;
-  const w = window as Window & {
-    gtag?: (...args: unknown[]) => void;
-    dataLayer?: unknown[];
-  };
-  try {
-    w.gtag?.("event", name, { event_category: "engagement", ...payload });
-  } catch {
-    /* ignore */
-  }
-  try {
-    w.dataLayer?.push({ event: name, ...payload });
-  } catch {
-    /* ignore */
-  }
+  trackAnalyticsEvent(name, { event_category: "engagement", ...payload });
 }
-
 /**
  * Exit-intent popup with a real offer:
  * "Lock today's price for 24 hours" — captures email locally so the user can
@@ -204,7 +192,7 @@ export function ExitIntentPopup() {
               aria-label="Call us now on 07909 032889"
               className="mt-3 flex justify-center transition-transform hover:scale-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 rounded-full"
             >
-              <img src="/call-icon.png" alt="Call us now" width={52} height={52} />
+              <Image src="/call-icon.png" alt="" width={52} height={52} sizes="52px" />
             </a>
 
             <p className="mt-3 text-[11px] text-slate-400">

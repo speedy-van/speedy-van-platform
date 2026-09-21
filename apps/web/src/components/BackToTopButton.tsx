@@ -17,9 +17,13 @@ export function BackToTopButton() {
     <button
       type="button"
       aria-label="Back to top"
+      tabIndex={visible ? 0 : -1}
+      aria-hidden={!visible}
       onClick={() => {
-        haptic(8);
-        window.scrollTo({ top: 0, behavior: "smooth" });
+        const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        if (!reducedMotion) haptic(8);
+        document.getElementById("main-content")?.focus({ preventScroll: true });
+        window.scrollTo({ top: 0, behavior: reducedMotion ? "instant" : "smooth" });
       }}
       className={`fixed right-4 z-30 flex h-12 w-12 items-center justify-center rounded-full text-2xl font-black text-black shadow-2xl transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:ring-offset-2 focus-visible:ring-offset-black bottom-40 md:bottom-24 md:right-6 ${
         visible ? "translate-y-0 opacity-100" : "pointer-events-none translate-y-3 opacity-0"

@@ -1,18 +1,34 @@
 "use client";
 
-import { useState, useEffect, useCallback, Suspense } from "react";
+import { useState, useEffect, useCallback, useRef, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { login, getUser } from "@/lib/auth-client";
+
+function getDriverReturnUrl(value: string | null): string {
+  const fallback = "/driver/dashboard";
+  if (!value || !value.startsWith("/") || value.startsWith("//") || /[\\\u0000-\u001f\u007f]/.test(value)) return fallback;
+
+  try {
+    const url = new URL(value, "https://driver.invalid");
+    const routes = new Set(["/jobs", "/driver/dashboard", "/driver/my-jobs", "/driver/stats", "/driver/messages", "/driver/earnings"]);
+    if (url.origin !== "https://driver.invalid") return fallback;
+    if (!routes.has(url.pathname) && !/^\/driver\/my-jobs\/[a-zA-Z0-9_-]+$/.test(url.pathname)) return fallback;
+    return `${url.pathname}${url.search}${url.hash}`;
+  } catch {
+    return fallback;
+  }
+}
 
 function DriverLoginForm() {
   const router = useRouter();
   const params = useSearchParams();
-  const returnUrl = params.get("returnUrl") ?? "/driver/dashboard";
+  const returnUrl = getDriverReturnUrl(params.get("returnUrl"));
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const submitting = useRef(false);
 
   useEffect(() => {
     const user = getUser();
@@ -22,6 +38,8 @@ function DriverLoginForm() {
   const handleSubmit = useCallback(
     async (e: React.FormEvent) => {
       e.preventDefault();
+      if (submitting.current) return;
+      submitting.current = true;
       setError("");
       setLoading(true);
       try {
@@ -35,6 +53,7 @@ function DriverLoginForm() {
       } catch (err: unknown) {
         setError(err instanceof Error ? err.message : "Invalid email or password");
       } finally {
+        submitting.current = false;
         setLoading(false);
       }
     },
@@ -50,15 +69,16 @@ function DriverLoginForm() {
           <p className="text-white/55 text-sm mt-1">Driver Portal</p>
         </div>
 
-        <form onSubmit={handleSubmit} className="rounded-2xl p-6 space-y-4" style={{ background: "rgba(255,255,255,0.04)", boxShadow: "0 0 0 1px rgba(245,158,11,0.15), 0 8px 32px rgba(0,0,0,0.4)" }}>
+        <form onSubmit={handleSubmit} aria-busy={loading} className="rounded-2xl p-6 space-y-4" style={{ background: "rgba(255,255,255,0.04)", boxShadow: "0 0 0 1px rgba(245,158,11,0.15), 0 8px 32px rgba(0,0,0,0.4)" }}>
           {error && (
-            <div className="bg-red-900/50 border border-red-700 text-red-300 rounded-xl px-4 py-3 text-sm">
+            <div role="alert" className="bg-red-900/50 border border-red-700 text-red-300 rounded-xl px-4 py-3 text-sm">
               {error}
             </div>
           )}
           <div>
-            <label className="block text-sm font-medium text-white/55 mb-1.5">Email</label>
+            <label htmlFor="driver-login-email" className="block text-sm font-medium text-white/55 mb-1.5">Email</label>
             <input
+              id="driver-login-email"
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -71,8 +91,9 @@ function DriverLoginForm() {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-white/55 mb-1.5">Password</label>
+            <label htmlFor="driver-login-password" className="block text-sm font-medium text-white/55 mb-1.5">Password</label>
             <input
+              id="driver-login-password"
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
@@ -115,7 +136,7 @@ function DriverLoginForm() {
 
 export default function DriverLoginPage() {
   return (
-    <Suspense>
+    <Suspense fallback={<p role="status" className="p-6 text-center">Loading driver sign-in…</p>}>
       <DriverLoginForm />
     </Suspense>
   );

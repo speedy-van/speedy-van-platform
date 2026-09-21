@@ -19,7 +19,7 @@ export default function SiteLayout({
     <>
       <LocationPersonalization />
       <Navbar />
-      <main className="pb-28 md:pb-0">{children}</main>
+      <main id="main-content" tabIndex={-1} className="pb-28 md:pb-0">{children}</main>
       <Footer />
       <StickyBookBar />
       <ScrollReveal />

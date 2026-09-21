@@ -1,3 +1,5 @@
+import { hasAnalyticsConsent } from "@/lib/analytics";
+
 const API_BASE =
   process.env.NODE_ENV === "development"
     ? "http://localhost:4000"
@@ -6,20 +8,25 @@ const API_BASE =
 const SESSION_KEY = "sv-visitor-session";
 
 export function trackClick(element: string, metadata: Record<string, unknown> = {}) {
-  const sessionId =
-    typeof window !== "undefined" ? sessionStorage.getItem(SESSION_KEY) : null;
+  if (typeof window === "undefined" || !hasAnalyticsConsent()) return;
+  let sessionId: string | null = null;
+  try {
+    sessionId = window.sessionStorage.getItem(SESSION_KEY);
+  } catch {
+    return;
+  }
   if (!sessionId) return;
 
-  fetch(`${API_BASE}/tracking/event`, {
+  void fetch(`${API_BASE}/tracking/event`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       sessionId,
-      type: "CLICK",
-      page: typeof window !== "undefined" ? window.location.pathname : "/",
+      type: "click",
+      page: window.location.pathname,
       element,
       metadata,
     }),
     keepalive: true,
-  }).catch(() => {});
+  }).catch(() => { /* Optional measurement must not interrupt the action. */ });
 }
