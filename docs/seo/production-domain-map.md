@@ -1,6 +1,6 @@
 # Production Domain Map
 
-Date: 2026-09-19
+Date: 2026-09-21
 
 ## Primary Host
 
@@ -27,8 +27,8 @@ Local configuration:
 ```text
 vercel.json buildCommand: npm run build -w apps/web
 vercel.json outputDirectory: apps/web/.next
-.vercel/project.json projectName: speedy-van-co-uk-web
-.vercel/project.json projectId: prj_03tJLYNkaGYRtFhEnl2rb0Rj7W4Q
+.vercel/project.json projectName: speedy-van-web
+.vercel/project.json projectId: prj_OkJrabaUpBmsMqNibYZc5cgnIqFg
 ```
 
 Live HTML evidence:
@@ -41,23 +41,38 @@ That matches `apps/web/src/app/(site)`.
 
 `apps/web-v2` is not present in this local workspace, so the active local equivalents are all under `apps/web` or shared packages.
 
+## Vercel Project Ownership
+
+| Role | Vercel project | Project ID | Production domains |
+| --- | --- | --- | --- |
+| Public website and web admin (`/admin`) | `speedy-van-web` | `prj_OkJrabaUpBmsMqNibYZc5cgnIqFg` | `www.speedyvan.uk`, `speedyvan.uk`, `speedy-van.co.uk`, `www.speedy-van.co.uk` |
+| API used by web, driver portal, and iOS admin | `speedy-van-api` | `prj_QjawXiV1uA0WAOB0eb7x379ydY3f` | `api.speedyvan.uk` |
+
+Do not deploy the production website to `speedy-van-co-uk-web`. That project is a stale duplicate and only owns the generated `speedy-van-co-uk-web.vercel.app` hostname.
+
+Latest verified production deployment for `www.speedyvan.uk`:
+
+```text
+Vercel project: speedy-van-web
+Deployment id: dpl_4CnN8XEktZw8716F6iX95EbCfgp3
+Status: Ready
+Verified: 2026-09-21
+```
+
 ## Repository Evidence
 
 | Source | Value | Status |
 | --- | --- | --- |
 | Local branch | `seo-production-execution-2026-09-17` | confirmed locally |
-| Local HEAD | `ce37317993e7b967a8eb09a4f49bb8d6c3e31b3b` | confirmed locally |
+| Local HEAD | `5bcc46c1 feat: add admin iOS app and production updates` | confirmed locally |
 | Public GitHub `main` | `688632f9948c5189438e50f4d1f61f938d1850a4` | confirmed with `git ls-remote` |
 | Production deployed commit | unknown | not exposed by public headers and not available through authenticated hosting access |
 
-## Unknowns
+## Remaining Unknowns
 
-The following could not be proven from public access:
+The following could not be proven from public access alone:
 
-- Exact Vercel production deployment id.
-- Exact production Git commit.
-- Production branch.
-- Whether the current local branch is the source branch for the live deployment.
+- Exact Git commit associated with Vercel's uploaded source bundle.
 - Whether public GitHub `main` is intentionally stale or no longer the production source.
 
 ## Local Redirect Implementation

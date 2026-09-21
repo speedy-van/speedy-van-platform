@@ -7,8 +7,9 @@ Professional furniture removal platform serving Glasgow, Edinburgh, Dundee and 2
 ```
 speedy-van/
 ├── apps/
-│   ├── web/          → Next.js 14 (customers, admin, driver portal)
-│   └── api/          → Hono.js REST API (60+ endpoints)
+│   ├── web/          -> Next.js 14 (customers, web admin, driver portal)
+│   ├── api/          -> Hono.js REST API (60+ endpoints)
+│   └── ios-admin/    -> Expo / React Native admin app
 ├── packages/
 │   ├── db/           → Prisma + Neon PostgreSQL
 │   ├── shared/       → Types, validations, utils
@@ -27,7 +28,7 @@ speedy-van/
 | Payments | Stripe |
 | Maps | Mapbox GL |
 | Email | Resend |
-| iOS App | Expo / React Native (separate repo) |
+| iOS Admin App | Expo / React Native in `apps/ios-admin` |
 
 ## Features
 
@@ -83,7 +84,7 @@ Key variables:
 
 ## Deploy
 
-### Web (Vercel — main project, speedyvan.uk)
+### Web and Web Admin (Vercel - `speedy-van-web`)
 
 ```bash
 vercel --prod
@@ -91,13 +92,27 @@ vercel --prod
 
 Uses `vercel.json` at root. Add all env vars in Vercel dashboard.
 
-### API (Vercel — separate project, api.speedyvan.uk)
+Production domains: `www.speedyvan.uk`, `speedyvan.uk`, `speedy-van.co.uk`, and `www.speedy-van.co.uk`.
+
+The `/admin` web app is part of this same Vercel project.
+
+### API (Vercel - `speedy-van-api`)
 
 ```bash
 cd apps/api && vercel --prod
 ```
 
 Uses `apps/api/vercel.json`. Set `DATABASE_URL`, `JWT_SECRET`, `STRIPE_SECRET_KEY`, etc.
+
+### iOS Admin (EAS / TestFlight)
+
+```bash
+cd apps/ios-admin
+eas build --platform ios --profile production
+eas submit --platform ios --profile production
+```
+
+The iOS admin app uses `https://api.speedyvan.uk` in production.
 
 ## Scripts
 

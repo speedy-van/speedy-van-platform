@@ -12,6 +12,6 @@ The app requires sign-in. After login:
 - More links to Analytics, Enquiries, and Notifications.
 
 The app uses standard HTTPS communication with the SpeedyVan API at:
-https://www.speedyvan.uk/api
+https://api.speedyvan.uk
 
 No non-exempt encryption is used beyond standard HTTPS.

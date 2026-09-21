@@ -1,12 +1,13 @@
 # SEO Release Checklist
 
-Date: 2026-09-19
+Date: 2026-09-21
 
 ## Before Deploy
 
 - Confirm the release branch includes only intended SEO and payment-guard changes.
 - Review all unpublished non-SEO changes already present in the workspace before merging.
-- Confirm deployment target is the Vercel project `speedy-van-co-uk-web`.
+- Confirm deployment target is the Vercel project `speedy-van-web`.
+- Confirm the root `.vercel/project.json` points at project id `prj_OkJrabaUpBmsMqNibYZc5cgnIqFg`.
 - Confirm production app is `apps/web`.
 - Confirm whether public GitHub `main` being at `688632f9948c5189438e50f4d1f61f938d1850a4` is expected, or identify the private production source.
 - Run `npm run typecheck -w apps/web`.
@@ -16,8 +17,8 @@ Date: 2026-09-19
 
 ## Deploy
 
-- Do not change live hosting from this handover alone.
 - Deploy only through the normal controlled Vercel workflow.
+- Do not deploy to or recreate the stale duplicate project `speedy-van-co-uk-web`.
 - Do not create a second public site for `.co.uk`.
 - Preserve the primary hostname `https://www.speedyvan.uk`.
 

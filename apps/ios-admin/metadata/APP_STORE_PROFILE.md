@@ -77,7 +77,7 @@ After creation, copy the numeric Apple ID from App Store Connect and place it in
 
 Review notes:
 
-SpeedyVan Admin is an internal operations app for SpeedyVan administrators. The app lets authorised staff view operational KPIs, manage customer bookings, assign drivers, publish driver jobs, review European removals enquiries, and monitor admin notifications. The app connects to the SpeedyVan API at `https://www.speedyvan.uk/api` and requires an admin JWT login.
+SpeedyVan Admin is an internal operations app for SpeedyVan administrators. The app lets authorised staff view operational KPIs, manage customer bookings, assign drivers, publish driver jobs, review European removals enquiries, and monitor admin notifications. The app connects to the SpeedyVan API at `https://api.speedyvan.uk` and requires an admin JWT login.
 
 Use the demo admin credentials above to sign in. After login, the Dashboard tab shows KPIs; Bookings shows searchable booking records and booking detail actions; Drivers shows driver status and earnings; Jobs shows available driver jobs; More links to Analytics, Enquiries, and Notifications.
 

@@ -1,6 +1,12 @@
-nex# SEO Audit Evidence
+# SEO Audit Evidence
 
 Date: 2026-09-19
+
+## 2026-09-21 Production Update
+
+The production website is now verified on Vercel project `speedy-van-web` (`prj_OkJrabaUpBmsMqNibYZc5cgnIqFg`), not the stale duplicate `speedy-van-co-uk-web`.
+
+Current live project map is maintained in `docs/deployment-projects.md`.
 
 ## Starting Constraints
 
@@ -26,7 +32,7 @@ Active production-serving app is `apps/web`, not `apps/web-v2`.
 Evidence:
 
 - Root `vercel.json` builds `apps/web` and outputs `apps/web/.next`.
-- `.vercel/project.json` identifies project `speedy-van-co-uk-web` with project id `prj_03tJLYNkaGYRtFhEnl2rb0Rj7W4Q`.
+- `.vercel/project.json` now identifies project `speedy-van-web` with project id `prj_OkJrabaUpBmsMqNibYZc5cgnIqFg`.
 - The local workspace does not contain `apps/web-v2`.
 - Live HTML on `https://www.speedyvan.uk/` references App Router chunks under `/_next/static/chunks/app/(site)/...`, matching `apps/web/src/app/(site)`.
 - Public headers do not expose the exact deployed commit. Production commit and deployment branch remain unverified.
