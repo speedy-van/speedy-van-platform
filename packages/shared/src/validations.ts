@@ -23,9 +23,12 @@ export const ResetPasswordSchema = z.object({
 
 // ─── Booking ───────────────────────────────────────────────────────────────
 export const SelectedItemSchema = z.object({
+  lineId: z.string().optional(),
   itemId: z.string().optional(),
   name: z.string(),
   quantity: z.number().int().positive().default(1),
+  roomId: z.string().optional(),
+  roomName: z.string().optional(),
 });
 
 export const CreateBookingSchema = z.object({
@@ -34,6 +37,7 @@ export const CreateBookingSchema = z.object({
   customerPhone: z.string().min(1),
 
   serviceSlug: z.string().min(1),
+  entryServiceSlug: z.string().optional(),
   serviceName: z.string().min(1),
   serviceVariant: z.string().optional(),
 

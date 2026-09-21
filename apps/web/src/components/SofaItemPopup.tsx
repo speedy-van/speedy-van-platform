@@ -154,7 +154,7 @@ export function SofaItemPopup() {
 
       {/* Header */}
       <div className="mb-3 pr-6">
-        <p id="sofa-popup-heading" className="text-sm font-bold text-slate-900 leading-snug">
+        <p id="sofa-popup-heading" className="text-sm font-bold text-stone-950 leading-snug">
           Do you need to move a sofa or large item?
         </p>
         <p className="text-[11px] text-slate-500 mt-0.5">Tap your items — see an instant price.</p>
@@ -192,7 +192,7 @@ export function SofaItemPopup() {
                 )}
                 {isSelected && (
                   <span
-                    className="absolute top-1 right-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary-400 text-[10px] font-extrabold text-slate-900 shadow"
+                    className="absolute top-1 right-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary-400 text-[10px] font-extrabold text-white shadow"
                     aria-hidden="true"
                   >
                     ✓
@@ -215,7 +215,7 @@ export function SofaItemPopup() {
           {hasItems ? (
             <>
               <p className="text-[10px] font-semibold uppercase tracking-wide text-slate-400">Estimated</p>
-              <p className="text-2xl font-extrabold text-slate-900 leading-none">From £{total}</p>
+              <p className="text-2xl font-extrabold text-stone-950 leading-none">From £{total}</p>
             </>
           ) : (
             <p className="text-[11px] text-slate-400 italic">Select items above</p>
@@ -224,7 +224,7 @@ export function SofaItemPopup() {
         <Link
           href={bookingHref}
           onClick={handleBook}
-          className="inline-flex items-center justify-center rounded-lg bg-primary-400 px-4 py-2.5 text-xs font-extrabold text-slate-900 hover:bg-primary-300 focus:outline-none focus:ring-2 focus:ring-primary-400 transition-colors shrink-0"
+          className="inline-flex items-center justify-center rounded-lg bg-primary-400 px-4 py-2.5 text-xs font-extrabold text-white hover:bg-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-400 transition-colors shrink-0"
         >
           {hasItems ? "Book now \u2192" : "Get a quote \u2192"}
         </Link>

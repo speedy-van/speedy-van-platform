@@ -93,7 +93,7 @@ export function InstantQuoteCalculator() {
           </span>
           <h2
             id="instant-quote-heading"
-            className="mt-3 text-2xl sm:text-4xl font-extrabold text-slate-900"
+            className="mt-3 text-2xl sm:text-4xl font-extrabold text-stone-950"
           >
             Get a price in 10 seconds
           </h2>
@@ -118,7 +118,7 @@ export function InstantQuoteCalculator() {
                 onChange={(e) => setPostcode(e.target.value)}
                 onBlur={() => setTouched(true)}
                 placeholder="e.g. G1 1AA"
-                className={`w-full rounded-lg border px-4 py-3 text-base font-medium text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-400 ${
+                className={`w-full rounded-lg border px-4 py-3 text-base font-medium text-stone-950 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-400 ${
                   showPostcodeError ? "border-red-400" : "border-slate-300"
                 }`}
                 aria-invalid={showPostcodeError ? "true" : "false"}
@@ -151,7 +151,7 @@ export function InstantQuoteCalculator() {
                 id="iq-service"
                 value={service}
                 onChange={(e) => setService(e.target.value as ServiceKey)}
-                className="w-full rounded-lg border border-slate-300 bg-white px-4 py-3 text-base font-medium text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-400"
+                className="w-full rounded-lg border border-slate-300 bg-white px-4 py-3 text-base font-medium text-stone-950 focus:outline-none focus:ring-2 focus:ring-primary-400"
               >
                 {SERVICE_OPTIONS.map((s) => (
                   <option key={s.key} value={s.key}>
@@ -170,7 +170,7 @@ export function InstantQuoteCalculator() {
                 id="iq-distance"
                 value={distance}
                 onChange={(e) => setDistance(Number(e.target.value))}
-                className="w-full rounded-lg border border-slate-300 bg-white px-4 py-3 text-base font-medium text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-400"
+                className="w-full rounded-lg border border-slate-300 bg-white px-4 py-3 text-base font-medium text-stone-950 focus:outline-none focus:ring-2 focus:ring-primary-400"
               >
                 {DISTANCE_OPTIONS.map((d) => (
                   <option key={d.value} value={d.value}>
@@ -183,7 +183,7 @@ export function InstantQuoteCalculator() {
 
           {/* Estimate result */}
           <div className="mt-6 grid gap-4 sm:grid-cols-[1fr_auto] sm:items-center">
-            <div className="rounded-xl bg-slate-900 text-white p-4 sm:p-5">
+            <div className="rounded-xl bg-stone-950 text-white p-4 sm:p-5">
               <p className="text-xs uppercase tracking-wide text-slate-300 font-semibold">
                 Estimated price
               </p>
@@ -202,7 +202,7 @@ export function InstantQuoteCalculator() {
                 onClick={handleEstimate}
                 data-track-event="quote_estimate_click"
                 data-track-location="calculator"
-                className="cta-pulse inline-flex items-center justify-center gap-2 rounded-lg bg-primary-400 px-6 py-3 font-extrabold text-slate-900 shadow-md hover:bg-primary-500 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400 focus-visible:ring-offset-2"
+                className="cta-pulse inline-flex items-center justify-center gap-2 rounded-lg bg-primary-400 px-6 py-3 font-extrabold text-white shadow-md hover:bg-primary-500 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400 focus-visible:ring-offset-2"
               >
                 Update estimate
               </button>
@@ -210,7 +210,7 @@ export function InstantQuoteCalculator() {
                 href="/book"
                 data-track-event="quote_click"
                 data-track-location="calculator"
-                className="text-sm font-semibold text-slate-700 hover:text-slate-900 underline underline-offset-2"
+                className="text-sm font-semibold text-slate-700 hover:text-stone-950 underline underline-offset-2"
               >
                 Continue to full booking →
               </Link>

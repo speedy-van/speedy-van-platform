@@ -1,31 +1,39 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { absoluteUrl } from "@/lib/seo/constants";
 
 export const metadata: Metadata = {
-  title: "Cookie Policy | SpeedyVan",
+  title: "Cookie Policy",
   description:
     "How SpeedyVan uses cookies and similar technologies, and how you can control them.",
   robots: { index: true, follow: true },
-  alternates: { canonical: "/cookies" },
+  alternates: { canonical: absoluteUrl("/cookies") },
 };
 
 const LAST_UPDATED = "April 2026";
 
 export default function CookiesPage() {
   return (
-    <article className="bg-white text-slate-800">
+    <article style={{ background: "#0A0A0A", color: "rgba(255,255,255,0.70)" }}>
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <header className="mb-10 border-b border-slate-200 pb-6">
-          <p className="text-xs font-semibold uppercase tracking-wider text-primary-600">
+        <header
+          className="mb-10 pb-6"
+          style={{ borderBottom: "1px solid rgba(245,158,11,0.15)" }}
+        >
+          <p className="text-xs font-black uppercase tracking-wider text-amber-400">
             Legal
           </p>
-          <h1 className="mt-2 text-3xl sm:text-4xl font-extrabold text-slate-900">
+          <h1 className="mt-2 text-3xl sm:text-4xl font-black text-white">
             Cookie Policy
           </h1>
-          <p className="mt-3 text-sm text-slate-500">Last updated: {LAST_UPDATED}</p>
+          <p className="mt-3 text-sm" style={{ color: "rgba(255,255,255,0.40)" }}>
+            Last updated: {LAST_UPDATED}
+          </p>
         </header>
 
-        <div className="prose prose-slate max-w-none prose-h2:text-2xl prose-h2:font-bold prose-h2:text-slate-900 prose-h2:mt-10 prose-p:leading-relaxed prose-li:leading-relaxed prose-a:text-primary-600 prose-a:no-underline hover:prose-a:underline">
+        <div className="prose max-w-none prose-headings:scroll-mt-20 prose-h2:text-2xl prose-h2:font-black prose-h2:text-white prose-h2:mt-10 prose-h3:text-lg prose-h3:font-bold prose-h3:text-white prose-p:leading-relaxed prose-li:leading-relaxed prose-a:text-amber-400 prose-a:no-underline hover:prose-a:underline prose-strong:text-white"
+          style={{ color: "rgba(255,255,255,0.60)" }}
+        >
           <p>
             This Cookie Policy explains what cookies are, which ones SpeedyVan
             uses, and how you can manage them. Please read this together with
@@ -76,15 +84,22 @@ export default function CookiesPage() {
           <h2>5. Contact</h2>
           <p>
             Questions? Email{" "}
-            <a href="mailto:support@speedy-van.co.uk">support@speedy-van.co.uk</a>.
+            <a href="mailto:support@speedyvan.uk">support@speedyvan.uk</a>.
           </p>
         </div>
 
-        <footer className="mt-12 pt-6 border-t border-slate-200 flex items-center justify-between text-sm">
-          <Link href="/" className="text-primary-600 hover:underline font-medium">
+        <footer
+          className="mt-12 pt-6 flex items-center justify-between text-sm"
+          style={{ borderTop: "1px solid rgba(245,158,11,0.15)" }}
+        >
+          <Link href="/" className="font-bold text-amber-400 hover:underline">
             ← Back to home
           </Link>
-          <Link href="/privacy" className="text-slate-500 hover:text-slate-700">
+          <Link
+            href="/privacy"
+            className="hover:text-white transition-colors"
+            style={{ color: "rgba(255,255,255,0.40)" }}
+          >
             View Privacy Policy →
           </Link>
         </footer>

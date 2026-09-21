@@ -1,52 +1,78 @@
 # SEO Growth Plan
 
-Date: 2026-09-17
+Date: 2026-09-19
 
-## Canonical Strategy
+## Positioning
 
-Keep `https://www.speedyvan.uk` as the only indexable production hostname. Redirect non-www `.uk`, apex `.co.uk`, and www `.co.uk` to the primary host with 308 redirects.
+Keep one indexable production hostname:
 
-Do not run two separate near-duplicate websites for `.uk` and `.co.uk`. If `apps/web-v2` is revived later, either give it a genuinely different purpose or keep it private/noindex.
+```text
+https://www.speedyvan.uk
+```
 
-## Service Coverage
+Use service pages for intent proof and area pages for geography proof. Avoid creating mass `service x area` pages until Search Console data proves demand and the business can support unique content for each page.
 
-Current canonical clusters:
+## 30 Days
 
-- `/services/man-and-van`: man and van, man with a van, van and man, van with driver.
-- `/services/flat-removals`: flat removals, apartment moves, studio moves, one-bed moves.
-- `/services/small-moves`: small moves, single-room moves, bulky item moves, storage transfers.
-- `/services/house-removal`: house removals, home removals, full-house removals.
-- `/services/office-removal`: office removals, business relocation, commercial moves.
-- `/services/furniture-delivery`: furniture removals, collection and delivery, marketplace pickups.
-- `/services/long-distance-removals`: intercity and Scotland-wide removals.
-- `/services/student-move`: halls, shared flats, student storage transfers.
+| Action | Owner | Dependency | Success measure |
+| --- | --- | --- | --- |
+| Deploy local canonical and content fixes | Engineering | Deployment access | Live `/privacy`, `/terms`, `/cookies`, `/book`, service and area metadata match local checks |
+| Submit sitemap in Search Console | SEO or owner | Search Console access | `https://www.speedyvan.uk/sitemap.xml` submitted and crawled |
+| Verify primary landing pages in URL Inspection | SEO or owner | Search Console access | Homepage, two services and two areas show intended canonical |
+| Connect GA4 or expose current property | Marketing or owner | Analytics access | Landing-page sessions and booking events measurable |
+| Review GBP categories and services | Owner | GBP access | Man and van and removals services match site language |
 
-## Next Content Opportunities
+## 60 Days
 
-Prioritize pages or sections only where there is genuine operational coverage:
+| Action | Owner | Dependency | Success measure |
+| --- | --- | --- | --- |
+| Add city-to-city route guide for Glasgow to Edinburgh | Content plus operations | Confirm operational coverage and pricing constraints | Route page or guide gets impressions for route terms |
+| Expand furniture collection guidance | Content | Photo quote and access requirements confirmed | More clicks and conversions to furniture page |
+| Add flat removal checklist content | Content | Operational input on tenements and lifts | Higher engagement on flat removals and Glasgow/Edinburgh pages |
+| Build office move checklist | Content | Commercial move process confirmed | More office enquiries and lower pre-sale questions |
 
-1. City-to-city guides for high-demand routes, for example Glasgow to Edinburgh, Edinburgh to Dundee, Aberdeen to Inverness.
-2. Furniture collection guides for marketplace/private seller pickup with access/photo checklist.
-3. Flat-removal guides for tenement/stair/lift access planning.
-4. Office relocation checklist covering IT, out-of-hours moves, inventory, and access.
+## 90 Days
 
-Avoid mass-producing `service x area` pages. Use area pages as geography proof and service pages as intent proof.
+| Action | Owner | Dependency | Success measure |
+| --- | --- | --- | --- |
+| Prioritise new pages from Search Console query data | SEO | Search Console data | New work is based on impressions and conversion potential |
+| Improve internal links from area pages to high-converting services | Engineering and SEO | Landing-page conversion data | Higher booking starts from area pages |
+| Test quote CTA variants on service pages | Marketing and engineering | Analytics events | Improved booking-start rate without reducing qualified leads |
+| Publish practical local moving updates | Content | Council parking and seasonal access checks | More useful local content without thin duplication |
 
-## Measurement Plan
+## Competitor And SERP Evidence
 
-After deployment:
+Third-party HYPD SERP samples on 2026-09-19 showed competitive local results for:
 
-1. Submit `https://www.speedyvan.uk/sitemap.xml` in Search Console.
-2. Inspect canonical status for homepage, three new service pages, and representative area pages.
-3. Track organic clicks/impressions by query groups:
-   - man and van / man with a van / van and man
-   - house removals
-   - flat removals / apartment moves / studio moves
-   - furniture collection / furniture delivery
-   - office removals / business relocation
-   - small moves / long-distance removals
-4. Compare booking funnel conversion by landing page without assuming rankings from an SEO score.
+- `man and van glasgow`
+- `house removals glasgow`
+- `furniture delivery glasgow`
 
-## Do Not Claim
+SpeedyVan was not observed in the inspected first organic/local results in those samples. This is not official ranking data and should be treated as directional only.
 
-Do not claim rankings, guaranteed traffic, guaranteed conversion lifts, customer counts, review ratings, live fleet availability, or Search Console gains until those are measured after deployment.
+Competitor overlap estimates mentioned domains such as `anyvan.com`, `yell.com`, `gumtree.com`, `uremovals.com`, and local Glasgow mover sites. Treat these as competitive discovery sources, not proof of Google performance.
+
+## Measurement Rules
+
+Do measure:
+
+- Search Console impressions, clicks, average position and canonical state.
+- Booking starts and completed bookings by landing page.
+- Quote failures and booking abandonment by step.
+- Local GBP calls and website clicks if GBP access is available.
+
+Do not claim:
+
+- Guaranteed rankings.
+- Guaranteed traffic uplift.
+- Guaranteed conversion uplift.
+- Live fleet availability.
+- Customer counts or review ratings not backed by data.
+
+## Content Principles
+
+- Use UK spelling.
+- Keep claims operational and verifiable.
+- Explain quote factors clearly: route, access, load, date, crew time and add-ons.
+- Make service fit clear: man and van is not self-drive van hire.
+- Avoid doorway pages and repeated boilerplate.

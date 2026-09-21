@@ -9,7 +9,7 @@ import { LocationToggle } from "@/components/driver/LocationToggle";
 const API_BASE =
   process.env.NODE_ENV === "development"
     ? "http://localhost:4000"
-    : (process.env.NEXT_PUBLIC_API_URL ?? "https://api.speedy-van.co.uk");
+    : (process.env.NEXT_PUBLIC_API_URL ?? "https://api.speedyvan.uk");
 
 type Tab = "upcoming" | "in_progress" | "completed" | "all";
 
@@ -106,12 +106,13 @@ export default function MyJobsPage() {
         </div>
 
         {/* Tabs */}
-        <div className="flex gap-1 bg-slate-100 rounded-xl p-1 mb-4">
+        <div className="flex gap-1 rounded-xl p-1 mb-4" style={{ background: "rgba(255,255,255,0.05)" }}>
           {TABS.map((t) => (
             <button
               key={t.id}
               onClick={() => setTab(t.id)}
-              className={`flex-1 py-2 text-xs font-bold rounded-lg transition-colors ${tab === t.id ? "bg-white shadow text-slate-900" : "text-slate-500"}`}
+              className={`flex-1 py-2 text-xs font-bold rounded-lg transition-colors ${tab === t.id ? "text-black" : "text-white/55"}`}
+              style={tab === t.id ? { background: "linear-gradient(135deg, #F59E0B 0%, #EA580C 100%)" } : undefined}
             >
               {t.label}
             </button>
@@ -120,12 +121,12 @@ export default function MyJobsPage() {
 
         {/* Job list */}
         {loading ? (
-          <div className="flex justify-center py-16"><div className="h-8 w-8 border-2 border-blue-500 border-t-transparent rounded-full animate-spin" /></div>
+          <div className="flex justify-center py-16"><div className="h-8 w-8 border-2 border-amber-400 border-t-transparent rounded-full animate-spin" /></div>
         ) : jobs.length === 0 ? (
-          <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-10 text-center">
+          <div className="rounded-2xl p-10 text-center" style={{ background: "rgba(255,255,255,0.04)", boxShadow: "0 0 0 1px rgba(245,158,11,0.15), 0 8px 32px rgba(0,0,0,0.4)" }}>
             <p className="text-3xl mb-2">📋</p>
-            <p className="font-bold text-slate-700">No {tab === "all" ? "" : tab.replace("_", " ")} jobs</p>
-            <a href="/jobs" className="mt-4 inline-block text-blue-600 text-sm font-semibold">Browse available jobs →</a>
+            <p className="font-bold text-white">No {tab === "all" ? "" : tab.replace("_", " ")} jobs</p>
+            <a href="/jobs" className="mt-4 inline-block text-amber-400 text-sm font-semibold">Browse available jobs →</a>
           </div>
         ) : (
           <div className="space-y-4 pb-4">

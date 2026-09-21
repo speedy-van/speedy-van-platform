@@ -1,5 +1,5 @@
 /* SpeedyVan service worker — minimal offline shell + asset cache. */
-const VERSION = "v1";
+const VERSION = "v5-pricing-white";
 const SHELL_CACHE = `sv-shell-${VERSION}`;
 const RUNTIME_CACHE = `sv-runtime-${VERSION}`;
 const OFFLINE_URL = "/offline.html";
@@ -8,7 +8,7 @@ const SHELL_ASSETS = [
   "/",
   "/offline.html",
   "/manifest.json",
-  "/logo.png",
+  "/logo.png?v=amber-20260921-1",
 ];
 
 self.addEventListener("install", (event) => {

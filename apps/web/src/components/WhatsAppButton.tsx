@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { haptic } from "@/lib/haptic";
 
-const WA_SHORT_LINK = "https://wa.me/message/J6EO772GDPHFO1";
+const WA_SHORT_LINK = "https://wa.me/447909032889";
 const DEFAULT_MESSAGE = "Hi SpeedyVan, I'd like a quote for a move.";
 
 interface BookingDraft {

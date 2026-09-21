@@ -34,7 +34,7 @@ export async function createBooking(input: CreateBookingInput): Promise<{
   const scheduledDate = new Date(input.selectedDate);
   const serverPrice = await calculatePriceForSlot(
     {
-      serviceType: input.serviceSlug,
+      serviceType: input.entryServiceSlug || input.serviceSlug,
       serviceVariant: input.serviceVariant,
       distanceMiles: input.distanceMiles,
       pickupFloor: input.pickupFloor,
@@ -71,6 +71,31 @@ export async function createBooking(input: CreateBookingInput): Promise<{
   if (!service) throw new Error("NOT_FOUND");
   const area = await db.area.findFirst({ where: { isActive: true } });
   if (!area) throw new Error("NOT_FOUND");
+
+  const submittedItemIds = Array.from(
+    new Set(
+      input.selectedItems
+        .map((item) => item.itemId)
+        .filter((itemId): itemId is string => Boolean(itemId)),
+    ),
+  );
+  const catalogItems =
+    submittedItemIds.length > 0
+      ? await db.item.findMany({
+          where: {
+            OR: [
+              { id: { in: submittedItemIds } },
+              { slug: { in: submittedItemIds } },
+            ],
+          },
+          select: { id: true, slug: true },
+        })
+      : [];
+  const catalogItemIdBySubmittedId = new Map<string, string>();
+  for (const item of catalogItems) {
+    catalogItemIdBySubmittedId.set(item.id, item.id);
+    catalogItemIdBySubmittedId.set(item.slug, item.id);
+  }
 
   // 4. Create booking
   const reference = generateBookingReference();
@@ -109,10 +134,15 @@ export async function createBooking(input: CreateBookingInput): Promise<{
       totalPrice: serverPrice,
       status: "PENDING",
       items: {
-        create: input.selectedItems.map((it) => ({
-          name: it.name,
-          quantity: it.quantity,
-        })),
+        create: input.selectedItems.map((it) => {
+          const resolvedItemId = it.itemId ? catalogItemIdBySubmittedId.get(it.itemId) : undefined;
+          const itemName = it.roomName ? `${it.roomName}: ${it.name}` : it.name;
+          return {
+            ...(resolvedItemId ? { itemId: resolvedItemId } : {}),
+            name: itemName,
+            quantity: it.quantity,
+          };
+        }),
       },
     },
   });

@@ -1,0 +1,17 @@
+SpeedyVan Admin is an internal operations app for SpeedyVan administrators.
+
+Demo credentials:
+Email: admin@speedyvan.com
+Password: Admin123!
+
+The app requires sign-in. After login:
+- Dashboard shows operational KPIs.
+- Bookings lets admins search, filter, open booking details, change status, assign drivers, add tracking notes, and cancel bookings.
+- Drivers lets admins review driver profiles, active status, earnings, mark unpaid earnings as paid, and reset passwords.
+- Jobs lets admins control available job visibility, pause/publish jobs, and set driver pay.
+- More links to Analytics, Enquiries, and Notifications.
+
+The app uses standard HTTPS communication with the SpeedyVan API at:
+https://www.speedyvan.uk/api
+
+No non-exempt encryption is used beyond standard HTTPS.

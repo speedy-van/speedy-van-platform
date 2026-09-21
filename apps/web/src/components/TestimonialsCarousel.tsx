@@ -20,12 +20,12 @@ function initials(name: string): string {
 }
 
 const AVATAR_COLORS = [
-  "bg-amber-400 text-slate-900",
-  "bg-rose-300 text-slate-900",
-  "bg-emerald-300 text-slate-900",
-  "bg-sky-300 text-slate-900",
-  "bg-violet-300 text-slate-900",
-  "bg-orange-300 text-slate-900",
+  "bg-primary-400 text-white",
+  "bg-rose-300 text-stone-950",
+  "bg-emerald-300 text-stone-950",
+  "bg-amber-300 text-stone-950",
+  "bg-violet-300 text-stone-950",
+  "bg-orange-300 text-stone-950",
 ];
 
 export function TestimonialsCarousel({ items }: { items: Testimonial[] }) {
@@ -89,7 +89,7 @@ export function TestimonialsCarousel({ items }: { items: Testimonial[] }) {
                     {initials(review.name)}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="font-semibold text-slate-900 text-sm truncate">{review.name}</p>
+                    <p className="font-semibold text-stone-950 text-sm truncate">{review.name}</p>
                     <p className="text-xs text-slate-500 truncate">{review.location}</p>
                   </div>
                   <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 text-emerald-700 text-[10px] font-bold uppercase tracking-wider px-2 py-1 ring-1 ring-emerald-200">

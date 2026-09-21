@@ -1,0 +1,73 @@
+{
+  "expo": {
+    "name": "SpeedyVan Admin",
+    "slug": "speedyvan-admin",
+    "scheme": "speedyvan-admin",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "automatic",
+    "backgroundColor": "#0F172A",
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "bundleIdentifier": "co.uk.speedy-van.admin",
+      "supportsTablet": false,
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      },
+      "config": {
+        "usesNonExemptEncryption": false
+      }
+    },
+    "android": {
+      "package": "co.uk.speedyvan.admin",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#0F172A"
+      }
+    },
+    "plugins": [
+      "expo-router",
+      "expo-secure-store",
+      "expo-font",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Allow SpeedyVan Admin to choose images for project content."
+        }
+      ],
+      [
+        "expo-notifications",
+        {
+          "sounds": [
+            "./assets/sounds/new-booking.mp3"
+          ],
+          "mode": "production",
+          "enableBackgroundRemoteNotifications": false
+        }
+      ]
+    ],
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#0F172A"
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "experiments": {
+      "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "24bad6a1-a00e-425a-88fa-c4c9e38208e1"
+      }
+    },
+    "owner": "ahmadawadalwakai"
+  }
+}

@@ -115,7 +115,7 @@ export function LocationPersonalization() {
 
   return (
     <div
-      className="bg-slate-900 text-white"
+      className="bg-stone-950 text-white"
       role="status"
       aria-live="polite"
     >

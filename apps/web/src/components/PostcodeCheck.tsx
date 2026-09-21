@@ -108,14 +108,14 @@ export function PostcodeCheck() {
           </span>
         )}
         {status.kind === "outside" && (
-          <span className="inline-flex flex-wrap items-center gap-x-2 gap-y-1 text-amber-300 font-semibold">
+          <span className="inline-flex flex-wrap items-center gap-x-2 gap-y-1 text-primary-200 font-semibold">
             <span className="inline-flex items-center gap-1">
               <span aria-hidden="true">📞</span> {status.area} is outside our coverage —
             </span>
             <button
               type="button"
               onClick={() => setWaitlistOpen(true)}
-              className="underline decoration-amber-200 underline-offset-2 hover:text-amber-200"
+              className="underline decoration-primary-200 underline-offset-2 hover:text-white"
             >
               notify me when you launch here
             </button>

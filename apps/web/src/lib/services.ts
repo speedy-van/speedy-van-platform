@@ -1,6 +1,10 @@
 export interface ServiceFaq {
   question: string;
   answer: string;
+  links?: {
+    label: string;
+    href: string;
+  }[];
 }
 
 export interface Service {
@@ -29,7 +33,7 @@ export const SERVICES: Service[] = [
     description:
       "A professional driver and van for small moves, single-item pickups, marketplace collections, and flexible local transport.",
     longDescription:
-      "Our man and van service covers the natural ways customers search for the same thing: man with a van, man & van, van and man, van with driver, or two-person van help. It is built for smaller loads, studio moves, single-room moves, furniture pickups, storage runs, and short-notice jobs where a full removal lorry would be too much.",
+      "Our man and van service is built for smaller loads, studio moves, single-room moves, furniture pickups, storage runs, and short-notice jobs where a full removal lorry would be too much. Tell us what needs moving, the access at both addresses, and your preferred time so the quote can reflect the real job.",
     includes: [
       "Professional driver with the right van for the load",
       "Loading and unloading assistance",
@@ -49,7 +53,7 @@ export const SERVICES: Service[] = [
       {
         question: "Is man and van the same as van and man?",
         answer:
-          "Yes. Customers use both phrases for a van with a driver who helps move items. We use one strong service page for these synonyms so the booking and quote journey stays clear.",
+          "Yes. Both describe a van with a driver who helps move items. Choose this service when you need transport and loading help rather than self-drive van hire.",
       },
       {
         question: "How many hours do I need for a man and van move?",
@@ -234,6 +238,12 @@ export const SERVICES: Service[] = [
         question: "Do you move outside Scotland?",
         answer:
           "For European moves, use the European removals enquiry page. Other UK-wide routes should be quoted before booking so the scope is clear.",
+        links: [
+          {
+            label: "European removals enquiry page",
+            href: "/services/european-removals",
+          },
+        ],
       },
     ],
   },

@@ -40,7 +40,7 @@ export default function VisitorsPage() {
   return (
     <div className="space-y-6">
       {loading ? (
-        <div className="flex items-center justify-center h-64"><div className="h-8 w-8 border-2 border-blue-500 border-t-transparent rounded-full animate-spin" /></div>
+        <div className="flex items-center justify-center h-64"><div className="h-8 w-8 border-2 border-amber-500 border-t-transparent rounded-full animate-spin" /></div>
       ) : (
         <>
           {/* KPI row */}
@@ -58,7 +58,7 @@ export default function VisitorsPage() {
                 <div key={d.date} className="flex-1 flex flex-col items-center gap-1">
                   <span className="text-xs text-slate-500 font-mono">{d.count}</span>
                   <div
-                    className="w-full bg-blue-500 rounded-t-sm transition-all duration-700"
+                    className="w-full bg-amber-500 rounded-t-sm transition-all duration-700"
                     style={{ height: `${(d.count / maxCount) * 100}%` }}
                   />
                   <span className="text-[11px] text-slate-400 whitespace-nowrap">

@@ -1,0 +1,21 @@
+# SpeedyVan Expo Admin Delivery Checklist
+
+- [x] Expo SDK 52 app starts with `npm run start -w apps/ios-admin`
+- [x] TypeScript passes with `npm run typecheck -w apps/ios-admin`
+- [x] NativeWind styles render in the web preview
+- [x] Login stores JWT in SecureStore on native and localStorage on web preview
+- [x] 401 responses clear auth and return to login
+- [x] Tabs are configured and Bookings includes the pending badge hook
+- [ ] Dashboard KPIs load from live API
+- [ ] Bookings search/filter/detail/status/cancel flows work
+- [ ] Drivers list/detail/toggle/mark-paid/reset-password flows work
+- [ ] Job board visibility, pause, resume, and driver pay flows work
+- [ ] Analytics charts render with live data
+- [ ] Enquiries update and send-quote flows work
+- [ ] Notifications mark-read, mark-all-read, and delete flows work
+- [ ] All destructive actions show confirmation
+- [ ] All lists show loading, empty, and error states
+- [x] App Store Connect app record exists for `co.uk.speedy-van.admin`
+- [x] App icon, splash, favicon, and App Store screenshot assets exist
+- [x] EAS iOS signing credentials are validated for cloud build
+- [x] TestFlight build is queued and uploaded

@@ -49,14 +49,14 @@ export function ChatInput({ onSend, disabled, placeholder = "Type a message…" 
         placeholder={placeholder}
         rows={1}
         disabled={disabled || sending}
-        className="flex-1 resize-none rounded-xl border border-slate-300 px-3 py-2.5 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent disabled:opacity-60"
+        className="flex-1 resize-none rounded-xl border border-slate-300 px-3 py-2.5 text-sm text-stone-950 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-transparent disabled:opacity-60"
         style={{ minHeight: 42 }}
       />
       <button
         type="button"
         onClick={() => void handleSend()}
         disabled={!text.trim() || sending || disabled}
-        className="h-[42px] w-[42px] shrink-0 flex items-center justify-center rounded-xl bg-blue-500 text-white hover:bg-blue-600 active:scale-95 transition disabled:opacity-50 disabled:cursor-not-allowed"
+        className="h-[42px] w-[42px] shrink-0 flex items-center justify-center rounded-xl bg-amber-500 text-slate-950 hover:bg-amber-600 active:scale-95 transition disabled:opacity-50 disabled:cursor-not-allowed"
         aria-label="Send message"
       >
         {sending ? (

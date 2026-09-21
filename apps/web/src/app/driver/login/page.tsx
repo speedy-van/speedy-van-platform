@@ -42,22 +42,22 @@ function DriverLoginForm() {
   );
 
   return (
-    <div className="min-h-screen bg-[#0F172A] flex flex-col items-center justify-center px-5">
+    <div className="min-h-screen flex flex-col items-center justify-center px-5" style={{ background: "#0A0A0A" }}>
       <div className="w-full max-w-sm">
         <div className="text-center mb-8">
           <div className="text-5xl mb-3">🚛</div>
           <h1 className="text-2xl font-extrabold text-white tracking-tight">Speedy Van</h1>
-          <p className="text-slate-400 text-sm mt-1">Driver Portal</p>
+          <p className="text-white/55 text-sm mt-1">Driver Portal</p>
         </div>
 
-        <form onSubmit={handleSubmit} className="bg-slate-800 rounded-2xl p-6 shadow-xl space-y-4">
+        <form onSubmit={handleSubmit} className="rounded-2xl p-6 space-y-4" style={{ background: "rgba(255,255,255,0.04)", boxShadow: "0 0 0 1px rgba(245,158,11,0.15), 0 8px 32px rgba(0,0,0,0.4)" }}>
           {error && (
             <div className="bg-red-900/50 border border-red-700 text-red-300 rounded-xl px-4 py-3 text-sm">
               {error}
             </div>
           )}
           <div>
-            <label className="block text-sm font-medium text-slate-300 mb-1.5">Email</label>
+            <label className="block text-sm font-medium text-white/55 mb-1.5">Email</label>
             <input
               type="email"
               value={email}
@@ -65,34 +65,37 @@ function DriverLoginForm() {
               required
               autoComplete="email"
               inputMode="email"
-              className="w-full rounded-xl bg-slate-700 border border-slate-600 text-white px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-yellow-400 placeholder-slate-500"
+              className="w-full rounded-xl text-white px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-amber-400 placeholder-white/30"
+              style={{ background: "rgba(255,255,255,0.07)", border: "1px solid rgba(245,158,11,0.2)" }}
               placeholder="you@example.com"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-slate-300 mb-1.5">Password</label>
+            <label className="block text-sm font-medium text-white/55 mb-1.5">Password</label>
             <input
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
               autoComplete="current-password"
-              className="w-full rounded-xl bg-slate-700 border border-slate-600 text-white px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-yellow-400 placeholder-slate-500"
+              className="w-full rounded-xl text-white px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-amber-400 placeholder-white/30"
+              style={{ background: "rgba(255,255,255,0.07)", border: "1px solid rgba(245,158,11,0.2)" }}
               placeholder="••••••••"
             />
           </div>
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-yellow-400 hover:bg-yellow-500 text-slate-900 font-bold py-3.5 rounded-xl text-base transition-colors disabled:opacity-50 min-h-[52px]"
+            className="w-full text-black font-black py-3.5 rounded-xl text-base transition-opacity disabled:opacity-50 min-h-[52px]"
+            style={{ background: "linear-gradient(135deg, #F59E0B 0%, #EA580C 100%)" }}
           >
             {loading ? "Signing in…" : "Sign In"}
           </button>
         </form>
 
-        <p className="text-center text-slate-500 text-xs mt-6">
+        <p className="text-center text-white/40 text-xs mt-6">
           Not a driver?{" "}
-          <a href="/jobs" className="text-yellow-400 hover:text-yellow-300 font-medium">View available jobs</a>
+          <a href="/jobs" className="text-amber-400 hover:text-amber-300 font-medium">View available jobs</a>
         </p>
 
         <div className="text-center mt-4">
@@ -100,7 +103,7 @@ function DriverLoginForm() {
             href="https://apps.apple.com/gb/app/speedy-van-driver/id6753916830"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 text-slate-400 hover:text-slate-300 text-xs transition-colors"
+            className="inline-flex items-center gap-1.5 text-white/40 hover:text-white/60 text-xs transition-colors"
           >
             🍎 Download the iOS Driver App
           </a>

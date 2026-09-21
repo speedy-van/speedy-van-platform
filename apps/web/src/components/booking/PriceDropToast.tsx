@@ -67,7 +67,7 @@ export function PriceDropToast() {
 
           {/* Text */}
           <div className="flex-1 min-w-0">
-            <p className={`text-sm font-bold leading-snug ${isDrop ? "text-emerald-800" : "text-slate-900"}`}>
+            <p className={`text-sm font-bold leading-snug ${isDrop ? "text-emerald-800" : "text-stone-950"}`}>
               {isDrop ? `You saved £${diff.toFixed(2)}` : `£${diff.toFixed(2)} added`}
             </p>
             <p className="text-xs text-slate-500 mt-0.5">

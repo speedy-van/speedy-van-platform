@@ -21,7 +21,7 @@ export default function DriverLayout({ children }: { children: React.ReactNode }
   }, [router]);
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col">
+    <div className="min-h-screen flex flex-col" style={{ background: "#0A0A0A" }}>
       <DriverTopBar />
       <main className="flex-1 pb-20 overflow-y-auto">{children}</main>
       <DriverBottomNav />

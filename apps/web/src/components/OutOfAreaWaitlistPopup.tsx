@@ -79,7 +79,7 @@ export function OutOfAreaWaitlistPopup({ open, postcode, area, source, onClose }
 
   return (
     <div
-      className="fixed inset-0 z-[70] flex items-center justify-center bg-slate-900/70 p-4"
+      className="fixed inset-0 z-[70] flex items-center justify-center bg-black/70 p-4"
       role="dialog"
       aria-modal="true"
       aria-labelledby="waitlist-title"
@@ -99,13 +99,13 @@ export function OutOfAreaWaitlistPopup({ open, postcode, area, source, onClose }
         </button>
 
         <div className="p-6 sm:p-7 text-center">
-          <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-amber-100 text-3xl">
+          <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-primary-100 text-3xl">
             📍
           </div>
 
           {done ? (
             <>
-              <h2 id="waitlist-title" className="text-xl font-bold text-slate-900">
+              <h2 id="waitlist-title" className="text-xl font-bold text-stone-950">
                 You&rsquo;re on the list!
               </h2>
               <p className="mt-2 text-sm text-slate-600">
@@ -116,14 +116,14 @@ export function OutOfAreaWaitlistPopup({ open, postcode, area, source, onClose }
               <button
                 type="button"
                 onClick={onClose}
-                className="mt-6 inline-flex items-center justify-center rounded-xl bg-slate-900 px-5 py-2.5 text-sm font-semibold text-white hover:bg-slate-800"
+                className="mt-6 inline-flex items-center justify-center rounded-xl bg-stone-950 px-5 py-2.5 text-sm font-semibold text-white hover:bg-stone-900"
               >
                 Close
               </button>
             </>
           ) : (
             <>
-              <h2 id="waitlist-title" className="text-xl font-bold text-slate-900">
+              <h2 id="waitlist-title" className="text-xl font-bold text-stone-950">
                 Sorry, we don&rsquo;t cover {area} yet
               </h2>
               <p className="mt-2 text-sm text-slate-600">
@@ -144,7 +144,7 @@ export function OutOfAreaWaitlistPopup({ open, postcode, area, source, onClose }
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="you@example.com"
-                  className="w-full rounded-xl border border-slate-300 px-4 py-3 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
+                  className="w-full rounded-xl border border-slate-300 px-4 py-3 text-sm text-stone-950 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-400 focus:border-transparent"
                 />
                 {error && (
                   <p className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg px-3 py-2">
@@ -154,7 +154,7 @@ export function OutOfAreaWaitlistPopup({ open, postcode, area, source, onClose }
                 <button
                   type="submit"
                   disabled={submitting}
-                  className="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-yellow-400 px-5 py-3 text-sm font-bold text-slate-900 shadow hover:bg-yellow-300 disabled:opacity-60 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                  className="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-primary-400 px-5 py-3 text-sm font-bold text-white shadow hover:bg-primary-500 active:bg-primary-600 disabled:opacity-60 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-primary-400"
                 >
                   {submitting ? "Saving…" : "Notify me when you launch"}
                 </button>

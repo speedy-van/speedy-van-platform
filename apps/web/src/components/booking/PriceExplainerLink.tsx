@@ -4,16 +4,17 @@ import { useState } from "react";
 import { useBooking } from "@/lib/booking-store";
 import { haptic } from "@/lib/haptic";
 
-/**
- * "Why £X?" link + modal showing the line-item breakdown of the current quote.
- * Pulls from booking-store (populated in Step 3).
- */
+const money = new Intl.NumberFormat("en-GB", {
+  style: "currency",
+  currency: "GBP",
+});
+
 export function PriceExplainerLink() {
   const { state } = useBooking();
   const [open, setOpen] = useState(false);
   const items = state.priceBreakdown ?? [];
 
-  if (items.length === 0) return null;
+  if (items.length === 0 || state.clientTotal <= 0) return null;
 
   function show() {
     haptic(10);
@@ -26,79 +27,76 @@ export function PriceExplainerLink() {
         type="button"
         onClick={show}
         data-track-event="price_explainer_open"
-        className="inline-flex items-center gap-1 text-xs font-semibold text-blue-600 hover:text-blue-800 underline-offset-2 hover:underline"
+        className="inline-flex items-center gap-1 text-xs font-semibold text-amber-400 hover:text-amber-300 underline-offset-2 hover:underline"
       >
-        <span aria-hidden="true">💡</span> Why £{state.clientTotal.toFixed(2)}?
+        How is {money.format(state.clientTotal)} calculated?
       </button>
 
       {open && (
         <div
-          className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-slate-900/60 p-0 sm:p-4"
+          className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4"
+          style={{ background: "rgba(0,0,0,0.75)", backdropFilter: "blur(6px)" }}
           role="dialog"
           aria-modal="true"
           aria-labelledby="price-explainer-title"
           onClick={() => setOpen(false)}
         >
           <div
-            className="w-full sm:max-w-md bg-white rounded-t-3xl sm:rounded-3xl shadow-2xl p-6 max-h-[85vh] overflow-y-auto animate-in slide-in-from-bottom duration-300"
+            className="w-full sm:max-w-md rounded-t-3xl sm:rounded-3xl p-6 max-h-[85vh] overflow-y-auto animate-in slide-in-from-bottom duration-300"
+            style={{ background: "#1A1200", boxShadow: "0 0 0 1px rgba(245,158,11,0.25), 0 24px 64px rgba(0,0,0,0.7)" }}
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-start justify-between gap-4 mb-4">
               <div>
-                <h2 id="price-explainer-title" className="text-lg font-extrabold text-slate-900">
+                <h2 id="price-explainer-title" className="text-lg font-black text-white">
                   How we calculated your price
                 </h2>
-                <p className="text-xs text-slate-500 mt-0.5">
-                  Transparent, fixed pricing — no surprises on the day.
+                <p className="text-xs text-amber-100/50 mt-0.5">
+                  These lines come from the current quote response.
                 </p>
               </div>
               <button
                 type="button"
                 onClick={() => setOpen(false)}
                 aria-label="Close"
-                className="text-slate-400 hover:text-slate-700 text-2xl leading-none"
+                className="text-white/40 hover:text-white text-2xl leading-none"
               >
                 ×
               </button>
             </div>
 
-            <ul className="divide-y divide-slate-100">
+            <ul className="divide-y divide-white/8">
               {items.map((li, i) => (
                 <li key={i} className="flex items-center justify-between py-2.5 text-sm">
-                  <span className="text-slate-700 flex items-center gap-1.5">
-                    {li.type === "discount" && <span aria-hidden="true">🎉</span>}
-                    {li.type === "surcharge" && <span aria-hidden="true">⚡</span>}
-                    {li.type === "addon" && <span aria-hidden="true">➕</span>}
-                    {li.type === "base" && <span aria-hidden="true">🚚</span>}
-                    {li.label}
-                  </span>
+                  <span className="text-white/60">{li.label}</span>
                   <span
-                    className={`font-mono font-semibold ${
-                      li.type === "discount" ? "text-emerald-600" : "text-slate-900"
+                    className={`font-mono font-bold ${
+                      li.type === "discount" ? "text-emerald-400" : "text-white"
                     }`}
                   >
-                    {li.amount === 0 ? "Free" : `£${li.amount.toFixed(2)}`}
+                    {li.amount === 0 ? "Free" : money.format(li.amount)}
                   </span>
                 </li>
               ))}
             </ul>
 
-            <div className="mt-4 pt-4 border-t-2 border-slate-200 flex items-center justify-between">
-              <span className="text-sm font-bold text-slate-700">Total</span>
-              <span className="text-2xl font-extrabold text-primary-600 font-mono">
-                £{state.clientTotal.toFixed(2)}
+            <div className="mt-4 pt-4 flex items-center justify-between" style={{ borderTop: "2px solid rgba(245,158,11,0.25)" }}>
+              <span className="text-sm font-bold text-white/60">Total</span>
+              <span className="text-2xl font-black text-amber-400 font-mono">
+                {money.format(state.clientTotal)}
               </span>
             </div>
 
-            <p className="mt-4 text-[11px] text-slate-500 leading-relaxed">
-              Includes transport, professional driver time, standard fuel and
-              goods-in-transit cover. VAT included where applicable.
+            <p className="mt-4 text-[11px] text-white/35 leading-relaxed">
+              Your final payment amount is checked by the server before a booking is created. If the quote changes,
+              payment cannot continue until the quote is refreshed.
             </p>
 
             <button
               type="button"
               onClick={() => setOpen(false)}
-              className="mt-4 w-full rounded-xl bg-slate-900 text-white py-3 text-sm font-bold hover:bg-slate-800"
+              className="mt-4 w-full rounded-xl py-3 text-sm font-black text-black transition hover:brightness-110"
+              style={{ background: "linear-gradient(135deg, #F59E0B 0%, #EA580C 100%)" }}
             >
               Got it
             </button>

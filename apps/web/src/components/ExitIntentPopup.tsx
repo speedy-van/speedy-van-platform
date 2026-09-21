@@ -1,11 +1,12 @@
 "use client";
 
-import { useEffect, useState, FormEvent } from "react";
+import { useEffect, useState } from "react";
+import type { FormEvent } from "react";
 import Link from "next/link";
 
 const SEEN_KEY = "sv_exit_intent_seen";
 const LOCK_KEY = "sv_quote_locked";
-const PHONE_HREF = "tel:01202129746";
+const PHONE_HREF = "tel:07909032889";
 
 interface LockedQuote {
   email: string;
@@ -135,7 +136,7 @@ export function ExitIntentPopup() {
 
   return (
     <div
-      className="fixed inset-0 z-[60] flex items-center justify-center bg-slate-900/70 p-4"
+      className="fixed inset-0 z-[60] flex items-center justify-center bg-black/70 p-4"
       role="dialog"
       aria-modal="true"
       aria-labelledby="exit-intent-title"
@@ -161,7 +162,7 @@ export function ExitIntentPopup() {
             <span className="inline-flex items-center gap-1.5 rounded-full bg-primary-400/15 px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-primary-700 ring-1 ring-primary-400/40">
               <span aria-hidden="true">🔒</span> Limited offer
             </span>
-            <h2 id="exit-intent-title" className="mt-3 text-2xl font-extrabold text-slate-900">
+            <h2 id="exit-intent-title" className="mt-3 text-2xl font-extrabold text-stone-950">
               Lock today&apos;s price for 24 hours
             </h2>
             <p className="mt-2 text-sm text-slate-600">
@@ -178,12 +179,12 @@ export function ExitIntentPopup() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="you@example.com"
-                className="w-full rounded-lg border border-slate-300 px-4 py-3 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-400 focus:border-transparent"
+                className="w-full rounded-lg border border-slate-300 px-4 py-3 text-sm text-stone-950 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-400 focus:border-transparent"
               />
               {error && <p className="text-xs text-red-600 text-left">{error}</p>}
               <button
                 type="submit"
-                className="cta-pulse inline-flex w-full items-center justify-center gap-2 rounded-lg bg-primary-400 px-6 py-3 text-base font-extrabold text-slate-900 shadow-md hover:bg-primary-500 transition-colors"
+                className="cta-pulse inline-flex w-full items-center justify-center gap-2 rounded-lg bg-primary-400 px-6 py-3 text-base font-extrabold text-white shadow-md hover:bg-primary-500 transition-colors"
               >
                 Lock my price for 24 hrs
               </button>
@@ -200,9 +201,10 @@ export function ExitIntentPopup() {
               data-track-event="call_click"
               data-track-location="exit_intent"
               onClick={() => track("exit_intent_cta", { cta: "call" })}
-              className="mt-3 inline-flex w-full items-center justify-center gap-2 rounded-lg border border-slate-300 bg-white px-6 py-3 text-sm font-semibold text-slate-700 hover:bg-slate-50"
+              aria-label="Call us now on 07909 032889"
+              className="mt-3 flex justify-center transition-transform hover:scale-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 rounded-full"
             >
-              Call now · 01202 129746
+              <img src="/call-icon.png" alt="Call us now" width={52} height={52} />
             </a>
 
             <p className="mt-3 text-[11px] text-slate-400">
@@ -216,7 +218,7 @@ export function ExitIntentPopup() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
               </svg>
             </div>
-            <h2 id="exit-intent-title" className="text-2xl font-extrabold text-slate-900">
+            <h2 id="exit-intent-title" className="text-2xl font-extrabold text-stone-950">
               Price locked for 24 hours
             </h2>
             <p className="mt-2 text-sm text-slate-600">
@@ -230,7 +232,7 @@ export function ExitIntentPopup() {
                 track("exit_intent_cta", { cta: "book_after_lock" });
                 setOpen(false);
               }}
-              className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-lg bg-primary-400 px-6 py-3 text-base font-extrabold text-slate-900 shadow-md hover:bg-primary-500 transition-colors"
+              className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-lg bg-primary-400 px-6 py-3 text-base font-extrabold text-white shadow-md hover:bg-primary-500 transition-colors"
             >
               Continue to booking
             </Link>

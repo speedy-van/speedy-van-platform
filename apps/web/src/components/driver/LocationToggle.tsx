@@ -54,11 +54,15 @@ export function LocationToggle() {
       onClick={() => setActive((a) => !a)}
       className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition-colors ${
         active
-          ? "bg-emerald-100 text-emerald-700 border border-emerald-300"
-          : "bg-slate-100 text-slate-600 border border-slate-200"
+          ? "text-emerald-400"
+          : "text-white/55"
       }`}
+      style={active
+        ? { background: "rgba(16,185,129,0.15)", border: "1px solid rgba(16,185,129,0.3)" }
+        : { background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)" }
+      }
     >
-      <span className={`h-2.5 w-2.5 rounded-full ${active ? "bg-emerald-500 animate-pulse" : "bg-slate-400"}`} />
+      <span className={`h-2.5 w-2.5 rounded-full ${active ? "bg-emerald-400 animate-pulse" : "bg-white/30"}`} />
       {active ? "Sharing Location" : "Share Location"}
     </button>
   );

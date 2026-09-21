@@ -159,7 +159,7 @@ app.get("/:id/invoice", requireAuth, async (c) => {
     doc.fontSize(26).font("Helvetica-Bold").fillColor("#0F172A").text("SPEEDY VAN", 50, 50);
     doc.fontSize(9).font("Helvetica").fillColor("#64748b");
     doc.text("1 Barrack Street, Office 2.18, Hamilton ML3 0HS", 50, 82);
-    doc.text("support@speedy-van.co.uk  ·  01202 129 746", 50, 93);
+    doc.text("support@speedyvan.uk  ·  +44 7909 032889", 50, 93);
 
     // Invoice label (right)
     doc.fontSize(22).font("Helvetica-Bold").fillColor("#0F172A").text("INVOICE", 400, 50, { align: "right", width: 145 });

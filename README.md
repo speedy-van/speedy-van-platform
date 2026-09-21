@@ -64,7 +64,7 @@ npm run dev
 | Role | Email | Password |
 |------|-------|----------|
 | Admin | admin@speedyvan.com | Admin123! |
-| Driver | driver@speedyvan.co.uk | driver123 |
+| Driver | driver@speedyvan.uk | driver123 |
 
 ## Environment Variables
 
@@ -83,7 +83,7 @@ Key variables:
 
 ## Deploy
 
-### Web (Vercel — main project, speedy-van.co.uk)
+### Web (Vercel — main project, speedyvan.uk)
 
 ```bash
 vercel --prod
@@ -91,7 +91,7 @@ vercel --prod
 
 Uses `vercel.json` at root. Add all env vars in Vercel dashboard.
 
-### API (Vercel — separate project, api.speedy-van.co.uk)
+### API (Vercel — separate project, api.speedyvan.uk)
 
 ```bash
 cd apps/api && vercel --prod

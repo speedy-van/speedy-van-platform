@@ -58,7 +58,7 @@ export function FaqSearch({ faqs }: { faqs: Faq[] }) {
             if (e.target.value.length === 3) track("faq_search", { length: 3 });
           }}
           placeholder="Search questions… (e.g. insurance, pricing, areas)"
-          className="w-full rounded-xl border border-slate-300 bg-white pl-11 pr-4 py-3.5 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-400 focus:border-transparent"
+          className="w-full rounded-xl border border-slate-300 bg-white pl-11 pr-4 py-3.5 text-sm text-stone-950 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-400 focus:border-transparent"
           aria-label="Search FAQs"
         />
       </div>
@@ -66,7 +66,7 @@ export function FaqSearch({ faqs }: { faqs: Faq[] }) {
       {filtered.length === 0 ? (
         <p className="text-center text-sm text-slate-500 py-8">
           No questions matched <span className="font-semibold text-slate-700">&ldquo;{query}&rdquo;</span>.{" "}
-          <a href="tel:01202129746" className="text-primary-600 font-semibold hover:underline" data-track-event="call_click" data-track-location="faq_no_results">
+          <a href="tel:07909032889" className="text-primary-600 font-semibold hover:underline" data-track-event="call_click" data-track-location="faq_no_results">
             Call us instead →
           </a>
         </p>
@@ -77,7 +77,7 @@ export function FaqSearch({ faqs }: { faqs: Faq[] }) {
               key={faq.question}
               className="faq-item group bg-white rounded-xl border border-slate-200 overflow-hidden"
             >
-              <summary className="flex items-center justify-between px-6 py-5 font-semibold text-slate-900 cursor-pointer hover:bg-slate-50 transition-colors">
+              <summary className="flex items-center justify-between px-6 py-5 font-semibold text-stone-950 cursor-pointer hover:bg-slate-50 transition-colors">
                 <span>{faq.question}</span>
                 <svg
                   className="chevron w-5 h-5 text-slate-400 shrink-0 transition-transform duration-200"

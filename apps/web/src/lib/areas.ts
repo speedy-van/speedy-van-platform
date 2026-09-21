@@ -8,6 +8,10 @@ export interface Area {
   highlights: string[];
   nearbyAreas: string[];
   metaDescription: string;
+  moveAdvice?: {
+    title: string;
+    body: string;
+  }[];
 }
 
 export const AREAS: Area[] = [
@@ -28,6 +32,20 @@ export const AREAS: Area[] = [
     nearbyAreas: ["edinburgh", "paisley", "hamilton", "east-kilbride"],
     metaDescription:
       "Reliable man and van hire in Glasgow. Tenement specialists, West End and Southside coverage. Free instant quote.",
+    moveAdvice: [
+      {
+        title: "Tenement and close access",
+        body: "Tell us the floor, stair width, close entry and any tight turns before the quote is confirmed. Photos help with sofas, wardrobes and appliances.",
+      },
+      {
+        title: "Parking and loading",
+        body: "Central, West End and Southside streets can have controlled bays or short loading windows. Check current Glasgow City Council parking guidance before move day if a dispensation or suspension may be needed.",
+      },
+      {
+        title: "Cross-city routes",
+        body: "Moves across the M8, M74 and Clyde crossings work best with realistic timing, especially at commuter hours, match days and month-end handovers.",
+      },
+    ],
   },
   {
     slug: "glasgow-west-end",
@@ -97,6 +115,20 @@ export const AREAS: Area[] = [
     nearbyAreas: ["edinburgh-leith", "edinburgh-south", "livingston", "glasgow"],
     metaDescription:
       "Man and van services in Edinburgh for tenement flats, New Town moves, furniture delivery and same-day enquiries.",
+    moveAdvice: [
+      {
+        title: "Old Town and New Town access",
+        body: "Shared stairs, basement flats, cobbles and narrow streets can change the crew time. Tell us about closes, entry systems and any lift limits.",
+      },
+      {
+        title: "Controlled parking",
+        body: "Many Edinburgh streets use controlled parking or loading restrictions. Check City of Edinburgh Council parking guidance before move day if the van needs extended loading time.",
+      },
+      {
+        title: "Busy calendar periods",
+        body: "Festival periods, student move dates and month-end key handovers can add traffic pressure, so earlier booking and flexible timings help keep the quote realistic.",
+      },
+    ],
   },
   {
     slug: "edinburgh-leith",

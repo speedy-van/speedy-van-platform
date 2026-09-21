@@ -101,7 +101,7 @@ export default function NotificationBell() {
     <div className="relative" ref={panelRef}>
       <button
         onClick={() => setOpen((o) => !o)}
-        className={`relative p-2 rounded-lg hover:bg-slate-100 text-slate-600 ${unread > 0 ? "animate-[wiggle_3s_ease-in-out_infinite]" : ""}`}
+        className={`relative p-2 rounded-lg text-white/55 hover:text-white hover:bg-white/5 ${unread > 0 ? "animate-[wiggle_3s_ease-in-out_infinite]" : ""}`}
         aria-label="Notifications"
       >
         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -116,21 +116,21 @@ export default function NotificationBell() {
       </button>
 
       {open && (
-        <div className="absolute right-0 mt-2 w-80 bg-white rounded-xl shadow-lg border border-slate-200 z-50 overflow-hidden">
+        <div className="absolute right-0 mt-2 w-80 rounded-xl z-50 overflow-hidden" style={{ background: "#0A0A0A", boxShadow: "0 0 0 1px rgba(245,158,11,0.15), 0 8px 32px rgba(0,0,0,0.4)" }}>
           {/* Header */}
-          <div className="flex items-center justify-between px-4 py-3 border-b border-slate-100">
-            <span className="text-sm font-semibold text-slate-900">Notifications ({unread})</span>
+          <div className="flex items-center justify-between px-4 py-3 border-b border-amber-900/20">
+            <span className="text-sm font-semibold text-white">Notifications ({unread})</span>
             <div className="flex items-center gap-2">
               <button
                 onClick={() => setSoundEnabled((s) => !s)}
-                className="text-slate-400 hover:text-slate-600 text-sm"
+                className="text-white/40 hover:text-white/70 text-sm"
                 title={soundEnabled ? "Mute" : "Unmute"}
               >
                 {soundEnabled ? "🔊" : "🔇"}
               </button>
               <button
                 onClick={markAllRead}
-                className="text-xs text-blue-600 hover:text-blue-800 font-medium"
+                className="text-xs text-amber-400 hover:text-amber-300 font-medium"
               >
                 Mark all read
               </button>
@@ -138,26 +138,26 @@ export default function NotificationBell() {
           </div>
 
           {/* List */}
-          <div className="max-h-72 overflow-y-auto divide-y divide-slate-50">
+          <div className="max-h-72 overflow-y-auto divide-y divide-white/8">
             {items.length === 0 ? (
-              <p className="px-4 py-6 text-sm text-slate-500 text-center">No notifications</p>
+              <p className="px-4 py-6 text-sm text-white/40 text-center">No notifications</p>
             ) : (
               items.map((n) => (
                 <button
                   key={n.id}
                   onClick={() => markRead(n.id)}
-                  className={`w-full text-left px-4 py-3 hover:bg-slate-50 transition-colors ${!n.isRead ? "bg-blue-50/50" : ""}`}
+                  className={`w-full text-left px-4 py-3 transition-colors hover:bg-amber-500/6 ${!n.isRead ? "bg-amber-500/8" : ""}`}
                 >
                   <div className="flex items-start gap-2">
                     <span className="text-base mt-0.5">{n.icon ?? "🔔"}</span>
                     <div className="flex-1 min-w-0">
-                      <p className={`text-sm font-medium truncate ${n.isRead ? "text-slate-700" : "text-slate-900"}`}>
+                      <p className={`text-sm font-medium truncate ${n.isRead ? "text-white/55" : "text-white"}`}>
                         {n.title}
                       </p>
-                      <p className="text-xs text-slate-500 mt-0.5 line-clamp-2">{n.message}</p>
-                      <p className="text-[11px] text-slate-400 mt-1">{timeAgo(n.createdAt)}</p>
+                      <p className="text-xs text-white/40 mt-0.5 line-clamp-2">{n.message}</p>
+                      <p className="text-[11px] text-white/40 mt-1">{timeAgo(n.createdAt)}</p>
                     </div>
-                    {!n.isRead && <span className="h-2 w-2 rounded-full bg-blue-500 mt-1.5 flex-shrink-0" />}
+                    {!n.isRead && <span className="h-2 w-2 rounded-full bg-amber-400 mt-1.5 flex-shrink-0" />}
                   </div>
                 </button>
               ))

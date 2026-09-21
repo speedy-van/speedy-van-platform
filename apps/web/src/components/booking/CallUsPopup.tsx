@@ -9,9 +9,9 @@ interface Props {
   onClose: () => void;
 }
 
-const PHONE_DISPLAY = "01202 129746";
-const PHONE_TEL = "tel:01202129746";
-const WHATSAPP_URL = "https://wa.me/message/J6EO772GDPHFO1";
+const PHONE_DISPLAY = "07909 032889";
+const PHONE_TEL = "tel:07909032889";
+const WHATSAPP_URL = "https://wa.me/447909032889";
 
 /**
  * Modal shown when the admin has set a service to "popup" mode
@@ -37,7 +37,7 @@ export function CallUsPopup({ open, serviceName, onClose }: Props) {
 
   return (
     <div
-      className="fixed inset-0 z-[70] flex items-center justify-center bg-slate-900/70 p-4"
+      className="fixed inset-0 z-[70] flex items-center justify-center bg-black/70 p-4"
       role="dialog"
       aria-modal="true"
       aria-labelledby="callus-title"
@@ -57,10 +57,10 @@ export function CallUsPopup({ open, serviceName, onClose }: Props) {
         </button>
 
         <div className="p-6 sm:p-7 text-center">
-          <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-yellow-100 text-3xl">
+          <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-primary-100 text-3xl">
             📞
           </div>
-          <h2 id="callus-title" className="text-xl font-bold text-slate-900">
+          <h2 id="callus-title" className="text-xl font-bold text-stone-950">
             Please call us for {serviceName}
           </h2>
           <p className="mt-2 text-sm text-slate-600">
@@ -72,7 +72,7 @@ export function CallUsPopup({ open, serviceName, onClose }: Props) {
             <a
               href={PHONE_TEL}
               onClick={() => haptic(10)}
-              className="inline-flex items-center justify-center gap-2 rounded-xl bg-yellow-400 px-5 py-3 text-base font-bold text-slate-900 shadow hover:bg-yellow-300 focus:outline-none focus:ring-2 focus:ring-yellow-500"
+              className="inline-flex items-center justify-center gap-2 rounded-xl bg-primary-400 px-5 py-3 text-base font-bold text-white shadow hover:bg-primary-500 active:bg-primary-600 focus:outline-none focus:ring-2 focus:ring-primary-400"
             >
               📞 Call {PHONE_DISPLAY}
             </a>

@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useState } from "react";
 import { Logo } from "./Logo";
 
@@ -15,7 +16,7 @@ export function Navbar() {
   const [open, setOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-b border-slate-200">
+    <header className="sticky top-0 z-50 backdrop-blur-sm border-b" style={{ background: "rgba(10,9,0,0.92)", borderColor: "rgba(245,158,11,0.12)" }}>
       <nav
         className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between"
         aria-label="Main navigation"
@@ -31,7 +32,7 @@ export function Navbar() {
             <li key={link.href}>
               <Link
                 href={link.href}
-                className="text-sm font-medium text-slate-700 hover:text-slate-900 transition-colors"
+                className="text-sm font-semibold text-white/60 hover:text-white transition-colors"
               >
                 {link.label}
               </Link>
@@ -43,10 +44,19 @@ export function Navbar() {
         <div className="hidden md:flex items-center gap-3">
           <Link
             href="/auth/login"
-            className="text-sm font-medium text-slate-700 hover:text-slate-900 transition-colors"
+            className="text-sm font-semibold text-white/60 hover:text-white transition-colors"
           >
             Login
           </Link>
+          <a
+            href="tel:07909032889"
+            aria-label="Call us on 07909 032889"
+            data-track-event="nav_call_click"
+            data-track-location="desktop_nav"
+            className="flex items-center justify-center transition-transform hover:scale-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:ring-offset-2 rounded-full"
+          >
+            <Image src="/call-icon.png" alt="Call us" width={44} height={44} priority />
+          </a>
           <Link
             href="/book"
             className="btn-primary text-sm px-4 py-2"
@@ -58,24 +68,24 @@ export function Navbar() {
         {/* Mobile hamburger */}
         <button
           type="button"
-          className="md:hidden relative z-50 flex flex-col justify-center items-center w-10 h-10 gap-1.5 rounded-lg hover:bg-slate-100 transition-colors"
+          className="md:hidden relative z-50 flex flex-col justify-center items-center w-10 h-10 gap-1.5 rounded-lg hover:bg-white/10 transition-colors"
           onClick={() => setOpen((o) => !o)}
           aria-label={open ? "Close menu" : "Open menu"}
           aria-expanded={open}
           aria-controls="mobile-menu"
         >
           <span
-            className={`block w-5 h-0.5 bg-slate-900 transition-all duration-300 ${
+            className={`block w-5 h-0.5 bg-white transition-all duration-300 ${
               open ? "rotate-45 translate-y-2" : ""
             }`}
           />
           <span
-            className={`block w-5 h-0.5 bg-slate-900 transition-all duration-300 ${
+            className={`block w-5 h-0.5 bg-white transition-all duration-300 ${
               open ? "opacity-0" : ""
             }`}
           />
           <span
-            className={`block w-5 h-0.5 bg-slate-900 transition-all duration-300 ${
+            className={`block w-5 h-0.5 bg-white transition-all duration-300 ${
               open ? "-rotate-45 -translate-y-2" : ""
             }`}
           />
@@ -85,16 +95,17 @@ export function Navbar() {
       {/* Mobile menu */}
       <div
         id="mobile-menu"
-        className={`md:hidden absolute inset-x-0 top-16 bg-white border-b border-slate-200 shadow-lg transition-all duration-300 overflow-hidden ${
+        className={`md:hidden absolute inset-x-0 top-16 border-b shadow-lg transition-all duration-300 overflow-hidden ${
           open ? "max-h-screen opacity-100" : "max-h-0 opacity-0"
         }`}
+        style={{ background: "#1A1200", borderColor: "rgba(245,158,11,0.15)" }}
       >
         <ul className="px-4 py-4 space-y-1" role="list">
           {NAV_LINKS.map((link) => (
             <li key={link.href}>
               <Link
                 href={link.href}
-                className="block px-3 py-2 rounded-lg text-base font-medium text-slate-700 hover:bg-slate-50 hover:text-slate-900 transition-colors"
+                className="block px-3 py-2 rounded-lg text-base font-semibold text-white/60 hover:bg-white/08 hover:text-white transition-colors"
                 onClick={() => setOpen(false)}
               >
                 {link.label}
@@ -104,7 +115,7 @@ export function Navbar() {
           <li>
             <Link
               href="/auth/login"
-              className="block px-3 py-2 rounded-lg text-base font-medium text-slate-700 hover:bg-slate-50 hover:text-slate-900 transition-colors"
+              className="block px-3 py-2 rounded-lg text-base font-semibold text-white/60 hover:bg-white/08 hover:text-white transition-colors"
               onClick={() => setOpen(false)}
             >
               Login
@@ -113,12 +124,13 @@ export function Navbar() {
           <li>
             <a
               href="tel:07909032889"
-              className="flex items-center gap-2 px-3 py-2 rounded-lg text-base font-semibold text-emerald-700 hover:bg-emerald-50 transition-colors"
+              className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-amber-500/10 transition-colors"
               onClick={() => setOpen(false)}
               data-track-event="nav_call_click"
               data-track-location="mobile_menu"
             >
-              <span aria-hidden="true">📞</span> Call 07909 032889
+              <Image src="/call-icon.png" alt="" width={36} height={36} aria-hidden="true" />
+              <span className="text-base font-semibold text-amber-400">Call us now</span>
             </a>
           </li>
         </ul>

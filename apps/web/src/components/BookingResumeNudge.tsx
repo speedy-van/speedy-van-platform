@@ -95,7 +95,7 @@ export function BookingResumeNudge() {
           👋
         </span>
         <div className="flex-1 min-w-0">
-          <p className="text-sm font-semibold text-slate-900">Welcome back!</p>
+          <p className="text-sm font-semibold text-stone-950">Welcome back!</p>
           <p className="text-xs text-slate-600 mt-0.5">
             Pick up where you left off — {service}
             {pc ? ` from ${pc}` : ""}
@@ -104,7 +104,7 @@ export function BookingResumeNudge() {
           <Link
             href="/book"
             onClick={() => setVisible(false)}
-            className="mt-3 inline-flex items-center justify-center rounded-lg bg-yellow-400 px-3 py-1.5 text-xs font-bold text-slate-900 hover:bg-yellow-300 focus:outline-none focus:ring-2 focus:ring-yellow-500"
+            className="mt-3 inline-flex items-center justify-center rounded-lg bg-primary-400 px-3 py-1.5 text-xs font-bold text-white hover:bg-primary-500 active:bg-primary-600 focus:outline-none focus:ring-2 focus:ring-primary-400"
           >
             Resume booking →
           </Link>

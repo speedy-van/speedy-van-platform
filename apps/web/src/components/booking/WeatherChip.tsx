@@ -19,11 +19,11 @@ interface Props {
   lng?: number;
 }
 
-const STYLE: Record<string, { bg: string; text: string; emoji: string; tip: string }> = {
-  rain:        { bg: "bg-blue-50",  text: "text-blue-800",  emoji: "🌧️", tip: "We'll bring covers — small weather surcharge applies." },
-  heavy_rain:  { bg: "bg-blue-100", text: "text-blue-900",  emoji: "⛈️", tip: "Heavy rain expected — small weather surcharge applied to keep things dry." },
-  snow:        { bg: "bg-cyan-50",  text: "text-cyan-800",  emoji: "❄️", tip: "Snow forecast — extra time and care included." },
-  storm:       { bg: "bg-amber-50", text: "text-amber-800", emoji: "🌩️", tip: "Storms forecast — booking will be reviewed for safety on the day." },
+const STYLE: Record<string, { bg: string; ring: string; text: string; emoji: string; tip: string }> = {
+  rain:        { bg: "rgba(245,158,11,0.12)",  ring: "rgba(245,158,11,0.25)",  text: "text-amber-300",  emoji: "🌧️", tip: "We'll bring covers — small weather surcharge applies." },
+  heavy_rain:  { bg: "rgba(234,88,12,0.16)",   ring: "rgba(234,88,12,0.32)",   text: "text-orange-200", emoji: "⛈️", tip: "Heavy rain expected — small weather surcharge applied to keep things dry." },
+  snow:        { bg: "rgba(255,255,255,0.10)",  ring: "rgba(255,255,255,0.22)",  text: "text-white",      emoji: "❄️", tip: "Snow forecast — extra time and care included." },
+  storm:       { bg: "rgba(239,68,68,0.12)",   ring: "rgba(239,68,68,0.25)",   text: "text-red-300",    emoji: "🌩️", tip: "Storms forecast — booking will be reviewed for safety on the day." },
 };
 
 /**
@@ -51,7 +51,8 @@ export function WeatherChip({ lat, lng }: Props) {
 
   return (
     <div
-      className={`inline-flex items-start gap-2 rounded-xl ${style.bg} ${style.text} px-3 py-2 text-xs font-medium`}
+      className={`inline-flex items-start gap-2 rounded-xl ${style.text} px-3 py-2 text-xs font-medium`}
+      style={{ background: style.bg, boxShadow: `0 0 0 1px ${style.ring}` }}
       role="status"
     >
       <span aria-hidden="true" className="text-base leading-none">{style.emoji}</span>
