@@ -134,6 +134,7 @@ export const INITIAL_BOOKING_STATE: BookingState = {
 // ─── Actions ────────────────────────────────────────────────────────────────
 
 export type BookingAction =
+  | { type: "APPLY_SERVICE_ENTRY"; slug: string }
   | { type: "SET_SERVICE"; slug: string; name: string; sourceSlug?: string }
   | { type: "SET_VARIANT"; variant: string }
   | { type: "SET_ENTRY_SERVICE"; slug: string }
@@ -185,12 +186,27 @@ function invalidateQuote(state: BookingState): BookingState {
   };
 }
 
+function serviceEntryIdentity(service: Pick<BookingState, "serviceSlug" | "entryServiceSlug" | "serviceName">): string {
+  const entry = resolveBookingService(service.entryServiceSlug);
+  const canonical = resolveBookingService(service.serviceSlug);
+  const name = service.serviceName.trim().toLowerCase();
+  // Public aliases share a booking service; distinct flat/small/intercity intents retain their names.
+  const isDefaultName = [entry?.serviceName, canonical?.serviceName]
+    .some((candidate) => candidate?.trim().toLowerCase() === name);
+  return [service.serviceSlug, entry?.entryServiceSlug ?? service.entryServiceSlug, isDefaultName ? "" : name].join(":");
+}
+
 export function bookingReducer(state: BookingState, action: BookingAction): BookingState {
   // An unresolved checkout must survive Back/Edit, query initialisation and late quotes.
   if (state.checkoutLocked && !["SET_BOOKING", "CHECKOUT_REJECTED", "CHECKOUT_COMPLETE"].includes(action.type)) {
     return state;
   }
   switch (action.type) {
+    case "APPLY_SERVICE_ENTRY": {
+      const service = resolveBookingService(action.slug);
+      if (!service || serviceEntryIdentity(state) === serviceEntryIdentity(service)) return state;
+      return { ...INITIAL_BOOKING_STATE, ...service, step: 2 };
+    }
     case "SET_SERVICE":
       return {
         ...invalidateQuote(state),
@@ -365,6 +381,7 @@ export function serialiseBookingDraft(state: BookingState, savedAt = Date.now())
 interface BookingContextValue {
   state: BookingState;
   dispatch: React.Dispatch<BookingAction>;
+  ready: boolean;
 }
 
 const BookingContext = createContext<BookingContextValue | null>(null);
@@ -378,14 +395,14 @@ export function BookingProvider({ children }: { children: ReactNode }) {
     if (hydrated.current) return;
     hydrated.current = true;
     try {
-      // Service links can start a new quote only when no unresolved checkout exists.
-      const service = new URLSearchParams(window.location.search).get("service");
       const raw = localStorage.getItem(STORAGE_KEY);
       const draft = restoreBookingDraft(raw);
-      if (draft?.checkoutLocked || !resolveBookingService(service)) {
-        if (draft) dispatch({ type: "RESTORE", state: draft });
-        else if (raw) localStorage.removeItem(STORAGE_KEY);
-      }
+      const service = new URLSearchParams(window.location.search).get("service");
+      // Resolve against the restored draft before mounting a previous service's quote step.
+      const restored = draft ?? INITIAL_BOOKING_STATE;
+      const next = service ? bookingReducer(restored, { type: "APPLY_SERVICE_ENTRY", slug: service }) : restored;
+      if (next !== INITIAL_BOOKING_STATE) dispatch({ type: "RESTORE", state: next });
+      else if (raw) localStorage.removeItem(STORAGE_KEY);
     } catch {
       // Storage may be unavailable; the service selector remains usable.
     } finally {
@@ -412,7 +429,7 @@ export function BookingProvider({ children }: { children: ReactNode }) {
   }, [ready, state]);
 
   return (
-    <BookingContext.Provider value={{ state, dispatch }}>
+    <BookingContext.Provider value={{ state, dispatch, ready }}>
       {children}
     </BookingContext.Provider>
   );

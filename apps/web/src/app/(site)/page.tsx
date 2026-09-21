@@ -323,6 +323,7 @@ export default function HomePage() {
                           fill
                           sizes="(max-width: 639px) 100vw, (max-width: 1023px) 50vw, 20vw"
                           priority={idx === 0}
+                          fetchPriority={idx === 0 ? "high" : undefined}
                           className="object-cover object-center transition-transform duration-500 group-hover:scale-105"
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/94 via-black/20 to-black/10" aria-hidden="true" />
@@ -736,7 +737,7 @@ export default function HomePage() {
                 <p className="text-sm mt-1 text-white/50">{tier.capacity}</p>
                 <div className="mt-4 mb-6">
                   <span className="text-4xl font-black text-white">{money.format(tier.price)}</span>
-                  <span className="text-sm text-white/40">/hr</span>
+                  <span className="text-sm text-white/70">/hr</span>
                 </div>
                 <ul className="space-y-2" role="list">
                   {tier.features.map((feature) => (
@@ -761,7 +762,7 @@ export default function HomePage() {
             ))}
           </ul>
 
-          <p className="mt-8 text-center text-sm text-white/35">
+          <p className="mt-8 text-center text-sm text-white/70">
             All prices are per hour. Minimum 2-hour booking. Fixed-price quotes available for house removals.
           </p>
         </div>

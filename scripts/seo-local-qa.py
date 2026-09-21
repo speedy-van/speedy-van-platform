@@ -5,7 +5,10 @@ Run: python scripts/seo-local-qa.py --base-url http://localhost:3002
 """
 import argparse
 import json
+import re
+import subprocess
 import sys
+from pathlib import Path
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timezone
 from html.parser import HTMLParser
@@ -17,7 +20,7 @@ from xml.etree import ElementTree
 PRIMARY = "https://www.speedyvan.uk"
 CORE = [
     "man-and-van", "furniture-delivery", "house-removal", "flat-removals",
-    "office-removal", "small-moves", "long-distance-removals",
+    "office-removal", "small-moves", "student-move", "long-distance-removals",
 ]
 PRIVATE = ["/book", "/book/review/QA-NONEXISTENT", "/auth/login", "/driver/login", "/track", "/jobs"]
 
@@ -36,6 +39,7 @@ class Page(HTMLParser):
         self.meta = {}
         self.links = set()
         self.schemas = []
+        self.schema_errors = []
         self._title = False
         self._h1 = False
         self._json = False
@@ -74,7 +78,10 @@ class Page(HTMLParser):
         if tag == "h1":
             self._h1 = False
         if tag == "script" and self._json:
-            self.schemas.append(json.loads(self._buffer))
+            try:
+                self.schemas.append(json.loads(self._buffer))
+            except json.JSONDecodeError as error:
+                self.schema_errors.append(str(error))
             self._json = False
 
 
@@ -88,12 +95,62 @@ def schema_nodes(value):
             yield from schema_nodes(child)
 
 
+def source_inventory():
+    """Read the actual pure source modules without installing, building or writing files."""
+    root = Path(__file__).resolve().parent.parent
+    node_script = r"""
+const fs = require("node:fs");
+const path = require("node:path");
+const Module = require("node:module");
+const ts = require("typescript");
+const root = process.cwd();
+const cache = new Map();
+function load(filename) {
+  if (cache.has(filename)) return cache.get(filename).exports;
+  const compiled = ts.transpileModule(fs.readFileSync(filename, "utf8"), {
+    compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.CommonJS }, fileName: filename,
+  });
+  const loaded = new Module(filename, module);
+  loaded.filename = filename;
+  loaded.paths = Module._nodeModulePaths(path.dirname(filename));
+  cache.set(filename, loaded);
+  const fallback = loaded.require.bind(loaded);
+  loaded.require = (specifier) => {
+    const base = specifier === "@speedy-van/config" ? path.join(root, "packages/config/src/index")
+      : specifier.startsWith("@/") ? path.join(root, "apps/web/src", specifier.slice(2))
+      : specifier.startsWith(".") ? path.resolve(path.dirname(filename), specifier) : null;
+    if (base) {
+      const source = [base, `${base}.ts`, path.join(base, "index.ts")].find((candidate) => fs.existsSync(candidate) && fs.statSync(candidate).isFile());
+      if (source && source.endsWith(".ts")) return load(source);
+    }
+    return fallback(specifier);
+  };
+  loaded._compile(compiled.outputText, filename);
+  return loaded.exports;
+}
+const web = path.join(root, "apps/web/src");
+const sitemap = load(path.join(web, "app/sitemap.ts")).default();
+const { AREAS } = load(path.join(web, "lib/areas.ts"));
+const { SERVICES } = load(path.join(web, "lib/services.ts"));
+process.stdout.write(JSON.stringify({
+  urls: sitemap.map((entry) => entry.url),
+  area_paths: AREAS.map((area) => `/areas/${area.slug}`),
+  service_paths: SERVICES.filter((service) => service.indexable !== false).map((service) => `/services/${service.slug}`),
+}));
+"""
+    result = subprocess.run(["node", "-e", node_script], cwd=root, capture_output=True, text=True, timeout=30, check=True)
+    return json.loads(result.stdout)
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--base-url", default="http://localhost:3002")
     parser.add_argument("--output", help="Optional JSON evidence path")
     args = parser.parse_args()
     base = args.base_url.rstrip("/")
+    if urlparse(base).hostname not in {"localhost", "127.0.0.1", "::1"}:
+        parser.error("This initial-HTML regression is local-only; use the read-only public crawl for live evidence.")
+    expected = source_inventory()
     results = []
     pages = {}
     transport_errors = []
@@ -134,7 +191,8 @@ def main():
         print(json.dumps(evidence, indent=2))
         return 1
     urls = [element.text for element in root.findall("{*}url/{*}loc")]
-    check("Sitemap contains the 47 intended pages without duplicates", len(urls) == 47 and len(set(urls)) == 47)
+    check("Sitemap contains the actual source URLs without duplicates", bool(urls) and len(urls) == len(set(urls)) and set(urls) == set(expected["urls"]))
+    check("Source sitemap has no duplicate URL definitions", len(expected["urls"]) == len(set(expected["urls"])))
     check("Sitemap contains only canonical HTTPS URLs", all(url and url.startswith(PRIMARY + "/") or url == PRIMARY for url in urls))
     check("Sitemap has no fabricated lastmod dates", not root.findall("{*}url/{*}lastmod"))
     check("Sitemap excludes private and unsupported routes", not any(any(part in urlparse(url).path.split("/") for part in ["book", "auth", "driver", "admin", "track", "jobs", "api", "rubbish-removal"]) for url in urls))
@@ -150,30 +208,38 @@ def main():
         check(f"{path}: canonical public HTTP 200", status == 200 and page.canonicals == [canonical])
         check(f"{path}: useful initial HTML H1", len(page.h1s) == 1 and len(page.h1s[0].strip()) > 5)
         check(f"{path}: indexable in HTML and HTTP headers", "noindex" not in headers.get("X-Robots-Tag", "") and "noindex" not in ",".join(page.meta.get("robots", [])))
-        check(f"{path}: title has one brand suffix", page.title.count("SpeedyVan") == 1)
+        check(f"{path}: title has one business label across spelling variants", len(re.findall(r"\bspeedy\s*van\b", page.title, re.IGNORECASE)) == 1)
+        check(f"{path}: structured data syntax is valid when present", not page.schema_errors)
         check(f"{path}: page-specific Open Graph URL", page.meta.get("og:url") == [canonical])
         check(f"{path}: useful description", any(len(value) >= 40 for value in page.meta.get("description", [])))
         check(f"{path}: no internal SEO instructions", not any(text in body for text in ["one strong service page", "keyword stuffing", "search intent cluster"]))
         if path.startswith("/services/") or path.startswith("/areas/"):
             check(f"{path}: parseable structured data", bool(page.schemas))
 
+    empty_page = Page("")
+    home = pages.get("/", empty_page)
+    service_hub = pages.get("/services", empty_page)
+    area_hub = pages.get("/areas", empty_page)
     for slug in CORE:
         path = f"/services/{slug}"
-        check(f"{path}: linked from home and service hub", path in pages["/"].links and path in pages["/services"].links)
-        check(f"{path}: crawlable booking action", any(link.startswith("/book?") for link in pages[path].links))
-        service_nodes = [node for schema in pages[path].schemas for node in schema_nodes(schema) if node.get("@type") == "Service"]
+        page = pages.get(path, empty_page)
+        check(f"{path}: linked from home and service hub", path in home.links and path in service_hub.links)
+        check(f"{path}: crawlable booking action", any(link.startswith("/book?") for link in page.links))
+        service_nodes = [node for schema in page.schemas for node in schema_nodes(schema) if node.get("@type") == "Service"]
         check(f"{path}: canonical Service entity", any(node.get("@id") == PRIMARY + path + "#service" for node in service_nodes))
     area_paths = [path for path in pages if path.startswith("/areas/")]
-    check("All 27 existing area pages linked from area hub", len(area_paths) == 27 and all(path in pages["/areas"].links for path in area_paths))
-    hourly_nodes = [node for schema in pages["/services/man-and-van"].schemas for node in schema_nodes(schema)]
+    check("Every configured area is in the sitemap and linked from the area hub", set(area_paths) == set(expected["area_paths"]) and all(path in area_hub.links for path in expected["area_paths"]))
+    check("Every configured indexable service is in the sitemap and linked from the service hub", all(path in pages and path in service_hub.links for path in expected["service_paths"]))
+    hourly_nodes = [node for schema in pages.get("/services/man-and-van", empty_page).schemas for node in schema_nodes(schema)]
     check("Hourly service schema includes GBP per-hour unit", any(node.get("@type") == "UnitPriceSpecification" and node.get("unitCode") == "HUR" and node.get("priceCurrency") == "GBP" for node in hourly_nodes))
-    home_nodes = [node for schema in pages["/"].schemas for node in schema_nodes(schema)]
+    home_nodes = [node for schema in home.schemas for node in schema_nodes(schema)]
     check("Homepage WebSite has stable entity ID", any(node.get("@type") == "WebSite" and node.get("@id") == PRIMARY + "/#website" for node in home_nodes))
 
     for path in ["/services/qa-invalid-service", "/areas/qa-invalid-area", "/qa-not-a-page"]:
         status, _, body = fetch(path)
         page = Page(body)
         check(f"{path}: real 404 with noindex", status == 404 and "noindex" in ",".join(page.meta.get("robots", [])))
+        check(f"{path}: no inherited canonical on an unknown route", not page.canonicals)
     for path in PRIVATE:
         status, headers, body = fetch(path)
         page = Page(body)
@@ -184,14 +250,14 @@ def main():
 
     if urlparse(base).hostname in {"localhost", "127.0.0.1", "::1"}:
         for host in ["speedyvan.uk", "speedy-van.co.uk", "www.speedy-van.co.uk"]:
-            for method in ["GET", "HEAD"]:
-                path = "/services/man-and-van?utm_source=qa&ref=a%2Fb"
-                status, headers, _ = fetch(path, host, method)
-                check(f"{host} {method}: one permanent redirect preserving path/query", status == 308 and headers.get("Location") == PRIMARY + path)
+            for path in ["/services/man-and-van?utm_source=qa&ref=a%2Fb", "/areas/glasgow", "/privacy", "/book?service=house-removals&utm_source=qa"]:
+                for method in ["GET", "HEAD"]:
+                    status, headers, _ = fetch(path, host, method)
+                    check(f"{host} {method} {path}: one permanent redirect preserving path/query", status == 308 and headers.get("Location") == PRIMARY + path)
             status, headers, _ = fetch("/api/qa-no-handler", host)
             check(f"{host}: API host bypass", status not in {301, 302, 307, 308} and "Location" not in headers)
-            status, headers, _ = fetch("/qa-no-handler", host, "POST")
-            check(f"{host}: non-GET host bypass", status not in {301, 302, 307, 308} and "Location" not in headers)
+            # Mutation methods are exercised in memory by seo-metadata-regression.cjs.
+            # This HTTP harness never sends a POST or submits a private form.
         _, headers, _ = fetch("/services", "qa-preview.vercel.app")
         check("Preview host gets HTTP noindex", "noindex" in headers.get("X-Robots-Tag", ""))
         _, headers, _ = fetch("/bookish", "www.speedyvan.uk")
@@ -200,7 +266,8 @@ def main():
     evidence = {
         "checked_at": datetime.now(timezone.utc).isoformat(),
         "base_url": base,
-        "scope": "HTTP and initial HTML only; no visual, JavaScript, field-performance or provider-payment claim",
+        "scope": "Local GET/HEAD and initial HTML only; no writes, browser interaction, field-performance or provider-payment claim",
+        "source_inventory": {"expected_urls": len(expected["urls"]), "configured_areas": len(expected["area_paths"]), "configured_indexable_services": len(expected["service_paths"])},
         "passed": sum(result["passed"] for result in results),
         "failed": [result["check"] for result in results if not result["passed"]],
         "pages": [{"path": path, "canonical": page.canonicals, "title": page.title, "h1": page.h1s} for path, page in pages.items()],

@@ -138,7 +138,7 @@ export function SofaItemPopup() {
         type="button"
         onClick={dismiss}
         aria-label="Dismiss"
-        className="absolute top-2 right-2 flex h-7 w-7 items-center justify-center rounded-full text-xl leading-none text-slate-400 hover:bg-slate-100 hover:text-slate-700 transition-colors"
+        className="absolute top-2 right-2 flex h-7 w-7 items-center justify-center rounded-full text-xl leading-none text-slate-600 hover:bg-slate-100 hover:text-slate-700 transition-colors"
       >
         ×
       </button>
@@ -160,7 +160,7 @@ export function SofaItemPopup() {
               key={item.id}
               type="button"
               onClick={() => toggle(item.id)}
-              aria-label={`${item.label}${isSelected ? " (selected)" : ""}`}
+              aria-pressed={isSelected}
               className={`relative flex flex-col items-center rounded-xl border-2 overflow-hidden transition-all focus:outline-none focus:ring-2 focus:ring-primary-400 ${
                 isSelected
                   ? "border-primary-400 shadow-sm"
@@ -171,7 +171,7 @@ export function SofaItemPopup() {
               <div className="relative w-full h-16 bg-slate-100">
                 <Image
                   src={item.imagePath}
-                  alt={item.label}
+                  alt=""
                   fill
                   sizes="96px"
                   className="object-cover"
@@ -183,7 +183,7 @@ export function SofaItemPopup() {
                 )}
                 {isSelected && (
                   <span
-                    className="absolute top-1 right-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary-400 text-[10px] font-extrabold text-white shadow"
+                    className="absolute top-1 right-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary-400 text-[10px] font-extrabold text-stone-950 shadow"
                     aria-hidden="true"
                   >
                     ✓
@@ -205,17 +205,17 @@ export function SofaItemPopup() {
         <div>
           {hasItems ? (
             <>
-              <p className="text-[10px] font-semibold uppercase tracking-wide text-slate-400">Estimated</p>
+              <p className="text-[10px] font-semibold uppercase tracking-wide text-slate-600">Estimated</p>
               <p className="text-2xl font-extrabold text-stone-950 leading-none">From £{total}</p>
             </>
           ) : (
-            <p className="text-[11px] text-slate-400 italic">Select items above</p>
+            <p className="text-[11px] text-slate-600 italic">Select items above</p>
           )}
         </div>
         <Link
           href={bookingHref}
           onClick={handleBook}
-          className="inline-flex items-center justify-center rounded-lg bg-primary-400 px-4 py-2.5 text-xs font-extrabold text-white hover:bg-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-400 transition-colors shrink-0"
+          className="inline-flex items-center justify-center rounded-lg bg-primary-400 px-4 py-2.5 text-xs font-extrabold text-stone-950 hover:bg-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-400 transition-colors shrink-0"
         >
           {hasItems ? "Book now \u2192" : "Get a quote \u2192"}
         </Link>

@@ -4,6 +4,7 @@ const test = require("node:test");
 const fs = require("node:fs");
 const path = require("node:path");
 const Module = require("node:module");
+const vm = require("node:vm");
 const ts = require("typescript");
 const root = path.resolve(__dirname, "..");
 const cache = new Map();
@@ -53,6 +54,299 @@ const state = {
 };
 const envelope = (changes = {}, savedAt = now - 1000) => JSON.stringify({ savedAt, state: { ...state, ...changes } });
 
+/** Exercise the real entry components and their effects without a browser or network. */
+function bookingEntryHarness(query, draft = null) {
+  let url = new URL(`https://example.test/book${query}`);
+  let raw = draft;
+  let dirty = false;
+  let context;
+  let active;
+  const provider = { hooks: [], effects: [], cursor: 0 };
+  const initializer = { hooks: [], effects: [], cursor: 0 };
+  const replacements = [];
+  const renderedSteps = [];
+  const nextHook = (initialise) => {
+    const index = active.cursor++;
+    if (!active.hooks[index]) active.hooks[index] = initialise();
+    return active.hooks[index];
+  };
+  const react = {
+    createContext: () => ({ Provider: "provider" }),
+    useContext: () => context,
+    useRef: (value) => nextHook(() => ({ current: value })),
+    useState: (value) => {
+      const hook = nextHook(() => ({ value: typeof value === "function" ? value() : value }));
+      hook.set ??= (next) => {
+        const value = typeof next === "function" ? next(hook.value) : next;
+        if (!Object.is(hook.value, value)) { hook.value = value; dirty = true; }
+      };
+      return [hook.value, hook.set];
+    },
+    useReducer: (reducer, initial) => {
+      const hook = nextHook(() => ({ value: initial }));
+      hook.dispatch ??= (action) => {
+        const next = reducer(hook.value, action);
+        if (!Object.is(next, hook.value)) { hook.value = next; dirty = true; }
+      };
+      return [hook.value, hook.dispatch];
+    },
+    useEffect: (effect, dependencies) => {
+      const hook = nextHook(() => ({ dependencies: undefined }));
+      if (!hook.dependencies || dependencies.some((value, i) => !Object.is(value, hook.dependencies[i]))) {
+        hook.dependencies = dependencies;
+        active.effects.push(effect);
+      }
+    },
+  };
+  const router = {
+    replace: (href, options) => {
+      replacements.push({ href, options });
+      url = new URL(href, url);
+      dirty = true;
+    },
+  };
+  class Clock extends Date {
+    constructor(...args) { super(...(args.length ? args : [now])); }
+    static now() { return now; }
+  }
+  const window = { get location() { return url; } };
+  const localStorage = {
+    getItem: () => raw,
+    setItem: (_key, value) => { raw = value; },
+    removeItem: () => { raw = null; },
+  };
+  const loaded = new Map();
+  function entryModule(relative) {
+    const filename = path.join(root, "apps/web/src", relative);
+    if (loaded.has(filename)) return loaded.get(filename).exports;
+    const module = { exports: {} };
+    loaded.set(filename, module);
+    const compiled = ts.transpileModule(fs.readFileSync(filename, "utf8"), {
+      compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.CommonJS, jsx: ts.JsxEmit.ReactJSX, esModuleInterop: true },
+      fileName: filename,
+    }).outputText;
+    vm.runInNewContext(compiled, {
+      module, exports: module.exports, window, localStorage, URL, URLSearchParams, Date: Clock,
+      require(specifier) {
+        if (specifier === "react") return react;
+        if (specifier === "react/jsx-runtime") return { jsx: (type, props) => ({ type, props }) };
+        if (specifier === "next/navigation") return {
+          useSearchParams: () => new URLSearchParams(url.search),
+          useRouter: () => router,
+          usePathname: () => url.pathname,
+        };
+        if (specifier === "@/lib/booking-store") return entryModule("lib/booking-store.tsx");
+        const source = specifier.startsWith("@/")
+          ? path.join(root, "apps/web/src", `${specifier.slice(2)}.ts`)
+          : path.resolve(path.dirname(filename), `${specifier}.ts`);
+        return sourceModule(source);
+      },
+    }, { filename });
+    return module.exports;
+  }
+  const { BookingProvider } = entryModule("lib/booking-store.tsx");
+  const { SearchParamsInitializer } = entryModule("components/booking/SearchParamsInitializer.tsx");
+  function flush() {
+    let renders = 0;
+    do {
+      dirty = false;
+      for (const owner of [provider, initializer]) { owner.cursor = 0; owner.effects = []; }
+      active = provider;
+      context = BookingProvider({ children: null }).props.value;
+      renderedSteps.push({ serviceSlug: context.state.serviceSlug, step: context.state.step });
+      active = initializer;
+      SearchParamsInitializer();
+      // React passive effects mount child-first. Rerender after the batch.
+      for (const effect of [...initializer.effects, ...provider.effects]) effect();
+      assert.ok(++renders < 12, "booking entry effects must settle without a render loop");
+    } while (dirty);
+  }
+  flush();
+  return {
+    get state() { return JSON.parse(JSON.stringify(context.state)); },
+    get url() { return url; },
+    get draft() { return raw; },
+    replacements,
+    renderedSteps,
+    navigate(query) { url = new URL(`/book${query}`, url); flush(); },
+    dispatch(action) { context.dispatch(action); flush(); },
+  };
+}
+
+/** Load the actual payment module; SDK, React lifecycle and booking input are isolated. */
+function paymentModuleHarness(publishableKey = "pk_test_offline") {
+  let active;
+  let mounted = false;
+  let dirty = false;
+  let stripeClient = null;
+  let tree;
+  let form;
+  let stepOwner;
+  let formOwner;
+  let resolveSdk;
+  let rejectSdk;
+  const sdk = new Promise((resolve, reject) => { resolveSdk = resolve; rejectSdk = reject; });
+  const calls = [];
+  const imports = [];
+  const providerPromises = [];
+  const nextHook = (initialise) => {
+    const index = active.cursor++;
+    if (!active.hooks[index]) active.hooks[index] = initialise();
+    return active.hooks[index];
+  };
+  const react = {
+    useRef: (value) => nextHook(() => ({ current: value })),
+    useState: (initial) => {
+      const hook = nextHook(() => ({ value: typeof initial === "function" ? initial() : initial }));
+      hook.set ??= (value) => {
+        const next = typeof value === "function" ? value(hook.value) : value;
+        if (!Object.is(next, hook.value)) { hook.value = next; dirty = true; }
+      };
+      return [hook.value, hook.set];
+    },
+    useEffect: (effect, dependencies) => {
+      const hook = nextHook(() => ({ dependencies: undefined, cleanup: undefined }));
+      if (!hook.dependencies || dependencies.some((value, index) => !Object.is(value, hook.dependencies[index]))) {
+        hook.dependencies = dependencies;
+        active.effects.push(() => { hook.cleanup?.(); hook.cleanup = effect(); });
+      }
+    },
+  };
+  const jsx = (type, props) => ({ type, props });
+  const module = { exports: {} };
+  const filename = path.join(root, "apps/web/src/components/booking/Step4Payment.tsx");
+  const compiled = ts.transpileModule(fs.readFileSync(filename, "utf8"), {
+    compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.CommonJS, jsx: ts.JsxEmit.ReactJSX, esModuleInterop: true },
+    fileName: filename,
+  }).outputText;
+  vm.runInNewContext(compiled, {
+    module, exports: module.exports, Promise, Date, Intl, encodeURIComponent,
+    process: { env: { NODE_ENV: "test", NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: publishableKey } },
+    require(specifier) {
+      imports.push(specifier);
+      if (specifier === "react") return react;
+      if (specifier === "react/jsx-runtime") return { jsx, jsxs: jsx, Fragment: "fragment" };
+      if (specifier === "@stripe/stripe-js" || specifier === "@stripe/stripe-js/pure") return {
+        loadStripe: (...args) => { calls.push(args); return sdk; },
+      };
+      if (specifier === "@stripe/react-stripe-js") return {
+        Elements: "elements-provider", CardElement: "card-element",
+        useStripe: () => stripeClient,
+        useElements: () => stripeClient ? {} : null,
+      };
+      if (specifier === "@/lib/booking-store") return {
+        useBooking: () => ({ state: { ...state, checkoutLocked: false }, dispatch() {} }),
+        serialiseBookingDraft,
+      };
+      if (specifier === "next/navigation") return { useRouter: () => ({ push() {} }) };
+      if (specifier === "next/image") return "image";
+      if (specifier === "./checkout-session") return { completeCardPayment, parseBookingPaymentSession };
+      if (specifier === "./PriceExplainerLink") return { PriceExplainerLink: "price-explainer" };
+      if (specifier === "./CheckoutRecovery") return { CheckoutRecovery: "checkout-recovery" };
+      if (specifier === "@/lib/analytics") return { trackPurchase() {} };
+      throw new Error(`Unexpected payment test dependency: ${specifier}`);
+    },
+  }, { filename });
+  function find(node, predicate) {
+    if (!node || typeof node !== "object") return null;
+    if (Array.isArray(node)) {
+      for (const child of node) { const match = find(child, predicate); if (match) return match; }
+      return null;
+    }
+    return predicate(node) ? node : find(node.props?.children, predicate);
+  }
+  function flush() {
+    if (!mounted) return;
+    let iterations = 0;
+    do {
+      dirty = false;
+      for (const owner of [stepOwner, formOwner]) { owner.cursor = 0; owner.effects = []; }
+      active = stepOwner;
+      tree = module.exports.Step4Payment();
+      providerPromises.push(tree.props.stripe);
+      const checkout = find(tree, (node) => node.type?.name === "CheckoutForm");
+      assert.ok(checkout, "the existing checkout form remains reachable");
+      active = formOwner;
+      form = checkout.type(checkout.props);
+      for (const effect of [...formOwner.effects, ...stepOwner.effects]) effect();
+      assert.ok(++iterations < 10, "payment loading effects must settle");
+    } while (dirty);
+  }
+  return {
+    calls, imports, providerPromises,
+    mount() {
+      mounted = true;
+      stepOwner = { hooks: [], cursor: 0, effects: [] };
+      formOwner = { hooks: [], cursor: 0, effects: [] };
+      flush();
+    },
+    unmount() {
+      mounted = false;
+      for (const owner of [stepOwner, formOwner]) for (const hook of owner.hooks) hook.cleanup?.();
+    },
+    rerender: flush,
+    async settle(client, error = null) {
+      stripeClient = client;
+      if (error) rejectSdk(error); else resolveSdk(client);
+      for (let i = 0; i < 6; i += 1) await Promise.resolve();
+      flush();
+    },
+    get payDisabled() { return find(form, (node) => node.props?.id === "booking-primary-action").props.disabled; },
+    get hasCard() { return Boolean(find(form, (node) => node.type === "card-element")); },
+    get hasLoadingStatus() { return Boolean(find(form, (node) => node.props?.role === "status")); },
+    get unavailable() { return JSON.stringify(form).includes("Online payment unavailable"); },
+  };
+}
+
+test("prefetching the payment module does not initialise Stripe or import its eager entry point", () => {
+  const fixture = paymentModuleHarness();
+  assert.equal(fixture.calls.length, 0);
+  assert.equal(fixture.imports.includes("@stripe/stripe-js"), false);
+  assert.equal(fixture.imports.includes("@stripe/stripe-js/pure"), true);
+});
+
+test("mounting payment lazily initialises one stable Stripe promise and reuses it after remount", async () => {
+  const fixture = paymentModuleHarness();
+  assert.equal(fixture.calls.length, 0);
+  fixture.mount();
+  assert.equal(fixture.calls.length, 1);
+  assert.equal(fixture.calls[0][0], "pk_test_offline");
+  assert.equal(fixture.calls[0][1].locale, "en-GB");
+  assert.equal(fixture.hasLoadingStatus, true);
+  assert.equal(fixture.payDisabled, true);
+  fixture.rerender();
+  fixture.unmount();
+  fixture.mount();
+  assert.equal(fixture.calls.length, 1);
+  const promises = fixture.providerPromises.filter(Boolean);
+  assert.ok(promises.length > 0);
+  assert.equal(new Set(promises).size, 1);
+  await fixture.settle({});
+  assert.equal(fixture.hasCard, true);
+  assert.equal(fixture.hasLoadingStatus, false);
+  assert.equal(fixture.payDisabled, false);
+});
+
+test("missing payment configuration does not load Stripe and retains unavailable UI", () => {
+  const fixture = paymentModuleHarness("");
+  fixture.mount();
+  assert.equal(fixture.calls.length, 0);
+  assert.equal(fixture.unavailable, true);
+  assert.equal(fixture.hasCard, false);
+  assert.equal(fixture.payDisabled, true);
+});
+
+test("SDK rejection retains unavailable UI and cannot enable payment or create a second loader", async () => {
+  const fixture = paymentModuleHarness();
+  fixture.mount();
+  await fixture.settle(null, new Error("Simulated blocked SDK"));
+  assert.equal(fixture.unavailable, true);
+  assert.equal(fixture.hasCard, false);
+  assert.equal(fixture.payDisabled, true);
+  fixture.rerender();
+  assert.equal(fixture.calls.length, 1);
+});
+
 test("direct entry begins at the service selector; unknown service links do not invent a service", () => {
   assert.equal(INITIAL_BOOKING_STATE.step, 1);
   assert.equal(resolveBookingService("not-a-service"), null);
@@ -61,6 +355,106 @@ test("direct entry begins at the service selector; unknown service links do not 
   assert.equal(resolveBookingService("house-removals").inventoryMode, "rooms");
   assert.equal(resolveBookingService("furniture").inventoryMode, "items");
   assert.equal(resolveBookingService("flat-removals").inventoryMode, "rooms");
+});
+
+test("refreshing a service entry retains matching draft items, bedrooms and route", () => {
+  const flow = bookingEntryHarness("?service=house-removals", envelope({ step: 3 }));
+  assert.deepEqual(flow.state.items, state.items);
+  assert.deepEqual(flow.state.inventoryRooms, state.inventoryRooms);
+  assert.equal(flow.state.bedroomCount, "2");
+  assert.equal(flow.state.pickup.postcode, "G1 1AA");
+  assert.equal(flow.state.step, 3);
+  assert.equal(flow.state.clientTotal, 0);
+  assert.equal(flow.state.quoteStatus, "stale");
+});
+
+test("an intentional different service entry starts that service without the previous inventory", () => {
+  const flow = bookingEntryHarness("?service=furniture", envelope({ step: 4 }));
+  assert.equal(flow.state.serviceSlug, "furniture-delivery");
+  assert.equal(flow.state.entryServiceSlug, "furniture");
+  assert.equal(flow.state.inventoryMode, "items");
+  assert.deepEqual(flow.state.items, []);
+  assert.equal(flow.state.bedroomCount, "");
+  assert.equal(flow.state.step, 2);
+  assert.equal(flow.renderedSteps.some((render) => render.serviceSlug === "house-removal" && render.step === 4), false,
+    "a different entry must not mount the old service's quote step before applying its selection");
+});
+
+test("fresh entries preselect the requested public service and do not turn student moves into a generic service", () => {
+  for (const [query, slug, mode] of [
+    ["house", "house-removal", "rooms"],
+    ["flat-removals", "man-and-van", "rooms"],
+    ["furniture", "furniture-delivery", "items"],
+    ["student-move", "student-move", "items"],
+  ]) {
+    const flow = bookingEntryHarness(`?service=${query}`);
+    assert.equal(flow.state.serviceSlug, slug);
+    assert.equal(flow.state.inventoryMode, mode);
+    assert.equal(flow.state.step, 2);
+    assert.equal(flow.url.searchParams.has("service"), false);
+    assert.equal(flow.replacements.length, 1);
+  }
+});
+
+test("equivalent aliases resume the same draft, but distinct mapped flat and small moves do not", () => {
+  for (const alias of ["house", "house-removal", "house-removals"]) {
+    const flow = bookingEntryHarness(`?service=${alias}`, envelope({ step: 3 }));
+    assert.deepEqual(flow.state.items, state.items);
+    assert.equal(flow.state.bedroomCount, "2");
+  }
+  const genericDraft = envelope({ serviceSlug: "man-and-van", serviceName: "Other", entryServiceSlug: "other", step: 3 });
+  assert.deepEqual(bookingEntryHarness("?service=man-and-van", genericDraft).state.items, state.items);
+  const flatDraft = envelope({ serviceSlug: "man-and-van", serviceName: "Flat Removals", entryServiceSlug: "other", step: 3 });
+  assert.deepEqual(bookingEntryHarness("?service=flat-removals", flatDraft).state.items, state.items);
+  assert.deepEqual(bookingEntryHarness("?service=small-moves", flatDraft).state.items, []);
+});
+
+test("direct and unknown service entries preserve a usable saved draft without applying arbitrary dates", () => {
+  for (const query of ["", "?service=retired-service", "?service=&date=2000-01-01"]) {
+    const flow = bookingEntryHarness(query, envelope({ step: 3 }));
+    assert.deepEqual(flow.state.items, state.items);
+    assert.equal(flow.state.selectedDate, state.selectedDate);
+    assert.equal(flow.replacements.length, 0);
+  }
+  assert.equal(bookingEntryHarness("?service=retired-service").state.step, 1);
+});
+
+test("consuming a service hint retains attribution, other parameters and hash without a history entry", () => {
+  const flow = bookingEntryHarness("?utm_source=sample&service=house&date=2026-10-01&tag=one&tag=two#details");
+  assert.equal(flow.url.searchParams.get("utm_source"), "sample");
+  assert.equal(flow.url.searchParams.get("date"), "2026-10-01");
+  assert.deepEqual(flow.url.searchParams.getAll("tag"), ["one", "two"]);
+  assert.equal(flow.url.hash, "#details");
+  assert.equal(flow.state.selectedDate, "");
+  assert.equal(flow.replacements.length, 1);
+  assert.equal(flow.replacements[0].options.scroll, false);
+});
+
+test("later edits survive refresh and history revisits after the service hint has been consumed", () => {
+  const flow = bookingEntryHarness("?service=house-removals", envelope({ step: 3 }));
+  flow.dispatch({ type: "SET_SERVICE", slug: "furniture-delivery", name: "Furniture", sourceSlug: "furniture" });
+  flow.dispatch({ type: "SET_ITEMS", items: [{ name: "Sofa", quantity: 1 }] });
+  const refreshed = bookingEntryHarness(flow.url.search, flow.draft);
+  assert.equal(refreshed.state.serviceSlug, "furniture-delivery");
+  assert.deepEqual(refreshed.state.items, [{ name: "Sofa", quantity: 1 }]);
+  refreshed.navigate("?service=office");
+  assert.equal(refreshed.state.serviceSlug, "office-removal");
+  refreshed.navigate("?service=retired-service");
+  assert.equal(refreshed.state.serviceSlug, "office-removal");
+  refreshed.navigate("?service=house-removals");
+  assert.equal(refreshed.state.serviceSlug, "house-removal");
+  assert.equal(refreshed.state.inventoryMode, "rooms");
+  assert.deepEqual(refreshed.state.items, []);
+});
+
+test("service query initialisation cannot replace an unresolved checkout after hydration", () => {
+  const flow = bookingEntryHarness("?service=furniture", envelope({ checkoutLocked: true }));
+  assert.equal(flow.state.checkoutLocked, true);
+  assert.equal(flow.state.serviceSlug, "house-removal");
+  assert.equal(flow.state.bookingRef, "reference_test");
+  assert.equal(flow.state.clientSecret, "");
+  assert.equal(flow.state.step, 5);
+  assert.deepEqual(flow.state.items, state.items);
 });
 
 test("corrupt, expired, future-dated and unknown-service drafts are rejected", () => {

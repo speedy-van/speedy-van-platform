@@ -57,6 +57,63 @@ function fixture({ consent, blockedStorage = false, browser } = {}) {
   return { api: context.exports, window, events, meta, listeners };
 }
 
+function loadComponent(relativePath, imports = {}, globals = {}) {
+  const componentSource = fs.readFileSync(path.join(root, relativePath), "utf8");
+  const componentJs = ts.transpileModule(componentSource, {
+    fileName: relativePath,
+    compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2020, jsx: ts.JsxEmit.ReactJSX },
+  }).outputText;
+  const context = {
+    exports: {}, ...globals,
+    require(name) {
+      if (Object.hasOwn(imports, name)) return imports[name];
+      if (name === "react/jsx-runtime") return {
+        jsx: (type, props) => ({ type, props }),
+        jsxs: (type, props) => ({ type, props }),
+        Fragment: "fragment",
+      };
+      // Leave unrelated child components unmounted; no providers or effects run.
+      return new Proxy({}, { get: (_target, key) => `${name}:${String(key)}` });
+    },
+  };
+  vm.runInNewContext(componentJs, context, { filename: relativePath });
+  return context.exports;
+}
+
+function descendants(node) {
+  if (Array.isArray(node)) return node.flatMap(descendants);
+  if (!node || typeof node !== "object") return [];
+  return [node, ...descendants(node.props?.children)];
+}
+
+function mountCtaTracker(f) {
+  let handler;
+  let cleanup;
+  const document = {
+    addEventListener: (_name, callback) => { handler = callback; },
+    removeEventListener: (_name, callback) => { assert.equal(callback, handler); handler = undefined; },
+  };
+  class Element {
+    constructor(props) {
+      this.props = props;
+      this.dataset = {
+        trackEvent: props["data-track-event"],
+        trackLocation: props["data-track-location"],
+        trackLabel: props["data-track-label"],
+      };
+      this.textContent = "Contact";
+    }
+    closest() { return this; }
+    getAttribute(name) { return this.props[name] ?? null; }
+  }
+  const component = loadComponent("apps/web/src/components/CtaClickTracker.tsx", {
+    react: { useEffect(effect) { cleanup = effect(); } },
+    "@/lib/analytics": f.api,
+  }, { document, Element });
+  component.CtaClickTracker();
+  return { click: (props) => handler({ target: new Element(props) }), cleanup: () => cleanup() };
+}
+
 test("unknown, declined and invalid choices do not send events even when providers exist", () => {
   for (const consent of [undefined, "declined", "unexpected"]) {
     const f = fixture({ consent });
@@ -231,4 +288,81 @@ test("SSR can safely import the helpers without a browser", () => {
   assert.equal(context.exports.getCookieConsent(), null);
   assert.doesNotThrow(() => context.exports.trackPageView("/"));
   assert.doesNotThrow(() => context.exports.trackPurchase("booking-ssr", 99, "man-and-van"));
+});
+
+test("marketing and booking layouts each inherit exactly one global CTA listener", () => {
+  const imports = { "@/components/CtaClickTracker": { CtaClickTracker: "cta-listener" } };
+  const { GlobalProviders } = loadComponent("apps/web/src/components/layout/GlobalProviders.tsx", imports);
+  const { default: SiteLayout } = loadComponent("apps/web/src/app/(site)/layout.tsx", imports);
+  const { default: BookLayout } = loadComponent("apps/web/src/app/book/layout.tsx", imports);
+  for (const Layout of [SiteLayout, BookLayout]) {
+    const tree = GlobalProviders({ children: Layout({ children: "page" }) });
+    assert.equal(descendants(tree).filter((node) => node.type === "cta-listener").length, 1);
+  }
+});
+
+test("footer contact destinations emit existing interest events once under consent", () => {
+  const { SITE } = loadComponent("packages/config/src/site.ts");
+  const { Footer } = loadComponent("apps/web/src/components/layout/Footer.tsx", {
+    "@speedy-van/config": { SITE },
+    "@/lib/services": { SERVICES: [] },
+    "@/lib/areas": { AREAS: [] },
+  });
+  const contacts = descendants(Footer()).filter((node) => node.type === "a" && node.props["data-track-event"]);
+  assert.equal(contacts.length, 3);
+  const f = fixture({ consent: "accepted" });
+  const tracker = mountCtaTracker(f);
+  for (const contact of contacts) tracker.click(contact.props);
+  assert.deepEqual(f.events.map((event) => event[1]).sort(), ["call_click", "email_click", "whatsapp_click"]);
+  assert.ok(f.events.every((event) => event[2].cta_location === "footer"));
+  assert.ok(f.events.some((event) => event[2].destination === `tel:${SITE.phone.replace(/\s/g, "")}`));
+  assert.ok(f.events.some((event) => event[2].destination === `mailto:${SITE.email}`));
+  assert.ok(f.events.some((event) => event[2].destination === SITE.social.whatsapp));
+  assert.equal(f.meta.filter((event) => event[1] === "Lead" || event[1] === "Purchase").length, 0);
+  f.api.setCookieConsent("declined");
+  const count = f.events.length;
+  for (const contact of contacts) tracker.click(contact.props);
+  assert.equal(f.events.length, count);
+  tracker.cleanup();
+});
+
+test("the app-level CTA listener preserves private-route exclusion for booking metadata", () => {
+  const f = fixture({ consent: "accepted" });
+  const tracker = mountCtaTracker(f);
+  const props = { "data-track-event": "booking_shell_call_click", href: "tel:07909032889" };
+  tracker.click(props);
+  assert.equal(f.events[0][1], "booking_shell_call_click");
+  for (const pathname of ["/admin", "/driver", "/track", "/book/review/private-reference"]) {
+    f.window.location.pathname = pathname;
+    tracker.click(props);
+  }
+  assert.equal(f.events.length, 1);
+  tracker.cleanup();
+});
+
+test("exit help offers real navigation, collects no email and does not record a lead", () => {
+  const events = [];
+  const states = [];
+  const component = loadComponent("apps/web/src/components/ExitIntentPopup.tsx", {
+    react: {
+      useState: () => [true, (value) => states.push(value)],
+      useRef: () => ({ current: null }),
+      useEffect: () => {},
+    },
+    "@/lib/analytics": { trackAnalyticsEvent: (name, payload) => events.push({ name, payload }) },
+  }, {
+    localStorage: { setItem: () => assert.fail("Help must not collect a local email or invent a locked quote") },
+  });
+  const tree = descendants(component.ExitIntentPopup());
+  assert.equal(tree.filter((node) => node.type === "input" || node.type === "form").length, 0);
+  const quote = tree.find((node) => node.props?.href === "/book");
+  const call = tree.find((node) => node.props?.href === "tel:07909032889");
+  assert.ok(quote);
+  assert.ok(call);
+  assert.equal(quote.props["data-track-event"], "quote_click");
+  assert.equal(call.props["data-track-event"], "call_click");
+  quote.props.onClick();
+  call.props.onClick();
+  assert.deepEqual(states, [false]);
+  assert.deepEqual(events.map((event) => event.name), ["exit_intent_cta", "exit_intent_cta"]);
 });

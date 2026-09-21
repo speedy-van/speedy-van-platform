@@ -29,7 +29,7 @@
 - [ ] robots.txt accessible at https://www.speedyvan.uk/robots.txt
 
 ## Analytics
-- [ ] GA4 property created, ID added to NEXT_PUBLIC_GA4_ID
+- [ ] GA4 property created, ID added to NEXT_PUBLIC_GA_ID
 - [ ] Facebook Pixel created, ID added to NEXT_PUBLIC_FB_PIXEL_ID
 - [ ] TikTok Pixel created, ID added to NEXT_PUBLIC_TIKTOK_PIXEL_ID
 - [ ] Conversion events verified (purchase, add_to_cart, begin_checkout)
@@ -59,7 +59,7 @@
 - [ ] RESEND_API_KEY set
 - [ ] OPENWEATHERMAP_API_KEY set
 - [ ] NEXT_PUBLIC_API_URL=https://api.speedyvan.uk
-- [ ] NEXT_PUBLIC_GA4_ID set
+- [ ] NEXT_PUBLIC_GA_ID set
 - [ ] NEXT_PUBLIC_FB_PIXEL_ID set
 - [ ] NEXT_PUBLIC_TIKTOK_PIXEL_ID set
 

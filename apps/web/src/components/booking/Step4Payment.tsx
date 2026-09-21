@@ -3,7 +3,7 @@
 import { useEffect, useState, useRef } from "react";
 import Image from "next/image";
 import type { FormEvent, ReactNode } from "react";
-import { loadStripe } from "@stripe/stripe-js";
+import { loadStripe } from "@stripe/stripe-js/pure";
 import {
   Elements,
   CardElement,
@@ -18,7 +18,18 @@ import { CheckoutRecovery } from "./CheckoutRecovery";
 import { completeCardPayment, parseBookingPaymentSession, type BookingPaymentSession } from "./checkout-session";
 
 const STRIPE_PK = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || "";
-const stripePromise = STRIPE_PK ? loadStripe(STRIPE_PK, { locale: "en-GB" }) : null;
+type StripeClientPromise = ReturnType<typeof loadStripe>;
+let cachedStripePromise: StripeClientPromise | null = null;
+
+/** Route prefetch may evaluate this module; initialise the SDK only after payment mounts. */
+function getStripeClientPromise(): StripeClientPromise | null {
+  if (!STRIPE_PK) return null;
+  if (!cachedStripePromise) {
+    // Elements accepts a null result; keep SDK failures in the existing unavailable state.
+    cachedStripePromise = loadStripe(STRIPE_PK, { locale: "en-GB" }).catch(() => null);
+  }
+  return cachedStripePromise;
+}
 const API_BASE =
   process.env.NODE_ENV === "development"
     ? "http://localhost:4000"
@@ -61,6 +72,7 @@ const reviewDate = new Intl.DateTimeFormat("en-GB", {
 
 interface CheckoutFormProps {
   onComplete: (bookingRef: string) => void;
+  stripePromise: StripeClientPromise | null;
 }
 
 function shortAddress(address: string): string {
@@ -203,7 +215,7 @@ function BookingReview() {
   );
 }
 
-function CheckoutForm({ onComplete }: CheckoutFormProps) {
+function CheckoutForm({ onComplete, stripePromise }: CheckoutFormProps) {
   const { state, dispatch } = useBooking();
   const stripe = useStripe();
   const elements = useElements();
@@ -211,7 +223,7 @@ function CheckoutForm({ onComplete }: CheckoutFormProps) {
   const [submitting, setSubmitting] = useState(false);
   const submittingRef = useRef(false);
   const mounted = useRef(true);
-  const [paymentUnavailable, setPaymentUnavailable] = useState(!stripePromise);
+  const [paymentUnavailable, setPaymentUnavailable] = useState(!STRIPE_PK);
   const [creationUncertain, setCreationUncertain] = useState(state.checkoutLocked && !state.clientSecret);
   const pendingSession = useRef<BookingPaymentSession | null>(parseBookingPaymentSession({
     bookingId: state.bookingId,
@@ -231,7 +243,7 @@ function CheckoutForm({ onComplete }: CheckoutFormProps) {
       });
     }
     return () => { active = false; mounted.current = false; };
-  }, []);
+  }, [stripePromise]);
 
   const [name, setName] = useState(state.customerName);
   const [email, setEmail] = useState(state.customerEmail);
@@ -454,7 +466,11 @@ function CheckoutForm({ onComplete }: CheckoutFormProps) {
       </div>
 
       {/* ── Payment details ── */}
-      {stripePromise && !paymentUnavailable ? (
+      {!paymentUnavailable && (!stripePromise || !stripe || !elements) ? (
+        <div role="status" className="rounded-2xl p-5 text-sm text-amber-100" style={cardStyle}>
+          Loading secure payment form…
+        </div>
+      ) : stripePromise && !paymentUnavailable ? (
         <div className="rounded-2xl p-5" style={cardStyle}>
           <h2 className="text-base font-black text-white mb-3">Payment details</h2>
           <div
@@ -542,6 +558,11 @@ function CheckoutForm({ onComplete }: CheckoutFormProps) {
 export function Step4Payment() {
   const { state, dispatch } = useBooking();
   const router = useRouter();
+  const [stripePromise, setStripePromise] = useState<StripeClientPromise | null>(null);
+
+  useEffect(() => {
+    setStripePromise(getStripeClientPromise());
+  }, []);
 
   function handleComplete(bookingRef: string) {
     dispatch({ type: "CHECKOUT_COMPLETE" });
@@ -583,7 +604,7 @@ export function Step4Payment() {
 
       <CheckoutRecovery />
       <BookingReview />
-      <CheckoutForm onComplete={handleComplete} />
+      <CheckoutForm onComplete={handleComplete} stripePromise={stripePromise} />
     </div>
   );
 

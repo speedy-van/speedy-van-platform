@@ -169,6 +169,33 @@ export const SERVICE_PLANNING: Partial<Record<string, ServicePlanning>> = {
       },
     ],
   },
+  "student-move": {
+    suitableFor:
+      "Student moves suit boxes, suitcases and small furniture travelling between halls, a shared flat, a family home or storage. List the belongings you are taking, including furniture, rather than relying only on the size of your room. If housemates are moving together, describe each person's load and destination.",
+    vehicleAndCrew:
+      "The combined load and access at both buildings determine the van and lifting help needed. Include desks, beds and other bulky pieces alongside bags and boxes. Tell us about stairs, lift dimensions, loading entrances and any time limit set by the accommodation team.",
+    pricing:
+      "Request a quote with your item list, both addresses, floor and lift access, date and any extra help needed. Shared collections, additional stops and a later return journey must be discussed before confirmation; they are not automatically included in a one-way move.",
+    notIncluded: [
+      "Storage-space rental; arrange the unit and access with your storage provider.",
+      "Packing, furniture dismantling or assembly unless included in your quote.",
+      "Accommodation keys, lift reservations or parking permissions unless separately agreed.",
+    ],
+    preparation: [
+      {
+        title: "Check your halls or flat access",
+        body: "Confirm the check-in or check-out window, when keys are available and where the van may load. Ask about lift bookings and entry arrangements. If a parent or housemate will be there instead of you, agree who will hand over and receive the items.",
+      },
+      {
+        title: "Keep shared loads separate",
+        body: "Label boxes and furniture with their owner and destination. Keep your housemates' belongings separate, seal loose items in suitable boxes and include every collection or delivery address when requesting the quote.",
+      },
+      {
+        title: "Arrange storage access in advance",
+        body: "For a storage transfer, book your storage space separately and confirm the opening hours, unit floor, loading entrance and how the collector can gain access. A later collection from storage needs its own agreed date and transport arrangements.",
+      },
+    ],
+  },
   "long-distance-removals": {
     suitableFor:
       "Choose long-distance removals when your home, flat, student belongings or furniture are travelling between Scottish towns and cities. Provide the actual collection and destination addresses so both ends of the move can be assessed.",

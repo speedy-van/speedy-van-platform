@@ -53,6 +53,8 @@ export function Footer() {
               </a>
               <a
                 href={SITE.social.whatsapp}
+                data-track-event="whatsapp_click"
+                data-track-location="footer"
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Chat with SpeedyVan on WhatsApp"
@@ -143,6 +145,8 @@ export function Footer() {
               </p>
               <a
                 href={`tel:${SITE.phone.replace(/\s/g, "")}`}
+                data-track-event="call_click"
+                data-track-location="footer"
                 aria-label={`Call us on ${SITE.phone}`}
                 className="inline-flex transition-transform hover:scale-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 rounded-full"
               >
@@ -150,6 +154,8 @@ export function Footer() {
               </a>
               <a
                 href={`mailto:${SITE.email}`}
+                data-track-event="email_click"
+                data-track-location="footer"
                 className="block w-fit max-w-full break-words rounded text-sm text-white/65 hover:text-white transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-400"
               >
                 {SITE.email}
