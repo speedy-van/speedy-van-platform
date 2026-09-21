@@ -6,9 +6,10 @@ Run: python scripts/seo-local-qa.py --base-url http://localhost:3002
 import argparse
 import json
 import sys
+from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timezone
 from html.parser import HTMLParser
-from urllib.error import HTTPError
+from urllib.error import HTTPError, URLError
 from urllib.parse import urlparse
 from urllib.request import HTTPRedirectHandler, Request, build_opener
 from xml.etree import ElementTree
@@ -93,36 +94,56 @@ def main():
     parser.add_argument("--output", help="Optional JSON evidence path")
     args = parser.parse_args()
     base = args.base_url.rstrip("/")
-    opener = build_opener(NoRedirect())
     results = []
     pages = {}
+    transport_errors = []
 
     def fetch(path, host=None, method="GET"):
         headers = {"User-Agent": "Local-SEO-Regression/1.0"}
         if host:
             headers["Host"] = host
         request = Request(base + path, headers=headers, method=method)
-        try:
-            response = opener.open(request, timeout=30)
-        except HTTPError as error:
-            response = error
-        with response:
-            return response.status, response.headers, response.read().decode("utf-8", errors="replace")
+        for attempt in range(2):
+            try:
+                try:
+                    response = build_opener(NoRedirect()).open(request, timeout=30)
+                except HTTPError as error:
+                    response = error
+                with response:
+                    return response.status, response.headers, response.read().decode("utf-8", errors="replace")
+            except (URLError, TimeoutError, ConnectionError) as error:
+                if attempt == 1:
+                    transport_errors.append({"path": path, "error": str(error), "attempts": 2})
+                    return 0, {}, ""
 
     def check(name, condition):
         results.append({"check": name, "passed": bool(condition)})
 
     status, _, sitemap = fetch("/sitemap.xml")
     check("Sitemap returns HTTP 200", status == 200)
-    root = ElementTree.fromstring(sitemap)
+    try:
+        root = ElementTree.fromstring(sitemap)
+    except ElementTree.ParseError:
+        evidence = {"checked_at": datetime.now(timezone.utc).isoformat(), "base_url": base,
+                    "scope": "Incomplete: sitemap could not be read", "passed": 0,
+                    "failed": ["Sitemap could not be read"], "transport_errors": transport_errors}
+        if args.output:
+            with open(args.output, "w", encoding="utf-8") as output:
+                json.dump(evidence, output, indent=2)
+                output.write("\n")
+        print(json.dumps(evidence, indent=2))
+        return 1
     urls = [element.text for element in root.findall("{*}url/{*}loc")]
     check("Sitemap contains the 47 intended pages without duplicates", len(urls) == 47 and len(set(urls)) == 47)
     check("Sitemap contains only canonical HTTPS URLs", all(url and url.startswith(PRIMARY + "/") or url == PRIMARY for url in urls))
     check("Sitemap has no fabricated lastmod dates", not root.findall("{*}url/{*}lastmod"))
     check("Sitemap excludes private and unsupported routes", not any(any(part in urlparse(url).path.split("/") for part in ["book", "auth", "driver", "admin", "track", "jobs", "api", "rubbish-removal"]) for url in urls))
+    paths = [urlparse(url).path or "/" for url in urls]
+    with ThreadPoolExecutor(max_workers=4) as executor:
+        responses = dict(zip(paths, executor.map(fetch, paths)))
     for url in urls:
         path = urlparse(url).path or "/"
-        status, headers, body = fetch(path)
+        status, headers, body = responses[path]
         page = Page(body)
         pages[path] = page
         canonical = PRIMARY if path == "/" else PRIMARY + path
@@ -184,6 +205,8 @@ def main():
         "failed": [result["check"] for result in results if not result["passed"]],
         "pages": [{"path": path, "canonical": page.canonicals, "title": page.title, "h1": page.h1s} for path, page in pages.items()],
         "checks": results,
+        "transport_errors": transport_errors,
+        "transport_policy": "At most four concurrent public-page requests; one retry for transport errors only. HTTP error responses are not retried.",
     }
     if args.output:
         with open(args.output, "w", encoding="utf-8") as output:

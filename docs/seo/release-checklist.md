@@ -1,6 +1,14 @@
 # Review, release and rollback
 
-Updated 21 September 2026. The owner subsequently authorised production deployment. The source branch and the hosting release are separate operations; record actual deployment results before marking this checklist complete.
+Updated 21 September 2026. The owner authorised and received a production release. The source branch remains open in draft PR #2; no merge was performed. Deployment completion does not mean every external integration or mobile visual gate below has been executed.
+
+## Executed release
+
+- Web: `5jXbcona28QiqxAyY7S1He4F5P6a`, ready at 16:13:56 UTC; API: `3hASzcuv7AutpMFHViDuZe8FL6sa`, ready at 16:09:36 UTC. Both were production-environment rebuilds from commit `10c781c49970b3f44c8ee61e4063cb0175c51d71`. The subsequent API-only London-date fix `5e5881a27cca0f6a602473c78a25c13369d1afc5` is live in `5woPnYouSe8kAHqwCsp1o5QoxzSg`, Ready at 16:27:50 UTC; its immediate rollback is `3hASzcuv7AutpMFHViDuZe8FL6sa`. See [deployment-2026-09-21.json](deployment-2026-09-21.json).
+- Public API probes passed for direct/proxied health, database catalogue and service configuration, synthetic quote calculation, validation and primary-origin CORS. The public browser journey passed from service CTA through address selection, inventory, date/slot and review. No booking or payment was submitted.
+- Google's live smartphone test fetched the canonical man-and-van page successfully and reported indexing allowed. The indexing request and 47-URL sitemap resubmission were accepted; completed indexing and ranking gains remain unmeasured.
+- Production branch tracking still points to `main`. Automatic approval review rejected changing branch/domain-assignment settings; no retry was made. A future `main` push can automatically release different source. Review and integrate this repair branch before using that pipeline.
+- Visual checks at 360px/768px, Stripe test-mode/concurrency checks, provider analytics receipt and operational slot windows remain explicit follow-up work. See [verification.md](verification.md) for the full scope.
 
 ## Pull safely
 
@@ -43,7 +51,7 @@ In a second terminal, run `python scripts/seo-local-qa.py --base-url http://loca
 
 Choose the API input explicitly. For Git, use root `apps/api` with outside-root files enabled. For the historical standalone CLI workflow, first run `npm run build:standalone -w apps/api`, then deploy `apps/api/dist/standalone` to the existing API project with its empty root. This output contains current source bundles, a locked runtime dependency tree and Prisma schema. Never deploy the tracked legacy `_api.js`, and never reuse web assets built with the local test API origin.
 
-1. Record the approved merge SHA and last known good web/API deployment IDs.
+1. Record the approved source SHA and last known good web/API deployment IDs. A reviewed branch deployment does not imply a merge.
 2. Release API changes to `speedy-van-api` before or alongside the web. Recovery expects the additive `isPaid` tracking field; older APIs fail closed.
 3. Release web to `speedy-van-web`, using the verified project ID in `production-domain-map.md`, root `apps/web`, outside-root files enabled and `apps/web/vercel.json`. The old dashboard build/output/install overrides are cleared. Do not use the stale duplicate project. Rebuild from source with production environment variables; never promote a locally compiled test-API bundle.
 4. Keep `https://www.speedyvan.uk` as the primary origin. Do not change DNS, payment callback origins or authentication origins as part of this branch.
@@ -56,7 +64,7 @@ Choose the API input explicitly. For Git, use root `apps/api` with outside-root 
 
 Rollback triggers include quote/payment regressions, incorrect canonical origins, private content indexing, mixed React-runtime errors, lost inventory or broken API/mobile contracts.
 
-- Re-promote the recorded last known good web and API deployments through the normal release workflow. Consider them together for payment/recovery behaviour; avoid mismatched releases.
+- Use Vercel's rollback action to restore the recorded web `4CnN8XEktZw8716F6iX95EbCfgp3` and API `4mQDCapaoV3vtVeHYnbkyEVMQQNC` deployments if a full repair rollback is required. For an API-only follow-up, prefer its immediately preceding verified deployment recorded in the release JSON. Consider web/API contracts together; avoid mismatched releases.
 - Revert the repair commit through a normal reviewable Git revert if a code rollback is required. Do not force-push, reset the owner's local tree or overwrite unrelated commits.
 - No schema migration or DNS change is included, so no database rollback is introduced by this branch.
 - Preserve actual payment/refund records and reconcile pending events; never delete them to make a test pass.

@@ -12,10 +12,14 @@ Executed 21 September 2026 on `fix/organic-search-and-booking-2026-09-21`, based
 | `npm run typecheck` | Passed | API, iOS admin, web, config, database and shared packages |
 | `npm run typecheck -w apps/web` after adding route type generation | Passed | `next typegen` plus TypeScript; works without previously generated route types |
 | `npm run lint` | Passed | API and web; no ESLint errors or warnings. Next reports its separate `next lint` deprecation notice |
-| `npm run test:regression` | 93 passed, 0 failed | 19 booking, 13 analytics, 29 payment/API, 13 service-worker/driver, 1 schema 6 deployment/handler and 12 pricing-configuration/availability checks |
+| `npm run test:regression` | 100 passed, 0 failed | 19 booking, 13 analytics, 29 payment/API, 13 service-worker/driver, 1 schema, 6 deployment/handler and 19 pricing-configuration/availability/date checks |
 | API standalone source build and isolated install | Passed | Current workspace sources bundled; pinned runtime install, Prisma generation and actual handler health checks outside the repository |
 | `NEXT_PUBLIC_API_URL=http://127.0.0.1:4000 npm run build` | Passed | Database package, Next 15.5.25 web production build (75 static pages) and API TypeScript build |
-| Production preview HTTP/HTML QA | 428 passed, 0 failed | All 47 sitemap pages plus private, invalid, redirect, method and preview-host probes |
+| Local production-build HTTP/HTML QA | 428 passed, 0 failed | All 47 sitemap pages plus private, invalid, redirect, method and preview-host probes |
+| Public production HTTP/HTML QA | 414 passed, 0 failed | All 47 live sitemap pages plus private and invalid routes; no unresolved transport errors in the completed run |
+| Public production host/private-route probes | 18 passed, 0 failed | Legacy/apex HTTPS GET/HEAD, encoded queries, API/method bypass and private headers |
+| Public production API probes | 10 passed, 0 failed | Direct/prefixed health, database-backed items and flags, synthetic GBP quotes, invalid input and CORS |
+| Public production browser journey | Passed to review | Service CTA, autocomplete, route, item catalogue, date/slot, valid GBP amount and checkout review; no submission |
 | Keyword map validation | Passed | 162 unique phrases; five sampled queries, 157 inferred; 16 existing/new hub targets; volumes unavailable |
 | `git diff --check` | Passed | Whitespace consistency |
 
@@ -30,7 +34,7 @@ npm run start -w apps/web -- --hostname 127.0.0.1
 python scripts/seo-local-qa.py --base-url http://127.0.0.1:3002
 ```
 
-Here the server and HTTP checker were launched as child processes of one local runner because each command environment has an isolated loopback network. No public preview was deployed. A normal local machine can use two terminals. The older script's print-only browser checks and expired hard-coded date were replaced with explicit HTTP assertions; old screenshot claims are not carried forward.
+For the initial local checks, the server and HTTP checker were launched as child processes of one runner because each command environment has an isolated loopback network. A normal local machine can use two terminals. Cloud previews and production deployments were subsequently verified as recorded below. The older script's print-only browser checks and expired hard-coded date were replaced with explicit HTTP assertions; old screenshot claims are not carried forward.
 
 Assertions cover:
 
@@ -66,6 +70,18 @@ Automatic approval review rejected saving a production-branch/automatic-domain-a
 
 Integrated QA also identified and repaired two pricing fallbacks: a failed configuration read must return an unavailable response rather than default prices, and a missing date/time slot must fail rather than return a static subtotal. The shared error envelope remains unchanged; configured read failure uses HTTP 503 and unavailable slots use HTTP 409. Tests exercise the actual pricing and error-handling code without live database or payment operations.
 
+## Verified production release
+
+The source at `10c781c49970b3f44c8ee61e4063cb0175c51d71` was rebuilt with production environment variables through the authenticated Vercel dashboard. API deployment `3hASzcuv7AutpMFHViDuZe8FL6sa` reached Ready at 16:09:36 UTC and web deployment `5jXbcona28QiqxAyY7S1He4F5P6a` at 16:13:56 UTC on 21 September 2026. Both public hostnames were then checked. This was a branch release; draft PR #2 remains unmerged. See [deployment-2026-09-21.json](deployment-2026-09-21.json) for the full history, including the API date-boundary follow-up.
+
+- [live-verification-2026-09-21.json](live-verification-2026-09-21.json): 414 assertions passed on the actual primary hostname. All 47 sitemap pages return HTTP 200, have one correct canonical and brand suffix, useful initial HTML, page-specific social metadata and no accidental noindex. Private/invalid-route and internal-link assertions passed. The first sequential attempt ended in an outbound proxy connection timeout without producing a report. The maintained checker now uses at most four concurrent page requests and one retry for transport failures; the completed run has no unresolved transport errors. This does not measure page-load performance.
+- [redirect-live-verification-2026-09-21.json](redirect-live-verification-2026-09-21.json): all 18 assertions passed. The initial checker wrongly expected a page at `/driver`; source inspection confirmed that root does not exist. Its observed 404/noindex is correct, and the corrected expectation is recorded openly in the evidence.
+- [api-live-verification-2026-09-21.json](api-live-verification-2026-09-21.json): ten read-only/non-persistent checks passed, including successful database-backed catalogue/configuration and price calculation. These establish connectivity and response contracts, not actual transaction concurrency or payment success.
+- [booking-live-verification-2026-09-21.json](booking-live-verification-2026-09-21.json): service CTA preserved Man and Van intent; empty addresses blocked progress; public Glasgow location suggestions resolved a 0.6-mile route; one Small Box Set produced a server quote for 24 September, afternoon, of £45.00; review preserved all choices. Contact fields, Stripe frame and pay button rendered. No customer details, card, payment or booking were submitted. Optional consent was declined. The sampled console contained only browser-extension metadata errors, with no application warning/error entries.
+- [search-console-release-2026-09-21.json](search-console-release-2026-09-21.json): Google's live smartphone test fetched the canonical man-and-van page successfully and reported crawl/indexing allowed. Its index snapshot remained **Discovered - currently not indexed**. The changed-page indexing request and updated sitemap submission were accepted. Search Console still displayed its earlier 45 discovered pages, while the live sitemap contains 47; neither is an indexed-page count.
+
+Final booking QA also reproduced a UTC/London boundary defect: at 00:30 BST the server calendar began on yesterday. The follow-up derives London's civil date and uses it consistently for the calendar, urgency and weekend/month arithmetic. Seven new actual-function tests cover midnight, cached configuration, month/year rollover, GMT and both DST transitions; the full regression suite now has 100 passing tests. The API-only follow-up `5e5881a27cca0f6a602473c78a25c13369d1afc5` was rebuilt as production deployment `5woPnYouSe8kAHqwCsp1o5QoxzSg`, Ready at 16:27:50 UTC. The web remains on its verified release. All ten API probes passed again after this follow-up, including the current London calendar date; see [api-london-live-verification-2026-09-21.json](api-london-live-verification-2026-09-21.json). The production clock was not altered to reproduce midnight. No slot names, response fields, business hours or capacity rules changed. Exact same-day slot cutoffs remain an operational dependency because no time windows or minimum-notice rules exist in the inspected configuration.
+
 ## Dependency findings and compatibility
 
 The original production dependency audit reported 41 findings, including four critical. Security updates include Next 15.5.25, React/React DOM 19.2.8 for the web, NextAuth 4.24.15, Hono 4.13.8 or compatible later 4.x, the 1.x Node adapter fix, and PostCSS 8.5.28. The unused competing sitemap package was removed. The lockfile was rebuilt to isolate web/mobile React peers without a mobile SDK migration; npm and the existing UI libraries remain in use.
@@ -78,10 +94,10 @@ Primary references: [Next image-optimisation advisory](https://github.com/vercel
 
 ## Release gates not executed here
 
-- **Visual/mobile browser QA:** the authenticated cloud browser rejected the local preview origin with `ERR_BLOCKED_BY_CLIENT`. No bypass or substitute standalone browser was used. Check 360px/768px/desktop, no-JavaScript presentation, keyboard focus, overflow and reduced motion before release. Source fixes and HTTP checks do not certify WCAG AA.
+- **Visual/mobile browser QA:** desktop cloud preview and production booking review were verified. The local/API preview restriction was not bypassed. The available browser interface did not expose viewport emulation; 360px/768px, assistive-technology, complete keyboard/overflow and reduced-motion checks remain unexecuted. Useful initial HTML was verified, but source/HTTP checks do not certify WCAG AA.
 - **Real integration:** no Stripe test-mode payment or actual Neon transaction/concurrency test was run. Verify success, 3-D Secure, decline, retries, webhook replay, recovery, cancellation/refund and dependent admin/driver/mobile flows in a non-production environment. API and web must be released together in the documented order.
 - **External services:** configured analytics receipt, GA4 Enhanced Measurement settings, notification/email delivery and managed Google Business Profile ownership remain unverified.
-- **Operational claims:** existing prices, minima, insurance, hours, capacity, specialist equipment and wider/ferry coverage need business confirmation.
+- **Operational claims:** existing prices, minima, insurance, hours, capacity, specialist equipment and wider/ferry coverage need business confirmation. Define morning/afternoon/evening windows and minimum notice before adding same-day elapsed-slot filtering; do not infer hours from UI greetings.
 - **Performance:** no field p75 LCP/INP/CLS measurement is available and no Lighthouse score is presented as field INP. Targets remain LCP <2.5s, INP <200ms and CLS <0.1.
 - **Search outcomes:** Search Console performance was processing. Accepted sitemap/indexing requests are not completed indexing, and neither this build nor these test counts prove ranking gains.
 

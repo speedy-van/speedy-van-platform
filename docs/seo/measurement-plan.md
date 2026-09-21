@@ -1,6 +1,8 @@
 # Organic search measurement plan
 
-Prepared 21 September 2026. The [baseline JSON](measurement-baseline-2026-09-21.json) is a **pre-deployment** record. No release timestamp or post-release ranking gain is established. Fill the deployment fields only after verifying the released web and API commits and public behaviour; do not replace the original observations.
+Prepared 21 September 2026. The [baseline JSON](measurement-baseline-2026-09-21.json) preserves the **pre-deployment** observations and adds a separate verified release anchor: the API was ready at 16:09:36 UTC and the web at 16:13:56 UTC. The initial coordinated release uses 16:13:56 UTC as D. Subsequent API-only maintenance is recorded separately. No post-release ranking gain is established.
+
+The post-release [Search Console evidence](search-console-release-2026-09-21.json) records the canonical man-and-van page's successful live smartphone test and accepted indexing request. Its index snapshot remains discovered but not indexed. The current sitemap contains 47 URLs, while the previously processed Search Console discovery count remained 45. Keep these values distinct from indexed totals.
 
 ## Recorded baseline
 

@@ -6,7 +6,7 @@ Evidence date: 21 September 2026. Implementation branch: `fix/organic-search-and
 
 The site is not wholly absent from Google. In the inspected UK mobile third-party sample, the brand query returned the apex homepage at position 1. The domain was absent from the first 10 results for `man and van`, `man and van Glasgow` and `furniture delivery Glasgow`, and the first nine for `house removals Edinburgh`. These are individual samples, not universal positions or Search Console averages.
 
-Authenticated Search Console inspection of the primary hostname found:
+Initial authenticated Search Console inspection of the primary hostname found:
 
 | Priority page | Inspected state | Last crawl |
 | --- | --- | --- |
@@ -19,6 +19,8 @@ The equivalent apex URLs were also unknown in that inspection. Glasgow and other
 
 This supports two distinct findings: some important landing pages are not indexed, and the sampled generic queries do not show the site prominently. It does not establish a penalty, a specific backlink deficit or a guaranteed reason Google has not selected each page. Adding a Search Console property alone does not produce rankings.
 
+After the production release, the canonical `/services/man-and-van` inspection showed **Discovered - currently not indexed**, with no prior crawl recorded. Google's smartphone live test at 16:18:01 UTC fetched the page successfully, allowed crawling and indexing, and read the correct www canonical. The changed page's indexing request was accepted. The resubmitted sitemap now serves 47 URLs; Search Console still displayed its earlier processed count of 45. Neither observation establishes completed indexing. Full evidence: [search-console-release-2026-09-21.json](search-console-release-2026-09-21.json).
+
 ## Production ownership
 
 See [production-domain-map.md](production-domain-map.md). The active repository is `speedy-van/speedy-van-platform`, with `apps/web` serving the website and `apps/api` serving the separate API. The older `speedy-van/sv` snapshot is not the implementation base. No applicable tracked `AGENTS.md` was found. A clean isolated checkout preserved unpublished work on the owner's computer.
@@ -29,7 +31,7 @@ See [production-domain-map.md](production-domain-map.md). The active repository 
 | --- | --- | --- |
 | Old www domain permanently redirects to primary www | Already correct | Live public-page path/query checks |
 | Two apex HTTPS roots use temporary 307 redirects | Already fixed earlier in this session | Hosting ownership corrected; existing middleware now supplies one 308 for tested public paths |
-| Primary sitemap contains 45 useful HTTP 200 pages | Already correct on live site | Live HTML/sitemap inspection; this branch adds two useful hubs, making 47 |
+| Primary sitemap contains 45 useful HTTP 200 pages | Already correct before this release | The released service and area hubs bring the live sitemap to 47 URLs |
 | Legal pages canonicalise to old host | Already fixed on live site | Current live canonical inspection; this branch additionally fixes page-specific social metadata |
 | Brand suffix duplicated in titles | Already fixed on live site | Current titles; local assertions check one suffix |
 | Customer copy exposes SEO commentary | Already fixed on live site | Current service HTML; content in this branch is practical service guidance |
@@ -39,7 +41,7 @@ See [production-domain-map.md](production-domain-map.md). The active repository 
 | Consent changes do not update all analytics consumers | Source defect in active checkout | Reactive consent and one shared event dispatcher implemented |
 | Validated payment can be confused with another booking | Source defect in active checkout | Exact intent/booking/reference/amount/currency binding and transactional confirmation added |
 | API deployment selects a stale precompiled bundle | Source deployment defect | Build current TypeScript or the reproducible standalone artefact; no longer select tracked `_api.js` |
-| API host `/api/health` returns 404 while `/health` returns 200 | Still present live before release | Adapter repair accepts both paths and preserves request methods, queries and raw webhook bodies |
+| API host `/api/health` returns 404 while `/health` returns 200 | Fixed and verified live | Both routes now return 200; database-backed catalogue, service flags and pricing probes also passed |
 
 ## Implemented on this branch
 
@@ -56,7 +58,7 @@ See [production-domain-map.md](production-domain-map.md). The active repository 
 - Service-worker caching excludes private/query-bearing/error responses. Driver return destinations are restricted to supported local routes.
 - Web/API security dependency updates are included. See [verification.md](verification.md) for actual audit results and remaining mobile-package work.
 
-These are branch changes, not a claim that the live deployment has received them.
+The web and API changes were released from commit `10c781c49970b3f44c8ee61e4063cb0175c51d71` on 21 September 2026. Actual deployment IDs, timestamps, subsequent API updates and scoped live evidence are recorded in [deployment-2026-09-21.json](deployment-2026-09-21.json). Payment unit checks do not establish a completed real transaction.
 
 ## Business evidence limits
 

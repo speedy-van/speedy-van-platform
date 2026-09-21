@@ -12,8 +12,9 @@ Primary origin: `https://www.speedyvan.uk`. API origin: `https://api.speedyvan.u
 ## Source and build
 
 - Repository: `https://github.com/speedy-van/speedy-van-platform`.
-- Production deployment: `4CnN8XEktZw8716F6iX95EbCfgp3`, Ready and Current when inspected.
-- Deployment source metadata: `seo-production-execution-2026-09-17`, commit `5bcc46c180d62db1b8a211ef4db227fb167cce0a`.
+- Production web deployment: `5jXbcona28QiqxAyY7S1He4F5P6a`, Ready at 16:13:56 UTC on 21 September 2026. Source: `fix/organic-search-and-booking-2026-09-21`, commit `10c781c49970b3f44c8ee61e4063cb0175c51d71`.
+- The coordinated API deployment `3hASzcuv7AutpMFHViDuZe8FL6sa` reached Ready at 16:09:36 UTC from the same source. The current API deployment is `5woPnYouSe8kAHqwCsp1o5QoxzSg`, Ready at 16:27:50 UTC, from `5e5881a27cca0f6a602473c78a25c13369d1afc5`; it adds the tested London calendar-date correction only. See [deployment-2026-09-21.json](deployment-2026-09-21.json) for the release history.
+- Previous web deployment and rollback point: `4CnN8XEktZw8716F6iX95EbCfgp3`, whose source metadata associated `seo-production-execution-2026-09-17` with commit `5bcc46c180d62db1b8a211ef4db227fb167cce0a`.
 - Implementation base: latest production-branch commit `e43ffc760b57b5d70b655760ee4877f1f759a85a` (ownership documentation; parent is the deployed commit).
 - Repair branch: `fix/organic-search-and-booking-2026-09-21`.
 - The source metadata identifies the deployment association; it does not independently prove that an uploaded bundle contained no uncommitted files. Inspected live routes and relevant source structure agree.
@@ -23,7 +24,9 @@ Primary origin: `https://www.speedyvan.uk`. API origin: `https://api.speedyvan.u
 - Hosting Node version: 24. The historical web install command was `npm install`; the application-root configuration now uses the committed lockfile through `npm --prefix ../.. ci --include=dev`.
 - Historical web build command: `npx prisma generate --schema=packages/db/prisma/schema.prisma && npm run build -w packages/db && npm run build -w apps/web`. The first cloud preview failed framework detection with the shallow workspace layout. The corrected project root is `apps/web`, outside-root files remain enabled, and the old dashboard build/output/install overrides have been cleared. `apps/web/vercel.json` now defines the root-aware Prisma/database build followed by the web build and preserves the API rewrite.
 - Active framework at the base: Next 14.2.35 / React 18. This branch applies a security-motivated Next 15.5.25 / React 19 web upgrade, retains npm/Tailwind and leaves the mobile application's React 18 dependency contract unchanged.
-- Root `vercel.json` rewrites `/api/(.*)` to `https://api.speedyvan.uk/api/$1`. API and browser-only route responsibilities must remain distinct.
+- The active `apps/web/vercel.json` preserves the `/api/(.*)` rewrite to `https://api.speedyvan.uk/api/$1`. API and browser-only route responsibilities must remain distinct.
+
+Both applications were promoted through the dashboard's **fresh production-environment rebuild** of the exact preview source. This did not merge the repair branch. Automatic approval review rejected a separate production-branch/automatic-domain-assignment setting change; the unsaved form was restored and no retry was made. Production tracking still points to `main`, so a future push to that branch can trigger a different automatic production release. Integrate the repair through normal review before relying on that pipeline; do not assume this manual release changed branch tracking.
 
 ## Host behaviour
 
@@ -34,7 +37,9 @@ Primary origin: `https://www.speedyvan.uk`. API origin: `https://api.speedyvan.u
 | `speedy-van.co.uk` | One 308 to the same primary path/query | Web project plus middleware |
 | `www.speedy-van.co.uk` | One 308 to the same primary path/query | Web project plus middleware |
 
-Earlier in this session, two apex hosting redirect rules were replaced with production-project attachment, allowing the existing middleware to return the permanent path-preserving redirect. Twenty live checks passed then. This branch does not change hosting or DNS. An HTTP request can still receive an additional platform HTTP-to-HTTPS hop.
+Earlier in this session, two apex hosting redirect rules were replaced with production-project attachment, allowing the existing middleware to return the permanent path-preserving redirect. Twenty live checks passed then. No DNS records were changed during the source release; project root/build settings were corrected as described above. An HTTP request can still receive an additional platform HTTP-to-HTTPS hop.
+
+After the source release, 18 new live host/private-route checks passed: the three HTTPS aliases preserve paths and encoded queries in one 308 hop; API and POST probes bypass that redirect. `/admin` has HTTP noindex; the nonexistent `/driver` root correctly returns 404 with noindex, while actual driver routes remain separate. See [redirect-live-verification-2026-09-21.json](redirect-live-verification-2026-09-21.json).
 
 `/api`, `/api/*` and non-GET/HEAD requests bypass hostname redirection. This preserves API, booking, payment, auth callbacks, webhooks and mobile contracts. Private HTML and `.vercel.app` previews receive HTTP noindex independently. Noindex is not authentication.
 

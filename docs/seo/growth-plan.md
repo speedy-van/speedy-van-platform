@@ -1,19 +1,21 @@
 # Organic growth plan
 
-Evidence date: 21 September 2026. The 30/60/90-day periods begin after the reviewed code is released. Code completion, index eligibility, Google's indexing decisions and commercial results are separate measures.
+Evidence date: 21 September 2026. The 30/60/90-day periods start from the verified coordinated release at **16:13:56 UTC on 21 September 2026**. The subsequent API-only date fix was ready at 16:27:50 UTC. Code completion, index eligibility, Google's indexing decisions and commercial results are separate measures. These are review checkpoints, not automatically scheduled work or ranking deadlines.
 
 Primary origin: `https://www.speedyvan.uk`.
 
-## Baseline
+## Pre-release baseline
 
 | Measure | Recorded evidence | Limit |
 | --- | --- | --- |
-| Priority service indexing | Fresh URL Inspection: man-and-van unknown to Google; house-removal, furniture-delivery and office-removal discovered but not indexed; last crawl `N/A` | These four pages were not indexed. The reports do not establish why Google had not crawled them. |
+| Priority service indexing | Initial URL Inspection: man-and-van unknown to Google; house-removal, furniture-delivery and office-removal discovered but not indexed; last crawl `N/A` | These four pages were not indexed at inspection. The reports do not establish why Google had not crawled them. |
 | Other inspected pages | Earlier inspections found flat-removals, small-moves, long-distance-removals and Glasgow indexed | The site is not wholly unindexed. Recheck after release. |
 | Sitemap | Accepted successfully with 45 discovered pages before this release | Discovery is not indexing. Compare the released sitemap with the new URL inventory. |
 | Index requests | Six requests previously accepted after live tests | Acceptance is not indexing completion. |
 | Search performance | Search Console processing; no reliable query/click/impression/CTR baseline | Missing data is unavailable, not zero. No measured conversion baseline is available. |
 | Google Business Profile | Management access and the correct profile not verified | Do not claim that a profile is absent, incorrect or optimised. |
+
+The [post-release Search Console record](search-console-release-2026-09-21.json) supersedes the man-and-van snapshot: the canonical page is now discovered but not indexed, and Google's live smartphone test fetched it successfully with crawling/indexing allowed. Its indexing request and the updated sitemap resubmission were accepted. The live sitemap has 47 URLs; the earlier processed discovery count still displayed 45. No ranking gain or completed indexing is inferred.
 
 The audit's HYPD Google organic samples used United Kingdom, English and mobile on 21 September 2026:
 
@@ -31,9 +33,9 @@ These were auditor-selected queries, not customer queries observed in Search Con
 
 | Priority / owner | Action | Completion evidence |
 | --- | --- | --- |
-| P0 / Engineering | Review and release the tested branch; repeat `verification.md` live checks | Seven useful, crawlable core pages with correct canonicals; genuine invalid-route 404s; protected private routes; booking links retain service intent and inventory mode. |
+| P0 / Engineering | Release and scoped live checks completed; review normal PR integration and finish outstanding mobile/payment integration checks | 414 live HTTP assertions across 47 pages, 18 host checks, ten API probes and the production browser journey to review passed. PR remains unmerged; production branch tracking remains `main`. See `verification.md` for limits. |
 | P0 / SEO | Inspect seven services, Glasgow, Edinburgh and the homepage after release | Dated indexing states, last crawl and Google-selected canonical recorded. Investigate failed live tests without repeatedly submitting accepted requests. |
-| P0 / Engineering + SEO | Reconcile published robots, sitemap, hubs and canonical inventory | No sitemap redirects, errors, private or preview URLs; record the actual released count. |
+| P0 / Engineering + SEO | Published robots, sitemap, hubs and canonical inventory reconciled; monitor subsequent changes | The 47 released sitemap URLs passed HTTP/canonical checks; private and preview URLs are excluded. |
 | P1 / Analytics | Verify the existing analytics and consent before adding tracking | Separate contact clicks, quote starts and genuine confirmed bookings; check deduplication and reconcile confirmed totals with backend records without exporting personal details. |
 | P1 / SEO | Export the first complete usable Search Console period | Preserve country/device/search-type/date filters and a documented brand filter. Establish a 28-day baseline once reliable data is available. |
 | P1 / Operations + owner | Confirm commercial facts and identify the correct existing Business Profile | Evidence for prices/units, minimum charges, crew, insurance, hours and routes; verified profile identity, phone, website and genuine operating address. |

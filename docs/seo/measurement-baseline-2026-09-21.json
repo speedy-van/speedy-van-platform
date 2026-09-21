@@ -596,5 +596,25 @@
     "reason": "Wait for complete reliable traffic/conversion data and confirmed operating capacity.",
     "guaranteed_ranking": false
   },
-  "measurement_plan": "docs/seo/measurement-plan.md"
+  "measurement_plan": "docs/seo/measurement-plan.md",
+  "release_anchor": {
+    "status": "deployed",
+    "web_deployed_at_utc": "2026-09-21T16:13:56Z",
+    "api_deployed_at_utc": "2026-09-21T16:09:36Z",
+    "web_commit": "10c781c49970b3f44c8ee61e4063cb0175c51d71",
+    "api_commit": "10c781c49970b3f44c8ee61e4063cb0175c51d71",
+    "comparison_anchor_utc": "2026-09-21T16:13:56Z",
+    "source": "deployment-2026-09-21.json",
+    "note": "The pre-deployment snapshot above is retained unchanged; this is the subsequent actual release anchor."
+  },
+  "after_release_observation": "search-console-release-2026-09-21.json",
+  "subsequent_maintenance": [
+    {
+      "application": "api",
+      "commit": "5e5881a27cca0f6a602473c78a25c13369d1afc5",
+      "deployed_at_utc": "2026-09-21T16:27:50Z",
+      "purpose": "London civil-date boundary correction; public landing-page source unchanged",
+      "comparison_anchor_changed": false
+    }
+  ]
 }
