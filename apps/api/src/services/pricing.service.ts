@@ -24,6 +24,19 @@ import { getWeatherSurcharge } from "./weather.service";
 type ConfigCache = { values: Record<string, Record<string, number>>; loadedAt: number };
 const CACHE_TTL_MS = 5 * 60 * 1000;
 let cache: ConfigCache | null = null;
+const londonCalendarDate = new Intl.DateTimeFormat("en-GB", {
+  timeZone: "Europe/London",
+  year: "numeric",
+  month: "2-digit",
+  day: "2-digit",
+});
+
+function currentBookingDate(now: Date): Date {
+  const parts = Object.fromEntries(londonCalendarDate.formatToParts(now).map((part) => [part.type, part.value]));
+  // Represent the London civil date at UTC midnight for date-only arithmetic.
+  // This is not a conversion of the actual London midnight instant.
+  return new Date(Date.UTC(Number(parts.year), Number(parts.month) - 1, Number(parts.day)));
+}
 
 async function loadConfig(): Promise<Record<string, Record<string, number>>> {
   if (cache && Date.now() - cache.loadedAt < CACHE_TTL_MS) return cache.values;
@@ -250,7 +263,7 @@ export async function calculatePrice(input: PricingCalculateInput): Promise<Pric
     ) / 100;
 
   // 14-day x 3-slot price calendar
-  const today = new Date();
+  const today = currentBookingDate(new Date());
   const days: DayPrice[] = [];
   const allPrices: number[] = [];
 

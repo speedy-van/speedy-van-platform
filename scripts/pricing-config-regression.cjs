@@ -163,6 +163,82 @@ test("zero, negative and non-finite slot prices cannot verify a booking amount",
   }
 });
 
+function clockFixture(instant, rows = baseRow(100)) {
+  const fixture = harness(async () => rows);
+  fixture.advance(Date.parse(instant) - fixedTime);
+  return fixture;
+}
+
+function assertCalendarContract(calendar, firstDate) {
+  assert.equal(calendar.days.length, 14);
+  assert.equal(calendar.days[0].date, firstDate);
+  assert.equal(calendar.currency, "GBP");
+  const dates = Array.from(calendar.days, (day) => day.date);
+  assert.equal(new Set(dates).size, 14);
+  for (let index = 0; index < calendar.days.length; index += 1) {
+    const expectedDate = new Date(Date.parse(`${firstDate}T00:00:00Z`) + index * 86400000).toISOString().slice(0, 10);
+    assert.equal(calendar.days[index].date, expectedDate);
+    assert.deepEqual(Array.from(calendar.days[index].slots, (slot) => slot.slot), ["morning", "afternoon", "evening"]);
+  }
+}
+
+test("BST midnight starts on the London date, rejects yesterday and keeps urgency aligned", async () => {
+  const fixture = clockFixture("2026-09-21T23:30:00Z");
+  const calendar = await fixture.service.calculatePrice(input);
+  assertCalendarContract(calendar, "2026-09-22");
+  assert.deepEqual(Array.from(calendar.days.slice(0, 4), (day) => day.slots.find((slot) => slot.slot === "afternoon").price), [140, 120, 110, 100]);
+  await assert.rejects(() => fixture.service.calculatePriceForSlot(input, new Date("2026-09-21"), "morning"), /SELECTED_SLOT_UNAVAILABLE/);
+  assert.equal(await fixture.service.calculatePriceForSlot(input, new Date("2026-09-22"), "afternoon"), 140);
+});
+
+test("calendar rolls over at London midnight even while configuration remains cached", async () => {
+  const fixture = clockFixture("2026-09-21T22:59:00Z");
+  assert.equal((await fixture.service.calculatePrice(input)).days[0].date, "2026-09-21");
+  fixture.advance(2 * 60000);
+  assertCalendarContract(await fixture.service.calculatePrice(input), "2026-09-22");
+  assert.equal(fixture.reads, 1);
+});
+
+test("winter GMT does not apply a permanent one-hour offset", async () => {
+  const fixture = clockFixture("2026-01-15T23:30:00Z");
+  assertCalendarContract(await fixture.service.calculatePrice(input), "2026-01-15");
+  fixture.advance(60 * 60000);
+  assertCalendarContract(await fixture.service.calculatePrice(input), "2026-01-16");
+});
+
+test("London month and year rollovers preserve the existing ISO calendar dates", async () => {
+  for (const [instant, expectedDate] of [
+    ["2026-04-30T23:30:00Z", "2026-05-01"],
+    ["2026-12-31T23:30:00Z", "2026-12-31"],
+    ["2027-01-01T00:30:00Z", "2027-01-01"],
+  ]) {
+    assertCalendarContract(await clockFixture(instant).service.calculatePrice(input), expectedDate);
+  }
+});
+
+test("weekend pricing follows the London civil day across BST midnight", async () => {
+  const fixture = clockFixture("2026-05-01T23:30:00Z");
+  const calendar = await fixture.service.calculatePrice(input);
+  assertCalendarContract(calendar, "2026-05-02");
+  assert.equal(calendar.days[0].slots.find((slot) => slot.slot === "afternoon").price, 161);
+});
+
+test("spring DST transition produces consecutive civil dates before and after the clock change", async () => {
+  for (const [instant, expectedDate] of [
+    ["2026-03-29T00:30:00Z", "2026-03-29"],
+    ["2026-03-29T01:30:00Z", "2026-03-29"],
+    ["2026-03-29T23:30:00Z", "2026-03-30"],
+  ]) {
+    assertCalendarContract(await clockFixture(instant).service.calculatePrice(input), expectedDate);
+  }
+});
+
+test("autumn DST repeated hour and return to GMT preserve a single London civil date", async () => {
+  for (const instant of ["2026-10-24T23:30:00Z", "2026-10-25T00:30:00Z", "2026-10-25T01:30:00Z", "2026-10-25T23:30:00Z"]) {
+    assertCalendarContract(await clockFixture(instant).service.calculatePrice(input), "2026-10-25");
+  }
+});
+
 const { errorHandler } = loadTs("apps/api/src/middleware/error.ts", { "@speedy-van/shared": shared });
 
 test("real pricing route and middleware return 503 fail envelope when configuration is unavailable", async () => {
