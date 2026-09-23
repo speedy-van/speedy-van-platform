@@ -1,0 +1,464 @@
+{
+  "batch": 4,
+  "checkedAt": "2026-09-23",
+  "contentFile": "apps/web/src/lib/content/scotland-towns-4.ts",
+  "counts": {
+    "towns": 32,
+    "adviceSections": 96,
+    "faqs": 64,
+    "councilAreas": 10,
+    "sourceUrls": 19
+  },
+  "scope": "Collections from Scotland; delivery across Britain, with ferry-dependent work individually assessed.",
+  "method": "Official council and transport sources discovered with web search and directly opened where available. System1 authoritative queries were attempted but returned unrelated results; system2 with official-domain filters and explicit-URL opens supplied the usable evidence.",
+  "caveats": [
+    "Source-backed location and access facts support original editorial moving advice, not claims of operational field experience.",
+    "No local job counts, review counts, depot locations, search demand, prices, availability or driver allocations were invented.",
+    "Nearby links indicate geographical navigation, not guaranteed capacity at any time.",
+    "Road projects and ferry services change: exact dates, tariffs and routine travel-time promises are excluded from page copy.",
+    "Balloch is explicitly the Loch Lomond town in West Dunbartonshire, not the locality near Inverness.",
+    "Some descriptions of gates, stairs, driveways and shared paths are conditional property-assessment questions, not claims that every local property has those features."
+  ],
+  "sources": [
+    {
+      "url": "https://www.north-ayrshire.gov.uk/roads-and-parking/parking/car-parks",
+      "retrievalStatus": "direct_read",
+      "checkedAt": "2026-09-23",
+      "supports": "Confirms named Irvine, Kilwinning and Saltcoats car parks, and Largs Seafront vehicle-type and bay-size restrictions. No tariffs or fixed opening hours copied into guides."
+    },
+    {
+      "url": "https://www.calmac.co.uk/route-information/ardrossan-brodick/",
+      "retrievalStatus": "direct_read",
+      "checkedAt": "2026-09-23",
+      "supports": "Confirms the operator publishes diversions and port changes. At retrieval it described a 7 September–8 October 2026 Ardrossan closure with services from Troon. Public guide deliberately uses a live-check instruction rather than embedding dates or promising a ferry connection."
+    },
+    {
+      "url": "https://www.north-ayrshire.gov.uk/documents/temporary-20mph-speed-limit-stevenston",
+      "retrievalStatus": "direct_read",
+      "checkedAt": "2026-09-23",
+      "supports": "Official Stevenston street schedule supports named local streets. Guide instructs following current signs; it does not generalise a temporary order to every street."
+    },
+    {
+      "url": "https://www.ayrshireroadsalliance.org/Parking-Information/Off-Street-Parking/East-Ayrshire-Car-Parks.aspx",
+      "retrievalStatus": "direct_read",
+      "checkedAt": "2026-09-23",
+      "supports": "Names the cited Cumnock, Stewarton and Galston parking locations. Listing is not treated as vehicle access permission or a reserved loading place."
+    },
+    {
+      "url": "https://www.ayrshireroadsalliance.org/Parking-Information/Off-Street-Parking/South-Ayrshire-Car-Parks.aspx",
+      "retrievalStatus": "direct_read",
+      "checkedAt": "2026-09-23",
+      "supports": "Names Troon and Girvan car parks. Guide omits tariffs, space counts and any claim that a large vehicle can load there."
+    },
+    {
+      "url": "https://www.ayrshireroadsalliance.org/Parking-Information/Residents-Parking-Permits/Prestwick-Residents-Parking-Permit.aspx",
+      "retrievalStatus": "direct_read",
+      "checkedAt": "2026-09-23",
+      "supports": "Confirms a resident parking scheme applies to specified Prestwick streets. No automatic entitlement is claimed for a visiting removal vehicle."
+    },
+    {
+      "url": "https://www.eastdunbarton.gov.uk/services/a-z-of-services/roads-pavements-transport/pay-and-display-car-parks/",
+      "retrievalStatus": "direct_read",
+      "checkedAt": "2026-09-23",
+      "supports": "Confirms the named car parks across Bishopbriggs, Kirkintilloch, Bearsden and Milngavie. No parking tariff, availability or goods access permission claimed."
+    },
+    {
+      "url": "https://www.west-dunbarton.gov.uk/roads-parking-travel/parking-and-car-parks/parking",
+      "retrievalStatus": "direct_read",
+      "checkedAt": "2026-09-23",
+      "supports": "Distinguishes council parking from Clydebank Shopping Centre provision. Does not grant use of service yards or vehicle loading."
+    },
+    {
+      "url": "https://www1.renfrewshire.gov.uk/article/14445/Renfrew-Bridge",
+      "retrievalStatus": "official_indexed_extract",
+      "checkedAt": "2026-09-23",
+      "supports": "Official indexed extract identifies an opening road bridge linking Renfrew to Clydebank/Yoker. Direct open returned 403; no live operational status, closure time or vehicle-specific permission was verified.",
+      "retrievalLimit": "Direct open: 403 Forbidden. Operational status not verified."
+    },
+    {
+      "url": "https://www.west-dunbarton.gov.uk/leisure-parks-events/tourism-and-visitor-attractions/tourist-information",
+      "retrievalStatus": "direct_read",
+      "checkedAt": "2026-09-23",
+      "supports": "Supports Dumbarton beside the Leven/Clyde, Alexandria south of Balloch, and Balloch at the southern end of Loch Lomond. Only stable location facts used; tourism opening hours, rankings and historical numerical claims not copied."
+    },
+    {
+      "url": "https://getinvolved.eastrenfrewshire.gov.uk/neighbourhood-streets-2024",
+      "retrievalStatus": "direct_read",
+      "checkedAt": "2026-09-23",
+      "supports": "Names Giffnock Primary and Church Road as access/crossing project locations. Page contains proposals and completed measures; guide makes that distinction explicit and does not claim all works complete."
+    },
+    {
+      "url": "https://getinvolved.eastrenfrewshire.gov.uk/barrheadroadactivecorridor",
+      "retrievalStatus": "direct_read",
+      "checkedAt": "2026-09-23",
+      "supports": "Distinguishes Barrhead Road in Newton Mearns, Aurs Road and Auchenback service-road work in Barrhead. Guide describes a phased programme and requires current access checks; no completion date asserted."
+    },
+    {
+      "url": "https://www.inverclyde.gov.uk/environment/roads-lighting/parking-inverclyde/parking-inverclyde/parking-in-greenock",
+      "retrievalStatus": "direct_read",
+      "checkedAt": "2026-09-23",
+      "supports": "Confirms distinct disc, paid and resident permit arrangements. No pricing or claim of an exemption for a removal van copied."
+    },
+    {
+      "url": "https://www.inverclyde.gov.uk/environment/roads-lighting/parking-inverclyde/parking-inverclyde/parking-in-port-glasgow",
+      "retrievalStatus": "direct_read",
+      "checkedAt": "2026-09-23",
+      "supports": "Confirms separate Fore Street/Shore Street and on-street parking conditions. Guide does not present public parking as loading permission."
+    },
+    {
+      "url": "https://www.inverclyde.gov.uk/environment/roads-lighting/parking-inverclyde/parking-inverclyde/parking-in-gourock",
+      "retrievalStatus": "official_indexed_extract",
+      "checkedAt": "2026-09-23",
+      "supports": "Official indexed extract identifies Station Road North and South beside Gourock station. Direct open timed out with 400; guide uses that location fact only and tells readers to check current conditions.",
+      "retrievalLimit": "Direct open: 400 Timeout fetching. Current detailed restrictions not verified."
+    },
+    {
+      "url": "https://www.renfrewshire.gov.uk/community-and-neighbourhood-issues/community-safety/emergencies-and-severe-weather/gritting-winter-weather",
+      "retrievalStatus": "direct_read",
+      "checkedAt": "2026-09-23",
+      "supports": "Identifies Johnstone town-centre pedestrian areas in winter-service information. Does not establish treatment or safety of a private path on moving day."
+    },
+    {
+      "url": "https://www.renfrewshire.gov.uk/parks-libraries-and-culture/parks-gardens-and-outdoor-spaces/boden-boo-and-erskine-beach",
+      "retrievalStatus": "direct_read",
+      "checkedAt": "2026-09-23",
+      "supports": "Confirms Boden Boo below Erskine Bridge with access from the A726. Used to distinguish a visitor landmark from private household vehicle access."
+    },
+    {
+      "url": "https://www.northlanarkshire.gov.uk/roads-streetlighting-parking-and-flooding/parking/car-parks",
+      "retrievalStatus": "direct_read",
+      "checkedAt": "2026-09-23",
+      "supports": "Confirms Hallcraig Street Airdrie and Summerlee Coatbridge in the listed managed sites and conditions including exclusion of vehicles over 3.5 tonnes, opening times and clear aisles. Not generalised to all parking in either town."
+    },
+    {
+      "url": "https://www.southlanarkshire.gov.uk/parking-car-parks/car-free-school-zones",
+      "retrievalStatus": "direct_read",
+      "checkedAt": "2026-09-23",
+      "supports": "Confirms Burnside Primary in Rutherglen as a car-free school-zone location. Guide directs readers to current signs/maps and does not assume a resident exemption transfers to the removal vehicle."
+    }
+  ],
+  "areas": [
+    {
+      "slug": "irvine",
+      "councilArea": "North Ayrshire",
+      "displayRegion": "West Scotland",
+      "schemaType": "Place",
+      "postcodePrefixes": "Not published: property-level postcode requested from customer.",
+      "sourceUrls": [
+        "https://www.north-ayrshire.gov.uk/roads-and-parking/parking/car-parks"
+      ]
+    },
+    {
+      "slug": "kilwinning",
+      "councilArea": "North Ayrshire",
+      "displayRegion": "West Scotland",
+      "schemaType": "Place",
+      "postcodePrefixes": "Not published: property-level postcode requested from customer.",
+      "sourceUrls": [
+        "https://www.north-ayrshire.gov.uk/roads-and-parking/parking/car-parks"
+      ]
+    },
+    {
+      "slug": "ardrossan",
+      "councilArea": "North Ayrshire",
+      "displayRegion": "West Scotland",
+      "schemaType": "Place",
+      "postcodePrefixes": "Not published: property-level postcode requested from customer.",
+      "sourceUrls": [
+        "https://www.calmac.co.uk/route-information/ardrossan-brodick/"
+      ]
+    },
+    {
+      "slug": "saltcoats",
+      "councilArea": "North Ayrshire",
+      "displayRegion": "West Scotland",
+      "schemaType": "Place",
+      "postcodePrefixes": "Not published: property-level postcode requested from customer.",
+      "sourceUrls": [
+        "https://www.north-ayrshire.gov.uk/roads-and-parking/parking/car-parks"
+      ]
+    },
+    {
+      "slug": "stevenston",
+      "councilArea": "North Ayrshire",
+      "displayRegion": "West Scotland",
+      "schemaType": "Place",
+      "postcodePrefixes": "Not published: property-level postcode requested from customer.",
+      "sourceUrls": [
+        "https://www.north-ayrshire.gov.uk/documents/temporary-20mph-speed-limit-stevenston"
+      ]
+    },
+    {
+      "slug": "largs",
+      "councilArea": "North Ayrshire",
+      "displayRegion": "West Scotland",
+      "schemaType": "Place",
+      "postcodePrefixes": "Not published: property-level postcode requested from customer.",
+      "sourceUrls": [
+        "https://www.north-ayrshire.gov.uk/roads-and-parking/parking/car-parks"
+      ]
+    },
+    {
+      "slug": "cumnock",
+      "councilArea": "East Ayrshire",
+      "displayRegion": "West Scotland",
+      "schemaType": "Place",
+      "postcodePrefixes": "Not published: property-level postcode requested from customer.",
+      "sourceUrls": [
+        "https://www.ayrshireroadsalliance.org/Parking-Information/Off-Street-Parking/East-Ayrshire-Car-Parks.aspx"
+      ]
+    },
+    {
+      "slug": "stewarton",
+      "councilArea": "East Ayrshire",
+      "displayRegion": "West Scotland",
+      "schemaType": "Place",
+      "postcodePrefixes": "Not published: property-level postcode requested from customer.",
+      "sourceUrls": [
+        "https://www.ayrshireroadsalliance.org/Parking-Information/Off-Street-Parking/East-Ayrshire-Car-Parks.aspx"
+      ]
+    },
+    {
+      "slug": "galston",
+      "councilArea": "East Ayrshire",
+      "displayRegion": "West Scotland",
+      "schemaType": "Place",
+      "postcodePrefixes": "Not published: property-level postcode requested from customer.",
+      "sourceUrls": [
+        "https://www.ayrshireroadsalliance.org/Parking-Information/Off-Street-Parking/East-Ayrshire-Car-Parks.aspx"
+      ]
+    },
+    {
+      "slug": "troon",
+      "councilArea": "South Ayrshire",
+      "displayRegion": "West Scotland",
+      "schemaType": "Place",
+      "postcodePrefixes": "Not published: property-level postcode requested from customer.",
+      "sourceUrls": [
+        "https://www.ayrshireroadsalliance.org/Parking-Information/Off-Street-Parking/South-Ayrshire-Car-Parks.aspx",
+        "https://www.calmac.co.uk/route-information/ardrossan-brodick/"
+      ]
+    },
+    {
+      "slug": "prestwick",
+      "councilArea": "South Ayrshire",
+      "displayRegion": "West Scotland",
+      "schemaType": "Place",
+      "postcodePrefixes": "Not published: property-level postcode requested from customer.",
+      "sourceUrls": [
+        "https://www.ayrshireroadsalliance.org/Parking-Information/Residents-Parking-Permits/Prestwick-Residents-Parking-Permit.aspx"
+      ]
+    },
+    {
+      "slug": "girvan",
+      "councilArea": "South Ayrshire",
+      "displayRegion": "West Scotland",
+      "schemaType": "Place",
+      "postcodePrefixes": "Not published: property-level postcode requested from customer.",
+      "sourceUrls": [
+        "https://www.ayrshireroadsalliance.org/Parking-Information/Off-Street-Parking/South-Ayrshire-Car-Parks.aspx"
+      ]
+    },
+    {
+      "slug": "bishopbriggs",
+      "councilArea": "East Dunbartonshire",
+      "displayRegion": "Greater Glasgow",
+      "schemaType": "Place",
+      "postcodePrefixes": "Not published: property-level postcode requested from customer.",
+      "sourceUrls": [
+        "https://www.eastdunbarton.gov.uk/services/a-z-of-services/roads-pavements-transport/pay-and-display-car-parks/"
+      ]
+    },
+    {
+      "slug": "kirkintilloch",
+      "councilArea": "East Dunbartonshire",
+      "displayRegion": "Greater Glasgow",
+      "schemaType": "Place",
+      "postcodePrefixes": "Not published: property-level postcode requested from customer.",
+      "sourceUrls": [
+        "https://www.eastdunbarton.gov.uk/services/a-z-of-services/roads-pavements-transport/pay-and-display-car-parks/"
+      ]
+    },
+    {
+      "slug": "bearsden",
+      "councilArea": "East Dunbartonshire",
+      "displayRegion": "Greater Glasgow",
+      "schemaType": "Place",
+      "postcodePrefixes": "Not published: property-level postcode requested from customer.",
+      "sourceUrls": [
+        "https://www.eastdunbarton.gov.uk/services/a-z-of-services/roads-pavements-transport/pay-and-display-car-parks/"
+      ]
+    },
+    {
+      "slug": "milngavie",
+      "councilArea": "East Dunbartonshire",
+      "displayRegion": "Greater Glasgow",
+      "schemaType": "Place",
+      "postcodePrefixes": "Not published: property-level postcode requested from customer.",
+      "sourceUrls": [
+        "https://www.eastdunbarton.gov.uk/services/a-z-of-services/roads-pavements-transport/pay-and-display-car-parks/"
+      ]
+    },
+    {
+      "slug": "clydebank",
+      "councilArea": "West Dunbartonshire",
+      "displayRegion": "Greater Glasgow",
+      "schemaType": "Place",
+      "postcodePrefixes": "Not published: property-level postcode requested from customer.",
+      "sourceUrls": [
+        "https://www.west-dunbarton.gov.uk/roads-parking-travel/parking-and-car-parks/parking",
+        "https://www1.renfrewshire.gov.uk/article/14445/Renfrew-Bridge"
+      ]
+    },
+    {
+      "slug": "dumbarton",
+      "councilArea": "West Dunbartonshire",
+      "displayRegion": "Greater Glasgow",
+      "schemaType": "Place",
+      "postcodePrefixes": "Not published: property-level postcode requested from customer.",
+      "sourceUrls": [
+        "https://www.west-dunbarton.gov.uk/leisure-parks-events/tourism-and-visitor-attractions/tourist-information"
+      ]
+    },
+    {
+      "slug": "alexandria",
+      "councilArea": "West Dunbartonshire",
+      "displayRegion": "Greater Glasgow",
+      "schemaType": "Place",
+      "postcodePrefixes": "Not published: property-level postcode requested from customer.",
+      "sourceUrls": [
+        "https://www.west-dunbarton.gov.uk/leisure-parks-events/tourism-and-visitor-attractions/tourist-information"
+      ]
+    },
+    {
+      "slug": "balloch",
+      "councilArea": "West Dunbartonshire",
+      "displayRegion": "Greater Glasgow",
+      "schemaType": "Place",
+      "postcodePrefixes": "Not published: property-level postcode requested from customer.",
+      "sourceUrls": [
+        "https://www.west-dunbarton.gov.uk/leisure-parks-events/tourism-and-visitor-attractions/tourist-information"
+      ]
+    },
+    {
+      "slug": "giffnock",
+      "councilArea": "East Renfrewshire",
+      "displayRegion": "Greater Glasgow",
+      "schemaType": "Place",
+      "postcodePrefixes": "Not published: property-level postcode requested from customer.",
+      "sourceUrls": [
+        "https://getinvolved.eastrenfrewshire.gov.uk/neighbourhood-streets-2024"
+      ]
+    },
+    {
+      "slug": "newton-mearns",
+      "councilArea": "East Renfrewshire",
+      "displayRegion": "Greater Glasgow",
+      "schemaType": "Place",
+      "postcodePrefixes": "Not published: property-level postcode requested from customer.",
+      "sourceUrls": [
+        "https://getinvolved.eastrenfrewshire.gov.uk/barrheadroadactivecorridor"
+      ]
+    },
+    {
+      "slug": "barrhead",
+      "councilArea": "East Renfrewshire",
+      "displayRegion": "Greater Glasgow",
+      "schemaType": "Place",
+      "postcodePrefixes": "Not published: property-level postcode requested from customer.",
+      "sourceUrls": [
+        "https://getinvolved.eastrenfrewshire.gov.uk/barrheadroadactivecorridor"
+      ]
+    },
+    {
+      "slug": "greenock",
+      "councilArea": "Inverclyde",
+      "displayRegion": "Greater Glasgow",
+      "schemaType": "Place",
+      "postcodePrefixes": "Not published: property-level postcode requested from customer.",
+      "sourceUrls": [
+        "https://www.inverclyde.gov.uk/environment/roads-lighting/parking-inverclyde/parking-inverclyde/parking-in-greenock"
+      ]
+    },
+    {
+      "slug": "port-glasgow",
+      "councilArea": "Inverclyde",
+      "displayRegion": "Greater Glasgow",
+      "schemaType": "Place",
+      "postcodePrefixes": "Not published: property-level postcode requested from customer.",
+      "sourceUrls": [
+        "https://www.inverclyde.gov.uk/environment/roads-lighting/parking-inverclyde/parking-inverclyde/parking-in-port-glasgow"
+      ]
+    },
+    {
+      "slug": "gourock",
+      "councilArea": "Inverclyde",
+      "displayRegion": "Greater Glasgow",
+      "schemaType": "Place",
+      "postcodePrefixes": "Not published: property-level postcode requested from customer.",
+      "sourceUrls": [
+        "https://www.inverclyde.gov.uk/environment/roads-lighting/parking-inverclyde/parking-inverclyde/parking-in-gourock"
+      ]
+    },
+    {
+      "slug": "renfrew",
+      "councilArea": "Renfrewshire",
+      "displayRegion": "Greater Glasgow",
+      "schemaType": "Place",
+      "postcodePrefixes": "Not published: property-level postcode requested from customer.",
+      "sourceUrls": [
+        "https://www1.renfrewshire.gov.uk/article/14445/Renfrew-Bridge"
+      ]
+    },
+    {
+      "slug": "johnstone",
+      "councilArea": "Renfrewshire",
+      "displayRegion": "Greater Glasgow",
+      "schemaType": "Place",
+      "postcodePrefixes": "Not published: property-level postcode requested from customer.",
+      "sourceUrls": [
+        "https://www.renfrewshire.gov.uk/community-and-neighbourhood-issues/community-safety/emergencies-and-severe-weather/gritting-winter-weather"
+      ]
+    },
+    {
+      "slug": "erskine",
+      "councilArea": "Renfrewshire",
+      "displayRegion": "Greater Glasgow",
+      "schemaType": "Place",
+      "postcodePrefixes": "Not published: property-level postcode requested from customer.",
+      "sourceUrls": [
+        "https://www.renfrewshire.gov.uk/parks-libraries-and-culture/parks-gardens-and-outdoor-spaces/boden-boo-and-erskine-beach"
+      ]
+    },
+    {
+      "slug": "airdrie",
+      "councilArea": "North Lanarkshire",
+      "displayRegion": "Central Scotland",
+      "schemaType": "Place",
+      "postcodePrefixes": "Not published: property-level postcode requested from customer.",
+      "sourceUrls": [
+        "https://www.northlanarkshire.gov.uk/roads-streetlighting-parking-and-flooding/parking/car-parks"
+      ]
+    },
+    {
+      "slug": "coatbridge",
+      "councilArea": "North Lanarkshire",
+      "displayRegion": "Central Scotland",
+      "schemaType": "Place",
+      "postcodePrefixes": "Not published: property-level postcode requested from customer.",
+      "sourceUrls": [
+        "https://www.northlanarkshire.gov.uk/roads-streetlighting-parking-and-flooding/parking/car-parks"
+      ]
+    },
+    {
+      "slug": "rutherglen",
+      "councilArea": "South Lanarkshire",
+      "displayRegion": "Central Scotland",
+      "schemaType": "Place",
+      "postcodePrefixes": "Not published: property-level postcode requested from customer.",
+      "sourceUrls": [
+        "https://www.southlanarkshire.gov.uk/parking-car-parks/car-free-school-zones"
+      ]
+    }
+  ]
+}

@@ -143,11 +143,15 @@ const web = path.join(root, "apps/web/src");
 const sitemap = load(path.join(web, "app/sitemap.ts")).default();
 const { AREAS } = load(path.join(web, "lib/areas.ts"));
 const { SERVICES } = load(path.join(web, "lib/services.ts"));
+const { LOCAL_SERVICE_PAGES } = load(path.join(web, "lib/content/city-service-pages.ts"));
+const { MOVING_ROUTE_PAGES } = load(path.join(web, "lib/content/moving-route-pages.ts"));
 const { getNearbyAreaGroups } = load(path.join(web, "lib/nearby-area-guides.ts"));
 process.stdout.write(JSON.stringify({
   urls: sitemap.map((entry) => entry.url),
   area_paths: AREAS.map((area) => `/areas/${area.slug}`),
   service_paths: SERVICES.filter((service) => service.indexable !== false).map((service) => `/services/${service.slug}`),
+  local_services: LOCAL_SERVICE_PAGES.map((page) => ({ path: `/areas/${page.areaSlug}/${page.serviceSlug}`, area: `/areas/${page.areaSlug}`, service: `/services/${page.serviceSlug}` })),
+  routes: MOVING_ROUTE_PAGES.map((page) => ({ path: `/moving-routes/${page.slug}`, origin: `/areas/${page.originSlug}` })),
   nearby_places: Object.fromEntries(["inverness", "aberdeen"].map((slug) => [slug, getNearbyAreaGroups(slug).flatMap((group) => group.places)])),
   place_areas: AREAS.filter((area) => area.schemaType === "Place").map((area) => ({ slug: area.slug, name: area.name })),
 }));
@@ -241,7 +245,7 @@ def main():
         check(f"{path}: crawlable booking action", any(link.startswith("/book?") for link in page.links))
         service_nodes = [node for schema in page.schemas for node in schema_nodes(schema) if node.get("@type") == "Service"]
         check(f"{path}: canonical Service entity", any(node.get("@id") == PRIMARY + path + "#service" for node in service_nodes))
-    area_paths = [path for path in pages if path.startswith("/areas/")]
+    area_paths = [path for path in pages if path.startswith("/areas/") and path.count("/") == 2]
     check("Every configured area is in the sitemap and linked from the area hub", set(area_paths) == set(expected["area_paths"]) and all(path in area_hub.links for path in expected["area_paths"]))
     check("Every configured indexable service is in the sitemap and linked from the service hub", all(path in pages and path in service_hub.links for path in expected["service_paths"]))
     hourly_nodes = [node for schema in pages.get("/services/man-and-van", empty_page).schemas for node in schema_nodes(schema)]
@@ -282,13 +286,28 @@ def main():
         nodes = [node for schema in page.schemas for node in schema_nodes(schema)]
         check(f"{path}: town service uses its actual Place identity", any(node.get("@type") == "Service" and node.get("@id") == PRIMARY + path + "#service" and node.get("areaServed") == {"@type": "Place", "name": area["name"]} for node in nodes))
         check(f"{path}: town quote actions preserve draft entry", "/book" in page.main_links and not any(link.startswith("/book?") for link in page.main_links))
-        check(f"{path}: contextual link returns to a city hub", any(f"/areas/{city}" in page.main_links for city in ["inverness", "aberdeen"]))
+        if area["slug"] in {"inverurie", "westhill", "stonehaven", "ellon", "nairn", "dingwall"}:
+            check(f"{path}: contextual link returns to a city hub", any(f"/areas/{city}" in page.main_links for city in ["inverness", "aberdeen"]))
+        else:
+            check(f"{path}: contextual link returns to the area directory", "/areas" in page.main_links)
+
+    for entry in expected["local_services"] + expected["routes"]:
+        path = entry["path"]
+        page = pages.get(path, empty_page)
+        parent_paths = [entry["area"], entry["service"]] if "area" in entry else [entry["origin"], "/moving-routes"]
+        check(f"{path}: discoverable from its parent guides", all(path in pages.get(parent, empty_page).main_links for parent in parent_paths))
+        check(f"{path}: links back to parent guides", all(parent in page.main_links for parent in parent_paths))
+        check(f"{path}: quote navigation preserves draft entry", "/book" in page.main_links and not any(link.startswith("/book?") for link in page.main_links))
+        section_links = [link[1:] for link in page.main_links if link.startswith("#")]
+        check(f"{path}: section links reach unique IDs", bool(section_links) and all(page.ids.count(target) == 1 for target in section_links))
+        nodes = [node for schema in page.schemas for node in schema_nodes(schema)]
+        check(f"{path}: canonical Service identity", any(node.get("@type") == "Service" and node.get("@id") == PRIMARY + path + "#service" for node in nodes))
 
     for slug in ["man-and-van", "house-removal", "furniture-delivery", "office-removal", "long-distance-removals", "same-day-delivery"]:
         page = pages.get(f"/services/{slug}", empty_page)
         check(f"{slug}: search and sharing titles remain aligned", bool(page.title) and page.meta.get("og:title") == [page.title] and page.meta.get("twitter:title") == [page.title])
 
-    for path in ["/services/qa-invalid-service", "/areas/qa-invalid-area", "/guides/qa-invalid-guide", "/qa-not-a-page"]:
+    for path in ["/services/qa-invalid-service", "/areas/qa-invalid-area", "/guides/qa-invalid-guide", "/areas/glasgow/qa-invalid-service", "/areas/peterhead/house-removal", "/areas/qa-invalid-area/house-removal", "/moving-routes/london-to-glasgow", "/moving-routes/qa-invalid-route", "/qa-not-a-page"]:
         status, _, body = fetch(path)
         page = Page(body)
         check(f"{path}: real 404 with noindex", status == 404 and "noindex" in ",".join(page.meta.get("robots", [])))

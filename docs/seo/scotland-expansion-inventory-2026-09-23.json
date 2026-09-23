@@ -1,0 +1,2068 @@
+{
+  "requestedTotal": 3500,
+  "implementedTotal": 250,
+  "remainingToResearchAndReview": 3250,
+  "milestones": [
+    250,
+    1000,
+    3500
+  ],
+  "scope": "Collections in Scotland; destinations throughout Britain. Named pages are planning guides, not a real-time availability claim.",
+  "evidenceLimits": "No measured search demand, Google indexing, local driver allocation, completed jobs or reviews are inferred from this inventory.",
+  "counts": {
+    "areas": 160,
+    "localServices": 48,
+    "routes": 19
+  },
+  "pages": [
+    {
+      "path": "/",
+      "canonical": "https://www.speedyvan.uk",
+      "kind": "existing",
+      "sources": []
+    },
+    {
+      "path": "/services",
+      "canonical": "https://www.speedyvan.uk/services",
+      "kind": "existing",
+      "sources": []
+    },
+    {
+      "path": "/areas",
+      "canonical": "https://www.speedyvan.uk/areas",
+      "kind": "existing",
+      "sources": []
+    },
+    {
+      "path": "/moving-routes",
+      "canonical": "https://www.speedyvan.uk/moving-routes",
+      "kind": "route-hub",
+      "sources": []
+    },
+    {
+      "path": "/pricing",
+      "canonical": "https://www.speedyvan.uk/pricing",
+      "kind": "existing",
+      "sources": []
+    },
+    {
+      "path": "/guides",
+      "canonical": "https://www.speedyvan.uk/guides",
+      "kind": "existing",
+      "sources": []
+    },
+    {
+      "path": "/guides/man-and-van-or-house-removals",
+      "canonical": "https://www.speedyvan.uk/guides/man-and-van-or-house-removals",
+      "kind": "existing",
+      "sources": []
+    },
+    {
+      "path": "/privacy",
+      "canonical": "https://www.speedyvan.uk/privacy",
+      "kind": "existing",
+      "sources": []
+    },
+    {
+      "path": "/terms",
+      "canonical": "https://www.speedyvan.uk/terms",
+      "kind": "existing",
+      "sources": []
+    },
+    {
+      "path": "/cookies",
+      "canonical": "https://www.speedyvan.uk/cookies",
+      "kind": "existing",
+      "sources": []
+    },
+    {
+      "path": "/areas/glasgow",
+      "canonical": "https://www.speedyvan.uk/areas/glasgow",
+      "kind": "area",
+      "sources": []
+    },
+    {
+      "path": "/areas/glasgow-west-end",
+      "canonical": "https://www.speedyvan.uk/areas/glasgow-west-end",
+      "kind": "area",
+      "sources": [
+        "https://onlineservices.glasgow.gov.uk/CouncillorsandCommittees/viewSelectedDocument.asp?c=P62AFQDNNT0GT10GNT"
+      ]
+    },
+    {
+      "path": "/areas/glasgow-southside",
+      "canonical": "https://www.speedyvan.uk/areas/glasgow-southside",
+      "kind": "area",
+      "sources": [
+        "https://onlineservices.glasgow.gov.uk/CouncillorsandCommittees/viewSelectedDocument.asp?c=P62AFQDNNT0GT10GNT"
+      ]
+    },
+    {
+      "path": "/areas/paisley",
+      "canonical": "https://www.speedyvan.uk/areas/paisley",
+      "kind": "area",
+      "sources": [
+        "https://www.renfrewshire.gov.uk/parking-roads-and-transport/parking"
+      ]
+    },
+    {
+      "path": "/areas/edinburgh",
+      "canonical": "https://www.speedyvan.uk/areas/edinburgh",
+      "kind": "area",
+      "sources": [
+        "https://www.edinburgh.gov.uk/parking-spaces/dispensations-suspensions"
+      ]
+    },
+    {
+      "path": "/areas/edinburgh-leith",
+      "canonical": "https://www.speedyvan.uk/areas/edinburgh-leith",
+      "kind": "area",
+      "sources": [
+        "https://www.edinburgh.gov.uk/parking-spaces/dispensations-suspensions"
+      ]
+    },
+    {
+      "path": "/areas/edinburgh-south",
+      "canonical": "https://www.speedyvan.uk/areas/edinburgh-south",
+      "kind": "area",
+      "sources": [
+        "https://www.edinburgh.gov.uk/parking-spaces/dispensations-suspensions"
+      ]
+    },
+    {
+      "path": "/areas/livingston",
+      "canonical": "https://www.speedyvan.uk/areas/livingston",
+      "kind": "area",
+      "sources": [
+        "https://www.westlothian.gov.uk/article/32704/Current-Road-Closures-Diversions-and-Traffic-Disruptions"
+      ]
+    },
+    {
+      "path": "/areas/dundee",
+      "canonical": "https://www.speedyvan.uk/areas/dundee",
+      "kind": "area",
+      "sources": [
+        "https://www.dundeecity.gov.uk/parking-information/parking-dispensation"
+      ]
+    },
+    {
+      "path": "/areas/perth",
+      "canonical": "https://www.speedyvan.uk/areas/perth",
+      "kind": "area",
+      "sources": [
+        "https://www.traffic.gov.scot/traffic-information/roadworks"
+      ]
+    },
+    {
+      "path": "/areas/kirkcaldy",
+      "canonical": "https://www.speedyvan.uk/areas/kirkcaldy",
+      "kind": "area",
+      "sources": [
+        "https://www.fife.gov.uk/roads-travel-parking/parking-and-car-parks/residents-parking-permits",
+        "https://www.fife.gov.uk/roads-travel-parking/parking-and-car-parks/parking-dispensations-and-parking-suspensions"
+      ]
+    },
+    {
+      "path": "/areas/dunfermline",
+      "canonical": "https://www.speedyvan.uk/areas/dunfermline",
+      "kind": "area",
+      "sources": [
+        "https://www.theforthbridges.org/plan-your-journey/forth-bridges-live-traffic-information/",
+        "https://www.fife.gov.uk/roads-travel-parking/parking-and-car-parks/residents-parking-permits"
+      ]
+    },
+    {
+      "path": "/areas/st-andrews",
+      "canonical": "https://www.speedyvan.uk/areas/st-andrews",
+      "kind": "area",
+      "sources": [
+        "https://www.st-andrews.ac.uk/guides/arrive-student-accommodation/",
+        "https://www.fife.gov.uk/roads-travel-parking/parking-and-car-parks/parking-dispensations-and-parking-suspensions"
+      ]
+    },
+    {
+      "path": "/areas/aberdeen",
+      "canonical": "https://www.speedyvan.uk/areas/aberdeen",
+      "kind": "area",
+      "sources": []
+    },
+    {
+      "path": "/areas/inverurie",
+      "canonical": "https://www.speedyvan.uk/areas/inverurie",
+      "kind": "area",
+      "sources": [
+        "https://www.aberdeenshire.gov.uk/roads-and-travel/car-parking/inverurie"
+      ]
+    },
+    {
+      "path": "/areas/westhill",
+      "canonical": "https://www.speedyvan.uk/areas/westhill",
+      "kind": "area",
+      "sources": [
+        "https://www.aberdeenshire.gov.uk/environment/natural-heritage/local-nature-reserves"
+      ]
+    },
+    {
+      "path": "/areas/stonehaven",
+      "canonical": "https://www.speedyvan.uk/areas/stonehaven",
+      "kind": "area",
+      "sources": [
+        "https://www.aberdeenshire.gov.uk/roads-and-travel/car-parking/stonehaven"
+      ]
+    },
+    {
+      "path": "/areas/ellon",
+      "canonical": "https://www.speedyvan.uk/areas/ellon",
+      "kind": "area",
+      "sources": [
+        "https://www.aberdeenshire.gov.uk/roads-and-travel/car-parking/ellon"
+      ]
+    },
+    {
+      "path": "/areas/inverness",
+      "canonical": "https://www.speedyvan.uk/areas/inverness",
+      "kind": "area",
+      "sources": []
+    },
+    {
+      "path": "/areas/nairn",
+      "canonical": "https://www.speedyvan.uk/areas/nairn",
+      "kind": "area",
+      "sources": [
+        "https://www.highland.gov.uk/parking"
+      ]
+    },
+    {
+      "path": "/areas/dingwall",
+      "canonical": "https://www.speedyvan.uk/areas/dingwall",
+      "kind": "area",
+      "sources": [
+        "https://www.highland.gov.uk/directory-record/11205/office-3-mayfield-dingwall"
+      ]
+    },
+    {
+      "path": "/areas/fort-william",
+      "canonical": "https://www.speedyvan.uk/areas/fort-william",
+      "kind": "area",
+      "sources": [
+        "https://www.highland.gov.uk/news/article/17266/fort-william-high-street-automatic-bollards-begin-operation",
+        "https://www.traffic.gov.scot/traffic-information/roadworks"
+      ]
+    },
+    {
+      "path": "/areas/stirling",
+      "canonical": "https://www.speedyvan.uk/areas/stirling",
+      "kind": "area",
+      "sources": [
+        "https://www.stirling.gov.uk/roads-transport-and-parking/parking-and-permits/apply-for-a-residents-parking-permit/"
+      ]
+    },
+    {
+      "path": "/areas/falkirk",
+      "canonical": "https://www.speedyvan.uk/areas/falkirk",
+      "kind": "area",
+      "sources": [
+        "https://www.falkirk.gov.uk/streets-and-parking/parking-tickets-and-enforcement",
+        "https://www.falkirk.gov.uk/streets-and-parking/car-parks"
+      ]
+    },
+    {
+      "path": "/areas/hamilton",
+      "canonical": "https://www.speedyvan.uk/areas/hamilton",
+      "kind": "area",
+      "sources": [
+        "https://www.southlanarkshire.gov.uk/parking-car-parks/parking-zone-permit-application-renewals/16"
+      ]
+    },
+    {
+      "path": "/areas/east-kilbride",
+      "canonical": "https://www.speedyvan.uk/areas/east-kilbride",
+      "kind": "area",
+      "sources": [
+        "https://www.southlanarkshire.gov.uk/parking-car-parks/parking-zone-permit-application-renewals/4"
+      ]
+    },
+    {
+      "path": "/areas/motherwell",
+      "canonical": "https://www.speedyvan.uk/areas/motherwell",
+      "kind": "area",
+      "sources": [
+        "https://www.northlanarkshire.gov.uk/roads-parking-and-active-travel/parking/parking-enforcement"
+      ]
+    },
+    {
+      "path": "/areas/ayr",
+      "canonical": "https://www.speedyvan.uk/areas/ayr",
+      "kind": "area",
+      "sources": [
+        "https://www.ayrshireroadsalliance.org/Parking-Information/Business-Parking-Permits/Loading-and-Access-Permit.aspx"
+      ]
+    },
+    {
+      "path": "/areas/kilmarnock",
+      "canonical": "https://www.speedyvan.uk/areas/kilmarnock",
+      "kind": "area",
+      "sources": [
+        "https://www.ayrshireroadsalliance.org/Parking-Information/Parking-Information.aspx",
+        "https://www.east-ayrshire.gov.uk/BusinessAndTrade/TownCentreManagement/Kilmarnock-Town-Centre-Mythbuster.aspx"
+      ]
+    },
+    {
+      "path": "/areas/oban",
+      "canonical": "https://www.speedyvan.uk/areas/oban",
+      "kind": "area",
+      "sources": [
+        "https://www.argyll-bute.gov.uk/roads-and-travel/car-parks-and-parking/car-parks-oban-lorn-and-isles"
+      ]
+    },
+    {
+      "path": "/areas/dumfries",
+      "canonical": "https://www.speedyvan.uk/areas/dumfries",
+      "kind": "area",
+      "sources": [
+        "https://www.dumfriesandgalloway.gov.uk/whitesands-project-updates",
+        "https://www.dumfriesandgalloway.gov.uk/roads-transport-parking/parking/visitor-parking-dumfries-langholm-stranraer"
+      ]
+    },
+    {
+      "path": "/areas/galashiels",
+      "canonical": "https://www.speedyvan.uk/areas/galashiels",
+      "kind": "area",
+      "sources": [
+        "https://www.scotborders.gov.uk/parking/parking-permits/3"
+      ]
+    },
+    {
+      "path": "/areas/alness",
+      "canonical": "https://www.speedyvan.uk/areas/alness",
+      "kind": "area",
+      "sources": [
+        "https://www.highland.gov.uk/download/downloads/id/24974/alness_and_invergordon_active_travel_masterplan_issue.pdf"
+      ]
+    },
+    {
+      "path": "/areas/invergordon",
+      "canonical": "https://www.speedyvan.uk/areas/invergordon",
+      "kind": "area",
+      "sources": [
+        "https://www.highland.gov.uk/download/downloads/id/24974/alness_and_invergordon_active_travel_masterplan_issue.pdf"
+      ]
+    },
+    {
+      "path": "/areas/tain",
+      "canonical": "https://www.speedyvan.uk/areas/tain",
+      "kind": "area",
+      "sources": [
+        "https://www.highland.gov.uk/download/meetings/id/66948/item_4_-_tain_town_centre_action_plan"
+      ]
+    },
+    {
+      "path": "/areas/aviemore",
+      "canonical": "https://www.speedyvan.uk/areas/aviemore",
+      "kind": "area",
+      "sources": [
+        "https://cairngorms.co.uk/taking-part/consultations/active-communities-consultation/improving-how-we-travel-in-aviemore"
+      ]
+    },
+    {
+      "path": "/areas/wick",
+      "canonical": "https://www.speedyvan.uk/areas/wick",
+      "kind": "area",
+      "sources": [
+        "https://www.highland.gov.uk/news/article/17267/wick-town-centre-streetscape-progresses-with-phased-opening-planned"
+      ]
+    },
+    {
+      "path": "/areas/thurso",
+      "canonical": "https://www.speedyvan.uk/areas/thurso",
+      "kind": "area",
+      "sources": [
+        "https://www.highland.gov.uk/news/article/15137/highland-new-town-centre-health-checks-published",
+        "https://www.northlinkferries.co.uk/book/routes-times-and-prices/timetables/"
+      ]
+    },
+    {
+      "path": "/areas/ullapool",
+      "canonical": "https://www.speedyvan.uk/areas/ullapool",
+      "kind": "area",
+      "sources": [
+        "https://www.calmac.co.uk/ports/ullapool-port/",
+        "https://www.calmac.co.uk/timetables"
+      ]
+    },
+    {
+      "path": "/areas/mallaig",
+      "canonical": "https://www.speedyvan.uk/areas/mallaig",
+      "kind": "area",
+      "sources": [
+        "https://www.calmac.co.uk/ports/mallaig-port/",
+        "https://www.calmac.co.uk/en-gb/faqs/before-you-travel/what-are-the-sat-nav-codes-or-directions-for-your-ports/"
+      ]
+    },
+    {
+      "path": "/areas/portree",
+      "canonical": "https://www.speedyvan.uk/areas/portree",
+      "kind": "area",
+      "sources": [
+        "https://www.calmac.co.uk/en-gb/faqs/before-you-travel/what-are-the-sat-nav-codes-or-directions-for-your-ports/"
+      ]
+    },
+    {
+      "path": "/areas/elgin",
+      "canonical": "https://www.speedyvan.uk/areas/elgin",
+      "kind": "area",
+      "sources": [
+        "https://www.moray.gov.uk/roads-and-transport/parking-and-car-parks/pay-and-display-charges-and-locations/"
+      ]
+    },
+    {
+      "path": "/areas/forres",
+      "canonical": "https://www.speedyvan.uk/areas/forres",
+      "kind": "area",
+      "sources": [
+        "https://www.moray.gov.uk/roads-and-transport/parking-and-car-parks/free-parking/"
+      ]
+    },
+    {
+      "path": "/areas/buckie",
+      "canonical": "https://www.speedyvan.uk/areas/buckie",
+      "kind": "area",
+      "sources": [
+        "https://www.moray.gov.uk/roads-and-transport/parking-and-car-parks/free-parking/"
+      ]
+    },
+    {
+      "path": "/areas/lossiemouth",
+      "canonical": "https://www.speedyvan.uk/areas/lossiemouth",
+      "kind": "area",
+      "sources": [
+        "https://www.moray.gov.uk/roads-and-transport/parking-and-car-parks/free-parking/"
+      ]
+    },
+    {
+      "path": "/areas/keith",
+      "canonical": "https://www.speedyvan.uk/areas/keith",
+      "kind": "area",
+      "sources": [
+        "https://www.moray.gov.uk/roads-and-transport/parking-and-car-parks/free-parking/"
+      ]
+    },
+    {
+      "path": "/areas/peterhead",
+      "canonical": "https://www.speedyvan.uk/areas/peterhead",
+      "kind": "area",
+      "sources": [
+        "https://www.aberdeenshire.gov.uk/roads-and-travel/public-transport/planning-your-journey-in-aberdeenshire-and-beyond"
+      ]
+    },
+    {
+      "path": "/areas/fraserburgh",
+      "canonical": "https://www.speedyvan.uk/areas/fraserburgh",
+      "kind": "area",
+      "sources": [
+        "https://www.aberdeenshire.gov.uk/roads-and-travel/public-transport/planning-your-journey-in-aberdeenshire-and-beyond"
+      ]
+    },
+    {
+      "path": "/areas/banchory",
+      "canonical": "https://www.speedyvan.uk/areas/banchory",
+      "kind": "area",
+      "sources": [
+        "https://www.aberdeenshire.gov.uk/roads-and-travel/roads/maintenance/bridges/bridge-restriction/",
+        "https://www.aberdeenshire.gov.uk/roads-and-travel/public-transport/planning-your-journey-in-aberdeenshire-and-beyond"
+      ]
+    },
+    {
+      "path": "/areas/huntly",
+      "canonical": "https://www.speedyvan.uk/areas/huntly",
+      "kind": "area",
+      "sources": [
+        "https://www.aberdeenshire.gov.uk/roads-and-travel/roads/maintenance/bridges/bridge-restriction/",
+        "https://www.aberdeenshire.gov.uk/roads-and-travel/public-transport/planning-your-journey-in-aberdeenshire-and-beyond"
+      ]
+    },
+    {
+      "path": "/areas/banff",
+      "canonical": "https://www.speedyvan.uk/areas/banff",
+      "kind": "area",
+      "sources": [
+        "https://www.aberdeenshire.gov.uk/news/2026/jun/critical-banff-bridge-scour-protection-works-completed",
+        "https://www.aberdeenshire.gov.uk/roads-and-travel/public-transport/planning-your-journey-in-aberdeenshire-and-beyond"
+      ]
+    },
+    {
+      "path": "/areas/turriff",
+      "canonical": "https://www.speedyvan.uk/areas/turriff",
+      "kind": "area",
+      "sources": [
+        "https://www.aberdeenshire.gov.uk/roads-and-travel/public-transport/planning-your-journey-in-aberdeenshire-and-beyond"
+      ]
+    },
+    {
+      "path": "/areas/kirkwall",
+      "canonical": "https://www.speedyvan.uk/areas/kirkwall",
+      "kind": "area",
+      "sources": [
+        "https://www.northlinkferries.co.uk/port/hatston/",
+        "https://www.northlinkferries.co.uk/booking/"
+      ]
+    },
+    {
+      "path": "/areas/stromness",
+      "canonical": "https://www.speedyvan.uk/areas/stromness",
+      "kind": "area",
+      "sources": [
+        "https://www.northlinkferries.co.uk/book/routes-times-and-prices/timetables/"
+      ]
+    },
+    {
+      "path": "/areas/lerwick",
+      "canonical": "https://www.speedyvan.uk/areas/lerwick",
+      "kind": "area",
+      "sources": [
+        "https://www.northlinkferries.co.uk/port/lerwick/",
+        "https://www.northlinkferries.co.uk/booking/"
+      ]
+    },
+    {
+      "path": "/areas/scalloway",
+      "canonical": "https://www.speedyvan.uk/areas/scalloway",
+      "kind": "area",
+      "sources": [
+        "https://www.shetland.gov.uk/downloads/file/1589/scalloway-conservation-area-character-appraisal",
+        "https://www.northlinkferries.co.uk/port/lerwick/"
+      ]
+    },
+    {
+      "path": "/areas/stornoway",
+      "canonical": "https://www.speedyvan.uk/areas/stornoway",
+      "kind": "area",
+      "sources": [
+        "https://www.calmac.co.uk/timetables"
+      ]
+    },
+    {
+      "path": "/areas/tarbert-harris",
+      "canonical": "https://www.speedyvan.uk/areas/tarbert-harris",
+      "kind": "area",
+      "sources": [
+        "https://www.calmac.co.uk/en-gb/faqs/before-you-travel/what-are-the-sat-nav-codes-or-directions-for-your-ports/",
+        "https://www.calmac.co.uk/timetables"
+      ]
+    },
+    {
+      "path": "/areas/balivanich",
+      "canonical": "https://www.speedyvan.uk/areas/balivanich",
+      "kind": "area",
+      "sources": [
+        "https://www.cne-siar.gov.uk/council-and-committees/customer-services/contact-us/comhairle-offices",
+        "https://www.calmac.co.uk/destinations/north-uist/"
+      ]
+    },
+    {
+      "path": "/areas/castlebay",
+      "canonical": "https://www.speedyvan.uk/areas/castlebay",
+      "kind": "area",
+      "sources": [
+        "https://www.cne-siar.gov.uk/council-and-committees/customer-services/contact-us/comhairle-offices",
+        "https://www.calmac.co.uk/timetables"
+      ]
+    },
+    {
+      "path": "/areas/helensburgh",
+      "canonical": "https://www.speedyvan.uk/areas/helensburgh",
+      "kind": "area",
+      "sources": [
+        "https://www.argyll-bute.gov.uk/roads-and-travel/car-parks-and-parking/car-parks-helensburgh-and-lomond"
+      ]
+    },
+    {
+      "path": "/areas/dunoon",
+      "canonical": "https://www.speedyvan.uk/areas/dunoon",
+      "kind": "area",
+      "sources": [
+        "https://www.western-ferries.co.uk/pages/company"
+      ]
+    },
+    {
+      "path": "/areas/campbeltown",
+      "canonical": "https://www.speedyvan.uk/areas/campbeltown",
+      "kind": "area",
+      "sources": [
+        "https://www.argyll-bute.gov.uk/roads-and-travel/car-parks-and-parking/car-parks-mid-argyll-kintyre-and-islay"
+      ]
+    },
+    {
+      "path": "/areas/rothesay",
+      "canonical": "https://www.speedyvan.uk/areas/rothesay",
+      "kind": "area",
+      "sources": [
+        "https://www.calmac.co.uk/route-information/wemyss-bay-rothesay/"
+      ]
+    },
+    {
+      "path": "/areas/arbroath",
+      "canonical": "https://www.speedyvan.uk/areas/arbroath",
+      "kind": "area",
+      "sources": [
+        "https://www.angus.gov.uk/sites/default/files/2018-02/Town%20Centre%20Health%20Checks%202017.pdf",
+        "https://www.angus.gov.uk/roads_parking_and_travel/parking/permission_to_park_on_the_street_parking_dispensation"
+      ]
+    },
+    {
+      "path": "/areas/forfar",
+      "canonical": "https://www.speedyvan.uk/areas/forfar",
+      "kind": "area",
+      "sources": [
+        "https://www.angus.gov.uk/sites/default/files/2018-02/Town%20Centre%20Health%20Checks%202017.pdf",
+        "https://www.angus.gov.uk/roads_parking_and_travel/parking/permission_to_park_on_the_street_parking_dispensation"
+      ]
+    },
+    {
+      "path": "/areas/montrose",
+      "canonical": "https://www.speedyvan.uk/areas/montrose",
+      "kind": "area",
+      "sources": [
+        "https://www.angus.gov.uk/sites/default/files/2018-02/Town%20Centre%20Health%20Checks%202017.pdf",
+        "https://www.angus.gov.uk/roads_parking_and_travel/parking/permission_to_park_on_the_street_parking_dispensation"
+      ]
+    },
+    {
+      "path": "/areas/brechin",
+      "canonical": "https://www.speedyvan.uk/areas/brechin",
+      "kind": "area",
+      "sources": [
+        "https://www.angus.gov.uk/sites/default/files/2018-02/Town%20Centre%20Health%20Checks%202017.pdf",
+        "https://www.angus.gov.uk/roads_parking_and_travel/parking/permission_to_park_on_the_street_parking_dispensation"
+      ]
+    },
+    {
+      "path": "/areas/carnoustie",
+      "canonical": "https://www.speedyvan.uk/areas/carnoustie",
+      "kind": "area",
+      "sources": [
+        "https://www.angus.gov.uk/sites/default/files/2018-02/Town%20Centre%20Health%20Checks%202017.pdf"
+      ]
+    },
+    {
+      "path": "/areas/kirriemuir",
+      "canonical": "https://www.speedyvan.uk/areas/kirriemuir",
+      "kind": "area",
+      "sources": [
+        "https://www.angus.gov.uk/sites/default/files/2018-02/Town%20Centre%20Health%20Checks%202017.pdf"
+      ]
+    },
+    {
+      "path": "/areas/glenrothes",
+      "canonical": "https://www.speedyvan.uk/areas/glenrothes",
+      "kind": "area",
+      "sources": [
+        "https://www.fife.gov.uk/roads-travel-parking/roads-and-pavements/roads-programme/202627/glenrothes-roads-programme-2026-27"
+      ]
+    },
+    {
+      "path": "/areas/cupar",
+      "canonical": "https://www.speedyvan.uk/areas/cupar",
+      "kind": "area",
+      "sources": [
+        "https://www.fife.gov.uk/__data/assets/file/0031/93577/CUPAR-final.pdf"
+      ]
+    },
+    {
+      "path": "/areas/leven",
+      "canonical": "https://www.speedyvan.uk/areas/leven",
+      "kind": "area",
+      "sources": [
+        "https://www.fife.gov.uk/__data/assets/file/0028/93583/LINKS-ROAD-LEVEN-CA-final.pdf"
+      ]
+    },
+    {
+      "path": "/areas/rosyth",
+      "canonical": "https://www.speedyvan.uk/areas/rosyth",
+      "kind": "area",
+      "sources": [
+        "https://www.historicenvironment.scot/about-us/news/community-curated-exhibition-marks-centenary-of-garden-city/"
+      ]
+    },
+    {
+      "path": "/areas/cowdenbeath",
+      "canonical": "https://www.speedyvan.uk/areas/cowdenbeath",
+      "kind": "area",
+      "sources": [
+        "https://www.fife.gov.uk/facilities/car-park/central-car-park,-cowdenbeath"
+      ]
+    },
+    {
+      "path": "/areas/dalgety-bay",
+      "canonical": "https://www.speedyvan.uk/areas/dalgety-bay",
+      "kind": "area",
+      "sources": [
+        "https://www.investfife.co.uk/land-property/business-units/west-way-phase-1-dalgety-bay/"
+      ]
+    },
+    {
+      "path": "/areas/inverkeithing",
+      "canonical": "https://www.speedyvan.uk/areas/inverkeithing",
+      "kind": "area",
+      "sources": [
+        "https://www.fife.gov.uk/planning/built-heritage-and-planning/conservation-areas"
+      ]
+    },
+    {
+      "path": "/areas/blairgowrie",
+      "canonical": "https://www.speedyvan.uk/areas/blairgowrie",
+      "kind": "area",
+      "sources": [
+        "https://www.trove.scot/place/28746"
+      ]
+    },
+    {
+      "path": "/areas/crieff",
+      "canonical": "https://www.speedyvan.uk/areas/crieff",
+      "kind": "area",
+      "sources": [
+        "https://www.pkc.gov.uk/article/17644/Conservation-areas"
+      ]
+    },
+    {
+      "path": "/areas/auchterarder",
+      "canonical": "https://www.speedyvan.uk/areas/auchterarder",
+      "kind": "area",
+      "sources": [
+        "https://www.pkc.gov.uk/article/21896/Traffic-Regulations-Orders"
+      ]
+    },
+    {
+      "path": "/areas/kinross",
+      "canonical": "https://www.speedyvan.uk/areas/kinross",
+      "kind": "area",
+      "sources": [
+        "https://www.pkc.gov.uk/media/37649/Kinross-appraisal/pdf/Kinross_appraisal.pdf?m=1475147515723"
+      ]
+    },
+    {
+      "path": "/areas/pitlochry",
+      "canonical": "https://www.speedyvan.uk/areas/pitlochry",
+      "kind": "area",
+      "sources": [
+        "https://www.pkc.gov.uk/media/37664/Pitlochry-appraisal/pdf/Pitlochry_appraisal.pdf?m=636107448620800000"
+      ]
+    },
+    {
+      "path": "/areas/aberfeldy",
+      "canonical": "https://www.speedyvan.uk/areas/aberfeldy",
+      "kind": "area",
+      "sources": [
+        "https://www.pkc.gov.uk/article/21896/Traffic-Regulations-Orders"
+      ]
+    },
+    {
+      "path": "/areas/dunblane",
+      "canonical": "https://www.speedyvan.uk/areas/dunblane",
+      "kind": "area",
+      "sources": [
+        "https://www.stirling.gov.uk/roads-transport-and-parking/parking-and-permits/parking-in-stirling/"
+      ]
+    },
+    {
+      "path": "/areas/bridge-of-allan",
+      "canonical": "https://www.speedyvan.uk/areas/bridge-of-allan",
+      "kind": "area",
+      "sources": [
+        "https://www.stirling.gov.uk/community-life-and-leisure/parks-walking-trails-and-cycle-paths/parks-in-stirling/parks-in-stirling/bridge-of-allan-fountain-road-park/"
+      ]
+    },
+    {
+      "path": "/areas/callander",
+      "canonical": "https://www.speedyvan.uk/areas/callander",
+      "kind": "area",
+      "sources": [
+        "https://www.lochlomond-trossachs.org/discover-the-park/towns-villages/callander/"
+      ]
+    },
+    {
+      "path": "/areas/doune",
+      "canonical": "https://www.speedyvan.uk/areas/doune",
+      "kind": "area",
+      "sources": [
+        "https://www.stirling.gov.uk/community-life-and-leisure/parks-walking-trails-and-cycle-paths/parks-in-stirling/parks-in-stirling/doune-moray-park/"
+      ]
+    },
+    {
+      "path": "/areas/balfron",
+      "canonical": "https://www.speedyvan.uk/areas/balfron",
+      "kind": "area",
+      "sources": [
+        "https://www.stirling.gov.uk/roads-transport-and-parking/active-travel/achievements-and-delivered-projects/"
+      ]
+    },
+    {
+      "path": "/areas/alloa",
+      "canonical": "https://www.speedyvan.uk/areas/alloa",
+      "kind": "area",
+      "sources": [
+        "https://www.clacks.gov.uk/transport/parking/"
+      ]
+    },
+    {
+      "path": "/areas/alva",
+      "canonical": "https://www.speedyvan.uk/areas/alva",
+      "kind": "area",
+      "sources": [
+        "https://www.clacks.gov.uk/transport/parking/"
+      ]
+    },
+    {
+      "path": "/areas/tillicoultry",
+      "canonical": "https://www.speedyvan.uk/areas/tillicoultry",
+      "kind": "area",
+      "sources": [
+        "https://www.clacks.gov.uk/transport/parking/"
+      ]
+    },
+    {
+      "path": "/areas/dollar",
+      "canonical": "https://www.speedyvan.uk/areas/dollar",
+      "kind": "area",
+      "sources": [
+        "https://www.clacks.gov.uk/transport/parking/"
+      ]
+    },
+    {
+      "path": "/areas/tullibody",
+      "canonical": "https://www.speedyvan.uk/areas/tullibody",
+      "kind": "area",
+      "sources": [
+        "https://www.clacks.gov.uk/transport/parking/"
+      ]
+    },
+    {
+      "path": "/areas/grangemouth",
+      "canonical": "https://www.speedyvan.uk/areas/grangemouth",
+      "kind": "area",
+      "sources": [
+        "https://www.falkirk.gov.uk/streets-and-parking/car-parks"
+      ]
+    },
+    {
+      "path": "/areas/boness",
+      "canonical": "https://www.speedyvan.uk/areas/boness",
+      "kind": "area",
+      "sources": [
+        "https://www.falkirk.gov.uk/development-management/conservation-areas"
+      ]
+    },
+    {
+      "path": "/areas/denny",
+      "canonical": "https://www.speedyvan.uk/areas/denny",
+      "kind": "area",
+      "sources": [
+        "https://www.falkirk.gov.uk/streets-and-parking/car-parks"
+      ]
+    },
+    {
+      "path": "/areas/musselburgh",
+      "canonical": "https://www.speedyvan.uk/areas/musselburgh",
+      "kind": "area",
+      "sources": [
+        "https://www.eastlothian.gov.uk/roads-parking-and-transport/parking/parking-east-lothian/street-car-parks"
+      ]
+    },
+    {
+      "path": "/areas/haddington",
+      "canonical": "https://www.speedyvan.uk/areas/haddington",
+      "kind": "area",
+      "sources": [
+        "https://www.eastlothian.gov.uk/roads-parking-and-transport/parking/parking-east-lothian/street-car-parks"
+      ]
+    },
+    {
+      "path": "/areas/tranent",
+      "canonical": "https://www.speedyvan.uk/areas/tranent",
+      "kind": "area",
+      "sources": [
+        "https://www.eastlothian.gov.uk/roads-parking-and-transport/parking/parking-east-lothian/street-car-parks"
+      ]
+    },
+    {
+      "path": "/areas/prestonpans",
+      "canonical": "https://www.speedyvan.uk/areas/prestonpans",
+      "kind": "area",
+      "sources": [
+        "https://www.eastlothian.gov.uk/download/downloads/id/28407/prestonpans_town_centre_strategy_sg.pdf"
+      ]
+    },
+    {
+      "path": "/areas/north-berwick",
+      "canonical": "https://www.speedyvan.uk/areas/north-berwick",
+      "kind": "area",
+      "sources": [
+        "https://www.eastlothian.gov.uk/roads-parking-and-transport/parking/parking-east-lothian/street-car-parks"
+      ]
+    },
+    {
+      "path": "/areas/dunbar",
+      "canonical": "https://www.speedyvan.uk/areas/dunbar",
+      "kind": "area",
+      "sources": [
+        "https://www.eastlothian.gov.uk/roads-parking-and-transport/parking/parking-east-lothian/street-car-parks",
+        "https://www.traffic.gov.scot/traffic-information/roadworks"
+      ]
+    },
+    {
+      "path": "/areas/dalkeith",
+      "canonical": "https://www.speedyvan.uk/areas/dalkeith",
+      "kind": "area",
+      "sources": [
+        "https://www.midlothian.gov.uk/info/200279/roads_and_travel/406/walking_and_cycling"
+      ]
+    },
+    {
+      "path": "/areas/bonnyrigg",
+      "canonical": "https://www.speedyvan.uk/areas/bonnyrigg",
+      "kind": "area",
+      "sources": [
+        "https://www.midlothian.gov.uk/info/205/planning_policy/721/local_place_plans/4"
+      ]
+    },
+    {
+      "path": "/areas/penicuik",
+      "canonical": "https://www.speedyvan.uk/areas/penicuik",
+      "kind": "area",
+      "sources": [
+        "https://www.midlothian.gov.uk/downloads/file/3802/caa_and_management_plan_penicuik"
+      ]
+    },
+    {
+      "path": "/areas/loanhead",
+      "canonical": "https://www.speedyvan.uk/areas/loanhead",
+      "kind": "area",
+      "sources": [
+        "https://www.midlothian.gov.uk/info/200279/roads_and_travel/406/walking_and_cycling"
+      ]
+    },
+    {
+      "path": "/areas/mayfield",
+      "canonical": "https://www.speedyvan.uk/areas/mayfield",
+      "kind": "area",
+      "sources": [
+        "https://www.midlothian.gov.uk/info/205/planning_policy/721/local_place_plans/4"
+      ]
+    },
+    {
+      "path": "/areas/gorebridge",
+      "canonical": "https://www.speedyvan.uk/areas/gorebridge",
+      "kind": "area",
+      "sources": [
+        "https://www.midlothian.gov.uk/downloads/file/3801/gorebridge_conservation_area_character_appraisal_november_2019"
+      ]
+    },
+    {
+      "path": "/areas/bathgate",
+      "canonical": "https://www.speedyvan.uk/areas/bathgate",
+      "kind": "area",
+      "sources": [
+        "https://www.westlothian.gov.uk/article/46557/Bathgate-Road-Closures"
+      ]
+    },
+    {
+      "path": "/areas/linlithgow",
+      "canonical": "https://www.speedyvan.uk/areas/linlithgow",
+      "kind": "area",
+      "sources": [
+        "https://www.westlothian.gov.uk/article/46581/Linlithgow-Road-Closures"
+      ]
+    },
+    {
+      "path": "/areas/broxburn",
+      "canonical": "https://www.speedyvan.uk/areas/broxburn",
+      "kind": "area",
+      "sources": [
+        "https://www.westlothian.gov.uk/article/46594/Broxburn-Uphall-and-Winchburgh-Road-Closures"
+      ]
+    },
+    {
+      "path": "/areas/armadale",
+      "canonical": "https://www.speedyvan.uk/areas/armadale",
+      "kind": "area",
+      "sources": [
+        "https://www.westlothian.gov.uk/article/46604/Armadale-and-Blackridge-Road-Closures"
+      ]
+    },
+    {
+      "path": "/areas/whitburn",
+      "canonical": "https://www.speedyvan.uk/areas/whitburn",
+      "kind": "area",
+      "sources": [
+        "https://www.westlothian.gov.uk/article/46647/Whitburn-and-Blackburn-Road-Closures"
+      ]
+    },
+    {
+      "path": "/areas/uphall",
+      "canonical": "https://www.speedyvan.uk/areas/uphall",
+      "kind": "area",
+      "sources": [
+        "https://www.westlothian.gov.uk/article/46594/Broxburn-Uphall-and-Winchburgh-Road-Closures"
+      ]
+    },
+    {
+      "path": "/areas/hawick",
+      "canonical": "https://www.speedyvan.uk/areas/hawick",
+      "kind": "area",
+      "sources": [
+        "https://www.scotborders.gov.uk/directory/48/car-parks/category/258"
+      ]
+    },
+    {
+      "path": "/areas/kelso",
+      "canonical": "https://www.speedyvan.uk/areas/kelso",
+      "kind": "area",
+      "sources": [
+        "https://www.scotborders.gov.uk/directory/48/car-parks/category/260"
+      ]
+    },
+    {
+      "path": "/areas/selkirk",
+      "canonical": "https://www.speedyvan.uk/areas/selkirk",
+      "kind": "area",
+      "sources": [
+        "https://www.scotborders.gov.uk/directory/48/car-parks/category/263"
+      ]
+    },
+    {
+      "path": "/areas/peebles",
+      "canonical": "https://www.speedyvan.uk/areas/peebles",
+      "kind": "area",
+      "sources": [
+        "https://www.scotborders.gov.uk/directory/48/car-parks/category/261"
+      ]
+    },
+    {
+      "path": "/areas/jedburgh",
+      "canonical": "https://www.speedyvan.uk/areas/jedburgh",
+      "kind": "area",
+      "sources": [
+        "https://www.scotborders.gov.uk/directory/48/car-parks/category/259",
+        "https://www.traffic.gov.scot/traffic-information/roadworks"
+      ]
+    },
+    {
+      "path": "/areas/eyemouth",
+      "canonical": "https://www.speedyvan.uk/areas/eyemouth",
+      "kind": "area",
+      "sources": [
+        "https://www.scotborders.gov.uk/downloads/file/1334/former_eyemouth_high_planning_brief"
+      ]
+    },
+    {
+      "path": "/areas/melrose",
+      "canonical": "https://www.speedyvan.uk/areas/melrose",
+      "kind": "area",
+      "sources": [
+        "https://www.scotborders.gov.uk/directory/48/car-parks/category/262"
+      ]
+    },
+    {
+      "path": "/areas/stranraer",
+      "canonical": "https://www.speedyvan.uk/areas/stranraer",
+      "kind": "area",
+      "sources": [
+        "https://www.dumfriesandgalloway.gov.uk/roads-transport-parking/parking/find-car-park/fisher-street-car-parks",
+        "https://www.dumfriesandgalloway.gov.uk/council-elections/councillors-wards/local-wards"
+      ]
+    },
+    {
+      "path": "/areas/annan",
+      "canonical": "https://www.speedyvan.uk/areas/annan",
+      "kind": "area",
+      "sources": [
+        "https://www.dumfriesandgalloway.gov.uk/roads-transport-parking/parking/find-car-park/green-car-park"
+      ]
+    },
+    {
+      "path": "/areas/lockerbie",
+      "canonical": "https://www.speedyvan.uk/areas/lockerbie",
+      "kind": "area",
+      "sources": [
+        "https://www.dumfriesandgalloway.gov.uk/roads-transport-parking/parking/find-car-park/station-square-car-park",
+        "https://www.traffic.gov.scot/traffic-information/roadworks"
+      ]
+    },
+    {
+      "path": "/areas/castle-douglas",
+      "canonical": "https://www.speedyvan.uk/areas/castle-douglas",
+      "kind": "area",
+      "sources": [
+        "https://www.dumfriesandgalloway.gov.uk/news/2026/latest-progress-new-transport-hubs-dumfries-galloway",
+        "https://www.dumfriesandgalloway.gov.uk/council-elections/councillors-wards/local-wards"
+      ]
+    },
+    {
+      "path": "/areas/dalbeattie",
+      "canonical": "https://www.speedyvan.uk/areas/dalbeattie",
+      "kind": "area",
+      "sources": [
+        "https://www.dumfriesandgalloway.gov.uk/council-elections/councillors-wards/local-wards"
+      ]
+    },
+    {
+      "path": "/areas/newton-stewart",
+      "canonical": "https://www.speedyvan.uk/areas/newton-stewart",
+      "kind": "area",
+      "sources": [
+        "https://www.dumfriesandgalloway.gov.uk/publications/local-place-plan-documents",
+        "https://www.traffic.gov.scot/traffic-information/roadworks"
+      ]
+    },
+    {
+      "path": "/areas/gretna",
+      "canonical": "https://www.speedyvan.uk/areas/gretna",
+      "kind": "area",
+      "sources": [
+        "https://www.dumfriesandgalloway.gov.uk/publications/local-place-plan-documents"
+      ]
+    },
+    {
+      "path": "/areas/irvine",
+      "canonical": "https://www.speedyvan.uk/areas/irvine",
+      "kind": "area",
+      "sources": [
+        "https://www.north-ayrshire.gov.uk/roads-and-parking/parking/car-parks"
+      ]
+    },
+    {
+      "path": "/areas/kilwinning",
+      "canonical": "https://www.speedyvan.uk/areas/kilwinning",
+      "kind": "area",
+      "sources": [
+        "https://www.north-ayrshire.gov.uk/roads-and-parking/parking/car-parks"
+      ]
+    },
+    {
+      "path": "/areas/ardrossan",
+      "canonical": "https://www.speedyvan.uk/areas/ardrossan",
+      "kind": "area",
+      "sources": [
+        "https://www.calmac.co.uk/route-information/ardrossan-brodick/"
+      ]
+    },
+    {
+      "path": "/areas/saltcoats",
+      "canonical": "https://www.speedyvan.uk/areas/saltcoats",
+      "kind": "area",
+      "sources": [
+        "https://www.north-ayrshire.gov.uk/roads-and-parking/parking/car-parks"
+      ]
+    },
+    {
+      "path": "/areas/stevenston",
+      "canonical": "https://www.speedyvan.uk/areas/stevenston",
+      "kind": "area",
+      "sources": [
+        "https://www.north-ayrshire.gov.uk/documents/temporary-20mph-speed-limit-stevenston"
+      ]
+    },
+    {
+      "path": "/areas/largs",
+      "canonical": "https://www.speedyvan.uk/areas/largs",
+      "kind": "area",
+      "sources": [
+        "https://www.north-ayrshire.gov.uk/roads-and-parking/parking/car-parks"
+      ]
+    },
+    {
+      "path": "/areas/cumnock",
+      "canonical": "https://www.speedyvan.uk/areas/cumnock",
+      "kind": "area",
+      "sources": [
+        "https://www.ayrshireroadsalliance.org/Parking-Information/Off-Street-Parking/East-Ayrshire-Car-Parks.aspx"
+      ]
+    },
+    {
+      "path": "/areas/stewarton",
+      "canonical": "https://www.speedyvan.uk/areas/stewarton",
+      "kind": "area",
+      "sources": [
+        "https://www.ayrshireroadsalliance.org/Parking-Information/Off-Street-Parking/East-Ayrshire-Car-Parks.aspx"
+      ]
+    },
+    {
+      "path": "/areas/galston",
+      "canonical": "https://www.speedyvan.uk/areas/galston",
+      "kind": "area",
+      "sources": [
+        "https://www.ayrshireroadsalliance.org/Parking-Information/Off-Street-Parking/East-Ayrshire-Car-Parks.aspx"
+      ]
+    },
+    {
+      "path": "/areas/troon",
+      "canonical": "https://www.speedyvan.uk/areas/troon",
+      "kind": "area",
+      "sources": [
+        "https://www.ayrshireroadsalliance.org/Parking-Information/Off-Street-Parking/South-Ayrshire-Car-Parks.aspx",
+        "https://www.calmac.co.uk/route-information/ardrossan-brodick/"
+      ]
+    },
+    {
+      "path": "/areas/prestwick",
+      "canonical": "https://www.speedyvan.uk/areas/prestwick",
+      "kind": "area",
+      "sources": [
+        "https://www.ayrshireroadsalliance.org/Parking-Information/Residents-Parking-Permits/Prestwick-Residents-Parking-Permit.aspx"
+      ]
+    },
+    {
+      "path": "/areas/girvan",
+      "canonical": "https://www.speedyvan.uk/areas/girvan",
+      "kind": "area",
+      "sources": [
+        "https://www.ayrshireroadsalliance.org/Parking-Information/Off-Street-Parking/South-Ayrshire-Car-Parks.aspx"
+      ]
+    },
+    {
+      "path": "/areas/bishopbriggs",
+      "canonical": "https://www.speedyvan.uk/areas/bishopbriggs",
+      "kind": "area",
+      "sources": [
+        "https://www.eastdunbarton.gov.uk/services/a-z-of-services/roads-pavements-transport/pay-and-display-car-parks/"
+      ]
+    },
+    {
+      "path": "/areas/kirkintilloch",
+      "canonical": "https://www.speedyvan.uk/areas/kirkintilloch",
+      "kind": "area",
+      "sources": [
+        "https://www.eastdunbarton.gov.uk/services/a-z-of-services/roads-pavements-transport/pay-and-display-car-parks/"
+      ]
+    },
+    {
+      "path": "/areas/bearsden",
+      "canonical": "https://www.speedyvan.uk/areas/bearsden",
+      "kind": "area",
+      "sources": [
+        "https://www.eastdunbarton.gov.uk/services/a-z-of-services/roads-pavements-transport/pay-and-display-car-parks/"
+      ]
+    },
+    {
+      "path": "/areas/milngavie",
+      "canonical": "https://www.speedyvan.uk/areas/milngavie",
+      "kind": "area",
+      "sources": [
+        "https://www.eastdunbarton.gov.uk/services/a-z-of-services/roads-pavements-transport/pay-and-display-car-parks/"
+      ]
+    },
+    {
+      "path": "/areas/clydebank",
+      "canonical": "https://www.speedyvan.uk/areas/clydebank",
+      "kind": "area",
+      "sources": [
+        "https://www.west-dunbarton.gov.uk/roads-parking-travel/parking-and-car-parks/parking",
+        "https://www1.renfrewshire.gov.uk/article/14445/Renfrew-Bridge"
+      ]
+    },
+    {
+      "path": "/areas/dumbarton",
+      "canonical": "https://www.speedyvan.uk/areas/dumbarton",
+      "kind": "area",
+      "sources": [
+        "https://www.west-dunbarton.gov.uk/leisure-parks-events/tourism-and-visitor-attractions/tourist-information"
+      ]
+    },
+    {
+      "path": "/areas/alexandria",
+      "canonical": "https://www.speedyvan.uk/areas/alexandria",
+      "kind": "area",
+      "sources": [
+        "https://www.west-dunbarton.gov.uk/leisure-parks-events/tourism-and-visitor-attractions/tourist-information"
+      ]
+    },
+    {
+      "path": "/areas/balloch",
+      "canonical": "https://www.speedyvan.uk/areas/balloch",
+      "kind": "area",
+      "sources": [
+        "https://www.west-dunbarton.gov.uk/leisure-parks-events/tourism-and-visitor-attractions/tourist-information"
+      ]
+    },
+    {
+      "path": "/areas/giffnock",
+      "canonical": "https://www.speedyvan.uk/areas/giffnock",
+      "kind": "area",
+      "sources": [
+        "https://getinvolved.eastrenfrewshire.gov.uk/neighbourhood-streets-2024"
+      ]
+    },
+    {
+      "path": "/areas/newton-mearns",
+      "canonical": "https://www.speedyvan.uk/areas/newton-mearns",
+      "kind": "area",
+      "sources": [
+        "https://getinvolved.eastrenfrewshire.gov.uk/barrheadroadactivecorridor"
+      ]
+    },
+    {
+      "path": "/areas/barrhead",
+      "canonical": "https://www.speedyvan.uk/areas/barrhead",
+      "kind": "area",
+      "sources": [
+        "https://getinvolved.eastrenfrewshire.gov.uk/barrheadroadactivecorridor"
+      ]
+    },
+    {
+      "path": "/areas/greenock",
+      "canonical": "https://www.speedyvan.uk/areas/greenock",
+      "kind": "area",
+      "sources": [
+        "https://www.inverclyde.gov.uk/environment/roads-lighting/parking-inverclyde/parking-inverclyde/parking-in-greenock"
+      ]
+    },
+    {
+      "path": "/areas/port-glasgow",
+      "canonical": "https://www.speedyvan.uk/areas/port-glasgow",
+      "kind": "area",
+      "sources": [
+        "https://www.inverclyde.gov.uk/environment/roads-lighting/parking-inverclyde/parking-inverclyde/parking-in-port-glasgow"
+      ]
+    },
+    {
+      "path": "/areas/gourock",
+      "canonical": "https://www.speedyvan.uk/areas/gourock",
+      "kind": "area",
+      "sources": [
+        "https://www.inverclyde.gov.uk/environment/roads-lighting/parking-inverclyde/parking-inverclyde/parking-in-gourock"
+      ]
+    },
+    {
+      "path": "/areas/renfrew",
+      "canonical": "https://www.speedyvan.uk/areas/renfrew",
+      "kind": "area",
+      "sources": [
+        "https://www1.renfrewshire.gov.uk/article/14445/Renfrew-Bridge"
+      ]
+    },
+    {
+      "path": "/areas/johnstone",
+      "canonical": "https://www.speedyvan.uk/areas/johnstone",
+      "kind": "area",
+      "sources": [
+        "https://www.renfrewshire.gov.uk/community-and-neighbourhood-issues/community-safety/emergencies-and-severe-weather/gritting-winter-weather"
+      ]
+    },
+    {
+      "path": "/areas/erskine",
+      "canonical": "https://www.speedyvan.uk/areas/erskine",
+      "kind": "area",
+      "sources": [
+        "https://www.renfrewshire.gov.uk/parks-libraries-and-culture/parks-gardens-and-outdoor-spaces/boden-boo-and-erskine-beach"
+      ]
+    },
+    {
+      "path": "/areas/airdrie",
+      "canonical": "https://www.speedyvan.uk/areas/airdrie",
+      "kind": "area",
+      "sources": [
+        "https://www.northlanarkshire.gov.uk/roads-streetlighting-parking-and-flooding/parking/car-parks"
+      ]
+    },
+    {
+      "path": "/areas/coatbridge",
+      "canonical": "https://www.speedyvan.uk/areas/coatbridge",
+      "kind": "area",
+      "sources": [
+        "https://www.northlanarkshire.gov.uk/roads-streetlighting-parking-and-flooding/parking/car-parks"
+      ]
+    },
+    {
+      "path": "/areas/rutherglen",
+      "canonical": "https://www.speedyvan.uk/areas/rutherglen",
+      "kind": "area",
+      "sources": [
+        "https://www.southlanarkshire.gov.uk/parking-car-parks/car-free-school-zones"
+      ]
+    },
+    {
+      "path": "/services/man-and-van",
+      "canonical": "https://www.speedyvan.uk/services/man-and-van",
+      "kind": "existing",
+      "sources": []
+    },
+    {
+      "path": "/services/flat-removals",
+      "canonical": "https://www.speedyvan.uk/services/flat-removals",
+      "kind": "existing",
+      "sources": []
+    },
+    {
+      "path": "/services/small-moves",
+      "canonical": "https://www.speedyvan.uk/services/small-moves",
+      "kind": "existing",
+      "sources": []
+    },
+    {
+      "path": "/services/house-removal",
+      "canonical": "https://www.speedyvan.uk/services/house-removal",
+      "kind": "existing",
+      "sources": []
+    },
+    {
+      "path": "/services/long-distance-removals",
+      "canonical": "https://www.speedyvan.uk/services/long-distance-removals",
+      "kind": "existing",
+      "sources": []
+    },
+    {
+      "path": "/services/office-removal",
+      "canonical": "https://www.speedyvan.uk/services/office-removal",
+      "kind": "existing",
+      "sources": []
+    },
+    {
+      "path": "/services/student-move",
+      "canonical": "https://www.speedyvan.uk/services/student-move",
+      "kind": "existing",
+      "sources": []
+    },
+    {
+      "path": "/services/furniture-delivery",
+      "canonical": "https://www.speedyvan.uk/services/furniture-delivery",
+      "kind": "existing",
+      "sources": []
+    },
+    {
+      "path": "/services/ikea-delivery",
+      "canonical": "https://www.speedyvan.uk/services/ikea-delivery",
+      "kind": "existing",
+      "sources": []
+    },
+    {
+      "path": "/services/piano-moving",
+      "canonical": "https://www.speedyvan.uk/services/piano-moving",
+      "kind": "existing",
+      "sources": []
+    },
+    {
+      "path": "/services/same-day-delivery",
+      "canonical": "https://www.speedyvan.uk/services/same-day-delivery",
+      "kind": "existing",
+      "sources": []
+    },
+    {
+      "path": "/services/packing-service",
+      "canonical": "https://www.speedyvan.uk/services/packing-service",
+      "kind": "existing",
+      "sources": []
+    },
+    {
+      "path": "/services/european-removals",
+      "canonical": "https://www.speedyvan.uk/services/european-removals",
+      "kind": "existing",
+      "sources": []
+    },
+    {
+      "path": "/areas/glasgow/house-removal",
+      "canonical": "https://www.speedyvan.uk/areas/glasgow/house-removal",
+      "kind": "city-service",
+      "sources": [
+        "https://www.glasgow.gov.uk/article/3801/Apply-for-Dispensation-or-a-Parking-Suspension",
+        "https://www.glasgow.gov.uk/article/3523/Common-Property-Repairs-and-Maintenance"
+      ]
+    },
+    {
+      "path": "/areas/glasgow/flat-removals",
+      "canonical": "https://www.speedyvan.uk/areas/glasgow/flat-removals",
+      "kind": "city-service",
+      "sources": [
+        "https://www.glasgow.gov.uk/article/3523/Common-Property-Repairs-and-Maintenance",
+        "https://www.glasgow.gov.uk/article/3982/Glasgow-s-LEZ-Key-Information"
+      ]
+    },
+    {
+      "path": "/areas/glasgow/furniture-delivery",
+      "canonical": "https://www.speedyvan.uk/areas/glasgow/furniture-delivery",
+      "kind": "city-service",
+      "sources": [
+        "https://www.glasgow.gov.uk/article/3523/Common-Property-Repairs-and-Maintenance",
+        "https://www.glasgow.gov.uk/article/3982/Glasgow-s-LEZ-Key-Information"
+      ]
+    },
+    {
+      "path": "/areas/glasgow/office-removal",
+      "canonical": "https://www.speedyvan.uk/areas/glasgow/office-removal",
+      "kind": "city-service",
+      "sources": [
+        "https://www.glasgow.gov.uk/article/3982/Glasgow-s-LEZ-Key-Information",
+        "https://www.glasgow.gov.uk/article/3801/Apply-for-Dispensation-or-a-Parking-Suspension"
+      ]
+    },
+    {
+      "path": "/areas/glasgow/student-move",
+      "canonical": "https://www.speedyvan.uk/areas/glasgow/student-move",
+      "kind": "city-service",
+      "sources": [
+        "https://www.gla.ac.uk/myglasgow/accommodation/arrivalsessentials/arrivalinformation-keycollection/",
+        "https://www.glasgow.gov.uk/article/3523/Common-Property-Repairs-and-Maintenance"
+      ]
+    },
+    {
+      "path": "/areas/glasgow/packing-service",
+      "canonical": "https://www.speedyvan.uk/areas/glasgow/packing-service",
+      "kind": "city-service",
+      "sources": [
+        "https://www.glasgow.gov.uk/article/3523/Common-Property-Repairs-and-Maintenance",
+        "https://www.glasgow.gov.uk/article/3801/Apply-for-Dispensation-or-a-Parking-Suspension"
+      ]
+    },
+    {
+      "path": "/areas/edinburgh/house-removal",
+      "canonical": "https://www.speedyvan.uk/areas/edinburgh/house-removal",
+      "kind": "city-service",
+      "sources": [
+        "https://www.edinburgh.gov.uk/parking-spaces/dispensations-suspensions",
+        "https://ewh.org.uk/the-old-town/"
+      ]
+    },
+    {
+      "path": "/areas/edinburgh/flat-removals",
+      "canonical": "https://www.speedyvan.uk/areas/edinburgh/flat-removals",
+      "kind": "city-service",
+      "sources": [
+        "https://ewh.org.uk/the-old-town/",
+        "https://www.edinburgh.gov.uk/parking-spaces/dispensations-suspensions"
+      ]
+    },
+    {
+      "path": "/areas/edinburgh/furniture-delivery",
+      "canonical": "https://www.speedyvan.uk/areas/edinburgh/furniture-delivery",
+      "kind": "city-service",
+      "sources": [
+        "https://ewh.org.uk/the-old-town/",
+        "https://www.edinburgh.gov.uk/parking-spaces/dispensations-suspensions"
+      ]
+    },
+    {
+      "path": "/areas/edinburgh/office-removal",
+      "canonical": "https://www.speedyvan.uk/areas/edinburgh/office-removal",
+      "kind": "city-service",
+      "sources": [
+        "https://ewh.org.uk/the-old-town/",
+        "https://www.edinburgh.gov.uk/parking-spaces/dispensations-suspensions"
+      ]
+    },
+    {
+      "path": "/areas/edinburgh/student-move",
+      "canonical": "https://www.speedyvan.uk/areas/edinburgh/student-move",
+      "kind": "city-service",
+      "sources": [
+        "https://www.accom.ed.ac.uk/living-with-us/moving-in",
+        "https://transport.ed.ac.uk/travelling-here/pollock"
+      ]
+    },
+    {
+      "path": "/areas/edinburgh/packing-service",
+      "canonical": "https://www.speedyvan.uk/areas/edinburgh/packing-service",
+      "kind": "city-service",
+      "sources": [
+        "https://ewh.org.uk/the-old-town/",
+        "https://www.edinburgh.gov.uk/parking-spaces/dispensations-suspensions"
+      ]
+    },
+    {
+      "path": "/areas/aberdeen/house-removal",
+      "canonical": "https://www.speedyvan.uk/areas/aberdeen/house-removal",
+      "kind": "city-service",
+      "sources": [
+        "https://www.aberdeencity.gov.uk/Council-Services/roads-parking-and-travel/bus-lanes-and-bus-gates/information/bus-gates-frequently-asked-questions",
+        "https://emuseum.aberdeencity.gov.uk/sites/247/back-wynd"
+      ]
+    },
+    {
+      "path": "/areas/aberdeen/flat-removals",
+      "canonical": "https://www.speedyvan.uk/areas/aberdeen/flat-removals",
+      "kind": "city-service",
+      "sources": [
+        "https://emuseum.aberdeencity.gov.uk/sites/247/back-wynd",
+        "https://www.mygov.scot/low-emission-zones"
+      ]
+    },
+    {
+      "path": "/areas/aberdeen/furniture-delivery",
+      "canonical": "https://www.speedyvan.uk/areas/aberdeen/furniture-delivery",
+      "kind": "city-service",
+      "sources": [
+        "https://emuseum.aberdeencity.gov.uk/sites/247/back-wynd",
+        "https://www.aberdeencity.gov.uk/Council-Services/roads-parking-and-travel/bus-lanes-and-bus-gates/information/bus-gates-frequently-asked-questions"
+      ]
+    },
+    {
+      "path": "/areas/aberdeen/office-removal",
+      "canonical": "https://www.speedyvan.uk/areas/aberdeen/office-removal",
+      "kind": "city-service",
+      "sources": [
+        "https://www.aberdeencity.gov.uk/Council-Services/roads-parking-and-travel/bus-lanes-and-bus-gates/information/bus-gates-frequently-asked-questions",
+        "https://www.mygov.scot/low-emission-zones"
+      ]
+    },
+    {
+      "path": "/areas/aberdeen/student-move",
+      "canonical": "https://www.speedyvan.uk/areas/aberdeen/student-move",
+      "kind": "city-service",
+      "sources": [
+        "https://www.abdn.ac.uk/accommodation/resident-info/arrival/",
+        "https://www.aberdeencity.gov.uk/Council-Services/roads-parking-and-travel/bus-lanes-and-bus-gates/information/bus-gates-frequently-asked-questions"
+      ]
+    },
+    {
+      "path": "/areas/aberdeen/packing-service",
+      "canonical": "https://www.speedyvan.uk/areas/aberdeen/packing-service",
+      "kind": "city-service",
+      "sources": [
+        "https://emuseum.aberdeencity.gov.uk/sites/247/back-wynd",
+        "https://www.aberdeencity.gov.uk/Council-Services/roads-parking-and-travel/bus-lanes-and-bus-gates/information/bus-gates-frequently-asked-questions"
+      ]
+    },
+    {
+      "path": "/areas/inverness/house-removal",
+      "canonical": "https://www.speedyvan.uk/areas/inverness/house-removal",
+      "kind": "city-service",
+      "sources": [
+        "https://her.highland.gov.uk/monument/MHG3867",
+        "https://www.highland.gov.uk/parking-fines-enforcement/decriminalised-parking-enforcement"
+      ]
+    },
+    {
+      "path": "/areas/inverness/flat-removals",
+      "canonical": "https://www.speedyvan.uk/areas/inverness/flat-removals",
+      "kind": "city-service",
+      "sources": [
+        "https://her.highland.gov.uk/monument/MHG3867",
+        "https://www.highland.gov.uk/parking-permits/rose-street-multi-storey-car-park"
+      ]
+    },
+    {
+      "path": "/areas/inverness/furniture-delivery",
+      "canonical": "https://www.speedyvan.uk/areas/inverness/furniture-delivery",
+      "kind": "city-service",
+      "sources": [
+        "https://her.highland.gov.uk/monument/MHG3867",
+        "https://www.highland.gov.uk/parking-fines-enforcement/decriminalised-parking-enforcement"
+      ]
+    },
+    {
+      "path": "/areas/inverness/office-removal",
+      "canonical": "https://www.speedyvan.uk/areas/inverness/office-removal",
+      "kind": "city-service",
+      "sources": [
+        "https://her.highland.gov.uk/monument/MHG3867",
+        "https://www.highland.gov.uk/parking-fines-enforcement/decriminalised-parking-enforcement"
+      ]
+    },
+    {
+      "path": "/areas/inverness/student-move",
+      "canonical": "https://www.speedyvan.uk/areas/inverness/student-move",
+      "kind": "city-service",
+      "sources": [
+        "https://www.inverness.uhi.ac.uk/study/accommodation/"
+      ]
+    },
+    {
+      "path": "/areas/inverness/packing-service",
+      "canonical": "https://www.speedyvan.uk/areas/inverness/packing-service",
+      "kind": "city-service",
+      "sources": [
+        "https://her.highland.gov.uk/monument/MHG3867",
+        "https://www.highland.gov.uk/parking-fines-enforcement/decriminalised-parking-enforcement"
+      ]
+    },
+    {
+      "path": "/areas/dundee/house-removal",
+      "canonical": "https://www.speedyvan.uk/areas/dundee/house-removal",
+      "kind": "city-service",
+      "sources": [
+        "https://www.dundeecity.gov.uk/service-area/city-development/sustainable-transport-and-roads/dundee-low-emission-zone-scheme-lez",
+        "https://www.dundeecity.gov.uk/sites/default/files/publications/West%20End%20Suburbs%20CA%20Low%20Res.pdf"
+      ]
+    },
+    {
+      "path": "/areas/dundee/flat-removals",
+      "canonical": "https://www.speedyvan.uk/areas/dundee/flat-removals",
+      "kind": "city-service",
+      "sources": [
+        "https://www.dundeecity.gov.uk/sites/default/files/publications/West%20End%20Suburbs%20CA%20Low%20Res.pdf",
+        "https://www.dundeecity.gov.uk/service-area/city-development/sustainable-transport-and-roads/dundee-low-emission-zone-scheme-lez"
+      ]
+    },
+    {
+      "path": "/areas/dundee/furniture-delivery",
+      "canonical": "https://www.speedyvan.uk/areas/dundee/furniture-delivery",
+      "kind": "city-service",
+      "sources": [
+        "https://www.dundeecity.gov.uk/sites/default/files/publications/West%20End%20Suburbs%20CA%20Low%20Res.pdf",
+        "https://www.dundeecity.gov.uk/service-area/city-development/sustainable-transport-and-roads/dundee-low-emission-zone-scheme-lez"
+      ]
+    },
+    {
+      "path": "/areas/dundee/office-removal",
+      "canonical": "https://www.speedyvan.uk/areas/dundee/office-removal",
+      "kind": "city-service",
+      "sources": [
+        "https://www.dundeecity.gov.uk/service-area/city-development/sustainable-transport-and-roads/dundee-low-emission-zone-scheme-lez"
+      ]
+    },
+    {
+      "path": "/areas/dundee/student-move",
+      "canonical": "https://www.speedyvan.uk/areas/dundee/student-move",
+      "kind": "city-service",
+      "sources": [
+        "https://www.dundee.ac.uk/guides/moving-student-accommodation",
+        "https://www.dundeecity.gov.uk/sites/default/files/publications/West%20End%20Suburbs%20CA%20Low%20Res.pdf"
+      ]
+    },
+    {
+      "path": "/areas/dundee/packing-service",
+      "canonical": "https://www.speedyvan.uk/areas/dundee/packing-service",
+      "kind": "city-service",
+      "sources": [
+        "https://www.dundeecity.gov.uk/sites/default/files/publications/West%20End%20Suburbs%20CA%20Low%20Res.pdf",
+        "https://www.dundeecity.gov.uk/service-area/city-development/sustainable-transport-and-roads/dundee-low-emission-zone-scheme-lez"
+      ]
+    },
+    {
+      "path": "/areas/perth/house-removal",
+      "canonical": "https://www.speedyvan.uk/areas/perth/house-removal",
+      "kind": "city-service",
+      "sources": [
+        "https://www.pkc.gov.uk/article/22131/Bay-suspensions-and-dispensations",
+        "https://www.pkc.gov.uk/article/17270/Road-closures-and-restrictions-Current-and-proposed"
+      ]
+    },
+    {
+      "path": "/areas/perth/flat-removals",
+      "canonical": "https://www.speedyvan.uk/areas/perth/flat-removals",
+      "kind": "city-service",
+      "sources": [
+        "https://www.pkc.gov.uk/article/22131/Bay-suspensions-and-dispensations",
+        "https://www.pkc.gov.uk/article/17270/Road-closures-and-restrictions-Current-and-proposed"
+      ]
+    },
+    {
+      "path": "/areas/perth/furniture-delivery",
+      "canonical": "https://www.speedyvan.uk/areas/perth/furniture-delivery",
+      "kind": "city-service",
+      "sources": [
+        "https://www.pkc.gov.uk/article/22131/Bay-suspensions-and-dispensations",
+        "https://www.pkc.gov.uk/article/17270/Road-closures-and-restrictions-Current-and-proposed"
+      ]
+    },
+    {
+      "path": "/areas/perth/office-removal",
+      "canonical": "https://www.speedyvan.uk/areas/perth/office-removal",
+      "kind": "city-service",
+      "sources": [
+        "https://www.pkc.gov.uk/article/22131/Bay-suspensions-and-dispensations",
+        "https://www.pkc.gov.uk/article/17270/Road-closures-and-restrictions-Current-and-proposed"
+      ]
+    },
+    {
+      "path": "/areas/perth/student-move",
+      "canonical": "https://www.speedyvan.uk/areas/perth/student-move",
+      "kind": "city-service",
+      "sources": [
+        "https://www.perth.uhi.ac.uk/student-life/accommodation/contact-us/",
+        "https://www.perth.uhi.ac.uk/student-life/accommodation/"
+      ]
+    },
+    {
+      "path": "/areas/perth/packing-service",
+      "canonical": "https://www.speedyvan.uk/areas/perth/packing-service",
+      "kind": "city-service",
+      "sources": [
+        "https://www.pkc.gov.uk/article/22131/Bay-suspensions-and-dispensations",
+        "https://www.pkc.gov.uk/article/17270/Road-closures-and-restrictions-Current-and-proposed"
+      ]
+    },
+    {
+      "path": "/areas/stirling/house-removal",
+      "canonical": "https://www.speedyvan.uk/areas/stirling/house-removal",
+      "kind": "city-service",
+      "sources": [
+        "https://www.historicenvironment.scot/visit/all/stirling-castle/plan-your-visit/",
+        "https://www.stirling.gov.uk/news/drop-in-event-arranged-for-project-to-transform-medieval-stirling-streets/"
+      ]
+    },
+    {
+      "path": "/areas/stirling/flat-removals",
+      "canonical": "https://www.speedyvan.uk/areas/stirling/flat-removals",
+      "kind": "city-service",
+      "sources": [
+        "https://www.stirling.gov.uk/news/drop-in-event-arranged-for-project-to-transform-medieval-stirling-streets/",
+        "https://www.historicenvironment.scot/visit/all/stirling-castle/plan-your-visit/",
+        "https://www.stirling.gov.uk/roads-transport-and-parking/roads-and-pavements/apply-for-traffic-restrictions/"
+      ]
+    },
+    {
+      "path": "/areas/stirling/furniture-delivery",
+      "canonical": "https://www.speedyvan.uk/areas/stirling/furniture-delivery",
+      "kind": "city-service",
+      "sources": [
+        "https://www.historicenvironment.scot/visit/all/stirling-castle/plan-your-visit/",
+        "https://www.stirling.gov.uk/news/drop-in-event-arranged-for-project-to-transform-medieval-stirling-streets/"
+      ]
+    },
+    {
+      "path": "/areas/stirling/office-removal",
+      "canonical": "https://www.speedyvan.uk/areas/stirling/office-removal",
+      "kind": "city-service",
+      "sources": [
+        "https://www.stirling.gov.uk/news/drop-in-event-arranged-for-project-to-transform-medieval-stirling-streets/",
+        "https://www.stirling.gov.uk/roads-transport-and-parking/roads-and-pavements/apply-for-traffic-restrictions/"
+      ]
+    },
+    {
+      "path": "/areas/stirling/student-move",
+      "canonical": "https://www.speedyvan.uk/areas/stirling/student-move",
+      "kind": "city-service",
+      "sources": [
+        "https://www.stir.ac.uk/student-life/accommodation/accommodation-life/moving-in/",
+        "https://www.stirling.gov.uk/news/drop-in-event-arranged-for-project-to-transform-medieval-stirling-streets/"
+      ]
+    },
+    {
+      "path": "/areas/stirling/packing-service",
+      "canonical": "https://www.speedyvan.uk/areas/stirling/packing-service",
+      "kind": "city-service",
+      "sources": [
+        "https://www.historicenvironment.scot/visit/all/stirling-castle/plan-your-visit/",
+        "https://www.stirling.gov.uk/news/drop-in-event-arranged-for-project-to-transform-medieval-stirling-streets/",
+        "https://www.stirling.gov.uk/roads-transport-and-parking/roads-and-pavements/apply-for-traffic-restrictions/"
+      ]
+    },
+    {
+      "path": "/areas/dunfermline/house-removal",
+      "canonical": "https://www.speedyvan.uk/areas/dunfermline/house-removal",
+      "kind": "city-service",
+      "sources": [
+        "https://www.fife.gov.uk/roads-travel-parking/parking-and-car-parks/parking-dispensations-and-parking-suspensions",
+        "https://www.fife.gov.uk/__data/assets/file/0018/42057/Making-Fifes-Places-Supplementary-Guidance-August-2018.pdf"
+      ]
+    },
+    {
+      "path": "/areas/dunfermline/flat-removals",
+      "canonical": "https://www.speedyvan.uk/areas/dunfermline/flat-removals",
+      "kind": "city-service",
+      "sources": [
+        "https://www.fife.gov.uk/__data/assets/file/0018/42057/Making-Fifes-Places-Supplementary-Guidance-August-2018.pdf",
+        "https://www.fife.gov.uk/roads-travel-parking/parking-and-car-parks/parking-dispensations-and-parking-suspensions"
+      ]
+    },
+    {
+      "path": "/areas/dunfermline/furniture-delivery",
+      "canonical": "https://www.speedyvan.uk/areas/dunfermline/furniture-delivery",
+      "kind": "city-service",
+      "sources": [
+        "https://www.fife.gov.uk/__data/assets/file/0018/42057/Making-Fifes-Places-Supplementary-Guidance-August-2018.pdf",
+        "https://www.fife.gov.uk/roads-travel-parking/parking-and-car-parks/parking-dispensations-and-parking-suspensions"
+      ]
+    },
+    {
+      "path": "/areas/dunfermline/office-removal",
+      "canonical": "https://www.speedyvan.uk/areas/dunfermline/office-removal",
+      "kind": "city-service",
+      "sources": [
+        "https://www.fife.gov.uk/roads-travel-parking/parking-and-car-parks/parking-dispensations-and-parking-suspensions",
+        "https://www.fife.gov.uk/roads-travel-parking/roads-and-pavements/legal-ordersnotices/temporary-restrictions-and-closures"
+      ]
+    },
+    {
+      "path": "/areas/dunfermline/student-move",
+      "canonical": "https://www.speedyvan.uk/areas/dunfermline/student-move",
+      "kind": "city-service",
+      "sources": [
+        "https://www.fife.ac.uk/campuses-facilities/new-dunfermline-city-campus/",
+        "https://www.fife.gov.uk/roads-travel-parking/parking-and-car-parks/parking-dispensations-and-parking-suspensions"
+      ]
+    },
+    {
+      "path": "/areas/dunfermline/packing-service",
+      "canonical": "https://www.speedyvan.uk/areas/dunfermline/packing-service",
+      "kind": "city-service",
+      "sources": [
+        "https://www.fife.gov.uk/__data/assets/file/0018/42057/Making-Fifes-Places-Supplementary-Guidance-August-2018.pdf",
+        "https://www.fife.gov.uk/roads-travel-parking/parking-and-car-parks/parking-dispensations-and-parking-suspensions"
+      ]
+    },
+    {
+      "path": "/moving-routes/glasgow-to-london",
+      "canonical": "https://www.speedyvan.uk/moving-routes/glasgow-to-london",
+      "kind": "moving-route",
+      "sources": [
+        "https://www.mygov.scot/low-emission-zones",
+        "https://tfl.gov.uk/modes/driving/red-routes/rules-of-red-routes/loading-for-the-public"
+      ]
+    },
+    {
+      "path": "/moving-routes/glasgow-to-manchester",
+      "canonical": "https://www.speedyvan.uk/moving-routes/glasgow-to-manchester",
+      "kind": "moving-route",
+      "sources": [
+        "https://www.mygov.scot/low-emission-zones",
+        "https://www.manchester.gov.uk/parking/tickets-and-fines/parking-restrictions/parking-restrictions/parking-in-a-loading-bay"
+      ]
+    },
+    {
+      "path": "/moving-routes/glasgow-to-birmingham",
+      "canonical": "https://www.speedyvan.uk/moving-routes/glasgow-to-birmingham",
+      "kind": "moving-route",
+      "sources": [
+        "https://www.mygov.scot/low-emission-zones",
+        "https://www.tfwm.org.uk/plan-your-journey/ways-to-travel/driving-in-the-west-midlands/birmingham-clean-air-zone/"
+      ]
+    },
+    {
+      "path": "/moving-routes/glasgow-to-cardiff",
+      "canonical": "https://www.speedyvan.uk/moving-routes/glasgow-to-cardiff",
+      "kind": "moving-route",
+      "sources": [
+        "https://www.mygov.scot/low-emission-zones",
+        "https://cardiff.gov.uk/contraventions"
+      ]
+    },
+    {
+      "path": "/moving-routes/glasgow-to-edinburgh",
+      "canonical": "https://www.speedyvan.uk/moving-routes/glasgow-to-edinburgh",
+      "kind": "moving-route",
+      "sources": [
+        "https://www.mygov.scot/low-emission-zones",
+        "https://www.edinburgh.gov.uk/parking-spaces/dispensations-suspensions"
+      ]
+    },
+    {
+      "path": "/moving-routes/edinburgh-to-london",
+      "canonical": "https://www.speedyvan.uk/moving-routes/edinburgh-to-london",
+      "kind": "moving-route",
+      "sources": [
+        "https://www.edinburgh.gov.uk/parking-spaces/dispensations-suspensions",
+        "https://tfl.gov.uk/modes/driving/red-routes/rules-of-red-routes/loading-for-the-public"
+      ]
+    },
+    {
+      "path": "/moving-routes/edinburgh-to-manchester",
+      "canonical": "https://www.speedyvan.uk/moving-routes/edinburgh-to-manchester",
+      "kind": "moving-route",
+      "sources": [
+        "https://www.edinburgh.gov.uk/parking-spaces/dispensations-suspensions",
+        "https://www.manchester.gov.uk/parking/tickets-and-fines/parking-restrictions/parking-restrictions/parking-in-a-loading-bay"
+      ]
+    },
+    {
+      "path": "/moving-routes/edinburgh-to-newcastle",
+      "canonical": "https://www.speedyvan.uk/moving-routes/edinburgh-to-newcastle",
+      "kind": "moving-route",
+      "sources": [
+        "https://www.edinburgh.gov.uk/parking-spaces/dispensations-suspensions",
+        "https://new.newcastle.gov.uk/parking/dispensations-and-suspensions"
+      ]
+    },
+    {
+      "path": "/moving-routes/edinburgh-to-bristol",
+      "canonical": "https://www.speedyvan.uk/moving-routes/edinburgh-to-bristol",
+      "kind": "moving-route",
+      "sources": [
+        "https://www.edinburgh.gov.uk/parking-spaces/dispensations-suspensions",
+        "https://www.bristol.gov.uk/residents/streets-travel/bristols-caz/charges-and-vehicle-checker"
+      ]
+    },
+    {
+      "path": "/moving-routes/aberdeen-to-london",
+      "canonical": "https://www.speedyvan.uk/moving-routes/aberdeen-to-london",
+      "kind": "moving-route",
+      "sources": [
+        "https://www.mygov.scot/low-emission-zones",
+        "https://tfl.gov.uk/modes/driving/red-routes/rules-of-red-routes/loading-for-the-public"
+      ]
+    },
+    {
+      "path": "/moving-routes/aberdeen-to-edinburgh",
+      "canonical": "https://www.speedyvan.uk/moving-routes/aberdeen-to-edinburgh",
+      "kind": "moving-route",
+      "sources": [
+        "https://www.mygov.scot/low-emission-zones",
+        "https://www.edinburgh.gov.uk/parking-spaces/dispensations-suspensions"
+      ]
+    },
+    {
+      "path": "/moving-routes/aberdeen-to-manchester",
+      "canonical": "https://www.speedyvan.uk/moving-routes/aberdeen-to-manchester",
+      "kind": "moving-route",
+      "sources": [
+        "https://www.mygov.scot/low-emission-zones",
+        "https://www.manchester.gov.uk/parking/tickets-and-fines/parking-restrictions/parking-restrictions/parking-in-a-loading-bay"
+      ]
+    },
+    {
+      "path": "/moving-routes/inverness-to-glasgow",
+      "canonical": "https://www.speedyvan.uk/moving-routes/inverness-to-glasgow",
+      "kind": "moving-route",
+      "sources": [
+        "https://www.highland.gov.uk/directory-record/32/inverness-church-street",
+        "https://www.traffic.gov.scot/travel-news",
+        "https://www.mygov.scot/low-emission-zones"
+      ]
+    },
+    {
+      "path": "/moving-routes/inverness-to-edinburgh",
+      "canonical": "https://www.speedyvan.uk/moving-routes/inverness-to-edinburgh",
+      "kind": "moving-route",
+      "sources": [
+        "https://www.highland.gov.uk/directory-record/32/inverness-church-street",
+        "https://www.traffic.gov.scot/travel-news",
+        "https://www.edinburgh.gov.uk/parking-spaces/dispensations-suspensions"
+      ]
+    },
+    {
+      "path": "/moving-routes/inverness-to-london",
+      "canonical": "https://www.speedyvan.uk/moving-routes/inverness-to-london",
+      "kind": "moving-route",
+      "sources": [
+        "https://www.highland.gov.uk/directory-record/32/inverness-church-street",
+        "https://www.traffic.gov.scot/travel-news",
+        "https://tfl.gov.uk/modes/driving/red-routes/rules-of-red-routes/loading-for-the-public"
+      ]
+    },
+    {
+      "path": "/moving-routes/dundee-to-london",
+      "canonical": "https://www.speedyvan.uk/moving-routes/dundee-to-london",
+      "kind": "moving-route",
+      "sources": [
+        "https://www.dundeecity.gov.uk/service-area/city-development/sustainable-transport-and-roads/dundee-low-emission-zone-scheme-lez",
+        "https://tfl.gov.uk/modes/driving/red-routes/rules-of-red-routes/loading-for-the-public"
+      ]
+    },
+    {
+      "path": "/moving-routes/perth-to-manchester",
+      "canonical": "https://www.speedyvan.uk/moving-routes/perth-to-manchester",
+      "kind": "moving-route",
+      "sources": [
+        "https://www.pkc.gov.uk/article/22131/Bay-suspensions-and-dispensations",
+        "https://www.manchester.gov.uk/parking/tickets-and-fines/parking-restrictions/parking-restrictions/parking-in-a-loading-bay"
+      ]
+    },
+    {
+      "path": "/moving-routes/stirling-to-birmingham",
+      "canonical": "https://www.speedyvan.uk/moving-routes/stirling-to-birmingham",
+      "kind": "moving-route",
+      "sources": [
+        "https://www.stirling.gov.uk/roads-transport-and-parking/parking-and-permits/apply-for-a-residents-parking-permit/",
+        "https://www.tfwm.org.uk/plan-your-journey/ways-to-travel/driving-in-the-west-midlands/birmingham-clean-air-zone/"
+      ]
+    },
+    {
+      "path": "/moving-routes/dunfermline-to-newcastle",
+      "canonical": "https://www.speedyvan.uk/moving-routes/dunfermline-to-newcastle",
+      "kind": "moving-route",
+      "sources": [
+        "https://www.fife.gov.uk/roads-travel-parking/roads-and-pavements/road-maintenance",
+        "https://new.newcastle.gov.uk/parking/dispensations-and-suspensions"
+      ]
+    }
+  ]
+}

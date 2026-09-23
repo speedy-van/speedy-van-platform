@@ -4,6 +4,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { AREAS, getAreaBySlug } from "@/lib/areas";
 import { getAreaGuide } from "@/lib/area-guides";
+import { AreaExpansionLinks } from "@/components/areas/AreaExpansionLinks";
 import { AreaGuideContent } from "@/components/areas/AreaGuideContent";
 import { SERVICES, getServicePriceLabel } from "@/lib/services";
 import { JsonLd } from "@/components/seo/JsonLd";
@@ -374,6 +375,8 @@ export default async function AreaPage({ params }: Props) {
       ) : null}
 
       </>}
+
+      <AreaExpansionLinks area={area} />
 
       {/* Nearby areas */}
       {nearbyAreaData.length > 0 && (

@@ -11,6 +11,7 @@ const QUICK_LINKS = [
   { href: "/#how-it-works", label: "How it works" },
   { href: "/pricing", label: "Pricing" },
   { href: "/guides", label: "Moving guides" },
+  { href: "/moving-routes", label: "Routes from Scotland" },
   { href: "/#faq", label: "FAQ" },
 ];
 

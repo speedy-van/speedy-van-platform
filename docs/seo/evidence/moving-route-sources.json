@@ -1,0 +1,162 @@
+{
+  "reviewedOn": "2026-09-23",
+  "contentFile": "apps/web/src/lib/content/moving-route-pages.ts",
+  "scope": "Nineteen explicitly authored routes collected in Scotland and delivered within Britain. No reverse-origin pages or generated origin/destination combinations.",
+  "counts": {
+    "routes": 19,
+    "origins": 8,
+    "sections": 76,
+    "faqs": 57,
+    "publishedSourceUrls": 14
+  },
+  "method": {
+    "research": "Official council, Scottish Government and transport-authority sources were searched and read on the review date. Retrieval status below distinguishes readable pages from indexed official extracts.",
+    "writing": "Local regulatory facts are short paraphrases. Measurement, packing, inventory, contact and handover recommendations are original practical planning advice; they are not presented as the result of a property inspection or a completed job.",
+    "freshness": "Readers are directed to current official guidance and the signs at their actual addresses. No permanent permit lead time, fee, traffic disruption or boundary-to-address decision is hardcoded.",
+    "transport": "No road itinerary, mileage, journey duration, fixed arrival, vehicle availability, guaranteed permission or same-day delivery is asserted.",
+    "businessEvidence": "No driver totals, allocated crews, depots, customer counts, reviews, work histories, prices or search volumes were invented or used.",
+    "implementation": "The content is an explicit allowlist with full route-specific text. Destination coverage does not authorise collection outside Scotland. Booking and operational contracts remain outside this file."
+  },
+  "sources": [
+    {
+      "id": "scottishLez",
+      "publisher": "Scottish Government",
+      "url": "https://www.mygov.scot/low-emission-zones",
+      "retrieval": "full_page_read",
+      "pageUpdatedOn": "2026-06-26",
+      "confirmedFacts": ["City-centre LEZs exist in Aberdeen, Dundee, Edinburgh and Glasgow.", "The page links to vehicle checking and each council's boundary guidance."],
+      "limits": "No collection or delivery address was independently plotted against a boundary. No assigned vehicle was checked."
+    },
+    {
+      "id": "edinburgh",
+      "publisher": "City of Edinburgh Council",
+      "url": "https://www.edinburgh.gov.uk/parking-spaces/dispensations-suspensions",
+      "retrieval": "full_page_read",
+      "confirmedFacts": ["Dispensations and bay suspensions have separate application requirements.", "Furniture and home removals are mentioned in the dispensation guidance."],
+      "limits": "Fees and notice periods were deliberately not copied into customer content. Permission for any address remains unconfirmed."
+    },
+    {
+      "id": "london",
+      "publisher": "Transport for London",
+      "url": "https://tfl.gov.uk/modes/driving/red-routes/rules-of-red-routes/loading-for-the-public",
+      "retrieval": "full_page_read",
+      "confirmedFacts": ["Red-route loading bays have location-specific signs and time restrictions.", "Goods must be ready, and loading bays cannot be used simply for waiting.", "TfL directs users to dispensation guidance where appropriate."],
+      "limits": "The guidance applies to TfL roads. Borough roads require the relevant borough's arrangements. No London address, permission or vehicle charge was checked."
+    },
+    {
+      "id": "manchester",
+      "publisher": "Manchester City Council",
+      "url": "https://www.manchester.gov.uk/parking/tickets-and-fines/parking-restrictions/parking-restrictions/parking-in-a-loading-bay",
+      "retrieval": "full_page_read_after_official_redirect",
+      "confirmedFacts": ["Loading bays are for loading or unloading.", "Some bays are restricted to commercial vehicles and users must check signs."],
+      "limits": "No building service-bay or lift policy was verified. Advice to ask building managers is conditional. The council's rules are not claimed to cover all Greater Manchester authorities."
+    },
+    {
+      "id": "birmingham",
+      "publisher": "Transport for West Midlands, West Midlands Combined Authority",
+      "url": "https://www.tfwm.org.uk/plan-your-journey/ways-to-travel/driving-in-the-west-midlands/birmingham-clean-air-zone/",
+      "retrieval": "full_page_read",
+      "confirmedFacts": ["The Birmingham Clean Air Zone is inside the A4540 Middleway; the Middleway itself is excluded.", "The official transport page links to vehicle checking."],
+      "limits": "Birmingham City Council's main zone page returned 403. The readable combined-authority source was used. No exemption, payable amount or vehicle eligibility is asserted."
+    },
+    {
+      "id": "cardiff",
+      "publisher": "Cardiff Council",
+      "url": "https://cardiff.gov.uk/contraventions",
+      "retrieval": "full_page_read",
+      "confirmedFacts": ["The guidance distinguishes waiting from loading restrictions.", "Kerb marks and signs communicate restrictions affecting loading."],
+      "limits": "No blanket loading exemption is claimed. No specific destination, resident bay or permission was checked."
+    },
+    {
+      "id": "bristol",
+      "publisher": "Bristol City Council",
+      "url": "https://www.bristol.gov.uk/residents/streets-travel/bristols-caz/charges-and-vehicle-checker",
+      "retrieval": "full_page_read",
+      "confirmedFacts": ["Bristol's Clean Air Zone guidance links to the government's vehicle checker."],
+      "limits": "No vehicle registration or delivery approach was checked. Current fees and fleet-wide compliance are not represented in the route content."
+    },
+    {
+      "id": "newcastle",
+      "publisher": "Newcastle City Council",
+      "url": "https://new.newcastle.gov.uk/parking/dispensations-and-suspensions",
+      "retrieval": "full_page_read",
+      "confirmedFacts": ["The dispensation process includes furniture deliveries and removals.", "Applications have conditions and advance notice requirements; permission is not automatic."],
+      "limits": "No address-specific eligibility or approved permission is claimed. Pages explicitly identify Newcastle upon Tyne and require the full postcode."
+    },
+    {
+      "id": "inverness",
+      "publisher": "Highland Council",
+      "url": "https://www.highland.gov.uk/directory-record/32/inverness-church-street",
+      "retrieval": "full_page_read",
+      "confirmedFacts": ["Church Street in Inverness is listed as pay-and-display parking with a maximum stay."],
+      "limits": "The example is explicitly confined to Church Street. Rates, hours and a numeric maximum stay were not hardcoded, and the listing does not establish removal-vehicle permission."
+    },
+    {
+      "id": "trafficScotland",
+      "publisher": "Traffic Scotland",
+      "url": "https://www.traffic.gov.scot/travel-news",
+      "retrieval": "full_page_read",
+      "confirmedFacts": ["The official service supplies incident, roadworks, event and weather/travel-warning information for Scotland's trunk and motorway network."],
+      "limits": "No temporary incident, specific diversion, chosen itinerary or journey-time estimate was incorporated into the pages."
+    },
+    {
+      "id": "dundee",
+      "publisher": "Dundee City Council",
+      "url": "https://www.dundeecity.gov.uk/service-area/city-development/sustainable-transport-and-roads/dundee-low-emission-zone-scheme-lez",
+      "retrieval": "full_page_read_after_official_redirect",
+      "confirmedFacts": ["The LEZ covers an area within the A991 Inner Ring Road with specified exclusions.", "The council provides detailed boundary mapping and vehicle-check information."],
+      "limits": "No customer address or vehicle was checked. The page contains some historical wording; only the current boundary/checking information was used."
+    },
+    {
+      "id": "perth",
+      "publisher": "Perth and Kinross Council",
+      "url": "https://www.pkc.gov.uk/article/22131/Bay-suspensions-and-dispensations",
+      "retrieval": "official_search_extract_only_direct_open_failed",
+      "confirmedFacts": ["The official indexed extract distinguishes applications inside Perth's pedestrian zone from dispensations outside it."],
+      "limits": "Full-page retrieval failed. Customer advice is confined to checking the appropriate current process; no fees, access times or guaranteed eligibility are stated."
+    },
+    {
+      "id": "stirling",
+      "publisher": "Stirling Council",
+      "url": "https://www.stirling.gov.uk/roads-transport-and-parking/parking-and-permits/apply-for-a-residents-parking-permit/",
+      "retrieval": "official_search_extract_only_direct_open_failed",
+      "confirmedFacts": ["The official indexed extract states that a resident permit does not guarantee a space and does not authorise use of all restricted areas."],
+      "limits": "Full-page retrieval failed. No moving-vehicle permit eligibility or street-specific loading rule is asserted."
+    },
+    {
+      "id": "fife",
+      "publisher": "Fife Council",
+      "url": "https://www.fife.gov.uk/roads-travel-parking/roads-and-pavements/road-maintenance",
+      "retrieval": "full_page_read",
+      "pageUpdatedOn": "2026-07-06",
+      "confirmedFacts": ["The council page describes local road maintenance and links to current Fife roadworks information.", "Dunfermline appears within its South Fife area information."],
+      "limits": "No temporary works or pedestrian-zone hours were asserted for Dunfermline. Information from Kirkcaldy's different pedestrian zone was excluded."
+    }
+  ],
+  "additionalRetrievalLimits": [
+    { "url": "https://www.glasgow.gov.uk/article/4985/Glasgow-s-Low-Emission-Zone", "result": "403; superseded by readable Scottish Government guidance for the narrow LEZ existence/checking claims." },
+    { "url": "https://www.birmingham.gov.uk/info/20076/air_quality/1763/clean_air_zone", "result": "403; readable Transport for West Midlands guidance used instead." },
+    { "url": "https://www.aberdeencity.gov.uk/Council-Services/roads-transport-and-parking/bus-lanes-and-bus-gates", "result": "Direct retrieval failed. No specific bus-gate configuration or exemption was used." }
+  ],
+  "routes": [
+    { "slug": "glasgow-to-london", "originSlug": "glasgow", "destination": "London", "sourceIds": ["scottishLez", "london"] },
+    { "slug": "glasgow-to-manchester", "originSlug": "glasgow", "destination": "Manchester", "sourceIds": ["scottishLez", "manchester"] },
+    { "slug": "glasgow-to-birmingham", "originSlug": "glasgow", "destination": "Birmingham", "sourceIds": ["scottishLez", "birmingham"] },
+    { "slug": "glasgow-to-cardiff", "originSlug": "glasgow", "destination": "Cardiff", "sourceIds": ["scottishLez", "cardiff"] },
+    { "slug": "glasgow-to-edinburgh", "originSlug": "glasgow", "destination": "Edinburgh", "sourceIds": ["scottishLez", "edinburgh"] },
+    { "slug": "edinburgh-to-london", "originSlug": "edinburgh", "destination": "London", "sourceIds": ["edinburgh", "london"] },
+    { "slug": "edinburgh-to-manchester", "originSlug": "edinburgh", "destination": "Manchester", "sourceIds": ["edinburgh", "manchester"] },
+    { "slug": "edinburgh-to-newcastle", "originSlug": "edinburgh", "destination": "Newcastle upon Tyne", "sourceIds": ["edinburgh", "newcastle"] },
+    { "slug": "edinburgh-to-bristol", "originSlug": "edinburgh", "destination": "Bristol", "sourceIds": ["edinburgh", "bristol"] },
+    { "slug": "aberdeen-to-london", "originSlug": "aberdeen", "destination": "London", "sourceIds": ["scottishLez", "london"] },
+    { "slug": "aberdeen-to-edinburgh", "originSlug": "aberdeen", "destination": "Edinburgh", "sourceIds": ["scottishLez", "edinburgh"] },
+    { "slug": "aberdeen-to-manchester", "originSlug": "aberdeen", "destination": "Manchester", "sourceIds": ["scottishLez", "manchester"] },
+    { "slug": "inverness-to-glasgow", "originSlug": "inverness", "destination": "Glasgow", "sourceIds": ["inverness", "trafficScotland", "scottishLez"] },
+    { "slug": "inverness-to-edinburgh", "originSlug": "inverness", "destination": "Edinburgh", "sourceIds": ["inverness", "trafficScotland", "edinburgh"] },
+    { "slug": "inverness-to-london", "originSlug": "inverness", "destination": "London", "sourceIds": ["inverness", "trafficScotland", "london"] },
+    { "slug": "dundee-to-london", "originSlug": "dundee", "destination": "London", "sourceIds": ["dundee", "london"] },
+    { "slug": "perth-to-manchester", "originSlug": "perth", "destination": "Manchester", "sourceIds": ["perth", "manchester"] },
+    { "slug": "stirling-to-birmingham", "originSlug": "stirling", "destination": "Birmingham", "sourceIds": ["stirling", "birmingham"] },
+    { "slug": "dunfermline-to-newcastle", "originSlug": "dunfermline", "destination": "Newcastle upon Tyne", "sourceIds": ["fife", "newcastle"] }
+  ]
+}

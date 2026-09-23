@@ -1,5 +1,7 @@
 # Scotland coverage plan — 23 September 2026
 
+> **Approved expansion update:** The owner subsequently approved a 3,500-page programme with review milestones at 250, 1,000 and 3,500. The original 32-area/54-URL inventory below remains the historical baseline, not the expanded count. See `scotland-expansion-review-2026-09-23.md` and `scotland-expansion-inventory-2026-09-23.json` for the first increment. Measured demand and town-level capacity remain unknown and are not fabricated. The later approval permits preparing this bounded review increment; publication and subsequent expansion still require review of the actual content and operational arrangements. No 3,500-page placeholder inventory is created.
+
 ## Scope and verified baseline
 
 The objective is to make useful moving information discoverable throughout Scotland, including towns outside the eight cities. The geographic inventory below is a research and delivery backlog. It is not a claim of operational availability, measured search demand, local driver capacity or Google indexing.

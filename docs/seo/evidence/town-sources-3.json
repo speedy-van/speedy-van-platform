@@ -1,0 +1,724 @@
+{
+  "batch": 3,
+  "createdAt": "2026-09-23",
+  "status": "newly-authored-after-workspace-loss",
+  "contentFile": "apps/web/src/lib/content/scotland-towns-3.ts",
+  "counts": {
+    "towns": 32,
+    "adviceSections": 96,
+    "faqs": 64,
+    "councilAreas": 5
+  },
+  "scope": "Collections in Scotland, with destinations across Britain. Service timing, access, vehicle and crew subject to assessment of the actual enquiry.",
+  "editorialMethod": "Individually authored local guidance. Official sources establish specified place names, local access-reference locations, or where to check current conditions. Packing, inventories and handling recommendations are editorial operational guidance, not claimed council advice or evidence of completed company jobs.",
+  "limitations": [
+    "No search volume or commercial demand data was available.",
+    "No completed moves, reviews, photographs, prices, depot addresses or driver allocations were invented.",
+    "All postcodes deliberately blank: customers must provide the precise booking address.",
+    "Place schema is used for all 32 settlements.",
+    "Nearby links are navigational geographic suggestions; no fixed mileage, travel duration or service availability is implied.",
+    "Direct access to the historical Prestonpans strategy PDF was blocked (403); only official indexed extracts were used.",
+    "The historical Loanhead plan URL returned 404 and was excluded from published source links.",
+    "Council directories locate public parking but do not grant removal loading permission or establish vehicle suitability."
+  ],
+  "sources": [
+    {
+      "id": "annan",
+      "label": "Dumfries and Galloway Council The Green car park location",
+      "url": "https://www.dumfriesandgalloway.gov.uk/roads-transport-parking/parking/find-car-park/green-car-park",
+      "retrievedAt": "2026-09-23",
+      "retrieval": "direct-official-page-read",
+      "supportAndLimits": "Direct council location record read. Confirms The Green car park in Annan, not a removal loading entitlement."
+    },
+    {
+      "id": "armadale",
+      "label": "West Lothian Council Armadale road closures",
+      "url": "https://www.westlothian.gov.uk/article/46604/Armadale-and-Blackridge-Road-Closures",
+      "retrievedAt": "2026-09-23",
+      "retrieval": "direct-official-page-read",
+      "supportAndLimits": "Direct council notices page read. West Lothian locality confirmed; central street names supported. Dates must be checked for the actual move."
+    },
+    {
+      "id": "bathgate",
+      "label": "West Lothian Council Bathgate road closures",
+      "url": "https://www.westlothian.gov.uk/article/46557/Bathgate-Road-Closures",
+      "retrievedAt": "2026-09-23",
+      "retrieval": "direct-official-page-read",
+      "supportAndLimits": "Direct dated council notices page read. Supports live-check advice and local road/street identifiers. No listed restriction asserted to be active indefinitely."
+    },
+    {
+      "id": "broxburn",
+      "label": "West Lothian Council Broxburn and Uphall road closures",
+      "url": "https://www.westlothian.gov.uk/article/46594/Broxburn-Uphall-and-Winchburgh-Road-Closures",
+      "retrievedAt": "2026-09-23",
+      "retrieval": "direct-official-page-read",
+      "supportAndLimits": "Direct local council notices page read. Supports East Mains estate and local road/path-works references; no completion or permanent restriction inferred."
+    },
+    {
+      "id": "dghubs",
+      "label": "Dumfries and Galloway Council transport hub progress",
+      "url": "https://www.dumfriesandgalloway.gov.uk/news/2026/latest-progress-new-transport-hubs-dumfries-galloway",
+      "retrievedAt": "2026-09-23",
+      "retrieval": "direct-official-page-read",
+      "supportAndLimits": "Direct council 10 March 2026 update read. Castle Douglas work was announced; guide explicitly avoids treating this as current construction/completion status or proof of a closure."
+    },
+    {
+      "id": "dgplans",
+      "label": "Dumfries and Galloway Council local place plan documents",
+      "url": "https://www.dumfriesandgalloway.gov.uk/publications/local-place-plan-documents",
+      "retrievedAt": "2026-09-23",
+      "retrieval": "direct-official-page-read",
+      "supportAndLimits": "Direct council document directory read. Supports names/scope of Newton Stewart/Minnigaff and Gretna/Rigg/Gretna Green plans; no unread PDF findings used."
+    },
+    {
+      "id": "dgwards",
+      "label": "Dumfries and Galloway Council local wards and settlements",
+      "url": "https://www.dumfriesandgalloway.gov.uk/council-elections/councillors-wards/local-wards",
+      "retrievedAt": "2026-09-23",
+      "retrieval": "direct-official-page-read",
+      "supportAndLimits": "Direct council settlement/ward list read. Used for place relationships only, not constituency population or driver service allocation."
+    },
+    {
+      "id": "east",
+      "label": "East Lothian Council car park access directory",
+      "url": "https://www.eastlothian.gov.uk/roads-parking-and-transport/parking/parking-east-lothian/street-car-parks",
+      "retrievedAt": "2026-09-23",
+      "retrieval": "direct-official-page-read",
+      "supportAndLimits": "Direct HTML read. Supports town-specific car park names/access and North Berwick June 2026 scheme notice. No parking prices, free-parking guarantee, van suitability or permission inferred."
+    },
+    {
+      "id": "eyemouth",
+      "label": "Scottish Borders Council Eyemouth planning brief: town topography",
+      "url": "https://www.scotborders.gov.uk/downloads/file/1334/former_eyemouth_high_planning_brief",
+      "retrievedAt": "2026-09-23",
+      "retrieval": "direct-official-page-read",
+      "supportAndLimits": "Direct official PDF text read, especially town topography at pages 7-8. Historical planning proposals are not presented as completed/current development; only stable harbour-to-hill geography is used."
+    },
+    {
+      "id": "gorebridge",
+      "label": "Midlothian Council Gorebridge conservation appraisal",
+      "url": "https://www.midlothian.gov.uk/downloads/file/3801/gorebridge_conservation_area_character_appraisal_november_2019",
+      "retrievedAt": "2026-09-23",
+      "retrieval": "direct-official-page-read",
+      "supportAndLimits": "Direct council appraisal listing/landing page read. Confirms appraisal exists. PDF interior was not read; no appraisal findings beyond existence used."
+    },
+    {
+      "id": "hawick",
+      "label": "Scottish Borders Council Hawick car parks",
+      "url": "https://www.scotborders.gov.uk/directory/48/car-parks/category/258",
+      "retrievedAt": "2026-09-23",
+      "retrieval": "direct-official-page-read",
+      "supportAndLimits": "Direct council town car park directory read. Names used as orientation only, never reserved or guaranteed removal loading."
+    },
+    {
+      "id": "jedburgh",
+      "label": "Scottish Borders Council Jedburgh car parks",
+      "url": "https://www.scotborders.gov.uk/directory/48/car-parks/category/259",
+      "retrievedAt": "2026-09-23",
+      "retrieval": "direct-official-page-read",
+      "supportAndLimits": "Direct council town car park directory read. Parking locations used as references; permissions and vehicle fit are not established."
+    },
+    {
+      "id": "kelso",
+      "label": "Scottish Borders Council Kelso car parks",
+      "url": "https://www.scotborders.gov.uk/directory/48/car-parks/category/260",
+      "retrievedAt": "2026-09-23",
+      "retrieval": "direct-official-page-read",
+      "supportAndLimits": "Direct council town car park directory read. Local names support orientation, not direct vehicle access to residential doors."
+    },
+    {
+      "id": "linlithgow",
+      "label": "West Lothian Council Linlithgow road closures",
+      "url": "https://www.westlothian.gov.uk/article/46581/Linlithgow-Road-Closures",
+      "retrievedAt": "2026-09-23",
+      "retrieval": "direct-official-page-read",
+      "supportAndLimits": "Direct council notices page read. Includes road, bridge and parking notices; instructions are to check relevant dates, not a permanent closure claim."
+    },
+    {
+      "id": "lockerbie",
+      "label": "Dumfries and Galloway Council Station Square car park location",
+      "url": "https://www.dumfriesandgalloway.gov.uk/roads-transport-parking/parking/find-car-park/station-square-car-park",
+      "retrievedAt": "2026-09-23",
+      "retrieval": "direct-official-page-read",
+      "supportAndLimits": "Direct council location record read. Confirms Station Square car park on Station Road; no station access or parking entitlement inferred."
+    },
+    {
+      "id": "melrose",
+      "label": "Scottish Borders Council Melrose car parks",
+      "url": "https://www.scotborders.gov.uk/directory/48/car-parks/category/262",
+      "retrievedAt": "2026-09-23",
+      "retrieval": "direct-official-page-read",
+      "supportAndLimits": "Direct council town car park directory read. Location names do not establish permission or suitability for loading."
+    },
+    {
+      "id": "midpaths",
+      "label": "Midlothian Council road and path closure information",
+      "url": "https://www.midlothian.gov.uk/info/200279/roads_and_travel/406/walking_and_cycling",
+      "retrievedAt": "2026-09-23",
+      "retrieval": "direct-official-page-read",
+      "supportAndLimits": "Direct HTML read. Council provides a link to the national road/path works map; no town-specific closure, parking exemption or vehicle access claim inferred."
+    },
+    {
+      "id": "midplans",
+      "label": "Midlothian Council registered local place plans",
+      "url": "https://www.midlothian.gov.uk/info/205/planning_policy/721/local_place_plans/4",
+      "retrievedAt": "2026-09-23",
+      "retrieval": "direct-official-page-read",
+      "supportAndLimits": "Direct register read, with Bonnyrigg and Mayfield/Easthouses landing pages also read. Supports place names and registered-plan scope only; no unread plan findings used."
+    },
+    {
+      "id": "peebles",
+      "label": "Scottish Borders Council Peebles car parks",
+      "url": "https://www.scotborders.gov.uk/directory/48/car-parks/category/261",
+      "retrievedAt": "2026-09-23",
+      "retrieval": "direct-official-page-read",
+      "supportAndLimits": "Direct council town car park directory read. Locations are references; no vehicle capacity or access assumption."
+    },
+    {
+      "id": "penicuik",
+      "label": "Midlothian Council Penicuik conservation appraisal",
+      "url": "https://www.midlothian.gov.uk/downloads/file/3802/caa_and_management_plan_penicuik",
+      "retrievedAt": "2026-09-23",
+      "retrieval": "direct-official-page-read",
+      "supportAndLimits": "Direct council appraisal listing/landing page read. Confirms appraisal exists. PDF interior was not read; access advice is conditional and property-specific, not a claim that all buildings have narrow stairs."
+    },
+    {
+      "id": "preston",
+      "label": "East Lothian Council Prestonpans town centre strategy",
+      "url": "https://www.eastlothian.gov.uk/download/downloads/id/28407/prestonpans_town_centre_strategy_sg.pdf",
+      "retrievedAt": "2026-09-23",
+      "retrieval": "official-indexed-extract-direct-403",
+      "supportAndLimits": "Official indexed PDF extract read; direct PDF retrieval returned 403. Supports High Street and conservation-area context only. Historic strategy is not used as evidence of current road access."
+    },
+    {
+      "id": "roads",
+      "label": "Traffic Scotland trunk roadworks information",
+      "url": "https://www.traffic.gov.scot/traffic-information/roadworks",
+      "retrievedAt": "2026-09-23",
+      "retrieval": "direct-official-page-read",
+      "supportAndLimits": "Direct Traffic Scotland roadworks page read. Supports checking trunk-road notices. No live journey duration, closure-free route or guaranteed arrival inferred."
+    },
+    {
+      "id": "selkirk",
+      "label": "Scottish Borders Council Selkirk car parks",
+      "url": "https://www.scotborders.gov.uk/directory/48/car-parks/category/263",
+      "retrievedAt": "2026-09-23",
+      "retrieval": "direct-official-page-read",
+      "supportAndLimits": "Direct council town car park directory read. Supports Market Place, West Port and Weavers Court/Dunsdale Road references; slope advice is conditional on the specific property."
+    },
+    {
+      "id": "stranraer",
+      "label": "Dumfries and Galloway Council Fisher Street car park location",
+      "url": "https://www.dumfriesandgalloway.gov.uk/roads-transport-parking/parking/find-car-park/fisher-street-car-parks",
+      "retrievedAt": "2026-09-23",
+      "retrieval": "direct-official-page-read",
+      "supportAndLimits": "Direct council location record read. Confirms Fisher Street car parks address on Princes Street. No parking suitability or entitlement inferred."
+    },
+    {
+      "id": "whitburn",
+      "label": "West Lothian Council Whitburn road closures",
+      "url": "https://www.westlothian.gov.uk/article/46647/Whitburn-and-Blackburn-Road-Closures",
+      "retrievedAt": "2026-09-23",
+      "retrieval": "direct-official-page-read",
+      "supportAndLimits": "Direct council notices page read. Supports the local notice source and West Main Street name only; not a claim that parking is always suspended."
+    }
+  ],
+  "excludedSources": [
+    {
+      "url": "https://www.midlothian.gov.uk/download/downloads/id/193/loanhead_neighbourhood_plan_review.pdf",
+      "result": "404 on direct retrieval; excluded from page source links"
+    },
+    {
+      "url": "https://www.eastlothian.gov.uk/roads-parking-and-transport/town-centre-parking-proposals/north-berwick-parking-scheme",
+      "result": "403 on direct retrieval. Published parking directory directly confirms June 2026 scheme notice; no details from blocked page used."
+    }
+  ],
+  "towns": [
+    {
+      "slug": "musselburgh",
+      "name": "Musselburgh",
+      "councilArea": "East Lothian",
+      "directoryRegion": "Edinburgh & Lothians",
+      "sourceIds": [
+        "east"
+      ],
+      "nearbyAreas": [
+        "edinburgh",
+        "prestonpans",
+        "tranent",
+        "dalkeith"
+      ]
+    },
+    {
+      "slug": "haddington",
+      "name": "Haddington",
+      "councilArea": "East Lothian",
+      "directoryRegion": "Edinburgh & Lothians",
+      "sourceIds": [
+        "east"
+      ],
+      "nearbyAreas": [
+        "tranent",
+        "north-berwick",
+        "dunbar",
+        "musselburgh"
+      ]
+    },
+    {
+      "slug": "tranent",
+      "name": "Tranent",
+      "councilArea": "East Lothian",
+      "directoryRegion": "Edinburgh & Lothians",
+      "sourceIds": [
+        "east"
+      ],
+      "nearbyAreas": [
+        "prestonpans",
+        "musselburgh",
+        "haddington",
+        "dalkeith"
+      ]
+    },
+    {
+      "slug": "prestonpans",
+      "name": "Prestonpans",
+      "councilArea": "East Lothian",
+      "directoryRegion": "Edinburgh & Lothians",
+      "sourceIds": [
+        "preston"
+      ],
+      "nearbyAreas": [
+        "musselburgh",
+        "tranent",
+        "haddington",
+        "edinburgh"
+      ]
+    },
+    {
+      "slug": "north-berwick",
+      "name": "North Berwick",
+      "councilArea": "East Lothian",
+      "directoryRegion": "Edinburgh & Lothians",
+      "sourceIds": [
+        "east"
+      ],
+      "nearbyAreas": [
+        "haddington",
+        "dunbar",
+        "prestonpans",
+        "musselburgh"
+      ]
+    },
+    {
+      "slug": "dunbar",
+      "name": "Dunbar",
+      "councilArea": "East Lothian",
+      "directoryRegion": "Edinburgh & Lothians",
+      "sourceIds": [
+        "east",
+        "roads"
+      ],
+      "nearbyAreas": [
+        "haddington",
+        "north-berwick",
+        "eyemouth",
+        "tranent"
+      ]
+    },
+    {
+      "slug": "dalkeith",
+      "name": "Dalkeith",
+      "councilArea": "Midlothian",
+      "directoryRegion": "Edinburgh & Lothians",
+      "sourceIds": [
+        "midpaths"
+      ],
+      "nearbyAreas": [
+        "bonnyrigg",
+        "mayfield",
+        "gorebridge",
+        "musselburgh"
+      ]
+    },
+    {
+      "slug": "bonnyrigg",
+      "name": "Bonnyrigg",
+      "councilArea": "Midlothian",
+      "directoryRegion": "Edinburgh & Lothians",
+      "sourceIds": [
+        "midplans"
+      ],
+      "nearbyAreas": [
+        "dalkeith",
+        "loanhead",
+        "mayfield",
+        "gorebridge"
+      ]
+    },
+    {
+      "slug": "penicuik",
+      "name": "Penicuik",
+      "councilArea": "Midlothian",
+      "directoryRegion": "Edinburgh & Lothians",
+      "sourceIds": [
+        "penicuik"
+      ],
+      "nearbyAreas": [
+        "loanhead",
+        "bonnyrigg",
+        "peebles",
+        "edinburgh"
+      ]
+    },
+    {
+      "slug": "loanhead",
+      "name": "Loanhead",
+      "councilArea": "Midlothian",
+      "directoryRegion": "Edinburgh & Lothians",
+      "sourceIds": [
+        "midpaths"
+      ],
+      "nearbyAreas": [
+        "bonnyrigg",
+        "penicuik",
+        "dalkeith",
+        "edinburgh"
+      ]
+    },
+    {
+      "slug": "mayfield",
+      "name": "Mayfield",
+      "councilArea": "Midlothian",
+      "directoryRegion": "Edinburgh & Lothians",
+      "sourceIds": [
+        "midplans"
+      ],
+      "nearbyAreas": [
+        "dalkeith",
+        "gorebridge",
+        "bonnyrigg",
+        "loanhead"
+      ]
+    },
+    {
+      "slug": "gorebridge",
+      "name": "Gorebridge",
+      "councilArea": "Midlothian",
+      "directoryRegion": "Edinburgh & Lothians",
+      "sourceIds": [
+        "gorebridge"
+      ],
+      "nearbyAreas": [
+        "mayfield",
+        "dalkeith",
+        "bonnyrigg",
+        "penicuik"
+      ]
+    },
+    {
+      "slug": "bathgate",
+      "name": "Bathgate",
+      "councilArea": "West Lothian",
+      "directoryRegion": "Edinburgh & Lothians",
+      "sourceIds": [
+        "bathgate"
+      ],
+      "nearbyAreas": [
+        "armadale",
+        "whitburn",
+        "linlithgow",
+        "livingston"
+      ]
+    },
+    {
+      "slug": "linlithgow",
+      "name": "Linlithgow",
+      "councilArea": "West Lothian",
+      "directoryRegion": "Edinburgh & Lothians",
+      "sourceIds": [
+        "linlithgow"
+      ],
+      "nearbyAreas": [
+        "bathgate",
+        "broxburn",
+        "uphall",
+        "falkirk"
+      ]
+    },
+    {
+      "slug": "broxburn",
+      "name": "Broxburn",
+      "councilArea": "West Lothian",
+      "directoryRegion": "Edinburgh & Lothians",
+      "sourceIds": [
+        "broxburn"
+      ],
+      "nearbyAreas": [
+        "uphall",
+        "livingston",
+        "linlithgow",
+        "bathgate"
+      ]
+    },
+    {
+      "slug": "armadale",
+      "name": "Armadale",
+      "councilArea": "West Lothian",
+      "directoryRegion": "Edinburgh & Lothians",
+      "sourceIds": [
+        "armadale"
+      ],
+      "nearbyAreas": [
+        "bathgate",
+        "whitburn",
+        "livingston",
+        "linlithgow"
+      ]
+    },
+    {
+      "slug": "whitburn",
+      "name": "Whitburn",
+      "councilArea": "West Lothian",
+      "directoryRegion": "Edinburgh & Lothians",
+      "sourceIds": [
+        "whitburn"
+      ],
+      "nearbyAreas": [
+        "armadale",
+        "bathgate",
+        "livingston",
+        "glasgow"
+      ]
+    },
+    {
+      "slug": "uphall",
+      "name": "Uphall",
+      "councilArea": "West Lothian",
+      "directoryRegion": "Edinburgh & Lothians",
+      "sourceIds": [
+        "broxburn"
+      ],
+      "nearbyAreas": [
+        "broxburn",
+        "livingston",
+        "bathgate",
+        "linlithgow"
+      ]
+    },
+    {
+      "slug": "hawick",
+      "name": "Hawick",
+      "councilArea": "Scottish Borders",
+      "directoryRegion": "Borders & South West",
+      "sourceIds": [
+        "hawick"
+      ],
+      "nearbyAreas": [
+        "selkirk",
+        "jedburgh",
+        "melrose",
+        "kelso"
+      ]
+    },
+    {
+      "slug": "kelso",
+      "name": "Kelso",
+      "councilArea": "Scottish Borders",
+      "directoryRegion": "Borders & South West",
+      "sourceIds": [
+        "kelso"
+      ],
+      "nearbyAreas": [
+        "jedburgh",
+        "melrose",
+        "selkirk",
+        "hawick"
+      ]
+    },
+    {
+      "slug": "selkirk",
+      "name": "Selkirk",
+      "councilArea": "Scottish Borders",
+      "directoryRegion": "Borders & South West",
+      "sourceIds": [
+        "selkirk"
+      ],
+      "nearbyAreas": [
+        "galashiels",
+        "melrose",
+        "hawick",
+        "peebles"
+      ]
+    },
+    {
+      "slug": "peebles",
+      "name": "Peebles",
+      "councilArea": "Scottish Borders",
+      "directoryRegion": "Borders & South West",
+      "sourceIds": [
+        "peebles"
+      ],
+      "nearbyAreas": [
+        "penicuik",
+        "selkirk",
+        "galashiels",
+        "edinburgh"
+      ]
+    },
+    {
+      "slug": "jedburgh",
+      "name": "Jedburgh",
+      "councilArea": "Scottish Borders",
+      "directoryRegion": "Borders & South West",
+      "sourceIds": [
+        "jedburgh",
+        "roads"
+      ],
+      "nearbyAreas": [
+        "kelso",
+        "hawick",
+        "melrose",
+        "selkirk"
+      ]
+    },
+    {
+      "slug": "eyemouth",
+      "name": "Eyemouth",
+      "councilArea": "Scottish Borders",
+      "directoryRegion": "Borders & South West",
+      "sourceIds": [
+        "eyemouth"
+      ],
+      "nearbyAreas": [
+        "dunbar",
+        "kelso",
+        "haddington",
+        "jedburgh"
+      ]
+    },
+    {
+      "slug": "melrose",
+      "name": "Melrose",
+      "councilArea": "Scottish Borders",
+      "directoryRegion": "Borders & South West",
+      "sourceIds": [
+        "melrose"
+      ],
+      "nearbyAreas": [
+        "galashiels",
+        "selkirk",
+        "kelso",
+        "jedburgh"
+      ]
+    },
+    {
+      "slug": "stranraer",
+      "name": "Stranraer",
+      "councilArea": "Dumfries and Galloway",
+      "directoryRegion": "Borders & South West",
+      "sourceIds": [
+        "stranraer",
+        "dgwards"
+      ],
+      "nearbyAreas": [
+        "newton-stewart",
+        "castle-douglas",
+        "dumfries",
+        "ayr"
+      ]
+    },
+    {
+      "slug": "annan",
+      "name": "Annan",
+      "councilArea": "Dumfries and Galloway",
+      "directoryRegion": "Borders & South West",
+      "sourceIds": [
+        "annan"
+      ],
+      "nearbyAreas": [
+        "gretna",
+        "lockerbie",
+        "dumfries",
+        "castle-douglas"
+      ]
+    },
+    {
+      "slug": "lockerbie",
+      "name": "Lockerbie",
+      "councilArea": "Dumfries and Galloway",
+      "directoryRegion": "Borders & South West",
+      "sourceIds": [
+        "lockerbie",
+        "roads"
+      ],
+      "nearbyAreas": [
+        "annan",
+        "gretna",
+        "dumfries",
+        "castle-douglas"
+      ]
+    },
+    {
+      "slug": "castle-douglas",
+      "name": "Castle Douglas",
+      "councilArea": "Dumfries and Galloway",
+      "directoryRegion": "Borders & South West",
+      "sourceIds": [
+        "dghubs",
+        "dgwards"
+      ],
+      "nearbyAreas": [
+        "dalbeattie",
+        "dumfries",
+        "newton-stewart",
+        "annan"
+      ]
+    },
+    {
+      "slug": "dalbeattie",
+      "name": "Dalbeattie",
+      "councilArea": "Dumfries and Galloway",
+      "directoryRegion": "Borders & South West",
+      "sourceIds": [
+        "dgwards"
+      ],
+      "nearbyAreas": [
+        "castle-douglas",
+        "dumfries",
+        "newton-stewart",
+        "annan"
+      ]
+    },
+    {
+      "slug": "newton-stewart",
+      "name": "Newton Stewart",
+      "councilArea": "Dumfries and Galloway",
+      "directoryRegion": "Borders & South West",
+      "sourceIds": [
+        "dgplans",
+        "roads"
+      ],
+      "nearbyAreas": [
+        "stranraer",
+        "castle-douglas",
+        "dalbeattie",
+        "dumfries"
+      ]
+    },
+    {
+      "slug": "gretna",
+      "name": "Gretna",
+      "councilArea": "Dumfries and Galloway",
+      "directoryRegion": "Borders & South West",
+      "sourceIds": [
+        "dgplans"
+      ],
+      "nearbyAreas": [
+        "annan",
+        "lockerbie",
+        "dumfries",
+        "castle-douglas"
+      ]
+    }
+  ]
+}

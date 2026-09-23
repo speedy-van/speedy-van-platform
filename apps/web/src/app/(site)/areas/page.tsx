@@ -70,7 +70,7 @@ export default function AreasPage() {
                 {AREAS.filter((area) => area.region === region).map((area) => (
                   <li key={area.slug}>
                     <Link href={`/areas/${area.slug}`} className="block rounded-lg px-2 py-3 font-semibold text-amber-300 underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-300">
-                      {area.name}<span className="ml-2 text-sm font-normal text-stone-300">{area.postcode}</span>
+                      {area.name}{area.postcode && <span className="ml-2 text-sm font-normal text-stone-300">{area.postcode}</span>}
                     </Link>
                   </li>
                 ))}
@@ -88,6 +88,7 @@ export default function AreasPage() {
           </p>
           <div className="mt-5 flex flex-wrap gap-x-6 gap-y-3">
             <Link href="/services/long-distance-removals" className={textLink}>Removals from Scotland across Britain</Link>
+            <Link href="/moving-routes" className={textLink}>Explore routes from Scotland</Link>
             <Link href="/services" className={textLink}>Compare moving services</Link>
             <Link href="/book" className={textLink}>Start a quote</Link>
           </div>
