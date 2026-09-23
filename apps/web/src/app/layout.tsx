@@ -25,7 +25,6 @@ export const metadata: Metadata = {
     type: "website",
     siteName: "SpeedyVan",
     locale: "en_GB",
-    url: SITE_URL,
     images: [
       {
         url: SITE_OG_IMAGE,

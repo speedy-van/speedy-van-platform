@@ -1,0 +1,113 @@
+{
+  "release_commit": "10c781c49970b3f44c8ee61e4063cb0175c51d71",
+  "release_tree": "e6fc1e99be22badd9c1a685ff96f432501016ca8",
+  "repository": "speedy-van/speedy-van-platform",
+  "branch": "fix/organic-search-and-booking-2026-09-21",
+  "production_method": "Dashboard Promote to Production: fresh production-environment rebuild of the exact preview source.",
+  "api": {
+    "project_id": "prj_QjawXiV1uA0WAOB0eb7x379ydY3f",
+    "root": "apps/api",
+    "preview_id": "A9cMtcwjmERyczvBnQaj3zE91hXq",
+    "production_id": "3hASzcuv7AutpMFHViDuZe8FL6sa",
+    "production_url": "https://api.speedyvan.uk",
+    "ready_at_utc": "2026-09-21T16:09:36Z",
+    "ready_time_source": "Authenticated deployment details; displayed 17:09:36 BST",
+    "status": "ready",
+    "live_checks": {
+      "passed": 10,
+      "failed": 0,
+      "evidence": "api-live-verification-2026-09-21.json"
+    },
+    "rollback_id": "4mQDCapaoV3vtVeHYnbkyEVMQQNC"
+  },
+  "web": {
+    "project_id": "prj_OkJrabaUpBmsMqNibYZc5cgnIqFg",
+    "root": "apps/web",
+    "preview_id": "5VkQpMoZtZZXCoqUKrq8hFRCX6fE",
+    "preview_url": "https://speedy-van-frp81zh56-wakaaahmad607-9482s-projects.vercel.app",
+    "production_id": "5jXbcona28QiqxAyY7S1He4F5P6a",
+    "production_url": "https://www.speedyvan.uk",
+    "ready_at_utc": "2026-09-21T16:13:56Z",
+    "status": "ready",
+    "rollback_id": "4CnN8XEktZw8716F6iX95EbCfgp3",
+    "ready_time_source": "Authenticated deployment details; displayed 17:13:56 BST",
+    "live_redirect_checks": {
+      "passed": 18,
+      "failed": 0,
+      "evidence": "redirect-live-verification-2026-09-21.json"
+    },
+    "live_html_checks": {
+      "passed": 414,
+      "failed": 0,
+      "pages": 47,
+      "evidence": "live-verification-2026-09-21.json"
+    }
+  },
+  "permissions_and_configuration": {
+    "selected_repository_access_saved": true,
+    "existing_selected_repositories_retained": true,
+    "extra_app_permission_request_accepted": false,
+    "both_existing_projects_git_connected": true,
+    "include_outside_root_files": true,
+    "web_dashboard_build_output_install_overrides": "cleared; application vercel.json applies",
+    "production_branch_tracking": "main; unchanged",
+    "auto_assign_domains": true,
+    "production_tracking_settings_save": "automatic approval review rejected; unsaved form restored, no retry",
+    "dns_changed": false
+  },
+  "local_regression_tests": {
+    "passed": 100,
+    "failed": 0,
+    "note": "Rerun after London calendar-date fix;19 pricing tests."
+  },
+  "browser_preview": {
+    "homepage_rendered": true,
+    "service_content_rendered": true,
+    "service_to_booking_cta": true,
+    "selected_service": "Man and Van",
+    "empty_route_blocks_continue": true,
+    "desktop_viewport_observed": true,
+    "mobile_360px_verified": false,
+    "payment_submitted": false
+  },
+  "remaining_verification": [
+    "Stripe test-mode end-to-end and actual Neon concurrent payment transitions",
+    "360px and 768px viewport checks",
+    "Analytics provider receipt and webhook subscription audit",
+    "Field Core Web Vitals and Search Console performance aggregates"
+  ],
+  "scope_limits": [
+    "No database migration, seed, payment, refund, or customer booking created.",
+    "Public API probes calculate synthetic prices only and read non-personal catalogue/service configuration.",
+    "No claim of ranking gain or completed Google indexing.",
+    "Vercel connector scope returned403; approved authenticated dashboard used."
+  ],
+  "live_browser": "booking-live-verification-2026-09-21.json",
+  "search_console": "search-console-release-2026-09-21.json",
+  "api_followup": {
+    "source_commit": "5e5881a27cca0f6a602473c78a25c13369d1afc5",
+    "source_tree": "893080491e47996d82a943d6607f6ecbef79b68e",
+    "reason": "Use London civil date for booking calendar and urgency across BST/GMT midnight",
+    "status": "ready",
+    "web_source_unchanged": true,
+    "rollback_id": "3hASzcuv7AutpMFHViDuZe8FL6sa",
+    "preview_id": "31SW5uUTneCGbpdVXYsCmW8vggKn",
+    "production_id": "5woPnYouSe8kAHqwCsp1o5QoxzSg",
+    "production_url": "https://api.speedyvan.uk",
+    "immutable_url": "https://speedy-van-p33yevzul-wakaaahmad607-9482s-projects.vercel.app",
+    "ready_at_utc": "2026-09-21T16:27:50Z",
+    "ready_time_source": "Authenticated deployment details; displayed 17:27:50 BST",
+    "build_duration_seconds": 22,
+    "live_checks": {
+      "passed": 10,
+      "failed": 0,
+      "evidence": "api-london-live-verification-2026-09-21.json"
+    }
+  },
+  "current_production": {
+    "web_deployment_id": "5jXbcona28QiqxAyY7S1He4F5P6a",
+    "web_commit": "10c781c49970b3f44c8ee61e4063cb0175c51d71",
+    "api_deployment_id": "5woPnYouSe8kAHqwCsp1o5QoxzSg",
+    "api_commit": "5e5881a27cca0f6a602473c78a25c13369d1afc5"
+  }
+}

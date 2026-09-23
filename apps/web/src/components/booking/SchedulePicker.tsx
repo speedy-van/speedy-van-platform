@@ -3,29 +3,11 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useBooking, type PriceLineItem, type TimeSlot } from "@/lib/booking-store";
 import { WeatherChip } from "./WeatherChip";
+import { parsePricingResult, type DayPrice, type PricingResult, type SlotData } from "./quote-response";
 
 export interface SchedulePickerProps {
   onBack?: () => void;
   onContinue?: () => void;
-}
-
-interface SlotData {
-  slot: TimeSlot;
-  price: number;
-  tier: "green" | "yellow" | "red";
-}
-
-interface DayPrice {
-  date: string;
-  slots: SlotData[];
-}
-
-interface PricingResult {
-  days: DayPrice[];
-  staticLineItems: PriceLineItem[];
-  staticSubtotal: number;
-  currency: string;
-  symbol: string;
 }
 
 const API_BASE =
@@ -191,6 +173,7 @@ export function SchedulePicker({ onBack, onContinue }: SchedulePickerProps) {
   const [error, setError] = useState("");
   const [validationError, setValidationError] = useState("");
   const requestSeq = useRef(0);
+  const pricingAbort = useRef<AbortController | null>(null);
   const datesRailRef = useRef<HTMLDivElement | null>(null);
 
   const pricingRequest = useMemo(
@@ -228,8 +211,13 @@ export function SchedulePicker({ onBack, onContinue }: SchedulePickerProps) {
   const fetchPricing = useCallback(async () => {
     const requestId = requestSeq.current + 1;
     requestSeq.current = requestId;
+    pricingAbort.current?.abort();
+    const controller = new AbortController();
+    pricingAbort.current = controller;
     setLoading(true);
+    setPricing(null);
     setError("");
+    dispatch({ type: "SET_PRICE", total: 0 });
     dispatch({ type: "SET_QUOTE_STATUS", status: "loading" });
 
     try {
@@ -244,11 +232,13 @@ export function SchedulePicker({ onBack, onContinue }: SchedulePickerProps) {
       const res = await fetch(`${API_BASE}/pricing/calculate`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        signal: controller.signal,
         body: JSON.stringify(pricingRequest),
       });
       const json = await res.json();
-      if (requestId !== requestSeq.current) return;
-      if (!res.ok || !json.success || !json.data?.days?.length) {
+      if (requestId !== requestSeq.current || controller.signal.aborted) return;
+      const nextPricing = parsePricingResult(json.data);
+      if (!res.ok || !json.success || !nextPricing) {
         console.warn("Pricing quote request failed", {
           status: res.status,
           code: json?.code,
@@ -261,7 +251,13 @@ export function SchedulePicker({ onBack, onContinue }: SchedulePickerProps) {
         return;
       }
 
-      setPricing(json.data as PricingResult);
+      if (nextPricing.days.length === 0) {
+        const nextError = "No dates are available for this move right now. Please retry later or contact us to check availability.";
+        setError(nextError);
+        dispatch({ type: "SET_QUOTE_STATUS", status: "failed", error: nextError });
+        return;
+      }
+      setPricing(nextPricing);
     } catch {
       if (requestId !== requestSeq.current) return;
       const nextError = "We couldn't reach pricing. Please check the connection and retry.";
@@ -275,6 +271,10 @@ export function SchedulePicker({ onBack, onContinue }: SchedulePickerProps) {
 
   useEffect(() => {
     void fetchPricing();
+    return () => {
+      requestSeq.current += 1;
+      pricingAbort.current?.abort();
+    };
   }, [fetchPricing]);
 
   const selectedDayData = pricing?.days.find((day) => day.date === state.selectedDate);
@@ -299,6 +299,7 @@ export function SchedulePicker({ onBack, onContinue }: SchedulePickerProps) {
     }
 
     if (!selectedSlotData) {
+      setValidationError("Your previous appointment is no longer available. Please choose another slot.");
       dispatch({ type: "SET_DATE", date: "" });
       dispatch({ type: "SET_PRICE", total: 0 });
       dispatch({ type: "SET_BREAKDOWN", items: pricing.staticLineItems });

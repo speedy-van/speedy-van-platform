@@ -1,5 +1,5 @@
 import type { InventoryMode } from "./room-inventory";
-import { SERVICES } from "./services";
+import { SERVICES, getBookableService } from "./services";
 
 export type BookingIntentId = "house-removals" | "furniture" | "storage" | "office" | "other";
 
@@ -140,6 +140,7 @@ export const BOOKING_SERVICE_OPTIONS: BookingServiceOption[] = [
 const OPTION_BY_ID = new Map(BOOKING_SERVICE_OPTIONS.map((option) => [option.id, option]));
 
 const INTENT_ALIASES: Record<string, BookingIntentId> = {
+  house: "house-removals",
   "house-removals": "house-removals",
   "house-removal": "house-removals",
   "long-distance-removals": "house-removals",
@@ -173,4 +174,31 @@ export function getBookingServiceOptionForState(
 
 export function getBookingServiceStartingFrom(option: BookingServiceOption): number | null {
   return SERVICES.find((service) => service.slug === option.serviceSlug)?.startingFrom ?? null;
+}
+
+/** Resolve the existing public service links and the homepage service choices. */
+export function resolveBookingService(value?: string | null) {
+  if (!value) return null;
+  const service = SERVICES.find((candidate) => candidate.slug === value);
+  const option = getBookingServiceOption(value);
+  if (!service && !option) return null;
+
+  if (!service && option) {
+    return {
+      serviceSlug: option.serviceSlug,
+      serviceName: option.label,
+      entryServiceSlug: option.id,
+      inventoryMode: option.inventoryMode,
+    };
+  }
+
+  const bookable = getBookableService(service!);
+  const bookingOption = option ?? getBookingServiceOption(bookable.slug);
+  const roomPlanner = ["house-removal", "flat-removals", "long-distance-removals", "small-moves"].includes(value);
+  return {
+    serviceSlug: bookable.slug,
+    serviceName: service!.name,
+    entryServiceSlug: bookingOption?.id ?? value,
+    inventoryMode: roomPlanner ? "rooms" as const : bookingOption?.inventoryMode ?? "items" as const,
+  };
 }

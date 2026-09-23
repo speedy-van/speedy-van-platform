@@ -1,6 +1,7 @@
 import type { Context } from "hono";
 import { ZodError } from "zod";
 import { fail } from "@speedy-van/shared";
+import { PaymentValidationError } from "../lib/payment-validation";
 
 export function errorHandler(err: Error, c: Context): Response {
   console.error(`[API Error] ${c.req.method} ${c.req.path}:`, err.message);
@@ -9,8 +10,20 @@ export function errorHandler(err: Error, c: Context): Response {
     return c.json(fail("Validation failed", "VALIDATION_ERROR", err.flatten()), 400);
   }
 
+  if (err instanceof PaymentValidationError) {
+    return c.json(fail(err.message, err.code), err.status);
+  }
+
   if (err.message === "STRIPE_NOT_CONFIGURED") {
     return c.json(fail("Payments are not configured on this server", "STRIPE_NOT_CONFIGURED"), 503);
+  }
+
+  if (err.message === "PRICING_CONFIG_UNAVAILABLE") {
+    return c.json(fail("We could not load prices. Please try again shortly.", "PRICING_CONFIG_UNAVAILABLE"), 503);
+  }
+
+  if (err.message === "SELECTED_SLOT_UNAVAILABLE") {
+    return c.json(fail("Your selected date or time is no longer available. Please choose another slot.", "SELECTED_SLOT_UNAVAILABLE"), 409);
   }
 
   if (err.message === "NOT_FOUND") {

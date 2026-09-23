@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useBooking } from "@/lib/booking-store";
 import { getBookingServiceOptionForState } from "@/lib/booking-service-options";
 import { PriceExplainerLink } from "./PriceExplainerLink";
@@ -49,7 +48,7 @@ export function BookingSummary({ compact = false, collapsible = false }: Booking
     : "";
   const slotLabel = state.selectedTimeSlot ? SLOT_LABELS[state.selectedTimeSlot] : "";
 
-  const editBtn = "inline-flex min-h-9 min-w-9 items-center justify-center rounded-lg px-2 text-xs font-bold text-amber-400 transition hover:text-amber-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400";
+  const editBtn = "inline-flex min-h-9 min-w-9 items-center justify-center rounded-lg px-2 text-xs font-bold text-amber-400 transition hover:text-amber-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 disabled:cursor-not-allowed disabled:opacity-40";
   const sectionDivider = "border-t border-amber-900/20 pt-3";
 
   const content = (
@@ -73,7 +72,7 @@ export function BookingSummary({ compact = false, collapsible = false }: Booking
           <div className="flex items-center justify-between gap-3">
             <h3 className="font-bold text-white/80">Service</h3>
             {state.serviceSlug && (
-              <Link href="/#get-quote" className={editBtn}>Edit</Link>
+              <button type="button" disabled={state.checkoutLocked} onClick={() => dispatch({ type: "SET_STEP", step: 1 })} className={editBtn}>Edit</button>
             )}
           </div>
           <p className="mt-1 text-booking-body">{state.serviceName || "Not selected"}</p>
@@ -86,7 +85,7 @@ export function BookingSummary({ compact = false, collapsible = false }: Booking
           <div className="flex items-center justify-between gap-3">
             <h3 className="font-bold text-white/80">Journey</h3>
             {(state.pickup || state.dropoff) && (
-              <button type="button" onClick={() => dispatch({ type: "SET_STEP", step: 2 })} className={editBtn}>Edit</button>
+              <button type="button" disabled={state.checkoutLocked} onClick={() => dispatch({ type: "SET_STEP", step: 2 })} className={editBtn}>Edit</button>
             )}
           </div>
           <div className="mt-1 space-y-1 text-booking-body">
@@ -102,7 +101,7 @@ export function BookingSummary({ compact = false, collapsible = false }: Booking
           <div className="flex items-center justify-between gap-3">
             <h3 className="font-bold text-white/80">Items and help</h3>
             {(totalItems > 0 || hasExtras) && (
-              <button type="button" onClick={() => dispatch({ type: "SET_STEP", step: 3 })} className={editBtn}>Edit</button>
+              <button type="button" disabled={state.checkoutLocked} onClick={() => dispatch({ type: "SET_STEP", step: 3 })} className={editBtn}>Edit</button>
             )}
           </div>
           <p className="mt-1 text-booking-body">
@@ -131,7 +130,7 @@ export function BookingSummary({ compact = false, collapsible = false }: Booking
           <div className="flex items-center justify-between gap-3">
             <h3 className="font-bold text-white/80">Appointment</h3>
             {state.selectedDate && (
-              <button type="button" onClick={() => dispatch({ type: "SET_STEP", step: 4 })} className={editBtn}>Edit</button>
+              <button type="button" disabled={state.checkoutLocked} onClick={() => dispatch({ type: "SET_STEP", step: 4 })} className={editBtn}>Edit</button>
             )}
           </div>
           <p className="mt-1 text-booking-body">

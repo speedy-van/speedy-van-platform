@@ -9,7 +9,11 @@ export const config = {
 
 export default async function handler(req: IncomingMessage, res: ServerResponse) {
   const host = req.headers["host"] ?? "localhost";
-  const url = `https://${host}${req.url ?? "/"}`;
+  const url = new URL(req.url ?? "/", `https://${host}`);
+  // The web origin forwards /api/* while mobile clients call the API root.
+  // Normalise only the API path segment; keep the method, query and raw body.
+  if (url.pathname === "/api") url.pathname = "/";
+  else if (url.pathname.startsWith("/api/")) url.pathname = url.pathname.slice(4);
 
   let body: Buffer | null = null;
   if (req.method !== "GET" && req.method !== "HEAD") {

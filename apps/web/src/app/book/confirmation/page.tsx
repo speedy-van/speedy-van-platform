@@ -7,11 +7,12 @@ export const metadata: Metadata = {
 };
 
 interface PageProps {
-  searchParams: { ref?: string };
+  searchParams: Promise<{ ref?: string | string[] }>;
 }
 
-export default function ConfirmationPage({ searchParams }: PageProps) {
-  const ref = searchParams.ref || "";
+export default async function ConfirmationPage({ searchParams }: PageProps) {
+  const query = await searchParams;
+  const ref = (Array.isArray(query.ref) ? query.ref[0] : query.ref) ?? "";
 
   return (
     <div className="min-h-screen bg-[#0A0A0A] flex flex-col items-center justify-center py-12 px-4">
@@ -53,7 +54,7 @@ export default function ConfirmationPage({ searchParams }: PageProps) {
         <div className="flex flex-col gap-3">
           {ref && (
             <Link
-              href={`/track?ref=${ref}`}
+              href={`/track?ref=${encodeURIComponent(ref)}`}
               className="py-3 rounded-xl text-sm font-black text-black text-center transition hover:opacity-90 active:scale-95"
               style={{ background: "linear-gradient(135deg, #F59E0B 0%, #EA580C 100%)" }}
             >

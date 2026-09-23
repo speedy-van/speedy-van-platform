@@ -1,0 +1,96 @@
+{
+  "base": "http://127.0.0.1:3002",
+  "result": "PASS",
+  "checks": [
+    {
+      "path": "/areas/inverness",
+      "status": 200,
+      "title": "Man and Van & Removals in Inverness | SpeedyVan",
+      "canonical": "https://www.speedyvan.uk/areas/inverness",
+      "service_links": 8,
+      "faq_count": 4,
+      "schema": "Service and BreadcrumbList pass"
+    },
+    {
+      "path": "/areas/aberdeen",
+      "status": 200,
+      "title": "Man and Van & Removals in Aberdeen | SpeedyVan",
+      "canonical": "https://www.speedyvan.uk/areas/aberdeen",
+      "service_links": 8,
+      "faq_count": 4,
+      "schema": "Service and BreadcrumbList pass"
+    },
+    {
+      "path": "/",
+      "status": 200,
+      "city_links": "both present"
+    },
+    {
+      "path": "/services/man-and-van",
+      "status": 200,
+      "city_links": "both present"
+    },
+    {
+      "path": "/services/furniture-delivery",
+      "status": 200,
+      "city_links": "both present"
+    },
+    {
+      "path": "/services/house-removal",
+      "status": 200,
+      "city_links": "both present"
+    },
+    {
+      "path": "/services/flat-removals",
+      "status": 200,
+      "city_links": "both present"
+    },
+    {
+      "path": "/services/office-removal",
+      "status": 200,
+      "city_links": "both present"
+    },
+    {
+      "path": "/services/small-moves",
+      "status": 200,
+      "city_links": "both present"
+    },
+    {
+      "path": "/services/long-distance-removals",
+      "status": 200,
+      "city_links": "both present"
+    },
+    {
+      "path": "/services/student-move",
+      "status": 200,
+      "city_links": "both present"
+    },
+    {
+      "path": "/areas/city-seo-invalid-slug",
+      "status": 404,
+      "robots": "noindex"
+    },
+    {
+      "path": "/services/city-seo-invalid-slug",
+      "status": 404,
+      "robots": "noindex"
+    },
+    {
+      "path": "/book",
+      "status": 200,
+      "robots": "noindex"
+    },
+    {
+      "path": "/sitemap.xml",
+      "status": 200,
+      "url_count": 47,
+      "city_entries": "once each"
+    },
+    {
+      "path": "/robots.txt",
+      "status": 200,
+      "city_crawling": "allowed"
+    }
+  ],
+  "limits": "HTTP and initial HTML checks; no payment, database mutation, browser interaction or field performance measurement."
+}

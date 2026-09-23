@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { JsonLd } from "@/components/seo/JsonLd";
 import EuropeanEnquiryForm from "@/components/european/EuropeanEnquiryForm";
@@ -6,7 +7,8 @@ import {
   EUROPEAN_COUNTRIES,
   INDICATIVE_PRICES,
 } from "@/lib/european";
-import { SITE_LEGAL_NAME, SITE_URL, absoluteUrl } from "@/lib/seo/constants";
+import { SITE_LEGAL_NAME, SITE_URL } from "@/lib/seo/constants";
+import { buildPageMetadata } from "@/lib/seo/metadata";
 
 const money = new Intl.NumberFormat("en-GB", {
   style: "currency",
@@ -14,19 +16,12 @@ const money = new Intl.NumberFormat("en-GB", {
   maximumFractionDigits: 0,
 });
 
-export const metadata: Metadata = {
-  title: "European Removals from Scotland | Speedy Van",
+export const metadata: Metadata = buildPageMetadata({
+  title: "European Removals from Scotland",
   description:
     "Door-to-door European removals from Scotland to France, Germany, Spain, Netherlands, Ireland and more. Packing options, customs paperwork support and written quotes.",
-  alternates: { canonical: absoluteUrl("/services/european-removals") },
-  openGraph: {
-    title: "European Removals from Scotland — Speedy Van",
-    description:
-      "Door-to-door international moves from Scotland to Europe with packing options and customs paperwork support.",
-    url: absoluteUrl("/services/european-removals"),
-    type: "website",
-  },
-};
+  path: "/services/european-removals",
+});
 
 const FEATURES = [
   {
@@ -190,7 +185,7 @@ export default function EuropeanRemovalsPage() {
               aria-label="Call us on 07909 032889"
               className="transition-transform hover:scale-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 rounded-full"
             >
-              <img src="/call-icon.png" alt="Call us" width={52} height={52} />
+              <Image src="/call-icon.png" alt="" width={52} height={52} sizes="52px" />
             </a>
           </div>
           <div className="mt-10 grid grid-cols-2 sm:grid-cols-4 gap-4 max-w-3xl mx-auto text-center">

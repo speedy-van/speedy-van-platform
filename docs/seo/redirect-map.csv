@@ -1,8 +1,9 @@
-legacy_url_pattern,exact_destination,status,path_query_handling,ownership_layer,regression_check,live_observation
-https://speedyvan.uk/*,https://www.speedyvan.uk/$1,308,preserve path and query for GET/HEAD public pages,apps/web/src/middleware.ts,local host redirect verified,live one hop observed
-https://speedy-van.co.uk/*,https://www.speedyvan.uk/$1,308,preserve path and query for GET/HEAD public pages,apps/web/src/middleware.ts,local direct host redirect verified,live two-hop normalisation observed
-https://www.speedy-van.co.uk/*,https://www.speedyvan.uk/$1,308,preserve path and query for GET/HEAD public pages,apps/web/src/middleware.ts,local host redirect verified,live one hop observed
-http://speedy-van.co.uk/*,https://www.speedyvan.uk/$1,308,preserve path and query for GET/HEAD public pages,apps/web/src/middleware.ts,local host redirect verified through middleware layer; platform may add protocol hop,live protocol plus host hops observed
-https://www.speedyvan.uk/*,https://www.speedyvan.uk/$1,none,primary host no redirect,none,local primary host returned 200,primary 200 observed
-*/api/*,same URL,none,API bypass,apps/web/src/middleware.ts,local old-host API request was not redirected,not verified live
-non-GET-or-HEAD public request,same URL,none,method bypass,apps/web/src/middleware.ts,local old-host POST request was not redirected,not verified live
+legacy_url_pattern,exact_destination,status,path_query_handling,ownership_layer,verification_scope,notes
+https://speedyvan.uk/*,https://www.speedyvan.uk/$1,308,preserve path and query for public GET/HEAD,web middleware plus production host attachment,live checked earlier 2026-09-21; local assertions,one HTTPS hop for inspected public paths
+https://speedy-van.co.uk/*,https://www.speedyvan.uk/$1,308,preserve path and query for public GET/HEAD,web middleware plus production host attachment,live checked earlier 2026-09-21; local assertions,one HTTPS hop for inspected public paths
+https://www.speedy-van.co.uk/*,https://www.speedyvan.uk/$1,308,preserve path and query for public GET/HEAD,web middleware plus production host attachment,live checked earlier 2026-09-21; local assertions,one HTTPS hop for inspected public paths
+http://speedy-van.co.uk/*,https://www.speedyvan.uk/$1,platform plus 308,preserve path and query,platform TLS plus web middleware,platform-dependent,HTTP may add a protocol redirect hop
+https://www.speedyvan.uk/*,same URL,none,primary host serves canonical page,production web,live and local HTML checks,invalid paths remain real 404
+*/api,same URL,none,exact API root bypass,apps/web/src/middleware.ts,source and local assertions,keep API contracts
+*/api/*,same URL,none,API descendant bypass,apps/web/src/middleware.ts,source and local assertions,keep auth payment and mobile contracts
+non-GET-or-HEAD request,same URL,none,method bypass,apps/web/src/middleware.ts,source and local assertions,no public-host redirect for mutations

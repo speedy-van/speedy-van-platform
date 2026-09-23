@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { Suspense, useState } from "react";
+import { useParams, useSearchParams } from "next/navigation";
 import Link from "next/link";
 
 const API_BASE =
@@ -8,15 +9,25 @@ const API_BASE =
     ? "http://localhost:4000"
     : (process.env.NEXT_PUBLIC_API_URL ?? "https://api.speedyvan.uk");
 
-export default function ReviewPage({
-  params,
-  searchParams,
-}: {
-  params: { reference: string };
-  searchParams: { email?: string };
-}) {
-  const { reference } = params;
-  const emailFromQuery = searchParams.email ?? "";
+export default function ReviewPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen bg-[#0A0A0A] px-4 py-12 text-center">
+          <h1 className="text-2xl font-black text-white">Leave a review</h1>
+          <p role="status" className="mt-3 text-white/70">Loading review form…</p>
+        </div>
+      }
+    >
+      <ReviewContent />
+    </Suspense>
+  );
+}
+
+function ReviewContent() {
+  const { reference } = useParams<{ reference: string }>();
+  const searchParams = useSearchParams();
+  const emailFromQuery = searchParams.get("email") ?? "";
 
   const [email, setEmail] = useState(emailFromQuery);
   const [rating, setRating] = useState(0);

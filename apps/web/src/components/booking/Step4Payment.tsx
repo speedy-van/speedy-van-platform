@@ -1,21 +1,35 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useEffect, useState, useRef } from "react";
+import Image from "next/image";
 import type { FormEvent, ReactNode } from "react";
-import { loadStripe } from "@stripe/stripe-js";
+import { loadStripe } from "@stripe/stripe-js/pure";
 import {
   Elements,
   CardElement,
   useStripe,
   useElements,
 } from "@stripe/react-stripe-js";
-import { useBooking, type SelectedItem, type TimeSlot } from "@/lib/booking-store";
+import { serialiseBookingDraft, useBooking, type SelectedItem, type TimeSlot } from "@/lib/booking-store";
 import { useRouter } from "next/navigation";
 import { trackPurchase } from "@/lib/analytics";
 import { PriceExplainerLink } from "./PriceExplainerLink";
+import { CheckoutRecovery } from "./CheckoutRecovery";
+import { completeCardPayment, parseBookingPaymentSession, type BookingPaymentSession } from "./checkout-session";
 
 const STRIPE_PK = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || "";
-const stripePromise = STRIPE_PK ? loadStripe(STRIPE_PK, { locale: "en-GB" }) : null;
+type StripeClientPromise = ReturnType<typeof loadStripe>;
+let cachedStripePromise: StripeClientPromise | null = null;
+
+/** Route prefetch may evaluate this module; initialise the SDK only after payment mounts. */
+function getStripeClientPromise(): StripeClientPromise | null {
+  if (!STRIPE_PK) return null;
+  if (!cachedStripePromise) {
+    // Elements accepts a null result; keep SDK failures in the existing unavailable state.
+    cachedStripePromise = loadStripe(STRIPE_PK, { locale: "en-GB" }).catch(() => null);
+  }
+  return cachedStripePromise;
+}
 const API_BASE =
   process.env.NODE_ENV === "development"
     ? "http://localhost:4000"
@@ -58,6 +72,7 @@ const reviewDate = new Intl.DateTimeFormat("en-GB", {
 
 interface CheckoutFormProps {
   onComplete: (bookingRef: string) => void;
+  stripePromise: StripeClientPromise | null;
 }
 
 function shortAddress(address: string): string {
@@ -86,7 +101,7 @@ function ReviewSection({
   editStep: 1 | 2 | 3 | 4;
   children: ReactNode;
 }) {
-  const { dispatch } = useBooking();
+  const { state, dispatch } = useBooking();
 
   return (
     <section
@@ -97,8 +112,9 @@ function ReviewSection({
         <h2 className="text-base font-black text-white">{title}</h2>
         <button
           type="button"
+          disabled={state.checkoutLocked}
           onClick={() => dispatch({ type: "SET_STEP", step: editStep })}
-          className="min-h-10 rounded-lg px-3 text-sm font-bold text-amber-400 transition hover:text-amber-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400"
+          className="min-h-10 rounded-lg px-3 text-sm font-bold text-amber-400 transition hover:text-amber-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 disabled:cursor-not-allowed disabled:opacity-40"
         >
           Edit
         </button>
@@ -187,7 +203,7 @@ function BookingReview() {
             </p>
             <p className="mt-1 text-amber-100/55">Final amount is checked again before your booking is created.</p>
           </div>
-          <p className="text-2xl font-black text-white">{money.format(state.clientTotal)}</p>
+          <p className="text-2xl font-black text-white">{state.checkoutLocked && !state.clientSecret ? "Check booking status" : money.format(state.clientTotal)}</p>
         </div>
         {state.priceBreakdown.length > 0 && (
           <div className="mt-3">
@@ -199,13 +215,35 @@ function BookingReview() {
   );
 }
 
-function CheckoutForm({ onComplete }: CheckoutFormProps) {
+function CheckoutForm({ onComplete, stripePromise }: CheckoutFormProps) {
   const { state, dispatch } = useBooking();
   const stripe = useStripe();
   const elements = useElements();
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const submittingRef = useRef(false);
+  const mounted = useRef(true);
+  const [paymentUnavailable, setPaymentUnavailable] = useState(!STRIPE_PK);
+  const [creationUncertain, setCreationUncertain] = useState(state.checkoutLocked && !state.clientSecret);
+  const pendingSession = useRef<BookingPaymentSession | null>(parseBookingPaymentSession({
+    bookingId: state.bookingId,
+    bookingRef: state.bookingRef,
+    clientSecret: state.clientSecret,
+    totalPrice: state.clientTotal,
+  }));
+
+  useEffect(() => {
+    mounted.current = true;
+    let active = true;
+    if (stripePromise) {
+      void stripePromise.then((client) => {
+        if (active) setPaymentUnavailable(!client);
+      }).catch(() => {
+        if (active) setPaymentUnavailable(true);
+      });
+    }
+    return () => { active = false; mounted.current = false; };
+  }, [stripePromise]);
 
   const [name, setName] = useState(state.customerName);
   const [email, setEmail] = useState(state.customerEmail);
@@ -217,106 +255,128 @@ function CheckoutForm({ onComplete }: CheckoutFormProps) {
     e.preventDefault();
     setError("");
 
-    if (submittingRef.current) return;
+    if (submittingRef.current || creationUncertain) return;
+    if (!stripe || !elements || paymentUnavailable) {
+      return setError("Online payment is unavailable right now. Please contact us to arrange your booking.");
+    }
+    const card = elements.getElement(CardElement);
+    if (!card) return setError("Please wait for the secure payment form to load.");
+    if (!state.pickup || !state.dropoff || !state.serviceSlug || state.items.length === 0 || state.distanceMiles <= 0) {
+      return setError("Please check your journey and items before payment.");
+    }
     if (state.quoteStatus !== "valid" || !state.selectedDate || !state.selectedTimeSlot || state.clientTotal <= 0) {
       return setError("Please choose a valid date and time before payment.");
     }
     if (!name.trim() || !email.trim() || !phone.trim()) {
       return setError("Please fill in all your details.");
     }
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
       return setError("Please enter a valid email address.");
+    }
+
+    if (!/^(?:0|\+44|0044)\d{10}$/.test(phone.replace(/[\s()-]/g, ""))) {
+      return setError("Please enter a valid UK phone number.");
     }
 
     submittingRef.current = true;
     setSubmitting(true);
-
+    if (!pendingSession.current) {
+      dispatch({ type: "SET_CUSTOMER", name: name.trim(), email: email.trim(), phone: phone.trim() });
+    }
+    dispatch({ type: "START_CHECKOUT" });
     try {
-      const createRes = await fetch(`${API_BASE}/booking/create`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          customerName: name.trim(),
-          customerEmail: email.trim(),
-          customerPhone: phone.trim(),
-          serviceSlug: state.serviceSlug,
-          entryServiceSlug: state.entryServiceSlug || undefined,
-          serviceName: state.serviceName,
-          serviceVariant: state.serviceVariant || undefined,
-          pickupAddress: state.pickup!.address,
-          pickupPostcode: state.pickup!.postcode,
-          pickupLat: state.pickup!.lat,
-          pickupLng: state.pickup!.lng,
-          pickupFloor: state.pickupFloor,
-          pickupHasLift: state.pickupHasLift,
-          dropoffAddress: state.dropoff!.address,
-          dropoffPostcode: state.dropoff!.postcode,
-          dropoffLat: state.dropoff!.lat,
-          dropoffLng: state.dropoff!.lng,
-          dropoffFloor: state.dropoffFloor,
-          dropoffHasLift: state.dropoffHasLift,
-          distanceMiles: state.distanceMiles,
-          selectedDate: state.selectedDate,
-          selectedTimeSlot: state.selectedTimeSlot,
-          helpersCount: state.helpersCount,
-          needsPacking: state.needsPacking,
-          needsAssembly: state.needsAssembly,
-          selectedItems: state.items,
-          clientTotal: state.clientTotal,
-        }),
-      });
+      localStorage.setItem("sv_booking_draft_v1", serialiseBookingDraft({
+        ...state, checkoutLocked: true, customerName: name.trim(), customerEmail: email.trim(), customerPhone: phone.trim(),
+      }));
+    } catch { /* The in-memory checkout lock still protects this booking. */ }
 
-      const createJson = await createRes.json();
-      if (!createJson.success) {
-        console.warn("Booking create request failed", {
-          status: createRes.status,
-          code: createJson?.code,
-          error: createJson?.error,
-        });
-        throw new Error(BOOKING_ERROR_MESSAGE);
-      }
-
-      const { bookingId, bookingRef, clientSecret, totalPrice } = createJson.data as {
-        bookingId: string;
-        bookingRef: string;
-        clientSecret: string | null;
-        totalPrice: number;
-      };
-
-      const finalAmount = typeof totalPrice === "number" ? totalPrice : state.clientTotal;
-      dispatch({ type: "SET_BOOKING", bookingId, bookingRef, clientSecret: clientSecret || "", total: finalAmount });
-      dispatch({ type: "SET_CUSTOMER", name, email, phone });
-
-      if (clientSecret && stripe && elements) {
-        const cardEl = elements.getElement(CardElement);
-        if (!cardEl) throw new Error("Card element not found.");
-
-        const { error: stripeErr, paymentIntent } = await stripe.confirmCardPayment(clientSecret, {
-          payment_method: { card: cardEl, billing_details: { name, email } },
-        });
-
-        if (stripeErr) {
-          throw new Error(stripeErr.message || "Payment failed.");
-        }
-
-        const confirmRes = await fetch(`${API_BASE}/booking/confirm`, {
+    let waitingForCreateResponse = false;
+    try {
+      let session = pendingSession.current;
+      if (!session) {
+        waitingForCreateResponse = true;
+        const createRes = await fetch(`${API_BASE}/booking/create`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            bookingId,
-            stripePaymentIntentId: paymentIntent!.id,
+            customerName: name.trim(),
+            customerEmail: email.trim(),
+            customerPhone: phone.trim(),
+            serviceSlug: state.serviceSlug,
+            entryServiceSlug: state.entryServiceSlug || undefined,
+            serviceName: state.serviceName,
+            serviceVariant: state.serviceVariant || undefined,
+            pickupAddress: state.pickup!.address,
+            pickupPostcode: state.pickup!.postcode,
+            pickupLat: state.pickup!.lat,
+            pickupLng: state.pickup!.lng,
+            pickupFloor: state.pickupFloor,
+            pickupHasLift: state.pickupHasLift,
+            dropoffAddress: state.dropoff!.address,
+            dropoffPostcode: state.dropoff!.postcode,
+            dropoffLat: state.dropoff!.lat,
+            dropoffLng: state.dropoff!.lng,
+            dropoffFloor: state.dropoffFloor,
+            dropoffHasLift: state.dropoffHasLift,
+            distanceMiles: state.distanceMiles,
+            selectedDate: state.selectedDate,
+            selectedTimeSlot: state.selectedTimeSlot,
+            helpersCount: state.helpersCount,
+            needsPacking: state.needsPacking,
+            needsAssembly: state.needsAssembly,
+            selectedItems: state.items,
+            clientTotal: state.clientTotal,
           }),
         });
-        const confirmJson = await confirmRes.json();
-        if (!confirmJson.success) {
-          console.warn("Booking confirm request failed", {
-            status: confirmRes.status,
-            code: confirmJson?.code,
-            error: confirmJson?.error,
-          });
-          throw new Error("We couldn't confirm your payment. Please contact us and we'll check it straight away.");
+        const createJson = await createRes.json();
+        if (!createJson || typeof createJson.success !== "boolean") {
+          throw new Error("Invalid booking response.");
+        }
+        waitingForCreateResponse = false;
+        if (!createRes.ok || !createJson.success) {
+          dispatch({ type: "CHECKOUT_REJECTED" });
+          if (createJson?.code === "PRICE_CHANGED") {
+            dispatch({ type: "SET_QUOTE_STATUS", status: "stale", error: "Your quote has changed. Please choose your date and time again." });
+            throw new Error("Your quote has changed. Please return to Date and time for a fresh price.");
+          }
+          throw new Error(BOOKING_ERROR_MESSAGE);
+        }
+        session = parseBookingPaymentSession(createJson.data);
+        if (!session) {
+          setCreationUncertain(true);
+          throw new Error("We couldn't open a secure payment session. Please contact us to check your booking before trying again.");
+        }
+        if (!mounted.current) return;
+        pendingSession.current = session;
+        try {
+          localStorage.setItem("sv_booking_draft_v1", serialiseBookingDraft({
+            ...state, checkoutLocked: true, bookingId: session.bookingId, bookingRef: session.bookingRef,
+            clientSecret: session.clientSecret, clientTotal: session.totalPrice,
+            customerName: name.trim(), customerEmail: email.trim(), customerPhone: phone.trim(),
+          }));
+        } catch { /* Never persist the payment client secret. */ }
+        dispatch({ type: "SET_BOOKING", bookingId: session.bookingId, bookingRef: session.bookingRef, clientSecret: session.clientSecret, total: session.totalPrice });
+        if (Math.round(session.totalPrice * 100) !== Math.round(state.clientTotal * 100)) {
+          throw new Error(`Your confirmed price is now ${money.format(session.totalPrice)}. Review the updated total and select Pay again to continue.`);
         }
       }
+
+      if (!mounted.current) return;
+      await completeCardPayment(session, stripe, card, { name: name.trim(), email: email.trim() }, async (bookingId, paymentIntentId) => {
+        const confirmRes = await fetch(`${API_BASE}/booking/confirm`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ bookingId, stripePaymentIntentId: paymentIntentId }),
+        });
+        const confirmJson = await confirmRes.json().catch(() => null);
+        if (!confirmRes.ok || !confirmJson?.success) {
+          if (confirmJson?.code === "BOOKING_CANCELLED") {
+            throw new Error("Payment was received, but this booking is cancelled. Please contact us before booking again.");
+          }
+          throw new Error("We couldn't confirm your booking. Please retry confirmation or contact us; do not make another payment.");
+        }
+      });
+      const { bookingRef, totalPrice: finalAmount } = session;
 
       if (!purchaseTrackedRef.current) {
         purchaseTrackedRef.current = true;
@@ -327,13 +387,20 @@ function CheckoutForm({ onComplete }: CheckoutFormProps) {
         }
       }
 
-      onComplete(bookingRef);
+      try { localStorage.removeItem("sv_booking_draft_v1"); } catch { /* Storage may be unavailable. */ }
+      if (mounted.current) onComplete(bookingRef);
       try { localStorage.setItem("sv-customer-email", email.trim()); } catch { /* ignore */ }
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Something went wrong.");
+      if (!mounted.current) return;
+      if (waitingForCreateResponse) {
+        setCreationUncertain(true);
+        setError("We couldn't check whether your booking was created. Please contact us before trying again.");
+      } else {
+        setError(err instanceof Error ? err.message : "Something went wrong. Please retry or contact us.");
+      }
     } finally {
       submittingRef.current = false;
-      setSubmitting(false);
+      if (mounted.current) setSubmitting(false);
     }
   }
 
@@ -357,6 +424,7 @@ function CheckoutForm({ onComplete }: CheckoutFormProps) {
             value={name}
             onChange={(e) => setName(e.target.value)}
             required
+            disabled={submitting || state.checkoutLocked}
             autoComplete="name"
             className="min-h-12 w-full rounded-xl px-4 py-3 text-base text-white placeholder-white/30 focus:outline-none focus:ring-2 focus:ring-amber-400"
             style={inputStyle}
@@ -371,6 +439,7 @@ function CheckoutForm({ onComplete }: CheckoutFormProps) {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
+            disabled={submitting || state.checkoutLocked}
             autoComplete="email"
             inputMode="email"
             className="min-h-12 w-full rounded-xl px-4 py-3 text-base text-white placeholder-white/30 focus:outline-none focus:ring-2 focus:ring-amber-400"
@@ -386,6 +455,7 @@ function CheckoutForm({ onComplete }: CheckoutFormProps) {
             value={phone}
             onChange={(e) => setPhone(e.target.value)}
             required
+            disabled={submitting || state.checkoutLocked}
             autoComplete="tel-national"
             inputMode="tel"
             className="min-h-12 w-full rounded-xl px-4 py-3 text-base text-white placeholder-white/30 focus:outline-none focus:ring-2 focus:ring-amber-400"
@@ -396,7 +466,11 @@ function CheckoutForm({ onComplete }: CheckoutFormProps) {
       </div>
 
       {/* ── Payment details ── */}
-      {stripePromise ? (
+      {!paymentUnavailable && (!stripePromise || !stripe || !elements) ? (
+        <div role="status" className="rounded-2xl p-5 text-sm text-amber-100" style={cardStyle}>
+          Loading secure payment form…
+        </div>
+      ) : stripePromise && !paymentUnavailable ? (
         <div className="rounded-2xl p-5" style={cardStyle}>
           <h2 className="text-base font-black text-white mb-3">Payment details</h2>
           <div
@@ -412,8 +486,8 @@ function CheckoutForm({ onComplete }: CheckoutFormProps) {
           className="rounded-2xl p-4 text-sm"
           style={{ background: "rgba(245,158,11,0.08)", boxShadow: "0 0 0 1px rgba(245,158,11,0.20)" }}
         >
-          <p className="font-bold text-amber-400">Pay on arrival</p>
-          <p className="mt-1 text-amber-100/60">Payment processing is not configured. Your booking will be created and you can pay later.</p>
+          <p className="font-bold text-amber-400">Online payment unavailable</p>
+          <p className="mt-1 text-amber-100/60">Please contact us to arrange your booking. No online payment has been confirmed.</p>
         </div>
       )}
 
@@ -446,7 +520,7 @@ function CheckoutForm({ onComplete }: CheckoutFormProps) {
             aria-label="Call us on 07909 032889"
             className="flex justify-center transition-transform hover:scale-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 rounded-full"
           >
-            <img src="/call-icon.png" alt="Call us" width={52} height={52} />
+            <Image src="/call-icon.png" alt="Call us" width={52} height={52} />
           </a>
           <a
             href="https://wa.me/447909032889"
@@ -464,7 +538,7 @@ function CheckoutForm({ onComplete }: CheckoutFormProps) {
       <button
         id="booking-primary-action"
         type="submit"
-        disabled={submitting || (!stripe && !!stripePromise) || state.quoteStatus !== "valid" || state.clientTotal <= 0}
+        disabled={submitting || creationUncertain || paymentUnavailable || !stripe || !elements || state.quoteStatus !== "valid" || state.clientTotal <= 0}
         className="hidden min-h-12 w-full items-center justify-center rounded-xl px-5 text-base font-black text-black shadow-lg transition hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:ring-offset-2 focus-visible:ring-offset-booking-background disabled:cursor-not-allowed disabled:opacity-40 lg:flex"
         style={{ background: "linear-gradient(135deg, #F59E0B 0%, #EA580C 100%)" }}
       >
@@ -474,7 +548,7 @@ function CheckoutForm({ onComplete }: CheckoutFormProps) {
             Processing...
           </span>
         ) : (
-          `Pay ${money.format(state.clientTotal)} and confirm →`
+          creationUncertain ? "Check booking status" : `Pay ${money.format(state.clientTotal)} and confirm →`
         )}
       </button>
     </form>
@@ -482,12 +556,18 @@ function CheckoutForm({ onComplete }: CheckoutFormProps) {
 }
 
 export function Step4Payment() {
-  const { dispatch } = useBooking();
+  const { state, dispatch } = useBooking();
   const router = useRouter();
+  const [stripePromise, setStripePromise] = useState<StripeClientPromise | null>(null);
+
+  useEffect(() => {
+    setStripePromise(getStripeClientPromise());
+  }, []);
 
   function handleComplete(bookingRef: string) {
-    dispatch({ type: "RESET" });
-    router.push(`/book/confirmation?ref=${bookingRef}`);
+    dispatch({ type: "CHECKOUT_COMPLETE" });
+    try { localStorage.removeItem("sv_booking_draft_v1"); } catch { /* Storage may be unavailable. */ }
+    router.push(`/book/confirmation?ref=${encodeURIComponent(bookingRef)}`);
   }
 
   const content = (
@@ -495,8 +575,9 @@ export function Step4Payment() {
       <div>
         <button
           type="button"
+          disabled={state.checkoutLocked}
           onClick={() => dispatch({ type: "SET_STEP", step: 4 })}
-          className="mb-4 inline-flex min-h-10 items-center gap-1.5 rounded-lg px-3 text-sm font-semibold text-amber-400/70 transition hover:text-amber-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400"
+          className="mb-4 inline-flex min-h-10 items-center gap-1.5 rounded-lg px-3 text-sm font-semibold text-amber-400/70 transition hover:text-amber-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 disabled:cursor-not-allowed disabled:opacity-40"
         >
           <span aria-hidden="true">←</span> Back
         </button>
@@ -507,18 +588,25 @@ export function Step4Payment() {
         </p>
       </div>
 
+      {state.checkoutLocked && (
+        <div role="status" className="rounded-2xl border border-amber-500/30 bg-amber-500/10 p-4 text-sm leading-6 text-amber-100">
+          <p className="font-bold text-white">Check this booking before starting another payment</p>
+          <p className="mt-1">
+            {state.clientSecret
+              ? "Your booking details are saved for this payment. If a payment attempt fails, use the same payment form to retry. If payment has already succeeded, the retry only checks its confirmation."
+              : "This checkout needs confirmation before starting another booking or payment. Wait for the current attempt, or contact us if it cannot finish."}
+          </p>
+          {state.bookingRef && <p className="mt-2">Booking reference: <strong>{state.bookingRef}</strong></p>}
+          <p className="mt-2"><a href="tel:07909032889" className="font-bold underline">Call us to check your booking</a></p>
+          {state.bookingRef && <p className="mt-2"><a href={`/track?ref=${encodeURIComponent(state.bookingRef)}`} className="font-bold underline">Check booking status</a></p>}
+        </div>
+      )}
+
+      <CheckoutRecovery />
       <BookingReview />
-      <CheckoutForm onComplete={handleComplete} />
+      <CheckoutForm onComplete={handleComplete} stripePromise={stripePromise} />
     </div>
   );
 
-  if (stripePromise) {
-    return (
-      <Elements stripe={stripePromise}>
-        {content}
-      </Elements>
-    );
-  }
-
-  return content;
+  return <Elements stripe={stripePromise}>{content}</Elements>;
 }

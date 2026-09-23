@@ -46,8 +46,8 @@ export function Step1Service() {
   return (
     <section className="space-y-6">
       <div>
-        <p className="text-sm font-semibold uppercase tracking-[0.08em] text-primary-600">Step 1 of 5</p>
-        <h1 className="mt-2 text-3xl font-bold tracking-normal text-stone-950">What do you need?</h1>
+        <p className="text-sm font-semibold uppercase tracking-[0.08em] text-amber-400">Start your quote</p>
+        <h1 className="mt-2 text-3xl font-bold tracking-normal text-white">What do you need?</h1>
       </div>
 
       <div className="grid gap-3 md:grid-cols-2">

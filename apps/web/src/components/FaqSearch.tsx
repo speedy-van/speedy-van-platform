@@ -1,5 +1,7 @@
 "use client";
 
+import { trackAnalyticsEvent } from "@/lib/analytics";
+
 import { useMemo, useState } from "react";
 
 export interface Faq {
@@ -8,23 +10,8 @@ export interface Faq {
 }
 
 function track(name: string, payload: Record<string, unknown> = {}) {
-  if (typeof window === "undefined") return;
-  const w = window as Window & {
-    gtag?: (...args: unknown[]) => void;
-    dataLayer?: unknown[];
-  };
-  try {
-    w.gtag?.("event", name, { event_category: "engagement", ...payload });
-  } catch {
-    /* ignore */
-  }
-  try {
-    w.dataLayer?.push({ event: name, ...payload });
-  } catch {
-    /* ignore */
-  }
+  trackAnalyticsEvent(name, { event_category: "engagement", ...payload });
 }
-
 export function FaqSearch({ faqs }: { faqs: Faq[] }) {
   const [query, setQuery] = useState("");
 

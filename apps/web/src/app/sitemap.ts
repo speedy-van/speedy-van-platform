@@ -1,5 +1,7 @@
 import type { MetadataRoute } from "next";
 import { AREAS } from "@/lib/areas";
+import { LOCAL_SERVICE_PAGES } from "@/lib/content/city-service-pages";
+import { MOVING_ROUTE_PAGES } from "@/lib/content/moving-route-pages";
 import { SERVICES } from "@/lib/services";
 import { absoluteUrl } from "@/lib/seo/constants";
 
@@ -14,7 +16,12 @@ interface SitemapPage {
 
 const staticPages: SitemapPage[] = [
   { path: "/", changeFrequency: "daily", priority: 1 },
+  { path: "/services", changeFrequency: "weekly", priority: 0.9 },
+  { path: "/areas", changeFrequency: "weekly", priority: 0.9 },
+  { path: "/moving-routes", changeFrequency: "monthly", priority: 0.7 },
   { path: "/pricing", changeFrequency: "weekly", priority: 0.7 },
+  { path: "/guides", changeFrequency: "monthly", priority: 0.6 },
+  { path: "/guides/man-and-van-or-house-removals", changeFrequency: "monthly", priority: 0.6 },
   { path: "/privacy", changeFrequency: "yearly", priority: 0.2 },
   { path: "/terms", changeFrequency: "yearly", priority: 0.2 },
   { path: "/cookies", changeFrequency: "yearly", priority: 0.2 },
@@ -56,5 +63,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...areaPages,
     ...servicePages,
     ...internationalPages,
+    ...LOCAL_SERVICE_PAGES.map((page): SitemapPage => ({ path: `/areas/${page.areaSlug}/${page.serviceSlug}`, changeFrequency: "monthly", priority: 0.7 })),
+    ...MOVING_ROUTE_PAGES.map((page): SitemapPage => ({ path: `/moving-routes/${page.slug}`, changeFrequency: "monthly", priority: 0.7 })),
   ].map(sitemapEntry);
 }

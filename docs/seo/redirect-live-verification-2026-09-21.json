@@ -1,0 +1,153 @@
+{
+  "checked_at_utc": "2026-09-21T16:14:55.457304+00:00",
+  "scope": "Public canonical-host redirects, encoded queries, API bypass, safe nonexistent mutation path and private HTML headers",
+  "passed": 18,
+  "failed": 0,
+  "checks": [
+    {
+      "url": "https://speedyvan.uk/",
+      "method": "GET",
+      "status": 308,
+      "location": "https://www.speedyvan.uk/",
+      "x_robots_tag": null,
+      "passed": true
+    },
+    {
+      "url": "https://speedyvan.uk/services/man-and-van?utm_source=release-check&ref=a%2Fb",
+      "method": "GET",
+      "status": 308,
+      "location": "https://www.speedyvan.uk/services/man-and-van?utm_source=release-check&ref=a%2Fb",
+      "x_robots_tag": null,
+      "passed": true
+    },
+    {
+      "url": "https://speedyvan.uk/privacy",
+      "method": "GET",
+      "status": 308,
+      "location": "https://www.speedyvan.uk/privacy",
+      "x_robots_tag": null,
+      "passed": true
+    },
+    {
+      "url": "https://speedyvan.uk/api/health",
+      "method": "GET",
+      "status": 200,
+      "location": null,
+      "x_robots_tag": null,
+      "passed": true
+    },
+    {
+      "url": "https://speedyvan.uk/qa-release-no-route",
+      "method": "POST",
+      "status": 404,
+      "location": null,
+      "x_robots_tag": null,
+      "passed": true
+    },
+    {
+      "url": "https://speedy-van.co.uk/",
+      "method": "GET",
+      "status": 308,
+      "location": "https://www.speedyvan.uk/",
+      "x_robots_tag": null,
+      "passed": true
+    },
+    {
+      "url": "https://speedy-van.co.uk/services/man-and-van?utm_source=release-check&ref=a%2Fb",
+      "method": "GET",
+      "status": 308,
+      "location": "https://www.speedyvan.uk/services/man-and-van?utm_source=release-check&ref=a%2Fb",
+      "x_robots_tag": null,
+      "passed": true
+    },
+    {
+      "url": "https://speedy-van.co.uk/privacy",
+      "method": "GET",
+      "status": 308,
+      "location": "https://www.speedyvan.uk/privacy",
+      "x_robots_tag": null,
+      "passed": true
+    },
+    {
+      "url": "https://speedy-van.co.uk/api/health",
+      "method": "GET",
+      "status": 200,
+      "location": null,
+      "x_robots_tag": null,
+      "passed": true
+    },
+    {
+      "url": "https://speedy-van.co.uk/qa-release-no-route",
+      "method": "POST",
+      "status": 404,
+      "location": null,
+      "x_robots_tag": null,
+      "passed": true
+    },
+    {
+      "url": "https://www.speedy-van.co.uk/",
+      "method": "GET",
+      "status": 308,
+      "location": "https://www.speedyvan.uk/",
+      "x_robots_tag": null,
+      "passed": true
+    },
+    {
+      "url": "https://www.speedy-van.co.uk/services/man-and-van?utm_source=release-check&ref=a%2Fb",
+      "method": "GET",
+      "status": 308,
+      "location": "https://www.speedyvan.uk/services/man-and-van?utm_source=release-check&ref=a%2Fb",
+      "x_robots_tag": null,
+      "passed": true
+    },
+    {
+      "url": "https://www.speedy-van.co.uk/privacy",
+      "method": "GET",
+      "status": 308,
+      "location": "https://www.speedyvan.uk/privacy",
+      "x_robots_tag": null,
+      "passed": true
+    },
+    {
+      "url": "https://www.speedy-van.co.uk/api/health",
+      "method": "GET",
+      "status": 200,
+      "location": null,
+      "x_robots_tag": null,
+      "passed": true
+    },
+    {
+      "url": "https://www.speedy-van.co.uk/qa-release-no-route",
+      "method": "POST",
+      "status": 404,
+      "location": null,
+      "x_robots_tag": null,
+      "passed": true
+    },
+    {
+      "url": "https://www.speedyvan.uk/api/health",
+      "method": "GET",
+      "status": 200,
+      "location": null,
+      "x_robots_tag": null,
+      "passed": true
+    },
+    {
+      "url": "https://www.speedyvan.uk/admin",
+      "method": "GET",
+      "status": 200,
+      "location": null,
+      "x_robots_tag": "noindex, nofollow",
+      "passed": true
+    },
+    {
+      "url": "https://www.speedyvan.uk/driver",
+      "method": "GET",
+      "status": 404,
+      "location": null,
+      "x_robots_tag": "noindex, nofollow",
+      "passed": true,
+      "note": "Correct genuine 404: source has no /driver root page; implemented driver pages are /driver/login, /driver/dashboard, and related routes. Initial checker assumed a root page incorrectly."
+    }
+  ]
+}

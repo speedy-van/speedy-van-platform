@@ -1,0 +1,32 @@
+{
+  "configuration": "apps/web/vercel.json",
+  "rootDirectory": "apps/web",
+  "includeFilesOutsideRootDirectory": true,
+  "framework": "nextjs",
+  "nodeVersion": "24.x",
+  "installCommand": "npm --prefix ../.. ci --include=dev",
+  "buildCommand": "cd ../.. && npm run db:generate && npm run build --workspace packages/db && npm run build --workspace apps/web",
+  "outputDirectory": ".next",
+  "installDryRun": "passed",
+  "configuredProductionBuild": "passed",
+  "nextVersion": "15.5.25",
+  "generatedPages": 75,
+  "prismaRhelEngineTraced": true,
+  "rootFileTracingVerified": true,
+  "productionApiRewritePreserved": true,
+  "generatedTrackedSourceUnchanged": true,
+  "initialLocalFontFailure": "One sanitised run excluded network proxy variables and could not resolve Google Fonts. One retry retained the provided proxy and CA variables and passed. No font or package changes.",
+  "executedBuildCommand": "cd ../.. && npm run db:generate && npm run build --workspace packages/db && npm run build --workspace apps/web",
+  "configuredBuildCommandAtVerification": "cd ../.. && npm run db:generate && npm run build --workspace packages/db && npm run build --workspace apps/web",
+  "currentLocalConfiguredBuildCommand": "cd ../.. && npm run db:generate && npm run build --workspace packages/db && npm run build --workspace apps/web",
+  "currentLocalConfigurationSha256": "b4b14e8eb0de21cdf86a4e5afe80ebf07d0c9c4b988a503160a72e576526d7d4",
+  "executionWorkingDirectory": "apps/web",
+  "executedCommandMatchesCurrentLocalConfiguration": true,
+  "commandVerificationMethod": "The verification process parsed apps/web/vercel.json and passed its buildCommand directly to subprocess.run with cwd=apps/web. The successful run used the cd ../.. command recorded above.",
+  "supersededLocalAttempt": {
+    "command": "npm --prefix ../.. run db:generate && npm --prefix ../.. run build --workspace packages/db && npm run build",
+    "result": "failed locally before Next build: npm reported No workspaces found for --workspace=packages/db",
+    "equivalenceClaimed": false
+  },
+  "cloudConfigurationVerifiedByThisReport": false
+}

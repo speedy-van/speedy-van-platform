@@ -1,0 +1,3030 @@
+{
+  "checked_at": "2026-09-23T16:42:21.535964+00:00",
+  "base_url": "http://127.0.0.1:3012",
+  "scope": "Local GET/HEAD and initial HTML only; no writes, browser interaction, field-performance or provider-payment claim",
+  "source_inventory": {
+    "expected_urls": 54,
+    "configured_areas": 32,
+    "configured_indexable_services": 12
+  },
+  "passed": 618,
+  "failed": [],
+  "pages": [
+    {
+      "path": "/",
+      "canonical": [
+        "https://www.speedyvan.uk"
+      ],
+      "title": "SpeedyVan | Man and Van, Removals & Delivery Across Scotland",
+      "h1": [
+        "Man and Van Services Across Scotland"
+      ]
+    },
+    {
+      "path": "/services",
+      "canonical": [
+        "https://www.speedyvan.uk/services"
+      ],
+      "title": "Man and Van, Removals and Delivery Services in Scotland | SpeedyVan",
+      "h1": [
+        "Moving services across Scotland"
+      ]
+    },
+    {
+      "path": "/areas",
+      "canonical": [
+        "https://www.speedyvan.uk/areas"
+      ],
+      "title": "Scottish Service Areas for Man and Van and Removals | SpeedyVan",
+      "h1": [
+        "Man and van and removals in Scotland"
+      ]
+    },
+    {
+      "path": "/pricing",
+      "canonical": [
+        "https://www.speedyvan.uk/pricing"
+      ],
+      "title": "Moving Prices in Scotland | SpeedyVan",
+      "h1": [
+        "Moving Prices in Scotland"
+      ]
+    },
+    {
+      "path": "/guides",
+      "canonical": [
+        "https://www.speedyvan.uk/guides"
+      ],
+      "title": "Moving Guides: Services, Costs and Local Planning | SpeedyVan",
+      "h1": [
+        "Moving guides"
+      ]
+    },
+    {
+      "path": "/guides/man-and-van-or-house-removals",
+      "canonical": [
+        "https://www.speedyvan.uk/guides/man-and-van-or-house-removals"
+      ],
+      "title": "Man and Van or House Removals: Which Do You Need? | SpeedyVan",
+      "h1": [
+        "Man and van or house removals: which do you need?"
+      ]
+    },
+    {
+      "path": "/privacy",
+      "canonical": [
+        "https://www.speedyvan.uk/privacy"
+      ],
+      "title": "Privacy Policy | SpeedyVan",
+      "h1": [
+        "Privacy Policy"
+      ]
+    },
+    {
+      "path": "/terms",
+      "canonical": [
+        "https://www.speedyvan.uk/terms"
+      ],
+      "title": "Terms & Conditions | SpeedyVan",
+      "h1": [
+        "Terms & Conditions"
+      ]
+    },
+    {
+      "path": "/cookies",
+      "canonical": [
+        "https://www.speedyvan.uk/cookies"
+      ],
+      "title": "Cookie Policy | SpeedyVan",
+      "h1": [
+        "Cookie Policy"
+      ]
+    },
+    {
+      "path": "/areas/glasgow",
+      "canonical": [
+        "https://www.speedyvan.uk/areas/glasgow"
+      ],
+      "title": "Man and Van in Glasgow | SpeedyVan",
+      "h1": [
+        "Man and Van in Glasgow"
+      ]
+    },
+    {
+      "path": "/areas/glasgow-west-end",
+      "canonical": [
+        "https://www.speedyvan.uk/areas/glasgow-west-end"
+      ],
+      "title": "Man and Van in Glasgow West End | SpeedyVan",
+      "h1": [
+        "Man and Van in Glasgow West End"
+      ]
+    },
+    {
+      "path": "/areas/glasgow-southside",
+      "canonical": [
+        "https://www.speedyvan.uk/areas/glasgow-southside"
+      ],
+      "title": "Man and Van in Glasgow Southside | SpeedyVan",
+      "h1": [
+        "Man and Van in Glasgow Southside"
+      ]
+    },
+    {
+      "path": "/areas/paisley",
+      "canonical": [
+        "https://www.speedyvan.uk/areas/paisley"
+      ],
+      "title": "Man and Van in Paisley | SpeedyVan",
+      "h1": [
+        "Man and Van in Paisley"
+      ]
+    },
+    {
+      "path": "/areas/edinburgh",
+      "canonical": [
+        "https://www.speedyvan.uk/areas/edinburgh"
+      ],
+      "title": "Man and Van in Edinburgh | SpeedyVan",
+      "h1": [
+        "Man and Van in Edinburgh"
+      ]
+    },
+    {
+      "path": "/areas/edinburgh-leith",
+      "canonical": [
+        "https://www.speedyvan.uk/areas/edinburgh-leith"
+      ],
+      "title": "Man and Van in Leith, Edinburgh | SpeedyVan",
+      "h1": [
+        "Man and Van in Leith, Edinburgh"
+      ]
+    },
+    {
+      "path": "/areas/edinburgh-south",
+      "canonical": [
+        "https://www.speedyvan.uk/areas/edinburgh-south"
+      ],
+      "title": "Man and Van in South Edinburgh | SpeedyVan",
+      "h1": [
+        "Man and Van in South Edinburgh"
+      ]
+    },
+    {
+      "path": "/areas/livingston",
+      "canonical": [
+        "https://www.speedyvan.uk/areas/livingston"
+      ],
+      "title": "Man and Van in Livingston | SpeedyVan",
+      "h1": [
+        "Man and Van in Livingston"
+      ]
+    },
+    {
+      "path": "/areas/dundee",
+      "canonical": [
+        "https://www.speedyvan.uk/areas/dundee"
+      ],
+      "title": "Man and Van in Dundee | SpeedyVan",
+      "h1": [
+        "Man and Van in Dundee"
+      ]
+    },
+    {
+      "path": "/areas/perth",
+      "canonical": [
+        "https://www.speedyvan.uk/areas/perth"
+      ],
+      "title": "Man and Van in Perth | SpeedyVan",
+      "h1": [
+        "Man and Van in Perth"
+      ]
+    },
+    {
+      "path": "/areas/kirkcaldy",
+      "canonical": [
+        "https://www.speedyvan.uk/areas/kirkcaldy"
+      ],
+      "title": "Man and Van in Kirkcaldy | SpeedyVan",
+      "h1": [
+        "Man and Van in Kirkcaldy"
+      ]
+    },
+    {
+      "path": "/areas/dunfermline",
+      "canonical": [
+        "https://www.speedyvan.uk/areas/dunfermline"
+      ],
+      "title": "Man and Van in Dunfermline | SpeedyVan",
+      "h1": [
+        "Man and Van in Dunfermline"
+      ]
+    },
+    {
+      "path": "/areas/st-andrews",
+      "canonical": [
+        "https://www.speedyvan.uk/areas/st-andrews"
+      ],
+      "title": "Man and Van in St Andrews | SpeedyVan",
+      "h1": [
+        "Man and Van in St Andrews"
+      ]
+    },
+    {
+      "path": "/areas/aberdeen",
+      "canonical": [
+        "https://www.speedyvan.uk/areas/aberdeen"
+      ],
+      "title": "Man and Van Aberdeen | Get a Moving Quote | SpeedyVan",
+      "h1": [
+        "Man and Van in Aberdeen"
+      ]
+    },
+    {
+      "path": "/areas/inverurie",
+      "canonical": [
+        "https://www.speedyvan.uk/areas/inverurie"
+      ],
+      "title": "Man and Van in Inverurie | SpeedyVan",
+      "h1": [
+        "Man and Van in Inverurie"
+      ]
+    },
+    {
+      "path": "/areas/westhill",
+      "canonical": [
+        "https://www.speedyvan.uk/areas/westhill"
+      ],
+      "title": "Man and Van in Westhill, Aberdeenshire | SpeedyVan",
+      "h1": [
+        "Man and Van in Westhill, Aberdeenshire"
+      ]
+    },
+    {
+      "path": "/areas/stonehaven",
+      "canonical": [
+        "https://www.speedyvan.uk/areas/stonehaven"
+      ],
+      "title": "Man and Van in Stonehaven | SpeedyVan",
+      "h1": [
+        "Man and Van in Stonehaven"
+      ]
+    },
+    {
+      "path": "/areas/ellon",
+      "canonical": [
+        "https://www.speedyvan.uk/areas/ellon"
+      ],
+      "title": "Man and Van in Ellon | SpeedyVan",
+      "h1": [
+        "Man and Van in Ellon"
+      ]
+    },
+    {
+      "path": "/areas/inverness",
+      "canonical": [
+        "https://www.speedyvan.uk/areas/inverness"
+      ],
+      "title": "Man and Van Inverness | Get a Moving Quote | SpeedyVan",
+      "h1": [
+        "Man and Van in Inverness"
+      ]
+    },
+    {
+      "path": "/areas/nairn",
+      "canonical": [
+        "https://www.speedyvan.uk/areas/nairn"
+      ],
+      "title": "Man and Van in Nairn | SpeedyVan",
+      "h1": [
+        "Man and Van in Nairn"
+      ]
+    },
+    {
+      "path": "/areas/dingwall",
+      "canonical": [
+        "https://www.speedyvan.uk/areas/dingwall"
+      ],
+      "title": "Man and Van in Dingwall | SpeedyVan",
+      "h1": [
+        "Man and Van in Dingwall"
+      ]
+    },
+    {
+      "path": "/areas/fort-william",
+      "canonical": [
+        "https://www.speedyvan.uk/areas/fort-william"
+      ],
+      "title": "Man and Van in Fort William | SpeedyVan",
+      "h1": [
+        "Man and Van in Fort William"
+      ]
+    },
+    {
+      "path": "/areas/stirling",
+      "canonical": [
+        "https://www.speedyvan.uk/areas/stirling"
+      ],
+      "title": "Man and Van in Stirling | SpeedyVan",
+      "h1": [
+        "Man and Van in Stirling"
+      ]
+    },
+    {
+      "path": "/areas/falkirk",
+      "canonical": [
+        "https://www.speedyvan.uk/areas/falkirk"
+      ],
+      "title": "Man and Van in Falkirk | SpeedyVan",
+      "h1": [
+        "Man and Van in Falkirk"
+      ]
+    },
+    {
+      "path": "/areas/hamilton",
+      "canonical": [
+        "https://www.speedyvan.uk/areas/hamilton"
+      ],
+      "title": "Man and Van in Hamilton | SpeedyVan",
+      "h1": [
+        "Man and Van in Hamilton"
+      ]
+    },
+    {
+      "path": "/areas/east-kilbride",
+      "canonical": [
+        "https://www.speedyvan.uk/areas/east-kilbride"
+      ],
+      "title": "Man and Van in East Kilbride | SpeedyVan",
+      "h1": [
+        "Man and Van in East Kilbride"
+      ]
+    },
+    {
+      "path": "/areas/motherwell",
+      "canonical": [
+        "https://www.speedyvan.uk/areas/motherwell"
+      ],
+      "title": "Man and Van in Motherwell | SpeedyVan",
+      "h1": [
+        "Man and Van in Motherwell"
+      ]
+    },
+    {
+      "path": "/areas/ayr",
+      "canonical": [
+        "https://www.speedyvan.uk/areas/ayr"
+      ],
+      "title": "Man and Van in Ayr | SpeedyVan",
+      "h1": [
+        "Man and Van in Ayr"
+      ]
+    },
+    {
+      "path": "/areas/kilmarnock",
+      "canonical": [
+        "https://www.speedyvan.uk/areas/kilmarnock"
+      ],
+      "title": "Man and Van in Kilmarnock | SpeedyVan",
+      "h1": [
+        "Man and Van in Kilmarnock"
+      ]
+    },
+    {
+      "path": "/areas/oban",
+      "canonical": [
+        "https://www.speedyvan.uk/areas/oban"
+      ],
+      "title": "Man and Van in Oban | SpeedyVan",
+      "h1": [
+        "Man and Van in Oban"
+      ]
+    },
+    {
+      "path": "/areas/dumfries",
+      "canonical": [
+        "https://www.speedyvan.uk/areas/dumfries"
+      ],
+      "title": "Man and Van in Dumfries | SpeedyVan",
+      "h1": [
+        "Man and Van in Dumfries"
+      ]
+    },
+    {
+      "path": "/areas/galashiels",
+      "canonical": [
+        "https://www.speedyvan.uk/areas/galashiels"
+      ],
+      "title": "Man and Van in Galashiels | SpeedyVan",
+      "h1": [
+        "Man and Van in Galashiels"
+      ]
+    },
+    {
+      "path": "/services/man-and-van",
+      "canonical": [
+        "https://www.speedyvan.uk/services/man-and-van"
+      ],
+      "title": "Man and Van Scotland | Quotes for Your Move | SpeedyVan",
+      "h1": [
+        "Man and van for your next move in Scotland"
+      ]
+    },
+    {
+      "path": "/services/flat-removals",
+      "canonical": [
+        "https://www.speedyvan.uk/services/flat-removals"
+      ],
+      "title": "Flat Removals in Scotland | SpeedyVan",
+      "h1": [
+        "Flat Removals"
+      ]
+    },
+    {
+      "path": "/services/small-moves",
+      "canonical": [
+        "https://www.speedyvan.uk/services/small-moves"
+      ],
+      "title": "Small Moves in Scotland | SpeedyVan",
+      "h1": [
+        "Small Moves"
+      ]
+    },
+    {
+      "path": "/services/house-removal",
+      "canonical": [
+        "https://www.speedyvan.uk/services/house-removal"
+      ],
+      "title": "House Removals Scotland | Get a Moving Quote | SpeedyVan",
+      "h1": [
+        "House removals across Scotland, planned around your home"
+      ]
+    },
+    {
+      "path": "/services/long-distance-removals",
+      "canonical": [
+        "https://www.speedyvan.uk/services/long-distance-removals"
+      ],
+      "title": "Long Distance Removals from Scotland Across Britain | SpeedyVan",
+      "h1": [
+        "Long distance removals from Scotland across Britain"
+      ]
+    },
+    {
+      "path": "/services/office-removal",
+      "canonical": [
+        "https://www.speedyvan.uk/services/office-removal"
+      ],
+      "title": "Office Removals Scotland | Business Moving Quotes | SpeedyVan",
+      "h1": [
+        "Office removals and business relocation across Scotland"
+      ]
+    },
+    {
+      "path": "/services/student-move",
+      "canonical": [
+        "https://www.speedyvan.uk/services/student-move"
+      ],
+      "title": "Student Moves in Scotland | SpeedyVan",
+      "h1": [
+        "Student Moves"
+      ]
+    },
+    {
+      "path": "/services/furniture-delivery",
+      "canonical": [
+        "https://www.speedyvan.uk/services/furniture-delivery"
+      ],
+      "title": "Furniture Movers Scotland | Collection & Delivery | SpeedyVan",
+      "h1": [
+        "Furniture movers for collection and delivery across Scotland"
+      ]
+    },
+    {
+      "path": "/services/ikea-delivery",
+      "canonical": [
+        "https://www.speedyvan.uk/services/ikea-delivery"
+      ],
+      "title": "IKEA Delivery & Assembly in Scotland | SpeedyVan",
+      "h1": [
+        "IKEA Delivery & Assembly"
+      ]
+    },
+    {
+      "path": "/services/piano-moving",
+      "canonical": [
+        "https://www.speedyvan.uk/services/piano-moving"
+      ],
+      "title": "Piano Moving in Scotland | SpeedyVan",
+      "h1": [
+        "Piano Moving"
+      ]
+    },
+    {
+      "path": "/services/same-day-delivery",
+      "canonical": [
+        "https://www.speedyvan.uk/services/same-day-delivery"
+      ],
+      "title": "Urgent Man and Van Delivery Scotland | Get a Quote | SpeedyVan",
+      "h1": [
+        "Urgent man and van delivery across Scotland"
+      ]
+    },
+    {
+      "path": "/services/packing-service",
+      "canonical": [
+        "https://www.speedyvan.uk/services/packing-service"
+      ],
+      "title": "Packing Service in Scotland | SpeedyVan",
+      "h1": [
+        "Packing Service"
+      ]
+    },
+    {
+      "path": "/services/european-removals",
+      "canonical": [
+        "https://www.speedyvan.uk/services/european-removals"
+      ],
+      "title": "European Removals from Scotland | SpeedyVan",
+      "h1": [
+        "European Removals from Scotland"
+      ]
+    }
+  ],
+  "checks": [
+    {
+      "check": "Sitemap returns HTTP 200",
+      "passed": true
+    },
+    {
+      "check": "Sitemap contains the actual source URLs without duplicates",
+      "passed": true
+    },
+    {
+      "check": "Source sitemap has no duplicate URL definitions",
+      "passed": true
+    },
+    {
+      "check": "Sitemap contains only canonical HTTPS URLs",
+      "passed": true
+    },
+    {
+      "check": "Sitemap has no fabricated lastmod dates",
+      "passed": true
+    },
+    {
+      "check": "Sitemap excludes private and unsupported routes",
+      "passed": true
+    },
+    {
+      "check": "/: canonical public HTTP 200",
+      "passed": true
+    },
+    {
+      "check": "/: useful initial HTML H1",
+      "passed": true
+    },
+    {
+      "check": "/: indexable in HTML and HTTP headers",
+      "passed": true
+    },
+    {
+      "check": "/: title has one business label across spelling variants",
+      "passed": true
+    },
+    {
+      "check": "/: structured data syntax is valid when present",
+      "passed": true
+    },
+    {
+      "check": "/: page-specific Open Graph URL",
+      "passed": true
+    },
+    {
+      "check": "/: useful description",
+      "passed": true
+    },
+    {
+      "check": "/: no internal SEO instructions",
+      "passed": true
+    },
+    {
+      "check": "/services: canonical public HTTP 200",
+      "passed": true
+    },
+    {
+      "check": "/services: useful initial HTML H1",
+      "passed": true
+    },
+    {
+      "check": "/services: indexable in HTML and HTTP headers",
+      "passed": true
+    },
+    {
+      "check": "/services: title has one business label across spelling variants",
+      "passed": true
+    },
+    {
+      "check": "/services: structured data syntax is valid when present",
+      "passed": true
+    },
+    {
+      "check": "/services: page-specific Open Graph URL",
+      "passed": true
+    },
+    {
+      "check": "/services: useful description",
+      "passed": true
+    },
+    {
+      "check": "/services: no internal SEO instructions",
+      "passed": true
+    },
+    {
+      "check": "/areas: canonical public HTTP 200",
+      "passed": true
+    },
+    {
+      "check": "/areas: useful initial HTML H1",
+      "passed": true
+    },
+    {
+      "check": "/areas: indexable in HTML and HTTP headers",
+      "passed": true
+    },
+    {
+      "check": "/areas: title has one business label across spelling variants",
+      "passed": true
+    },
+    {
+      "check": "/areas: structured data syntax is valid when present",
+      "passed": true
+    },
+    {
+      "check": "/areas: page-specific Open Graph URL",
+      "passed": true
+    },
+    {
+      "check": "/areas: useful description",
+      "passed": true
+    },
+    {
+      "check": "/areas: no internal SEO instructions",
+      "passed": true
+    },
+    {
+      "check": "/pricing: canonical public HTTP 200",
+      "passed": true
+    },
+    {
+      "check": "/pricing: useful initial HTML H1",
+      "passed": true
+    },
+    {
+      "check": "/pricing: indexable in HTML and HTTP headers",
+      "passed": true
+    },
+    {
+      "check": "/pricing: title has one business label across spelling variants",
+      "passed": true
+    },
+    {
+      "check": "/pricing: structured data syntax is valid when present",
+      "passed": true
+    },
+    {
+      "check": "/pricing: page-specific Open Graph URL",
+      "passed": true
+    },
+    {
+      "check": "/pricing: useful description",
+      "passed": true
+    },
+    {
+      "check": "/pricing: no internal SEO instructions",
+      "passed": true
+    },
+    {
+      "check": "/guides: canonical public HTTP 200",
+      "passed": true
+    },
+    {
+      "check": "/guides: useful initial HTML H1",
+      "passed": true
+    },
+    {
+      "check": "/guides: indexable in HTML and HTTP headers",
+      "passed": true
+    },
+    {
+      "check": "/guides: title has one business label across spelling variants",
+      "passed": true
+    },
+    {
+      "check": "/guides: structured data syntax is valid when present",
+      "passed": true
+    },
+    {
+      "check": "/guides: page-specific Open Graph URL",
+      "passed": true
+    },
+    {
+      "check": "/guides: useful description",
+      "passed": true
+    },
+    {
+      "check": "/guides: no internal SEO instructions",
+      "passed": true
+    },
+    {
+      "check": "/guides/man-and-van-or-house-removals: canonical public HTTP 200",
+      "passed": true
+    },
+    {
+      "check": "/guides/man-and-van-or-house-removals: useful initial HTML H1",
+      "passed": true
+    },
+    {
+      "check": "/guides/man-and-van-or-house-removals: indexable in HTML and HTTP headers",
+      "passed": true
+    },
+    {
+      "check": "/guides/man-and-van-or-house-removals: title has one business label across spelling variants",
+      "passed": true
+    },
+    {
+      "check": "/guides/man-and-van-or-house-removals: structured data syntax is valid when present",
+      "passed": true
+    },
+    {
+      "check": "/guides/man-and-van-or-house-removals: page-specific Open Graph URL",
+      "passed": true
+    },
+    {
+      "check": "/guides/man-and-van-or-house-removals: useful description",
+      "passed": true
+    },
+    {
+      "check": "/guides/man-and-van-or-house-removals: no internal SEO instructions",
+      "passed": true
+    },
+    {
+      "check": "/privacy: canonical public HTTP 200",
+      "passed": true
+    },
+    {
+      "check": "/privacy: useful initial HTML H1",
+      "passed": true
+    },
+    {
+      "check": "/privacy: indexable in HTML and HTTP headers",
+      "passed": true
+    },
+    {
+      "check": "/privacy: title has one business label across spelling variants",
+      "passed": true
+    },
+    {
+      "check": "/privacy: structured data syntax is valid when present",
+      "passed": true
+    },
+    {
+      "check": "/privacy: page-specific Open Graph URL",
+      "passed": true
+    },
+    {
+      "check": "/privacy: useful description",
+      "passed": true
+    },
+    {
+      "check": "/privacy: no internal SEO instructions",
+      "passed": true
+    },
+    {
+      "check": "/terms: canonical public HTTP 200",
+      "passed": true
+    },
+    {
+      "check": "/terms: useful initial HTML H1",
+      "passed": true
+    },
+    {
+      "check": "/terms: indexable in HTML and HTTP headers",
+      "passed": true
+    },
+    {
+      "check": "/terms: title has one business label across spelling variants",
+      "passed": true
+    },
+    {
+      "check": "/terms: structured data syntax is valid when present",
+      "passed": true
+    },
+    {
+      "check": "/terms: page-specific Open Graph URL",
+      "passed": true
+    },
+    {
+      "check": "/terms: useful description",
+      "passed": true
+    },
+    {
+      "check": "/terms: no internal SEO instructions",
+      "passed": true
+    },
+    {
+      "check": "/cookies: canonical public HTTP 200",
+      "passed": true
+    },
+    {
+      "check": "/cookies: useful initial HTML H1",
+      "passed": true
+    },
+    {
+      "check": "/cookies: indexable in HTML and HTTP headers",
+      "passed": true
+    },
+    {
+      "check": "/cookies: title has one business label across spelling variants",
+      "passed": true
+    },
+    {
+      "check": "/cookies: structured data syntax is valid when present",
+      "passed": true
+    },
+    {
+      "check": "/cookies: page-specific Open Graph URL",
+      "passed": true
+    },
+    {
+      "check": "/cookies: useful description",
+      "passed": true
+    },
+    {
+      "check": "/cookies: no internal SEO instructions",
+      "passed": true
+    },
+    {
+      "check": "/areas/glasgow: canonical public HTTP 200",
+      "passed": true
+    },
+    {
+      "check": "/areas/glasgow: useful initial HTML H1",
+      "passed": true
+    },
+    {
+      "check": "/areas/glasgow: indexable in HTML and HTTP headers",
+      "passed": true
+    },
+    {
+      "check": "/areas/glasgow: title has one business label across spelling variants",
+      "passed": true
+    },
+    {
+      "check": "/areas/glasgow: structured data syntax is valid when present",
+      "passed": true
+    },
+    {
+      "check": "/areas/glasgow: page-specific Open Graph URL",
+      "passed": true
+    },
+    {
+      "check": "/areas/glasgow: useful description",
+      "passed": true
+    },
+    {
+      "check": "/areas/glasgow: no internal SEO instructions",
+      "passed": true
+    },
+    {
+      "check": "/areas/glasgow: parseable structured data",
+      "passed": true
+    },
+    {
+      "check": "/areas/glasgow-west-end: canonical public HTTP 200",
+      "passed": true
+    },
+    {
+      "check": "/areas/glasgow-west-end: useful initial HTML H1",
+      "passed": true
+    },
+    {
+      "check": "/areas/glasgow-west-end: indexable in HTML and HTTP headers",
+      "passed": true
+    },
+    {
+      "check": "/areas/glasgow-west-end: title has one business label across spelling variants",
+      "passed": true
+    },
+    {
+      "check": "/areas/glasgow-west-end: structured data syntax is valid when present",
+      "passed": true
+    },
+    {
+      "check": "/areas/glasgow-west-end: page-specific Open Graph URL",
+      "passed": true
+    },
+    {
+      "check": "/areas/glasgow-west-end: useful description",
+      "passed": true
+    },
+    {
+      "check": "/areas/glasgow-west-end: no internal SEO instructions",
+      "passed": true
+    },
+    {
+      "check": "/areas/glasgow-west-end: parseable structured data",
+      "passed": true
+    },
+    {
+      "check": "/areas/glasgow-southside: canonical public HTTP 200",
+      "passed": true
+    },
+    {
+      "check": "/areas/glasgow-southside: useful initial HTML H1",
+      "passed": true
+    },
+    {
+      "check": "/areas/glasgow-southside: indexable in HTML and HTTP headers",
+      "passed": true
+    },
+    {
+      "check": "/areas/glasgow-southside: title has one business label across spelling variants",
+      "passed": true
+    },
+    {
+      "check": "/areas/glasgow-southside: structured data syntax is valid when present",
+      "passed": true
+    },
+    {
+      "check": "/areas/glasgow-southside: page-specific Open Graph URL",
+      "passed": true
+    },
+    {
+      "check": "/areas/glasgow-southside: useful description",
+      "passed": true
+    },
+    {
+      "check": "/areas/glasgow-southside: no internal SEO instructions",
+      "passed": true
+    },
+    {
+      "check": "/areas/glasgow-southside: parseable structured data",
+      "passed": true
+    },
+    {
+      "check": "/areas/paisley: canonical public HTTP 200",
+      "passed": true
+    },
+    {
+      "check": "/areas/paisley: useful initial HTML H1",
+      "passed": true
+    },
+    {
+      "check": "/areas/paisley: indexable in HTML and HTTP headers",
+      "passed": true
+    },
+    {
+      "check": "/areas/paisley: title has one business label across spelling variants",
+      "passed": true
+    },
+    {
+      "check": "/areas/paisley: structured data syntax is valid when present",
+      "passed": true
+    },
+    {
+      "check": "/areas/paisley: page-specific Open Graph URL",
+      "passed": true
+    },
+    {
+      "check": "/areas/paisley: useful description",
+      "passed": true
+    },
+    {
+      "check": "/areas/paisley: no internal SEO instructions",
+      "passed": true
+    },
+    {
+      "check": "/areas/paisley: parseable structured data",
+      "passed": true
+    },
+    {
+      "check": "/areas/edinburgh: canonical public HTTP 200",
+      "passed": true
+    },
+    {
+      "check": "/areas/edinburgh: useful initial HTML H1",
+      "passed": true
+    },
+    {
+      "check": "/areas/edinburgh: indexable in HTML and HTTP headers",
+      "passed": true
+    },
+    {
+      "check": "/areas/edinburgh: title has one business label across spelling variants",
+      "passed": true
+    },
+    {
+      "check": "/areas/edinburgh: structured data syntax is valid when present",
+      "passed": true
+    },
+    {
+      "check": "/areas/edinburgh: page-specific Open Graph URL",
+      "passed": true
+    },
+    {
+      "check": "/areas/edinburgh: useful description",
+      "passed": true
+    },
+    {
+      "check": "/areas/edinburgh: no internal SEO instructions",
+      "passed": true
+    },
+    {
+      "check": "/areas/edinburgh: parseable structured data",
+      "passed": true
+    },
+    {
+      "check": "/areas/edinburgh-leith: canonical public HTTP 200",
+      "passed": true
+    },
+    {
+      "check": "/areas/edinburgh-leith: useful initial HTML H1",
+      "passed": true
+    },
+    {
+      "check": "/areas/edinburgh-leith: indexable in HTML and HTTP headers",
+      "passed": true
+    },
+    {
+      "check": "/areas/edinburgh-leith: title has one business label across spelling variants",
+      "passed": true
+    },
+    {
+      "check": "/areas/edinburgh-leith: structured data syntax is valid when present",
+      "passed": true
+    },
+    {
+      "check": "/areas/edinburgh-leith: page-specific Open Graph URL",
+      "passed": true
+    },
+    {
+      "check": "/areas/edinburgh-leith: useful description",
+      "passed": true
+    },
+    {
+      "check": "/areas/edinburgh-leith: no internal SEO instructions",
+      "passed": true
+    },
+    {
+      "check": "/areas/edinburgh-leith: parseable structured data",
+      "passed": true
+    },
+    {
+      "check": "/areas/edinburgh-south: canonical public HTTP 200",
+      "passed": true
+    },
+    {
+      "check": "/areas/edinburgh-south: useful initial HTML H1",
+      "passed": true
+    },
+    {
+      "check": "/areas/edinburgh-south: indexable in HTML and HTTP headers",
+      "passed": true
+    },
+    {
+      "check": "/areas/edinburgh-south: title has one business label across spelling variants",
+      "passed": true
+    },
+    {
+      "check": "/areas/edinburgh-south: structured data syntax is valid when present",
+      "passed": true
+    },
+    {
+      "check": "/areas/edinburgh-south: page-specific Open Graph URL",
+      "passed": true
+    },
+    {
+      "check": "/areas/edinburgh-south: useful description",
+      "passed": true
+    },
+    {
+      "check": "/areas/edinburgh-south: no internal SEO instructions",
+      "passed": true
+    },
+    {
+      "check": "/areas/edinburgh-south: parseable structured data",
+      "passed": true
+    },
+    {
+      "check": "/areas/livingston: canonical public HTTP 200",
+      "passed": true
+    },
+    {
+      "check": "/areas/livingston: useful initial HTML H1",
+      "passed": true
+    },
+    {
+      "check": "/areas/livingston: indexable in HTML and HTTP headers",
+      "passed": true
+    },
+    {
+      "check": "/areas/livingston: title has one business label across spelling variants",
+      "passed": true
+    },
+    {
+      "check": "/areas/livingston: structured data syntax is valid when present",
+      "passed": true
+    },
+    {
+      "check": "/areas/livingston: page-specific Open Graph URL",
+      "passed": true
+    },
+    {
+      "check": "/areas/livingston: useful description",
+      "passed": true
+    },
+    {
+      "check": "/areas/livingston: no internal SEO instructions",
+      "passed": true
+    },
+    {
+      "check": "/areas/livingston: parseable structured data",
+      "passed": true
+    },
+    {
+      "check": "/areas/dundee: canonical public HTTP 200",
+      "passed": true
+    },
+    {
+      "check": "/areas/dundee: useful initial HTML H1",
+      "passed": true
+    },
+    {
+      "check": "/areas/dundee: indexable in HTML and HTTP headers",
+      "passed": true
+    },
+    {
+      "check": "/areas/dundee: title has one business label across spelling variants",
+      "passed": true
+    },
+    {
+      "check": "/areas/dundee: structured data syntax is valid when present",
+      "passed": true
+    },
+    {
+      "check": "/areas/dundee: page-specific Open Graph URL",
+      "passed": true
+    },
+    {
+      "check": "/areas/dundee: useful description",
+      "passed": true
+    },
+    {
+      "check": "/areas/dundee: no internal SEO instructions",
+      "passed": true
+    },
+    {
+      "check": "/areas/dundee: parseable structured data",
+      "passed": true
+    },
+    {
+      "check": "/areas/perth: canonical public HTTP 200",
+      "passed": true
+    },
+    {
+      "check": "/areas/perth: useful initial HTML H1",
+      "passed": true
+    },
+    {
+      "check": "/areas/perth: indexable in HTML and HTTP headers",
+      "passed": true
+    },
+    {
+      "check": "/areas/perth: title has one business label across spelling variants",
+      "passed": true
+    },
+    {
+      "check": "/areas/perth: structured data syntax is valid when present",
+      "passed": true
+    },
+    {
+      "check": "/areas/perth: page-specific Open Graph URL",
+      "passed": true
+    },
+    {
+      "check": "/areas/perth: useful description",
+      "passed": true
+    },
+    {
+      "check": "/areas/perth: no internal SEO instructions",
+      "passed": true
+    },
+    {
+      "check": "/areas/perth: parseable structured data",
+      "passed": true
+    },
+    {
+      "check": "/areas/kirkcaldy: canonical public HTTP 200",
+      "passed": true
+    },
+    {
+      "check": "/areas/kirkcaldy: useful initial HTML H1",
+      "passed": true
+    },
+    {
+      "check": "/areas/kirkcaldy: indexable in HTML and HTTP headers",
+      "passed": true
+    },
+    {
+      "check": "/areas/kirkcaldy: title has one business label across spelling variants",
+      "passed": true
+    },
+    {
+      "check": "/areas/kirkcaldy: structured data syntax is valid when present",
+      "passed": true
+    },
+    {
+      "check": "/areas/kirkcaldy: page-specific Open Graph URL",
+      "passed": true
+    },
+    {
+      "check": "/areas/kirkcaldy: useful description",
+      "passed": true
+    },
+    {
+      "check": "/areas/kirkcaldy: no internal SEO instructions",
+      "passed": true
+    },
+    {
+      "check": "/areas/kirkcaldy: parseable structured data",
+      "passed": true
+    },
+    {
+      "check": "/areas/dunfermline: canonical public HTTP 200",
+      "passed": true
+    },
+    {
+      "check": "/areas/dunfermline: useful initial HTML H1",
+      "passed": true
+    },
+    {
+      "check": "/areas/dunfermline: indexable in HTML and HTTP headers",
+      "passed": true
+    },
+    {
+      "check": "/areas/dunfermline: title has one business label across spelling variants",
+      "passed": true
+    },
+    {
+      "check": "/areas/dunfermline: structured data syntax is valid when present",
+      "passed": true
+    },
+    {
+      "check": "/areas/dunfermline: page-specific Open Graph URL",
+      "passed": true
+    },
+    {
+      "check": "/areas/dunfermline: useful description",
+      "passed": true
+    },
+    {
+      "check": "/areas/dunfermline: no internal SEO instructions",
+      "passed": true
+    },
+    {
+      "check": "/areas/dunfermline: parseable structured data",
+      "passed": true
+    },
+    {
+      "check": "/areas/st-andrews: canonical public HTTP 200",
+      "passed": true
+    },
+    {
+      "check": "/areas/st-andrews: useful initial HTML H1",
+      "passed": true
+    },
+    {
+      "check": "/areas/st-andrews: indexable in HTML and HTTP headers",
+      "passed": true
+    },
+    {
+      "check": "/areas/st-andrews: title has one business label across spelling variants",
+      "passed": true
+    },
+    {
+      "check": "/areas/st-andrews: structured data syntax is valid when present",
+      "passed": true
+    },
+    {
+      "check": "/areas/st-andrews: page-specific Open Graph URL",
+      "passed": true
+    },
+    {
+      "check": "/areas/st-andrews: useful description",
+      "passed": true
+    },
+    {
+      "check": "/areas/st-andrews: no internal SEO instructions",
+      "passed": true
+    },
+    {
+      "check": "/areas/st-andrews: parseable structured data",
+      "passed": true
+    },
+    {
+      "check": "/areas/aberdeen: canonical public HTTP 200",
+      "passed": true
+    },
+    {
+      "check": "/areas/aberdeen: useful initial HTML H1",
+      "passed": true
+    },
+    {
+      "check": "/areas/aberdeen: indexable in HTML and HTTP headers",
+      "passed": true
+    },
+    {
+      "check": "/areas/aberdeen: title has one business label across spelling variants",
+      "passed": true
+    },
+    {
+      "check": "/areas/aberdeen: structured data syntax is valid when present",
+      "passed": true
+    },
+    {
+      "check": "/areas/aberdeen: page-specific Open Graph URL",
+      "passed": true
+    },
+    {
+      "check": "/areas/aberdeen: useful description",
+      "passed": true
+    },
+    {
+      "check": "/areas/aberdeen: no internal SEO instructions",
+      "passed": true
+    },
+    {
+      "check": "/areas/aberdeen: parseable structured data",
+      "passed": true
+    },
+    {
+      "check": "/areas/inverurie: canonical public HTTP 200",
+      "passed": true
+    },
+    {
+      "check": "/areas/inverurie: useful initial HTML H1",
+      "passed": true
+    },
+    {
+      "check": "/areas/inverurie: indexable in HTML and HTTP headers",
+      "passed": true
+    },
+    {
+      "check": "/areas/inverurie: title has one business label across spelling variants",
+      "passed": true
+    },
+    {
+      "check": "/areas/inverurie: structured data syntax is valid when present",
+      "passed": true
+    },
+    {
+      "check": "/areas/inverurie: page-specific Open Graph URL",
+      "passed": true
+    },
+    {
+      "check": "/areas/inverurie: useful description",
+      "passed": true
+    },
+    {
+      "check": "/areas/inverurie: no internal SEO instructions",
+      "passed": true
+    },
+    {
+      "check": "/areas/inverurie: parseable structured data",
+      "passed": true
+    },
+    {
+      "check": "/areas/westhill: canonical public HTTP 200",
+      "passed": true
+    },
+    {
+      "check": "/areas/westhill: useful initial HTML H1",
+      "passed": true
+    },
+    {
+      "check": "/areas/westhill: indexable in HTML and HTTP headers",
+      "passed": true
+    },
+    {
+      "check": "/areas/westhill: title has one business label across spelling variants",
+      "passed": true
+    },
+    {
+      "check": "/areas/westhill: structured data syntax is valid when present",
+      "passed": true
+    },
+    {
+      "check": "/areas/westhill: page-specific Open Graph URL",
+      "passed": true
+    },
+    {
+      "check": "/areas/westhill: useful description",
+      "passed": true
+    },
+    {
+      "check": "/areas/westhill: no internal SEO instructions",
+      "passed": true
+    },
+    {
+      "check": "/areas/westhill: parseable structured data",
+      "passed": true
+    },
+    {
+      "check": "/areas/stonehaven: canonical public HTTP 200",
+      "passed": true
+    },
+    {
+      "check": "/areas/stonehaven: useful initial HTML H1",
+      "passed": true
+    },
+    {
+      "check": "/areas/stonehaven: indexable in HTML and HTTP headers",
+      "passed": true
+    },
+    {
+      "check": "/areas/stonehaven: title has one business label across spelling variants",
+      "passed": true
+    },
+    {
+      "check": "/areas/stonehaven: structured data syntax is valid when present",
+      "passed": true
+    },
+    {
+      "check": "/areas/stonehaven: page-specific Open Graph URL",
+      "passed": true
+    },
+    {
+      "check": "/areas/stonehaven: useful description",
+      "passed": true
+    },
+    {
+      "check": "/areas/stonehaven: no internal SEO instructions",
+      "passed": true
+    },
+    {
+      "check": "/areas/stonehaven: parseable structured data",
+      "passed": true
+    },
+    {
+      "check": "/areas/ellon: canonical public HTTP 200",
+      "passed": true
+    },
+    {
+      "check": "/areas/ellon: useful initial HTML H1",
+      "passed": true
+    },
+    {
+      "check": "/areas/ellon: indexable in HTML and HTTP headers",
+      "passed": true
+    },
+    {
+      "check": "/areas/ellon: title has one business label across spelling variants",
+      "passed": true
+    },
+    {
+      "check": "/areas/ellon: structured data syntax is valid when present",
+      "passed": true
+    },
+    {
+      "check": "/areas/ellon: page-specific Open Graph URL",
+      "passed": true
+    },
+    {
+      "check": "/areas/ellon: useful description",
+      "passed": true
+    },
+    {
+      "check": "/areas/ellon: no internal SEO instructions",
+      "passed": true
+    },
+    {
+      "check": "/areas/ellon: parseable structured data",
+      "passed": true
+    },
+    {
+      "check": "/areas/inverness: canonical public HTTP 200",
+      "passed": true
+    },
+    {
+      "check": "/areas/inverness: useful initial HTML H1",
+      "passed": true
+    },
+    {
+      "check": "/areas/inverness: indexable in HTML and HTTP headers",
+      "passed": true
+    },
+    {
+      "check": "/areas/inverness: title has one business label across spelling variants",
+      "passed": true
+    },
+    {
+      "check": "/areas/inverness: structured data syntax is valid when present",
+      "passed": true
+    },
+    {
+      "check": "/areas/inverness: page-specific Open Graph URL",
+      "passed": true
+    },
+    {
+      "check": "/areas/inverness: useful description",
+      "passed": true
+    },
+    {
+      "check": "/areas/inverness: no internal SEO instructions",
+      "passed": true
+    },
+    {
+      "check": "/areas/inverness: parseable structured data",
+      "passed": true
+    },
+    {
+      "check": "/areas/nairn: canonical public HTTP 200",
+      "passed": true
+    },
+    {
+      "check": "/areas/nairn: useful initial HTML H1",
+      "passed": true
+    },
+    {
+      "check": "/areas/nairn: indexable in HTML and HTTP headers",
+      "passed": true
+    },
+    {
+      "check": "/areas/nairn: title has one business label across spelling variants",
+      "passed": true
+    },
+    {
+      "check": "/areas/nairn: structured data syntax is valid when present",
+      "passed": true
+    },
+    {
+      "check": "/areas/nairn: page-specific Open Graph URL",
+      "passed": true
+    },
+    {
+      "check": "/areas/nairn: useful description",
+      "passed": true
+    },
+    {
+      "check": "/areas/nairn: no internal SEO instructions",
+      "passed": true
+    },
+    {
+      "check": "/areas/nairn: parseable structured data",
+      "passed": true
+    },
+    {
+      "check": "/areas/dingwall: canonical public HTTP 200",
+      "passed": true
+    },
+    {
+      "check": "/areas/dingwall: useful initial HTML H1",
+      "passed": true
+    },
+    {
+      "check": "/areas/dingwall: indexable in HTML and HTTP headers",
+      "passed": true
+    },
+    {
+      "check": "/areas/dingwall: title has one business label across spelling variants",
+      "passed": true
+    },
+    {
+      "check": "/areas/dingwall: structured data syntax is valid when present",
+      "passed": true
+    },
+    {
+      "check": "/areas/dingwall: page-specific Open Graph URL",
+      "passed": true
+    },
+    {
+      "check": "/areas/dingwall: useful description",
+      "passed": true
+    },
+    {
+      "check": "/areas/dingwall: no internal SEO instructions",
+      "passed": true
+    },
+    {
+      "check": "/areas/dingwall: parseable structured data",
+      "passed": true
+    },
+    {
+      "check": "/areas/fort-william: canonical public HTTP 200",
+      "passed": true
+    },
+    {
+      "check": "/areas/fort-william: useful initial HTML H1",
+      "passed": true
+    },
+    {
+      "check": "/areas/fort-william: indexable in HTML and HTTP headers",
+      "passed": true
+    },
+    {
+      "check": "/areas/fort-william: title has one business label across spelling variants",
+      "passed": true
+    },
+    {
+      "check": "/areas/fort-william: structured data syntax is valid when present",
+      "passed": true
+    },
+    {
+      "check": "/areas/fort-william: page-specific Open Graph URL",
+      "passed": true
+    },
+    {
+      "check": "/areas/fort-william: useful description",
+      "passed": true
+    },
+    {
+      "check": "/areas/fort-william: no internal SEO instructions",
+      "passed": true
+    },
+    {
+      "check": "/areas/fort-william: parseable structured data",
+      "passed": true
+    },
+    {
+      "check": "/areas/stirling: canonical public HTTP 200",
+      "passed": true
+    },
+    {
+      "check": "/areas/stirling: useful initial HTML H1",
+      "passed": true
+    },
+    {
+      "check": "/areas/stirling: indexable in HTML and HTTP headers",
+      "passed": true
+    },
+    {
+      "check": "/areas/stirling: title has one business label across spelling variants",
+      "passed": true
+    },
+    {
+      "check": "/areas/stirling: structured data syntax is valid when present",
+      "passed": true
+    },
+    {
+      "check": "/areas/stirling: page-specific Open Graph URL",
+      "passed": true
+    },
+    {
+      "check": "/areas/stirling: useful description",
+      "passed": true
+    },
+    {
+      "check": "/areas/stirling: no internal SEO instructions",
+      "passed": true
+    },
+    {
+      "check": "/areas/stirling: parseable structured data",
+      "passed": true
+    },
+    {
+      "check": "/areas/falkirk: canonical public HTTP 200",
+      "passed": true
+    },
+    {
+      "check": "/areas/falkirk: useful initial HTML H1",
+      "passed": true
+    },
+    {
+      "check": "/areas/falkirk: indexable in HTML and HTTP headers",
+      "passed": true
+    },
+    {
+      "check": "/areas/falkirk: title has one business label across spelling variants",
+      "passed": true
+    },
+    {
+      "check": "/areas/falkirk: structured data syntax is valid when present",
+      "passed": true
+    },
+    {
+      "check": "/areas/falkirk: page-specific Open Graph URL",
+      "passed": true
+    },
+    {
+      "check": "/areas/falkirk: useful description",
+      "passed": true
+    },
+    {
+      "check": "/areas/falkirk: no internal SEO instructions",
+      "passed": true
+    },
+    {
+      "check": "/areas/falkirk: parseable structured data",
+      "passed": true
+    },
+    {
+      "check": "/areas/hamilton: canonical public HTTP 200",
+      "passed": true
+    },
+    {
+      "check": "/areas/hamilton: useful initial HTML H1",
+      "passed": true
+    },
+    {
+      "check": "/areas/hamilton: indexable in HTML and HTTP headers",
+      "passed": true
+    },
+    {
+      "check": "/areas/hamilton: title has one business label across spelling variants",
+      "passed": true
+    },
+    {
+      "check": "/areas/hamilton: structured data syntax is valid when present",
+      "passed": true
+    },
+    {
+      "check": "/areas/hamilton: page-specific Open Graph URL",
+      "passed": true
+    },
+    {
+      "check": "/areas/hamilton: useful description",
+      "passed": true
+    },
+    {
+      "check": "/areas/hamilton: no internal SEO instructions",
+      "passed": true
+    },
+    {
+      "check": "/areas/hamilton: parseable structured data",
+      "passed": true
+    },
+    {
+      "check": "/areas/east-kilbride: canonical public HTTP 200",
+      "passed": true
+    },
+    {
+      "check": "/areas/east-kilbride: useful initial HTML H1",
+      "passed": true
+    },
+    {
+      "check": "/areas/east-kilbride: indexable in HTML and HTTP headers",
+      "passed": true
+    },
+    {
+      "check": "/areas/east-kilbride: title has one business label across spelling variants",
+      "passed": true
+    },
+    {
+      "check": "/areas/east-kilbride: structured data syntax is valid when present",
+      "passed": true
+    },
+    {
+      "check": "/areas/east-kilbride: page-specific Open Graph URL",
+      "passed": true
+    },
+    {
+      "check": "/areas/east-kilbride: useful description",
+      "passed": true
+    },
+    {
+      "check": "/areas/east-kilbride: no internal SEO instructions",
+      "passed": true
+    },
+    {
+      "check": "/areas/east-kilbride: parseable structured data",
+      "passed": true
+    },
+    {
+      "check": "/areas/motherwell: canonical public HTTP 200",
+      "passed": true
+    },
+    {
+      "check": "/areas/motherwell: useful initial HTML H1",
+      "passed": true
+    },
+    {
+      "check": "/areas/motherwell: indexable in HTML and HTTP headers",
+      "passed": true
+    },
+    {
+      "check": "/areas/motherwell: title has one business label across spelling variants",
+      "passed": true
+    },
+    {
+      "check": "/areas/motherwell: structured data syntax is valid when present",
+      "passed": true
+    },
+    {
+      "check": "/areas/motherwell: page-specific Open Graph URL",
+      "passed": true
+    },
+    {
+      "check": "/areas/motherwell: useful description",
+      "passed": true
+    },
+    {
+      "check": "/areas/motherwell: no internal SEO instructions",
+      "passed": true
+    },
+    {
+      "check": "/areas/motherwell: parseable structured data",
+      "passed": true
+    },
+    {
+      "check": "/areas/ayr: canonical public HTTP 200",
+      "passed": true
+    },
+    {
+      "check": "/areas/ayr: useful initial HTML H1",
+      "passed": true
+    },
+    {
+      "check": "/areas/ayr: indexable in HTML and HTTP headers",
+      "passed": true
+    },
+    {
+      "check": "/areas/ayr: title has one business label across spelling variants",
+      "passed": true
+    },
+    {
+      "check": "/areas/ayr: structured data syntax is valid when present",
+      "passed": true
+    },
+    {
+      "check": "/areas/ayr: page-specific Open Graph URL",
+      "passed": true
+    },
+    {
+      "check": "/areas/ayr: useful description",
+      "passed": true
+    },
+    {
+      "check": "/areas/ayr: no internal SEO instructions",
+      "passed": true
+    },
+    {
+      "check": "/areas/ayr: parseable structured data",
+      "passed": true
+    },
+    {
+      "check": "/areas/kilmarnock: canonical public HTTP 200",
+      "passed": true
+    },
+    {
+      "check": "/areas/kilmarnock: useful initial HTML H1",
+      "passed": true
+    },
+    {
+      "check": "/areas/kilmarnock: indexable in HTML and HTTP headers",
+      "passed": true
+    },
+    {
+      "check": "/areas/kilmarnock: title has one business label across spelling variants",
+      "passed": true
+    },
+    {
+      "check": "/areas/kilmarnock: structured data syntax is valid when present",
+      "passed": true
+    },
+    {
+      "check": "/areas/kilmarnock: page-specific Open Graph URL",
+      "passed": true
+    },
+    {
+      "check": "/areas/kilmarnock: useful description",
+      "passed": true
+    },
+    {
+      "check": "/areas/kilmarnock: no internal SEO instructions",
+      "passed": true
+    },
+    {
+      "check": "/areas/kilmarnock: parseable structured data",
+      "passed": true
+    },
+    {
+      "check": "/areas/oban: canonical public HTTP 200",
+      "passed": true
+    },
+    {
+      "check": "/areas/oban: useful initial HTML H1",
+      "passed": true
+    },
+    {
+      "check": "/areas/oban: indexable in HTML and HTTP headers",
+      "passed": true
+    },
+    {
+      "check": "/areas/oban: title has one business label across spelling variants",
+      "passed": true
+    },
+    {
+      "check": "/areas/oban: structured data syntax is valid when present",
+      "passed": true
+    },
+    {
+      "check": "/areas/oban: page-specific Open Graph URL",
+      "passed": true
+    },
+    {
+      "check": "/areas/oban: useful description",
+      "passed": true
+    },
+    {
+      "check": "/areas/oban: no internal SEO instructions",
+      "passed": true
+    },
+    {
+      "check": "/areas/oban: parseable structured data",
+      "passed": true
+    },
+    {
+      "check": "/areas/dumfries: canonical public HTTP 200",
+      "passed": true
+    },
+    {
+      "check": "/areas/dumfries: useful initial HTML H1",
+      "passed": true
+    },
+    {
+      "check": "/areas/dumfries: indexable in HTML and HTTP headers",
+      "passed": true
+    },
+    {
+      "check": "/areas/dumfries: title has one business label across spelling variants",
+      "passed": true
+    },
+    {
+      "check": "/areas/dumfries: structured data syntax is valid when present",
+      "passed": true
+    },
+    {
+      "check": "/areas/dumfries: page-specific Open Graph URL",
+      "passed": true
+    },
+    {
+      "check": "/areas/dumfries: useful description",
+      "passed": true
+    },
+    {
+      "check": "/areas/dumfries: no internal SEO instructions",
+      "passed": true
+    },
+    {
+      "check": "/areas/dumfries: parseable structured data",
+      "passed": true
+    },
+    {
+      "check": "/areas/galashiels: canonical public HTTP 200",
+      "passed": true
+    },
+    {
+      "check": "/areas/galashiels: useful initial HTML H1",
+      "passed": true
+    },
+    {
+      "check": "/areas/galashiels: indexable in HTML and HTTP headers",
+      "passed": true
+    },
+    {
+      "check": "/areas/galashiels: title has one business label across spelling variants",
+      "passed": true
+    },
+    {
+      "check": "/areas/galashiels: structured data syntax is valid when present",
+      "passed": true
+    },
+    {
+      "check": "/areas/galashiels: page-specific Open Graph URL",
+      "passed": true
+    },
+    {
+      "check": "/areas/galashiels: useful description",
+      "passed": true
+    },
+    {
+      "check": "/areas/galashiels: no internal SEO instructions",
+      "passed": true
+    },
+    {
+      "check": "/areas/galashiels: parseable structured data",
+      "passed": true
+    },
+    {
+      "check": "/services/man-and-van: canonical public HTTP 200",
+      "passed": true
+    },
+    {
+      "check": "/services/man-and-van: useful initial HTML H1",
+      "passed": true
+    },
+    {
+      "check": "/services/man-and-van: indexable in HTML and HTTP headers",
+      "passed": true
+    },
+    {
+      "check": "/services/man-and-van: title has one business label across spelling variants",
+      "passed": true
+    },
+    {
+      "check": "/services/man-and-van: structured data syntax is valid when present",
+      "passed": true
+    },
+    {
+      "check": "/services/man-and-van: page-specific Open Graph URL",
+      "passed": true
+    },
+    {
+      "check": "/services/man-and-van: useful description",
+      "passed": true
+    },
+    {
+      "check": "/services/man-and-van: no internal SEO instructions",
+      "passed": true
+    },
+    {
+      "check": "/services/man-and-van: parseable structured data",
+      "passed": true
+    },
+    {
+      "check": "/services/flat-removals: canonical public HTTP 200",
+      "passed": true
+    },
+    {
+      "check": "/services/flat-removals: useful initial HTML H1",
+      "passed": true
+    },
+    {
+      "check": "/services/flat-removals: indexable in HTML and HTTP headers",
+      "passed": true
+    },
+    {
+      "check": "/services/flat-removals: title has one business label across spelling variants",
+      "passed": true
+    },
+    {
+      "check": "/services/flat-removals: structured data syntax is valid when present",
+      "passed": true
+    },
+    {
+      "check": "/services/flat-removals: page-specific Open Graph URL",
+      "passed": true
+    },
+    {
+      "check": "/services/flat-removals: useful description",
+      "passed": true
+    },
+    {
+      "check": "/services/flat-removals: no internal SEO instructions",
+      "passed": true
+    },
+    {
+      "check": "/services/flat-removals: parseable structured data",
+      "passed": true
+    },
+    {
+      "check": "/services/small-moves: canonical public HTTP 200",
+      "passed": true
+    },
+    {
+      "check": "/services/small-moves: useful initial HTML H1",
+      "passed": true
+    },
+    {
+      "check": "/services/small-moves: indexable in HTML and HTTP headers",
+      "passed": true
+    },
+    {
+      "check": "/services/small-moves: title has one business label across spelling variants",
+      "passed": true
+    },
+    {
+      "check": "/services/small-moves: structured data syntax is valid when present",
+      "passed": true
+    },
+    {
+      "check": "/services/small-moves: page-specific Open Graph URL",
+      "passed": true
+    },
+    {
+      "check": "/services/small-moves: useful description",
+      "passed": true
+    },
+    {
+      "check": "/services/small-moves: no internal SEO instructions",
+      "passed": true
+    },
+    {
+      "check": "/services/small-moves: parseable structured data",
+      "passed": true
+    },
+    {
+      "check": "/services/house-removal: canonical public HTTP 200",
+      "passed": true
+    },
+    {
+      "check": "/services/house-removal: useful initial HTML H1",
+      "passed": true
+    },
+    {
+      "check": "/services/house-removal: indexable in HTML and HTTP headers",
+      "passed": true
+    },
+    {
+      "check": "/services/house-removal: title has one business label across spelling variants",
+      "passed": true
+    },
+    {
+      "check": "/services/house-removal: structured data syntax is valid when present",
+      "passed": true
+    },
+    {
+      "check": "/services/house-removal: page-specific Open Graph URL",
+      "passed": true
+    },
+    {
+      "check": "/services/house-removal: useful description",
+      "passed": true
+    },
+    {
+      "check": "/services/house-removal: no internal SEO instructions",
+      "passed": true
+    },
+    {
+      "check": "/services/house-removal: parseable structured data",
+      "passed": true
+    },
+    {
+      "check": "/services/long-distance-removals: canonical public HTTP 200",
+      "passed": true
+    },
+    {
+      "check": "/services/long-distance-removals: useful initial HTML H1",
+      "passed": true
+    },
+    {
+      "check": "/services/long-distance-removals: indexable in HTML and HTTP headers",
+      "passed": true
+    },
+    {
+      "check": "/services/long-distance-removals: title has one business label across spelling variants",
+      "passed": true
+    },
+    {
+      "check": "/services/long-distance-removals: structured data syntax is valid when present",
+      "passed": true
+    },
+    {
+      "check": "/services/long-distance-removals: page-specific Open Graph URL",
+      "passed": true
+    },
+    {
+      "check": "/services/long-distance-removals: useful description",
+      "passed": true
+    },
+    {
+      "check": "/services/long-distance-removals: no internal SEO instructions",
+      "passed": true
+    },
+    {
+      "check": "/services/long-distance-removals: parseable structured data",
+      "passed": true
+    },
+    {
+      "check": "/services/office-removal: canonical public HTTP 200",
+      "passed": true
+    },
+    {
+      "check": "/services/office-removal: useful initial HTML H1",
+      "passed": true
+    },
+    {
+      "check": "/services/office-removal: indexable in HTML and HTTP headers",
+      "passed": true
+    },
+    {
+      "check": "/services/office-removal: title has one business label across spelling variants",
+      "passed": true
+    },
+    {
+      "check": "/services/office-removal: structured data syntax is valid when present",
+      "passed": true
+    },
+    {
+      "check": "/services/office-removal: page-specific Open Graph URL",
+      "passed": true
+    },
+    {
+      "check": "/services/office-removal: useful description",
+      "passed": true
+    },
+    {
+      "check": "/services/office-removal: no internal SEO instructions",
+      "passed": true
+    },
+    {
+      "check": "/services/office-removal: parseable structured data",
+      "passed": true
+    },
+    {
+      "check": "/services/student-move: canonical public HTTP 200",
+      "passed": true
+    },
+    {
+      "check": "/services/student-move: useful initial HTML H1",
+      "passed": true
+    },
+    {
+      "check": "/services/student-move: indexable in HTML and HTTP headers",
+      "passed": true
+    },
+    {
+      "check": "/services/student-move: title has one business label across spelling variants",
+      "passed": true
+    },
+    {
+      "check": "/services/student-move: structured data syntax is valid when present",
+      "passed": true
+    },
+    {
+      "check": "/services/student-move: page-specific Open Graph URL",
+      "passed": true
+    },
+    {
+      "check": "/services/student-move: useful description",
+      "passed": true
+    },
+    {
+      "check": "/services/student-move: no internal SEO instructions",
+      "passed": true
+    },
+    {
+      "check": "/services/student-move: parseable structured data",
+      "passed": true
+    },
+    {
+      "check": "/services/furniture-delivery: canonical public HTTP 200",
+      "passed": true
+    },
+    {
+      "check": "/services/furniture-delivery: useful initial HTML H1",
+      "passed": true
+    },
+    {
+      "check": "/services/furniture-delivery: indexable in HTML and HTTP headers",
+      "passed": true
+    },
+    {
+      "check": "/services/furniture-delivery: title has one business label across spelling variants",
+      "passed": true
+    },
+    {
+      "check": "/services/furniture-delivery: structured data syntax is valid when present",
+      "passed": true
+    },
+    {
+      "check": "/services/furniture-delivery: page-specific Open Graph URL",
+      "passed": true
+    },
+    {
+      "check": "/services/furniture-delivery: useful description",
+      "passed": true
+    },
+    {
+      "check": "/services/furniture-delivery: no internal SEO instructions",
+      "passed": true
+    },
+    {
+      "check": "/services/furniture-delivery: parseable structured data",
+      "passed": true
+    },
+    {
+      "check": "/services/ikea-delivery: canonical public HTTP 200",
+      "passed": true
+    },
+    {
+      "check": "/services/ikea-delivery: useful initial HTML H1",
+      "passed": true
+    },
+    {
+      "check": "/services/ikea-delivery: indexable in HTML and HTTP headers",
+      "passed": true
+    },
+    {
+      "check": "/services/ikea-delivery: title has one business label across spelling variants",
+      "passed": true
+    },
+    {
+      "check": "/services/ikea-delivery: structured data syntax is valid when present",
+      "passed": true
+    },
+    {
+      "check": "/services/ikea-delivery: page-specific Open Graph URL",
+      "passed": true
+    },
+    {
+      "check": "/services/ikea-delivery: useful description",
+      "passed": true
+    },
+    {
+      "check": "/services/ikea-delivery: no internal SEO instructions",
+      "passed": true
+    },
+    {
+      "check": "/services/ikea-delivery: parseable structured data",
+      "passed": true
+    },
+    {
+      "check": "/services/piano-moving: canonical public HTTP 200",
+      "passed": true
+    },
+    {
+      "check": "/services/piano-moving: useful initial HTML H1",
+      "passed": true
+    },
+    {
+      "check": "/services/piano-moving: indexable in HTML and HTTP headers",
+      "passed": true
+    },
+    {
+      "check": "/services/piano-moving: title has one business label across spelling variants",
+      "passed": true
+    },
+    {
+      "check": "/services/piano-moving: structured data syntax is valid when present",
+      "passed": true
+    },
+    {
+      "check": "/services/piano-moving: page-specific Open Graph URL",
+      "passed": true
+    },
+    {
+      "check": "/services/piano-moving: useful description",
+      "passed": true
+    },
+    {
+      "check": "/services/piano-moving: no internal SEO instructions",
+      "passed": true
+    },
+    {
+      "check": "/services/piano-moving: parseable structured data",
+      "passed": true
+    },
+    {
+      "check": "/services/same-day-delivery: canonical public HTTP 200",
+      "passed": true
+    },
+    {
+      "check": "/services/same-day-delivery: useful initial HTML H1",
+      "passed": true
+    },
+    {
+      "check": "/services/same-day-delivery: indexable in HTML and HTTP headers",
+      "passed": true
+    },
+    {
+      "check": "/services/same-day-delivery: title has one business label across spelling variants",
+      "passed": true
+    },
+    {
+      "check": "/services/same-day-delivery: structured data syntax is valid when present",
+      "passed": true
+    },
+    {
+      "check": "/services/same-day-delivery: page-specific Open Graph URL",
+      "passed": true
+    },
+    {
+      "check": "/services/same-day-delivery: useful description",
+      "passed": true
+    },
+    {
+      "check": "/services/same-day-delivery: no internal SEO instructions",
+      "passed": true
+    },
+    {
+      "check": "/services/same-day-delivery: parseable structured data",
+      "passed": true
+    },
+    {
+      "check": "/services/packing-service: canonical public HTTP 200",
+      "passed": true
+    },
+    {
+      "check": "/services/packing-service: useful initial HTML H1",
+      "passed": true
+    },
+    {
+      "check": "/services/packing-service: indexable in HTML and HTTP headers",
+      "passed": true
+    },
+    {
+      "check": "/services/packing-service: title has one business label across spelling variants",
+      "passed": true
+    },
+    {
+      "check": "/services/packing-service: structured data syntax is valid when present",
+      "passed": true
+    },
+    {
+      "check": "/services/packing-service: page-specific Open Graph URL",
+      "passed": true
+    },
+    {
+      "check": "/services/packing-service: useful description",
+      "passed": true
+    },
+    {
+      "check": "/services/packing-service: no internal SEO instructions",
+      "passed": true
+    },
+    {
+      "check": "/services/packing-service: parseable structured data",
+      "passed": true
+    },
+    {
+      "check": "/services/european-removals: canonical public HTTP 200",
+      "passed": true
+    },
+    {
+      "check": "/services/european-removals: useful initial HTML H1",
+      "passed": true
+    },
+    {
+      "check": "/services/european-removals: indexable in HTML and HTTP headers",
+      "passed": true
+    },
+    {
+      "check": "/services/european-removals: title has one business label across spelling variants",
+      "passed": true
+    },
+    {
+      "check": "/services/european-removals: structured data syntax is valid when present",
+      "passed": true
+    },
+    {
+      "check": "/services/european-removals: page-specific Open Graph URL",
+      "passed": true
+    },
+    {
+      "check": "/services/european-removals: useful description",
+      "passed": true
+    },
+    {
+      "check": "/services/european-removals: no internal SEO instructions",
+      "passed": true
+    },
+    {
+      "check": "/services/european-removals: parseable structured data",
+      "passed": true
+    },
+    {
+      "check": "/services/man-and-van: linked from home and service hub",
+      "passed": true
+    },
+    {
+      "check": "/services/man-and-van: crawlable booking action",
+      "passed": true
+    },
+    {
+      "check": "/services/man-and-van: canonical Service entity",
+      "passed": true
+    },
+    {
+      "check": "/services/furniture-delivery: linked from home and service hub",
+      "passed": true
+    },
+    {
+      "check": "/services/furniture-delivery: crawlable booking action",
+      "passed": true
+    },
+    {
+      "check": "/services/furniture-delivery: canonical Service entity",
+      "passed": true
+    },
+    {
+      "check": "/services/house-removal: linked from home and service hub",
+      "passed": true
+    },
+    {
+      "check": "/services/house-removal: crawlable booking action",
+      "passed": true
+    },
+    {
+      "check": "/services/house-removal: canonical Service entity",
+      "passed": true
+    },
+    {
+      "check": "/services/flat-removals: linked from home and service hub",
+      "passed": true
+    },
+    {
+      "check": "/services/flat-removals: crawlable booking action",
+      "passed": true
+    },
+    {
+      "check": "/services/flat-removals: canonical Service entity",
+      "passed": true
+    },
+    {
+      "check": "/services/office-removal: linked from home and service hub",
+      "passed": true
+    },
+    {
+      "check": "/services/office-removal: crawlable booking action",
+      "passed": true
+    },
+    {
+      "check": "/services/office-removal: canonical Service entity",
+      "passed": true
+    },
+    {
+      "check": "/services/small-moves: linked from home and service hub",
+      "passed": true
+    },
+    {
+      "check": "/services/small-moves: crawlable booking action",
+      "passed": true
+    },
+    {
+      "check": "/services/small-moves: canonical Service entity",
+      "passed": true
+    },
+    {
+      "check": "/services/student-move: linked from home and service hub",
+      "passed": true
+    },
+    {
+      "check": "/services/student-move: crawlable booking action",
+      "passed": true
+    },
+    {
+      "check": "/services/student-move: canonical Service entity",
+      "passed": true
+    },
+    {
+      "check": "/services/long-distance-removals: linked from home and service hub",
+      "passed": true
+    },
+    {
+      "check": "/services/long-distance-removals: crawlable booking action",
+      "passed": true
+    },
+    {
+      "check": "/services/long-distance-removals: canonical Service entity",
+      "passed": true
+    },
+    {
+      "check": "Every configured area is in the sitemap and linked from the area hub",
+      "passed": true
+    },
+    {
+      "check": "Every configured indexable service is in the sitemap and linked from the service hub",
+      "passed": true
+    },
+    {
+      "check": "Hourly service schema includes GBP per-hour unit",
+      "passed": true
+    },
+    {
+      "check": "Homepage WebSite has stable entity ID",
+      "passed": true
+    },
+    {
+      "check": "Guide hub and comparison guide link to each other in main content",
+      "passed": true
+    },
+    {
+      "check": "Guide hub is discoverable from the homepage",
+      "passed": true
+    },
+    {
+      "check": "/pricing: contextual comparison guide link",
+      "passed": true
+    },
+    {
+      "check": "/areas/aberdeen: contextual comparison guide link",
+      "passed": true
+    },
+    {
+      "check": "/areas/inverness: contextual comparison guide link",
+      "passed": true
+    },
+    {
+      "check": "/services/man-and-van: contextual comparison guide link",
+      "passed": true
+    },
+    {
+      "check": "/services/furniture-delivery: contextual comparison guide link",
+      "passed": true
+    },
+    {
+      "check": "/services/house-removal: contextual comparison guide link",
+      "passed": true
+    },
+    {
+      "check": "/services/flat-removals: contextual comparison guide link",
+      "passed": true
+    },
+    {
+      "check": "/services/office-removal: contextual comparison guide link",
+      "passed": true
+    },
+    {
+      "check": "/services/small-moves: contextual comparison guide link",
+      "passed": true
+    },
+    {
+      "check": "/services/student-move: contextual comparison guide link",
+      "passed": true
+    },
+    {
+      "check": "/services/long-distance-removals: contextual comparison guide link",
+      "passed": true
+    },
+    {
+      "check": "/guides: quote entry preserves the existing draft URL",
+      "passed": true
+    },
+    {
+      "check": "/guides: comparison resources reach both cities and pricing",
+      "passed": true
+    },
+    {
+      "check": "/guides: breadcrumb ends on the canonical guide",
+      "passed": true
+    },
+    {
+      "check": "/guides/man-and-van-or-house-removals: quote entry preserves the existing draft URL",
+      "passed": true
+    },
+    {
+      "check": "/guides/man-and-van-or-house-removals: comparison resources reach both cities and pricing",
+      "passed": true
+    },
+    {
+      "check": "/guides/man-and-van-or-house-removals: breadcrumb ends on the canonical guide",
+      "passed": true
+    },
+    {
+      "check": "aberdeen: local pricing link reaches a unique section",
+      "passed": true
+    },
+    {
+      "check": "aberdeen: pricing links back to the local guide",
+      "passed": true
+    },
+    {
+      "check": "aberdeen: guide navigation reaches unique section headings",
+      "passed": true
+    },
+    {
+      "check": "aberdeen: commercial quote actions preserve draft entry",
+      "passed": true
+    },
+    {
+      "check": "aberdeen: surrounding settlements are present in initial HTML",
+      "passed": true
+    },
+    {
+      "check": "aberdeen: surrounding settlement links resolve to canonical area pages",
+      "passed": true
+    },
+    {
+      "check": "aberdeen: surrounding places have unique identities",
+      "passed": true
+    },
+    {
+      "check": "inverness: local pricing link reaches a unique section",
+      "passed": true
+    },
+    {
+      "check": "inverness: pricing links back to the local guide",
+      "passed": true
+    },
+    {
+      "check": "inverness: guide navigation reaches unique section headings",
+      "passed": true
+    },
+    {
+      "check": "inverness: commercial quote actions preserve draft entry",
+      "passed": true
+    },
+    {
+      "check": "inverness: surrounding settlements are present in initial HTML",
+      "passed": true
+    },
+    {
+      "check": "inverness: surrounding settlement links resolve to canonical area pages",
+      "passed": true
+    },
+    {
+      "check": "inverness: surrounding places have unique identities",
+      "passed": true
+    },
+    {
+      "check": "/areas/inverurie: town service uses its actual Place identity",
+      "passed": true
+    },
+    {
+      "check": "/areas/inverurie: town quote actions preserve draft entry",
+      "passed": true
+    },
+    {
+      "check": "/areas/inverurie: contextual link returns to a city hub",
+      "passed": true
+    },
+    {
+      "check": "/areas/westhill: town service uses its actual Place identity",
+      "passed": true
+    },
+    {
+      "check": "/areas/westhill: town quote actions preserve draft entry",
+      "passed": true
+    },
+    {
+      "check": "/areas/westhill: contextual link returns to a city hub",
+      "passed": true
+    },
+    {
+      "check": "/areas/stonehaven: town service uses its actual Place identity",
+      "passed": true
+    },
+    {
+      "check": "/areas/stonehaven: town quote actions preserve draft entry",
+      "passed": true
+    },
+    {
+      "check": "/areas/stonehaven: contextual link returns to a city hub",
+      "passed": true
+    },
+    {
+      "check": "/areas/ellon: town service uses its actual Place identity",
+      "passed": true
+    },
+    {
+      "check": "/areas/ellon: town quote actions preserve draft entry",
+      "passed": true
+    },
+    {
+      "check": "/areas/ellon: contextual link returns to a city hub",
+      "passed": true
+    },
+    {
+      "check": "/areas/nairn: town service uses its actual Place identity",
+      "passed": true
+    },
+    {
+      "check": "/areas/nairn: town quote actions preserve draft entry",
+      "passed": true
+    },
+    {
+      "check": "/areas/nairn: contextual link returns to a city hub",
+      "passed": true
+    },
+    {
+      "check": "/areas/dingwall: town service uses its actual Place identity",
+      "passed": true
+    },
+    {
+      "check": "/areas/dingwall: town quote actions preserve draft entry",
+      "passed": true
+    },
+    {
+      "check": "/areas/dingwall: contextual link returns to a city hub",
+      "passed": true
+    },
+    {
+      "check": "man-and-van: search and sharing titles remain aligned",
+      "passed": true
+    },
+    {
+      "check": "house-removal: search and sharing titles remain aligned",
+      "passed": true
+    },
+    {
+      "check": "furniture-delivery: search and sharing titles remain aligned",
+      "passed": true
+    },
+    {
+      "check": "office-removal: search and sharing titles remain aligned",
+      "passed": true
+    },
+    {
+      "check": "long-distance-removals: search and sharing titles remain aligned",
+      "passed": true
+    },
+    {
+      "check": "same-day-delivery: search and sharing titles remain aligned",
+      "passed": true
+    },
+    {
+      "check": "/services/qa-invalid-service: real 404 with noindex",
+      "passed": true
+    },
+    {
+      "check": "/services/qa-invalid-service: no inherited canonical on an unknown route",
+      "passed": true
+    },
+    {
+      "check": "/areas/qa-invalid-area: real 404 with noindex",
+      "passed": true
+    },
+    {
+      "check": "/areas/qa-invalid-area: no inherited canonical on an unknown route",
+      "passed": true
+    },
+    {
+      "check": "/guides/qa-invalid-guide: real 404 with noindex",
+      "passed": true
+    },
+    {
+      "check": "/guides/qa-invalid-guide: no inherited canonical on an unknown route",
+      "passed": true
+    },
+    {
+      "check": "/qa-not-a-page: real 404 with noindex",
+      "passed": true
+    },
+    {
+      "check": "/qa-not-a-page: no inherited canonical on an unknown route",
+      "passed": true
+    },
+    {
+      "check": "/book: private HTML remains noindex",
+      "passed": true
+    },
+    {
+      "check": "/book: no inherited public canonical",
+      "passed": true
+    },
+    {
+      "check": "/book/review/QA-NONEXISTENT: private HTML remains noindex",
+      "passed": true
+    },
+    {
+      "check": "/book/review/QA-NONEXISTENT: no inherited public canonical",
+      "passed": true
+    },
+    {
+      "check": "/auth/login: private HTML remains noindex",
+      "passed": true
+    },
+    {
+      "check": "/auth/login: no inherited public canonical",
+      "passed": true
+    },
+    {
+      "check": "/driver/login: private HTML remains noindex",
+      "passed": true
+    },
+    {
+      "check": "/driver/login: no inherited public canonical",
+      "passed": true
+    },
+    {
+      "check": "/track: private HTML remains noindex",
+      "passed": true
+    },
+    {
+      "check": "/track: no inherited public canonical",
+      "passed": true
+    },
+    {
+      "check": "/jobs: private HTML remains noindex",
+      "passed": true
+    },
+    {
+      "check": "/jobs: no inherited public canonical",
+      "passed": true
+    },
+    {
+      "check": "Robots permits reading HTML noindex and names canonical sitemap",
+      "passed": true
+    },
+    {
+      "check": "speedyvan.uk GET /services/man-and-van?utm_source=qa&ref=a%2Fb: one permanent redirect preserving path/query",
+      "passed": true
+    },
+    {
+      "check": "speedyvan.uk HEAD /services/man-and-van?utm_source=qa&ref=a%2Fb: one permanent redirect preserving path/query",
+      "passed": true
+    },
+    {
+      "check": "speedyvan.uk GET /areas/glasgow: one permanent redirect preserving path/query",
+      "passed": true
+    },
+    {
+      "check": "speedyvan.uk HEAD /areas/glasgow: one permanent redirect preserving path/query",
+      "passed": true
+    },
+    {
+      "check": "speedyvan.uk GET /privacy: one permanent redirect preserving path/query",
+      "passed": true
+    },
+    {
+      "check": "speedyvan.uk HEAD /privacy: one permanent redirect preserving path/query",
+      "passed": true
+    },
+    {
+      "check": "speedyvan.uk GET /book?service=house-removals&utm_source=qa: one permanent redirect preserving path/query",
+      "passed": true
+    },
+    {
+      "check": "speedyvan.uk HEAD /book?service=house-removals&utm_source=qa: one permanent redirect preserving path/query",
+      "passed": true
+    },
+    {
+      "check": "speedyvan.uk: API host bypass",
+      "passed": true
+    },
+    {
+      "check": "speedy-van.co.uk GET /services/man-and-van?utm_source=qa&ref=a%2Fb: one permanent redirect preserving path/query",
+      "passed": true
+    },
+    {
+      "check": "speedy-van.co.uk HEAD /services/man-and-van?utm_source=qa&ref=a%2Fb: one permanent redirect preserving path/query",
+      "passed": true
+    },
+    {
+      "check": "speedy-van.co.uk GET /areas/glasgow: one permanent redirect preserving path/query",
+      "passed": true
+    },
+    {
+      "check": "speedy-van.co.uk HEAD /areas/glasgow: one permanent redirect preserving path/query",
+      "passed": true
+    },
+    {
+      "check": "speedy-van.co.uk GET /privacy: one permanent redirect preserving path/query",
+      "passed": true
+    },
+    {
+      "check": "speedy-van.co.uk HEAD /privacy: one permanent redirect preserving path/query",
+      "passed": true
+    },
+    {
+      "check": "speedy-van.co.uk GET /book?service=house-removals&utm_source=qa: one permanent redirect preserving path/query",
+      "passed": true
+    },
+    {
+      "check": "speedy-van.co.uk HEAD /book?service=house-removals&utm_source=qa: one permanent redirect preserving path/query",
+      "passed": true
+    },
+    {
+      "check": "speedy-van.co.uk: API host bypass",
+      "passed": true
+    },
+    {
+      "check": "www.speedy-van.co.uk GET /services/man-and-van?utm_source=qa&ref=a%2Fb: one permanent redirect preserving path/query",
+      "passed": true
+    },
+    {
+      "check": "www.speedy-van.co.uk HEAD /services/man-and-van?utm_source=qa&ref=a%2Fb: one permanent redirect preserving path/query",
+      "passed": true
+    },
+    {
+      "check": "www.speedy-van.co.uk GET /areas/glasgow: one permanent redirect preserving path/query",
+      "passed": true
+    },
+    {
+      "check": "www.speedy-van.co.uk HEAD /areas/glasgow: one permanent redirect preserving path/query",
+      "passed": true
+    },
+    {
+      "check": "www.speedy-van.co.uk GET /privacy: one permanent redirect preserving path/query",
+      "passed": true
+    },
+    {
+      "check": "www.speedy-van.co.uk HEAD /privacy: one permanent redirect preserving path/query",
+      "passed": true
+    },
+    {
+      "check": "www.speedy-van.co.uk GET /book?service=house-removals&utm_source=qa: one permanent redirect preserving path/query",
+      "passed": true
+    },
+    {
+      "check": "www.speedy-van.co.uk HEAD /book?service=house-removals&utm_source=qa: one permanent redirect preserving path/query",
+      "passed": true
+    },
+    {
+      "check": "www.speedy-van.co.uk: API host bypass",
+      "passed": true
+    },
+    {
+      "check": "Preview host gets HTTP noindex",
+      "passed": true
+    },
+    {
+      "check": "Private-route boundary does not include /bookish",
+      "passed": true
+    }
+  ],
+  "transport_errors": [],
+  "transport_policy": "At most four concurrent public-page requests; one retry for transport errors only. HTTP error responses are not retried."
+}

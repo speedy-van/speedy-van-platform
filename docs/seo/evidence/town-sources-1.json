@@ -1,0 +1,488 @@
+{
+  "reviewedAt": "2026-09-23",
+  "implementation": "Newly rebuilt source; not recovery of the earlier tested Git tree.",
+  "batch": 1,
+  "sources": {
+    "alness": {
+      "label": "Highland Council Alness and Invergordon transport study",
+      "url": "https://www.highland.gov.uk/download/downloads/id/24974/alness_and_invergordon_active_travel_masterplan_issue.pdf",
+      "verification": "Direct PDF read; 2021 study. Used for town geography, B817, High Street, harbour and named employment areas. Proposed improvements are not represented as completed."
+    },
+    "tain": {
+      "label": "Highland Council Tain town centre study",
+      "url": "https://www.highland.gov.uk/download/meetings/id/66948/item_4_-_tain_town_centre_action_plan",
+      "verification": "Direct PDF read; 2014 draft action plan. Used only for established town-centre geography, not current traffic rules or completion of proposals."
+    },
+    "aviemore": {
+      "label": "Cairngorms National Park Aviemore transport consultation",
+      "url": "https://cairngorms.co.uk/taking-part/consultations/active-communities-consultation/improving-how-we-travel-in-aviemore",
+      "verification": "Direct HTML read plus indexed official transport committee extracts. Grampian Road proposals are not treated as completed works."
+    },
+    "wick": {
+      "label": "Highland Council Wick streetscape update",
+      "url": "https://www.highland.gov.uk/news/article/17267/wick-town-centre-streetscape-progresses-with-phased-opening-planned",
+      "verification": "Direct HTML read; 21 May 2026 update identifies Bridge Street, High Street and rising-bollard pedestrian-zone design. No assertion that works remain ongoing or all access controls are operational now."
+    },
+    "highland": {
+      "label": "Highland Council town centre health checks",
+      "url": "https://www.highland.gov.uk/news/article/15137/highland-new-town-centre-health-checks-published",
+      "verification": "Direct HTML read. Confirms named Highland town centres including Thurso and Portree; does not establish present street restrictions."
+    },
+    "ullapool": {
+      "label": "CalMac Ullapool port information",
+      "url": "https://www.calmac.co.uk/ports/ullapool-port/",
+      "verification": "Direct HTML read; identifies Ullapool ferry port and bookable route. No sailing availability queried."
+    },
+    "mallaig": {
+      "label": "CalMac Mallaig port information",
+      "url": "https://www.calmac.co.uk/ports/mallaig-port/",
+      "verification": "Official indexed extract read; direct page fetch failed. Only Mallaig as port and bookable routes relied on; no check-in times or fares copied."
+    },
+    "skye": {
+      "label": "CalMac port directions and Skye bridge guidance",
+      "url": "https://www.calmac.co.uk/en-gb/faqs/before-you-travel/what-are-the-sat-nav-codes-or-directions-for-your-ports/",
+      "verification": "Direct HTML read. Distinguishes Skye bridge from suggested Mallaig-Armadale ferry route and Tarbert Harris from Tarbert Loch Fyne."
+    },
+    "moray-free": {
+      "label": "Moray Council parking locations",
+      "url": "https://www.moray.gov.uk/roads-and-transport/parking-and-car-parks/free-parking/",
+      "verification": "Direct HTML read. Confirms named locations in Forres, Buckie, Keith and Lossiemouth. Parking listing is not treated as removal-van permission, a reserved space or a loading bay."
+    },
+    "elgin": {
+      "label": "Moray Council Elgin parking information",
+      "url": "https://www.moray.gov.uk/roads-and-transport/parking-and-car-parks/pay-and-display-charges-and-locations/",
+      "verification": "Direct HTML read. Used for named Elgin parking areas and distinction between car parks; no current price copied."
+    },
+    "aberdeen-travel": {
+      "label": "Aberdeenshire Council town transport locations",
+      "url": "https://www.aberdeenshire.gov.uk/roads-and-travel/public-transport/planning-your-journey-in-aberdeenshire-and-beyond",
+      "verification": "Direct HTML read. Confirms named town-centre streets and Peterhead interchange. Public transport stops are not presented as permitted van loading."
+    },
+    "aberdeen-permit": {
+      "label": "Aberdeenshire Council resident parking guidance",
+      "url": "https://www.aberdeenshire.gov.uk/roads-and-travel/car-parking/residents-permit",
+      "verification": "Direct HTML read. Confirms a resident permit does not reserve or guarantee a space. No permit price or eligibility claim for the removal vehicle."
+    },
+    "northlink": {
+      "label": "NorthLink ferry routes and travel updates",
+      "url": "https://www.northlinkferries.co.uk/book/routes-times-and-prices/timetables/",
+      "verification": "Direct HTML read of 2026 timetable. Used only for route connections and need to confirm sailing; no departure times, fares or availability published."
+    },
+    "northlink-business": {
+      "label": "NorthLink business vehicle booking information",
+      "url": "https://www.northlinkferries.co.uk/booking/",
+      "verification": "Direct HTML read. Operator states business vehicles must be arranged with freight department. No booking made."
+    },
+    "hatston": {
+      "label": "NorthLink Kirkwall Hatston terminal",
+      "url": "https://www.northlinkferries.co.uk/port/hatston/",
+      "verification": "Direct HTML read. Confirms Kirkwall Hatston terminal; terminal choice must be agreed for the actual route."
+    },
+    "shetland": {
+      "label": "Shetland Islands Council access route maps",
+      "url": "https://www.shetland.gov.uk/downloads/download/146/access-route-maps",
+      "verification": "Direct HTML read confirms separate Lerwick and Scalloway access maps. These walking/access maps are not van routing permissions."
+    },
+    "scalloway": {
+      "label": "Shetland Islands Council Scalloway conservation appraisal",
+      "url": "https://www.shetland.gov.uk/downloads/file/1589/scalloway-conservation-area-character-appraisal",
+      "verification": "Official indexed extract confirms Scalloway west of Lerwick and bay-centred settlement; direct PDF read timed out. No detailed street rules inferred."
+    },
+    "hebrides": {
+      "label": "Comhairle nan Eilean Siar island office locations",
+      "url": "https://www.cne-siar.gov.uk/council-and-committees/customer-services/contact-us/comhairle-offices",
+      "verification": "Direct HTML read. Confirms Stornoway on Lewis, Tarbert office on Harris, Balivanich on Benbecula, Castlebay on Barra. Council offices are not claimed as company premises."
+    },
+    "calmac": {
+      "label": "CalMac route directory",
+      "url": "https://www.calmac.co.uk/timetables",
+      "verification": "Direct HTML read. Confirms route endpoints including Stornoway-Ullapool, Uig-Tarbert, Uig-Lochmaddy, Oban-Castlebay and Ardmhor-Eriskay; no timetable frequency, current capacity or prices inferred."
+    },
+    "helensburgh": {
+      "label": "Argyll and Bute Council Helensburgh parking",
+      "url": "https://www.argyll-bute.gov.uk/roads-and-travel/car-parks-and-parking/car-parks-helensburgh-and-lomond",
+      "verification": "Direct HTML read; named car parks and local signs are route-planning references, not proof that a removal vehicle can stop at a property."
+    },
+    "campbeltown": {
+      "label": "Argyll and Bute Council Kintyre parking",
+      "url": "https://www.argyll-bute.gov.uk/roads-and-travel/car-parks-and-parking/car-parks-mid-argyll-kintyre-and-islay",
+      "verification": "Direct HTML read. Confirms Campbeltown in Kintyre and named local parking locations; no parking entitlement or ferry service assumed."
+    },
+    "dunoon": {
+      "label": "Western Ferries vehicle crossing information",
+      "url": "https://www.western-ferries.co.uk/pages/company",
+      "verification": "Direct HTML read. Confirms passenger-and-vehicle crossing Hunter's Quay-McInroy's Point. No fares or guaranteed departure published."
+    },
+    "rothesay": {
+      "label": "CalMac Wemyss Bay to Rothesay route",
+      "url": "https://www.calmac.co.uk/route-information/wemyss-bay-rothesay/",
+      "verification": "Direct HTML read. Confirms Rothesay-Wemyss Bay and alternative Rhubodach-Colintraive route. Does not establish available vehicle capacity on a chosen day."
+    },
+    "bridges": {
+      "label": "Aberdeenshire Council bridge restrictions",
+      "url": "https://www.aberdeenshire.gov.uk/roads-and-travel/roads/maintenance/bridges/bridge-restriction/",
+      "verification": "Direct HTML read. Identifies Huntly Railway bridge on A97 Bogie Street and Slug Road Railway bridge on Stonehaven-Banchory route. No numeric clearance copied; current signs and actual vehicle dimensions require checking."
+    },
+    "banff": {
+      "label": "Aberdeenshire Council Banff Bridge update",
+      "url": "https://www.aberdeenshire.gov.uk/news/2026/jun/critical-banff-bridge-scour-protection-works-completed",
+      "verification": "Direct HTML read of June 2026 completion update. Used for A98 Banff Bridge and River Deveron geography; does not imply current closure or a guaranteed clear route."
+    },
+    "lerwick": {
+      "label": "NorthLink Lerwick terminal information",
+      "url": "https://www.northlinkferries.co.uk/port/lerwick/",
+      "verification": "Direct HTML read. Confirms Lerwick terminal at Holmsgarth; no current capacity or sailing availability checked."
+    },
+    "uist": {
+      "label": "CalMac North Uist connections",
+      "url": "https://www.calmac.co.uk/destinations/north-uist/",
+      "verification": "Direct HTML read. Confirms Uig-Lochmaddy and alternative island connections. No ferry connection from Balivanich itself asserted."
+    }
+  },
+  "towns": [
+    {
+      "slug": "alness",
+      "council": "Highland",
+      "sources": [
+        "https://www.highland.gov.uk/download/downloads/id/24974/alness_and_invergordon_active_travel_masterplan_issue.pdf"
+      ],
+      "authoredSections": 3,
+      "authoredFaqs": 2,
+      "unverified": "Exact property access, parking permission, vehicle allocation and date-specific transport arrangements require enquiry."
+    },
+    {
+      "slug": "invergordon",
+      "council": "Highland",
+      "sources": [
+        "https://www.highland.gov.uk/download/downloads/id/24974/alness_and_invergordon_active_travel_masterplan_issue.pdf"
+      ],
+      "authoredSections": 3,
+      "authoredFaqs": 2,
+      "unverified": "Exact property access, parking permission, vehicle allocation and date-specific transport arrangements require enquiry."
+    },
+    {
+      "slug": "tain",
+      "council": "Highland",
+      "sources": [
+        "https://www.highland.gov.uk/download/meetings/id/66948/item_4_-_tain_town_centre_action_plan"
+      ],
+      "authoredSections": 3,
+      "authoredFaqs": 2,
+      "unverified": "Exact property access, parking permission, vehicle allocation and date-specific transport arrangements require enquiry."
+    },
+    {
+      "slug": "aviemore",
+      "council": "Highland",
+      "sources": [
+        "https://cairngorms.co.uk/taking-part/consultations/active-communities-consultation/improving-how-we-travel-in-aviemore"
+      ],
+      "authoredSections": 3,
+      "authoredFaqs": 2,
+      "unverified": "Exact property access, parking permission, vehicle allocation and date-specific transport arrangements require enquiry."
+    },
+    {
+      "slug": "wick",
+      "council": "Highland",
+      "sources": [
+        "https://www.highland.gov.uk/news/article/17267/wick-town-centre-streetscape-progresses-with-phased-opening-planned"
+      ],
+      "authoredSections": 3,
+      "authoredFaqs": 2,
+      "unverified": "Exact property access, parking permission, vehicle allocation and date-specific transport arrangements require enquiry."
+    },
+    {
+      "slug": "thurso",
+      "council": "Highland",
+      "sources": [
+        "https://www.highland.gov.uk/news/article/15137/highland-new-town-centre-health-checks-published",
+        "https://www.northlinkferries.co.uk/book/routes-times-and-prices/timetables/"
+      ],
+      "authoredSections": 3,
+      "authoredFaqs": 2,
+      "unverified": "Exact property access, parking permission, vehicle allocation and date-specific transport arrangements require enquiry."
+    },
+    {
+      "slug": "ullapool",
+      "council": "Highland",
+      "sources": [
+        "https://www.calmac.co.uk/ports/ullapool-port/",
+        "https://www.calmac.co.uk/timetables"
+      ],
+      "authoredSections": 3,
+      "authoredFaqs": 2,
+      "unverified": "Exact property access, parking permission, vehicle allocation and date-specific transport arrangements require enquiry."
+    },
+    {
+      "slug": "mallaig",
+      "council": "Highland",
+      "sources": [
+        "https://www.calmac.co.uk/en-gb/faqs/before-you-travel/what-are-the-sat-nav-codes-or-directions-for-your-ports/",
+        "https://www.calmac.co.uk/ports/mallaig-port/"
+      ],
+      "authoredSections": 3,
+      "authoredFaqs": 2,
+      "unverified": "Exact property access, parking permission, vehicle allocation and date-specific transport arrangements require enquiry."
+    },
+    {
+      "slug": "portree",
+      "council": "Highland",
+      "sources": [
+        "https://www.calmac.co.uk/en-gb/faqs/before-you-travel/what-are-the-sat-nav-codes-or-directions-for-your-ports/"
+      ],
+      "authoredSections": 3,
+      "authoredFaqs": 2,
+      "unverified": "Exact property access, parking permission, vehicle allocation and date-specific transport arrangements require enquiry."
+    },
+    {
+      "slug": "elgin",
+      "council": "Moray",
+      "sources": [
+        "https://www.moray.gov.uk/roads-and-transport/parking-and-car-parks/pay-and-display-charges-and-locations/"
+      ],
+      "authoredSections": 3,
+      "authoredFaqs": 2,
+      "unverified": "Exact property access, parking permission, vehicle allocation and date-specific transport arrangements require enquiry."
+    },
+    {
+      "slug": "forres",
+      "council": "Moray",
+      "sources": [
+        "https://www.moray.gov.uk/roads-and-transport/parking-and-car-parks/free-parking/"
+      ],
+      "authoredSections": 3,
+      "authoredFaqs": 2,
+      "unverified": "Exact property access, parking permission, vehicle allocation and date-specific transport arrangements require enquiry."
+    },
+    {
+      "slug": "buckie",
+      "council": "Moray",
+      "sources": [
+        "https://www.moray.gov.uk/roads-and-transport/parking-and-car-parks/free-parking/"
+      ],
+      "authoredSections": 3,
+      "authoredFaqs": 2,
+      "unverified": "Exact property access, parking permission, vehicle allocation and date-specific transport arrangements require enquiry."
+    },
+    {
+      "slug": "lossiemouth",
+      "council": "Moray",
+      "sources": [
+        "https://www.moray.gov.uk/roads-and-transport/parking-and-car-parks/free-parking/"
+      ],
+      "authoredSections": 3,
+      "authoredFaqs": 2,
+      "unverified": "Exact property access, parking permission, vehicle allocation and date-specific transport arrangements require enquiry."
+    },
+    {
+      "slug": "keith",
+      "council": "Moray",
+      "sources": [
+        "https://www.moray.gov.uk/roads-and-transport/parking-and-car-parks/free-parking/"
+      ],
+      "authoredSections": 3,
+      "authoredFaqs": 2,
+      "unverified": "Exact property access, parking permission, vehicle allocation and date-specific transport arrangements require enquiry."
+    },
+    {
+      "slug": "peterhead",
+      "council": "Aberdeenshire",
+      "sources": [
+        "https://www.aberdeenshire.gov.uk/roads-and-travel/public-transport/planning-your-journey-in-aberdeenshire-and-beyond"
+      ],
+      "authoredSections": 3,
+      "authoredFaqs": 2,
+      "unverified": "Exact property access, parking permission, vehicle allocation and date-specific transport arrangements require enquiry."
+    },
+    {
+      "slug": "fraserburgh",
+      "council": "Aberdeenshire",
+      "sources": [
+        "https://www.aberdeenshire.gov.uk/roads-and-travel/public-transport/planning-your-journey-in-aberdeenshire-and-beyond"
+      ],
+      "authoredSections": 3,
+      "authoredFaqs": 2,
+      "unverified": "Exact property access, parking permission, vehicle allocation and date-specific transport arrangements require enquiry."
+    },
+    {
+      "slug": "banchory",
+      "council": "Aberdeenshire",
+      "sources": [
+        "https://www.aberdeenshire.gov.uk/roads-and-travel/public-transport/planning-your-journey-in-aberdeenshire-and-beyond",
+        "https://www.aberdeenshire.gov.uk/roads-and-travel/roads/maintenance/bridges/bridge-restriction/"
+      ],
+      "authoredSections": 3,
+      "authoredFaqs": 2,
+      "unverified": "Exact property access, parking permission, vehicle allocation and date-specific transport arrangements require enquiry."
+    },
+    {
+      "slug": "huntly",
+      "council": "Aberdeenshire",
+      "sources": [
+        "https://www.aberdeenshire.gov.uk/roads-and-travel/public-transport/planning-your-journey-in-aberdeenshire-and-beyond",
+        "https://www.aberdeenshire.gov.uk/roads-and-travel/roads/maintenance/bridges/bridge-restriction/"
+      ],
+      "authoredSections": 3,
+      "authoredFaqs": 2,
+      "unverified": "Exact property access, parking permission, vehicle allocation and date-specific transport arrangements require enquiry."
+    },
+    {
+      "slug": "banff",
+      "council": "Aberdeenshire",
+      "sources": [
+        "https://www.aberdeenshire.gov.uk/news/2026/jun/critical-banff-bridge-scour-protection-works-completed",
+        "https://www.aberdeenshire.gov.uk/roads-and-travel/public-transport/planning-your-journey-in-aberdeenshire-and-beyond"
+      ],
+      "authoredSections": 3,
+      "authoredFaqs": 2,
+      "unverified": "Exact property access, parking permission, vehicle allocation and date-specific transport arrangements require enquiry."
+    },
+    {
+      "slug": "turriff",
+      "council": "Aberdeenshire",
+      "sources": [
+        "https://www.aberdeenshire.gov.uk/roads-and-travel/public-transport/planning-your-journey-in-aberdeenshire-and-beyond"
+      ],
+      "authoredSections": 3,
+      "authoredFaqs": 2,
+      "unverified": "Exact property access, parking permission, vehicle allocation and date-specific transport arrangements require enquiry."
+    },
+    {
+      "slug": "kirkwall",
+      "council": "Orkney Islands",
+      "sources": [
+        "https://www.northlinkferries.co.uk/booking/",
+        "https://www.northlinkferries.co.uk/port/hatston/"
+      ],
+      "authoredSections": 3,
+      "authoredFaqs": 2,
+      "unverified": "Exact property access, parking permission, vehicle allocation and date-specific transport arrangements require enquiry."
+    },
+    {
+      "slug": "stromness",
+      "council": "Orkney Islands",
+      "sources": [
+        "https://www.northlinkferries.co.uk/book/routes-times-and-prices/timetables/"
+      ],
+      "authoredSections": 3,
+      "authoredFaqs": 2,
+      "unverified": "Exact property access, parking permission, vehicle allocation and date-specific transport arrangements require enquiry."
+    },
+    {
+      "slug": "lerwick",
+      "council": "Shetland Islands",
+      "sources": [
+        "https://www.northlinkferries.co.uk/booking/",
+        "https://www.northlinkferries.co.uk/port/lerwick/"
+      ],
+      "authoredSections": 3,
+      "authoredFaqs": 2,
+      "unverified": "Exact property access, parking permission, vehicle allocation and date-specific transport arrangements require enquiry."
+    },
+    {
+      "slug": "scalloway",
+      "council": "Shetland Islands",
+      "sources": [
+        "https://www.northlinkferries.co.uk/port/lerwick/",
+        "https://www.shetland.gov.uk/downloads/file/1589/scalloway-conservation-area-character-appraisal"
+      ],
+      "authoredSections": 3,
+      "authoredFaqs": 2,
+      "unverified": "Exact property access, parking permission, vehicle allocation and date-specific transport arrangements require enquiry."
+    },
+    {
+      "slug": "stornoway",
+      "council": "Na h-Eileanan Siar",
+      "sources": [
+        "https://www.calmac.co.uk/timetables"
+      ],
+      "authoredSections": 3,
+      "authoredFaqs": 2,
+      "unverified": "Exact property access, parking permission, vehicle allocation and date-specific transport arrangements require enquiry."
+    },
+    {
+      "slug": "tarbert-harris",
+      "council": "Na h-Eileanan Siar",
+      "sources": [
+        "https://www.calmac.co.uk/en-gb/faqs/before-you-travel/what-are-the-sat-nav-codes-or-directions-for-your-ports/",
+        "https://www.calmac.co.uk/timetables"
+      ],
+      "authoredSections": 3,
+      "authoredFaqs": 2,
+      "unverified": "Exact property access, parking permission, vehicle allocation and date-specific transport arrangements require enquiry."
+    },
+    {
+      "slug": "balivanich",
+      "council": "Na h-Eileanan Siar",
+      "sources": [
+        "https://www.calmac.co.uk/destinations/north-uist/",
+        "https://www.cne-siar.gov.uk/council-and-committees/customer-services/contact-us/comhairle-offices"
+      ],
+      "authoredSections": 3,
+      "authoredFaqs": 2,
+      "unverified": "Exact property access, parking permission, vehicle allocation and date-specific transport arrangements require enquiry."
+    },
+    {
+      "slug": "castlebay",
+      "council": "Na h-Eileanan Siar",
+      "sources": [
+        "https://www.calmac.co.uk/timetables",
+        "https://www.cne-siar.gov.uk/council-and-committees/customer-services/contact-us/comhairle-offices"
+      ],
+      "authoredSections": 3,
+      "authoredFaqs": 2,
+      "unverified": "Exact property access, parking permission, vehicle allocation and date-specific transport arrangements require enquiry."
+    },
+    {
+      "slug": "helensburgh",
+      "council": "Argyll and Bute",
+      "sources": [
+        "https://www.argyll-bute.gov.uk/roads-and-travel/car-parks-and-parking/car-parks-helensburgh-and-lomond"
+      ],
+      "authoredSections": 3,
+      "authoredFaqs": 2,
+      "unverified": "Exact property access, parking permission, vehicle allocation and date-specific transport arrangements require enquiry."
+    },
+    {
+      "slug": "dunoon",
+      "council": "Argyll and Bute",
+      "sources": [
+        "https://www.western-ferries.co.uk/pages/company"
+      ],
+      "authoredSections": 3,
+      "authoredFaqs": 2,
+      "unverified": "Exact property access, parking permission, vehicle allocation and date-specific transport arrangements require enquiry."
+    },
+    {
+      "slug": "campbeltown",
+      "council": "Argyll and Bute",
+      "sources": [
+        "https://www.argyll-bute.gov.uk/roads-and-travel/car-parks-and-parking/car-parks-mid-argyll-kintyre-and-islay"
+      ],
+      "authoredSections": 3,
+      "authoredFaqs": 2,
+      "unverified": "Exact property access, parking permission, vehicle allocation and date-specific transport arrangements require enquiry."
+    },
+    {
+      "slug": "rothesay",
+      "council": "Argyll and Bute",
+      "sources": [
+        "https://www.calmac.co.uk/route-information/wemyss-bay-rothesay/"
+      ],
+      "authoredSections": 3,
+      "authoredFaqs": 2,
+      "unverified": "Exact property access, parking permission, vehicle allocation and date-specific transport arrangements require enquiry."
+    }
+  ],
+  "limits": [
+    "No measured search demand, completed jobs, reviews, driver availability, prices or depot presence established.",
+    "Advice beyond the cited geographical or operator facts is original conditional move-planning guidance, not a report of work performed.",
+    "No live ferry capacity, booking, parking permission or property access established.",
+    "Historic planning studies support geographical context only; proposals are not asserted to be completed."
+  ],
+  "counts": {
+    "places": 32,
+    "adviceSections": 96,
+    "faqs": 64,
+    "sourceRecords": 27
+  }
+}

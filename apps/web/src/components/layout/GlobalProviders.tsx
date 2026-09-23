@@ -5,6 +5,7 @@ import { AnalyticsPixels } from "./AnalyticsPixels";
 import { BookingDetectionPopup } from "@/components/booking/BookingDetectionPopup";
 import { BookingResumeNudge } from "@/components/BookingResumeNudge";
 import { InstallPrompt } from "./InstallPrompt";
+import { CtaClickTracker } from "@/components/CtaClickTracker";
 
 export function GlobalProviders({ children }: { children: React.ReactNode }) {
   return (
@@ -12,6 +13,7 @@ export function GlobalProviders({ children }: { children: React.ReactNode }) {
       {children}
       <CookieConsent />
       <AnalyticsPixels />
+      <CtaClickTracker />
       <BookingDetectionPopup />
       <BookingResumeNudge />
       <InstallPrompt />

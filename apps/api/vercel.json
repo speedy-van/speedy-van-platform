@@ -1,20 +1,26 @@
 {
   "version": 2,
-  "installCommand": "npm install",
-  "buildCommand": "npm install --prefix . && npx prisma generate --schema=./prisma/schema.prisma",
+  "installCommand": "npm ci --include=dev",
+  "buildCommand": "npm run vercel-build",
   "builds": [
     {
-      "src": "_api.js",
-      "use": "@vercel/node",
+      "src": "api-entry.cjs",
+      "use": "@vercel/node@13.0.1",
       "config": {
-        "includeFiles": ["node_modules/@prisma/client/**", "node_modules/.prisma/**"]
+        "includeFiles": [
+          "dist/vercel/source-manifest.json",
+          "node_modules/@prisma/client/**",
+          "node_modules/.prisma/client/**",
+          "../../node_modules/@prisma/client/**",
+          "../../node_modules/.prisma/client/**"
+        ]
       }
     }
   ],
   "routes": [
     {
       "src": "/(.*)",
-      "dest": "_api.js"
+      "dest": "api-entry.cjs"
     }
   ]
 }
