@@ -340,7 +340,7 @@ export function restoreBookingDraft(raw: string | null, now = Date.now()): Booki
     const draft = objectValue(envelope.state);
     if (!draft || typeof draft.serviceSlug !== "string") return null;
     // Unresolved payment attempts require reconciliation even after ordinary drafts expire.
-    if (now - envelope.savedAt > STORAGE_TTL_MS && draft.checkoutLocked !== true) return null;
+    if (now - envelope.savedAt > BOOKING_DRAFT_TTL_MS && draft.checkoutLocked !== true) return null;
     const service = resolveBookingService(draft.serviceSlug);
     if (!service) return null;
     const text = (key: string) => typeof draft[key] === "string" ? draft[key] as string : "";

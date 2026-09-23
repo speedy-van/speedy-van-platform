@@ -144,7 +144,6 @@ const INTENT_ALIASES: Record<string, BookingIntentId> = {
   "house-removals": "house-removals",
   "house-removal": "house-removals",
   "long-distance-removals": "house-removals",
-  house: "house-removals",
   "packing-service": "house-removals",
   furniture: "furniture",
   "furniture-delivery": "furniture",
