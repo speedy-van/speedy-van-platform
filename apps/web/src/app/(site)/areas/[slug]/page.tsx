@@ -171,10 +171,10 @@ export default async function AreaPage({ params }: Props) {
             <div className="mt-8 flex flex-col sm:flex-row gap-3">
               <Link
                 href="/book"
-                className="inline-flex items-center justify-center rounded-lg px-8 py-4 text-base font-black text-black transition-transform motion-safe:hover:scale-105"
+                className="inline-flex items-center justify-center rounded-lg px-8 py-4 text-center text-base font-black text-black motion-safe:transition-transform motion-safe:hover:scale-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0A0A0A]"
                 style={{ background: "linear-gradient(135deg, #F59E0B 0%, #EA580C 100%)" }}
               >
-                Start an Online Quote
+                {guide ? "Get a Moving Quote" : "Start an Online Quote"}
               </Link>
               <a
                 href="tel:07909032889"
@@ -183,6 +183,14 @@ export default async function AreaPage({ params }: Props) {
               >
                 <Image src="/call-icon.png" alt="" width={52} height={52} sizes="52px" />
               </a>
+              {guide && (
+                <Link
+                  href={`/pricing#${area.slug}`}
+                  className="inline-flex items-center justify-center rounded-lg px-4 py-3 text-center font-semibold text-amber-300 underline underline-offset-4 hover:text-amber-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400"
+                >
+                  Man and van pricing guide
+                </Link>
+              )}
             </div>
           </div>
         </div>

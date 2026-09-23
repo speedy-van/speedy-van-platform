@@ -24,9 +24,9 @@ export interface AreaGuide {
 
 const AREA_GUIDES: Record<string, AreaGuide> = {
   aberdeen: {
-    metadataTitle: "Man and Van & Removals in Aberdeen",
+    metadataTitle: "Man and Van Aberdeen | Get a Moving Quote",
     introduction:
-      "Moving a sofa across Aberdeen, leaving a shared flat or planning a business relocation? Choose the service that matches your load, then describe both addresses. A man with a van can suit a smaller move; a whole property needs an inventory and a plan for access and lifting.",
+      "Hire a man with a van in Aberdeen for a furniture collection or smaller load, or plan a house, flat or office removal around the full inventory. From a sofa bought from a seller to the contents of a shared home, start with the service below and request a price for your items, route and lifting help.",
     services: [
       {
         slug: "man-and-van",
@@ -36,7 +36,7 @@ const AREA_GUIDES: Record<string, AreaGuide> = {
       {
         slug: "furniture-delivery",
         description:
-          "Collecting a sofa, bed or wardrobe from a seller or shop? Provide dimensions, collection arrangements and the destination floor, including whether the item needs dismantling to fit.",
+          "Furniture collection and delivery for sofas, tables, chairs, beds and wardrobes. Share measurements, the seller's collection window and the destination floor so the lifting and access can be planned.",
       },
       {
         slug: "house-removal",
@@ -70,6 +70,38 @@ const AREA_GUIDES: Record<string, AreaGuide> = {
       },
     ],
     sections: [
+      {
+        id: "moving-costs",
+        title: "Planning a lower-cost man and van move in Aberdeen",
+        paragraphs: [
+          "For a smaller Aberdeen flat move, list only the items travelling with you and have boxes packed before the agreed collection. Separate your belongings from a housemate's and check whether a bed or table can be prepared in advance. These details help plan the load and time needed.",
+          "If your date or seller's collection window is flexible, include the options in your quote request. Choose lifting help around the furniture and stairs: reducing the crew is not a useful saving if the load cannot be moved safely.",
+        ],
+      },
+      {
+        id: "furniture-collection",
+        title: "Furniture movers in Aberdeen: sofas, tables, chairs and beds",
+        paragraphs: [
+          "Buying a sofa from a private seller or collecting a dining set from a shop? Agree when the items will be ready and send a complete list, including matching chairs, cushions or bed parts. For an upper-floor delivery, measure the largest piece against the shared entrance and stair turns before arranging collection.",
+          "Tell us whether the seller can dismantle an item or whether you need that work included in the enquiry. Keep fixings with the furniture and identify fragile glass or loose panels so handling can be planned.",
+        ],
+      },
+      {
+        id: "urgent-moves",
+        title: "Need an urgent man and van in Aberdeen?",
+        paragraphs: [
+          "For a short-notice flat move or a seller who needs furniture collected soon, send both addresses, the item list and the latest collection time together. Include the floor and loading point so the enquiry can be assessed without missing access details.",
+          "Call to discuss the deadline if it is urgent. Same-day or next-day moves depend on a suitable vehicle, crew and slot being available; confirm the collection before promising a handover time.",
+        ],
+      },
+      {
+        id: "long-distance",
+        title: "Long-distance man and van from Aberdeen",
+        paragraphs: [
+          "A small load leaving Aberdeen for another Scottish city needs a plan for arrival as well as departure. Provide the destination postcode, key handover time and any final stop at storage. Furniture and boxes for different stops should be identified in the inventory.",
+          "For a flat-to-flat journey, share the stairs or lift details at both ends. Ask for the complete route and handling to be included in the quote, then agree the available collection and delivery window.",
+        ],
+      },
       {
         id: "access",
         title: "Parking, shared stairs and access in Aberdeen",
@@ -125,21 +157,21 @@ const AREA_GUIDES: Record<string, AreaGuide> = {
           "Yes, you can request an intercity quote. Give the destination postcode, full inventory and required delivery date. The route and available capacity need confirmation before you rely on a particular slot.",
       },
       {
-        question: "How far ahead should I arrange a flat removal?",
+        question: "How much does a man and van in Aberdeen cost?",
         answer:
-          "Enquire once you know the likely date and addresses, and explain any uncertainty about keys. Check availability before committing to a handover time; a quote request alone does not confirm a booking.",
+          "Request a price using your full item list, both addresses and access details. The load, journey, lifting help and handling time affect the quote. Compare the included work and ask whether the price is hourly or fixed and whether a minimum charge applies.",
       },
       {
-        question: "Does an office move include reconnecting equipment?",
+        question: "Can I request an urgent or same-day Aberdeen collection?",
         answer:
-          "Describe the equipment when requesting the quote. Transport, dismantling and technical setup are different tasks; confirm exactly what is agreed and arrange any specialist IT work separately unless expressly included.",
+          "Yes, send the item list, addresses and latest collection time, or call to discuss a short-notice enquiry. Same-day availability is not guaranteed. A suitable slot, vehicle and lifting help must be confirmed before the collection is booked.",
       },
     ],
   },
   inverness: {
-    metadataTitle: "Man and Van & Removals in Inverness",
+    metadataTitle: "Man and Van Inverness | Get a Moving Quote",
     introduction:
-      "An Inverness move might mean one furniture collection, a change of flat or a household travelling further into the Highlands. Match the quote to the complete journey. Whether you call it man and van or van and man, the important details are the load, lifting help and access at each end.",
+      "Looking for a man with a van in Inverness? Request a quote for a furniture collection, student room, flat or full-house removal. Choose the service for your load and describe the complete journey, including any onward Highland address. Whether you need a van and man for a few items or more lifting help for a home move, the plan starts with your inventory.",
     services: [
       {
         slug: "man-and-van",
@@ -149,7 +181,7 @@ const AREA_GUIDES: Record<string, AreaGuide> = {
       {
         slug: "furniture-delivery",
         description:
-          "Arrange a furniture collection with the seller before choosing a slot. Share item measurements, whether pieces are assembled and any narrow entrance or staircase at the delivery address.",
+          "Collect sofas, tables, chairs and beds from a seller or shop in Inverness. Include every piece, its measurements and the delivery address, with any gate, narrow entrance or staircase on the way in.",
       },
       {
         slug: "house-removal",
@@ -183,6 +215,38 @@ const AREA_GUIDES: Record<string, AreaGuide> = {
       },
     ],
     sections: [
+      {
+        id: "moving-costs",
+        title: "Keep your Inverness man and van costs under control",
+        paragraphs: [
+          "When comparing low-cost man and van quotes, use an accurate load rather than a rough count of rooms. Group boxes by destination and include furniture from sheds or storage before requesting a quote. If a shop collection and a home collection are part of the same move, list both stops together.",
+          "For a delivery beyond Inverness, confirm that someone can receive the items and open any gate when the van arrives. Good preparation helps avoid a preventable wait or an extra journey; ask what any change to the agreed route would cost.",
+        ],
+      },
+      {
+        id: "furniture-collection",
+        title: "Furniture collection and delivery in Inverness",
+        paragraphs: [
+          "Use a furniture moving quote for a single sofa, a dining table and chairs, a bed or several larger pieces. Check the seller's collection arrangements, measure assembled items and explain where each piece will go at delivery. A mattress and a dismantled bed frame should both appear on the list.",
+          "For delivery from Inverness to a rural property, include the entrance, turning space and distance to the door. Ask about dismantling or reassembly when requesting the quote so the planned work matches the furniture.",
+        ],
+      },
+      {
+        id: "urgent-moves",
+        title: "Urgent man and van enquiries in Inverness",
+        paragraphs: [
+          "Need to leave a room at short notice or collect furniture before a seller's deadline? Give the earliest and latest collection times, the complete load and the delivery address. A city collection with an onward rural journey needs enough time for both parts.",
+          "Call to discuss an urgent request and whether an alternative time could work. Same-day and next-day slots are subject to availability; confirm the route, crew and collection before finalising other arrangements.",
+        ],
+      },
+      {
+        id: "long-distance",
+        title: "Long-distance man and van to or from Inverness",
+        paragraphs: [
+          "For an intercity move or a longer Highland journey, give the full destination rather than a broad area name. Include the number of stops, when the property will be accessible and whether delivery must fit around keys or a storage facility's opening times.",
+          "Describe any narrow approach, vehicle-size limit or restricted turning space before the vehicle is selected. Route suitability and the available date are assessed together, with the quote based on the full load and journey in miles.",
+        ],
+      },
       {
         id: "access",
         title: "Plan Inverness loading and Highland access",
@@ -238,14 +302,14 @@ const AREA_GUIDES: Record<string, AreaGuide> = {
           "Provide the exact addresses and proposed date for assessment. Rural access, journey length, load and capacity affect what can be arranged. Confirm the route and slot before making dependent travel or handover plans.",
       },
       {
-        question: "Can a student move be arranged around a room handover?",
+        question: "Can I request a same-day man and van in Inverness?",
         answer:
-          "Include the accommodation's check-out or arrival time in your enquiry. Check its loading arrangements and whether keys must be collected first, then agree a suitable available collection and delivery window.",
+          "You can enquire about a short-notice move with your addresses, items and required collection window. Call if the deadline is urgent. Same-day service depends on a suitable slot and crew being available, including enough time for any onward journey.",
       },
       {
-        question: "How long will my Inverness move take?",
+        question: "What affects the price of a man and van in Inverness?",
         answer:
-          "The load, number of floors, carry distance and full journey all matter. Share these details for a realistic allowance. A few items with difficult access can take longer than a larger, straightforward collection.",
+          "The full route, load, lifting help and access affect the quote. An onward rural delivery, extra stop or long carry can change the work even with only a few items. Include these details and check the minimum charge, included time and any separately agreed packing or assembly.",
       },
     ],
   },

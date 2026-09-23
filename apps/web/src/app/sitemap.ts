@@ -17,6 +17,8 @@ const staticPages: SitemapPage[] = [
   { path: "/services", changeFrequency: "weekly", priority: 0.9 },
   { path: "/areas", changeFrequency: "weekly", priority: 0.9 },
   { path: "/pricing", changeFrequency: "weekly", priority: 0.7 },
+  { path: "/guides", changeFrequency: "monthly", priority: 0.6 },
+  { path: "/guides/man-and-van-or-house-removals", changeFrequency: "monthly", priority: 0.6 },
   { path: "/privacy", changeFrequency: "yearly", priority: 0.2 },
   { path: "/terms", changeFrequency: "yearly", priority: 0.2 },
   { path: "/cookies", changeFrequency: "yearly", priority: 0.2 },

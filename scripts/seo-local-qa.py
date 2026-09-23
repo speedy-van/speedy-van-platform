@@ -38,6 +38,9 @@ class Page(HTMLParser):
         self.canonicals = []
         self.meta = {}
         self.links = set()
+        self.main_links = set()
+        self.ids = []
+        self._main = False
         self.schemas = []
         self.schema_errors = []
         self._title = False
@@ -48,6 +51,10 @@ class Page(HTMLParser):
 
     def handle_starttag(self, tag, attrs):
         attrs = dict(attrs)
+        if tag == "main":
+            self._main = True
+        if attrs.get("id"):
+            self.ids.append(attrs["id"])
         if tag == "title":
             self._title = True
         if tag == "h1":
@@ -60,6 +67,8 @@ class Page(HTMLParser):
             self.meta.setdefault(key, []).append(attrs.get("content", ""))
         if tag == "a" and attrs.get("href"):
             self.links.add(attrs["href"])
+            if self._main:
+                self.main_links.add(attrs["href"])
         if tag == "script" and attrs.get("type") == "application/ld+json":
             self._json = True
             self._buffer = ""
@@ -73,6 +82,8 @@ class Page(HTMLParser):
             self._buffer += data
 
     def handle_endtag(self, tag):
+        if tag == "main":
+            self._main = False
         if tag == "title":
             self._title = False
         if tag == "h1":
@@ -235,7 +246,34 @@ def main():
     home_nodes = [node for schema in home.schemas for node in schema_nodes(schema)]
     check("Homepage WebSite has stable entity ID", any(node.get("@type") == "WebSite" and node.get("@id") == PRIMARY + "/#website" for node in home_nodes))
 
-    for path in ["/services/qa-invalid-service", "/areas/qa-invalid-area", "/qa-not-a-page"]:
+    choice_path = "/guides/man-and-van-or-house-removals"
+    choice = pages.get(choice_path, empty_page)
+    guides = pages.get("/guides", empty_page)
+    pricing = pages.get("/pricing", empty_page)
+    check("Guide hub and comparison guide link to each other in main content", choice_path in guides.main_links and "/guides" in choice.main_links)
+    check("Guide hub is discoverable from the homepage", "/guides" in home.links)
+    for path in ["/pricing", "/areas/aberdeen", "/areas/inverness"] + [f"/services/{slug}" for slug in CORE]:
+        check(f"{path}: contextual comparison guide link", choice_path in pages.get(path, empty_page).main_links)
+    for path in ["/guides", choice_path]:
+        page = pages.get(path, empty_page)
+        check(f"{path}: quote entry preserves the existing draft URL", "/book" in page.main_links and not any(link.startswith("/book?") for link in page.main_links))
+        check(f"{path}: comparison resources reach both cities and pricing", all(link in page.main_links for link in ["/areas/aberdeen", "/areas/inverness", "/pricing"]))
+        breadcrumbs = [node for schema in page.schemas for node in schema_nodes(schema) if node.get("@type") == "BreadcrumbList"]
+        check(f"{path}: breadcrumb ends on the canonical guide", any(node.get("itemListElement", [{}])[-1].get("item") == PRIMARY + path for node in breadcrumbs))
+    for city in ["aberdeen", "inverness"]:
+        target = f"/pricing#{city}"
+        check(f"{city}: local pricing link reaches a unique section", pricing.ids.count(city) == 1 and target in choice.main_links and target in pages.get(f"/areas/{city}", empty_page).main_links)
+        check(f"{city}: pricing links back to the local guide", f"/areas/{city}" in pricing.main_links)
+        city_page = pages.get(f"/areas/{city}", empty_page)
+        section_links = [link[1:] for link in city_page.main_links if link.startswith("#")]
+        check(f"{city}: guide navigation reaches unique section headings", bool(section_links) and all(city_page.ids.count(target_id) == 1 for target_id in section_links))
+        check(f"{city}: commercial quote actions preserve draft entry", "/book" in city_page.main_links and not any(link.startswith("/book?") for link in city_page.main_links))
+
+    for slug in ["man-and-van", "house-removal", "furniture-delivery", "office-removal", "long-distance-removals", "same-day-delivery"]:
+        page = pages.get(f"/services/{slug}", empty_page)
+        check(f"{slug}: search and sharing titles remain aligned", bool(page.title) and page.meta.get("og:title") == [page.title] and page.meta.get("twitter:title") == [page.title])
+
+    for path in ["/services/qa-invalid-service", "/areas/qa-invalid-area", "/guides/qa-invalid-guide", "/qa-not-a-page"]:
         status, _, body = fetch(path)
         page = Page(body)
         check(f"{path}: real 404 with noindex", status == 404 and "noindex" in ",".join(page.meta.get("robots", [])))

@@ -27,6 +27,18 @@ export function AreaGuideContent({ area, guide }: AreaGuideContentProps) {
             <p className="mt-4 text-white/70 leading-relaxed">
               {guide.introduction}
             </p>
+            <nav aria-label={`${area.name} moving guide sections`} className="mt-6">
+              <p className="font-semibold text-white">Plan your move</p>
+              <ul className="mt-3 flex flex-wrap gap-x-5 gap-y-3 text-sm">
+                {guide.sections.map((section) => (
+                  <li key={section.id} className="min-w-0">
+                    <Link href={`#${area.slug}-${section.id}`} className={textLinkClassName}>
+                      {section.title}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </nav>
           </div>
           <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4" role="list">
             {guide.services.map((item) => {
@@ -51,6 +63,13 @@ export function AreaGuideContent({ area, guide }: AreaGuideContentProps) {
               );
             })}
           </ul>
+          <p className="mt-6 max-w-3xl text-white/70 leading-relaxed">
+            Unsure how much moving support to request?{" "}
+            <Link href="/guides/man-and-van-or-house-removals" className={textLinkClassName}>
+              Compare man and van with house removals
+            </Link>
+            {" using your inventory, access and preparation needs."}
+          </p>
         </div>
       </section>
 
@@ -65,7 +84,7 @@ export function AreaGuideContent({ area, guide }: AreaGuideContentProps) {
           >
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               <div className="max-w-3xl">
-                <h2 id={headingId} className="text-2xl font-black text-white">
+                <h2 id={headingId} className="scroll-mt-28 text-2xl font-black text-white">
                   {section.title}
                 </h2>
                 {section.paragraphs.map((paragraph) => (
@@ -92,7 +111,23 @@ export function AreaGuideContent({ area, guide }: AreaGuideContentProps) {
                     <Link href="/pricing" className={textLinkClassName}>
                       Read the moving price guide
                     </Link>
-                    {" for more on the details to include in your quote request."}
+                    {" and "}
+                    <Link href={`/pricing#${area.slug}`} className={textLinkClassName}>
+                      plan your {area.name} quote
+                    </Link>
+                    {" with the access and journey details that matter."}
+                  </p>
+                )}
+                {section.id === "urgent-moves" && (
+                  <p className="mt-6 leading-relaxed">
+                    <a href="tel:07909032889" className={textLinkClassName}>
+                      Call to check short-notice availability
+                    </a>
+                    {" or "}
+                    <Link href="/book" className={textLinkClassName}>
+                      request a moving quote online
+                    </Link>
+                    .
                   </p>
                 )}
               </div>

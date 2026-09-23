@@ -10,13 +10,15 @@ import {
 } from "@/lib/services";
 import { FEATURED_AREAS } from "@/lib/areas";
 import { SERVICE_BOOKING_STEPS, SERVICE_PLANNING } from "@/lib/content/service-planning";
+import { SERVICE_SEARCH_CONTENT } from "@/lib/content/service-search-content";
 import { JsonLd } from "@/components/seo/JsonLd";
 import {
   buildBreadcrumbSchema,
   buildServiceSchema,
 } from "@/lib/seo/schemas";
 import { WhatsAppPhotoQuoteButton } from "@/components/WhatsAppPhotoQuoteButton";
-import { SITE_OG_IMAGE, absoluteUrl } from "@/lib/seo/constants";
+import { absoluteUrl } from "@/lib/seo/constants";
+import { buildPageMetadata } from "@/lib/seo/metadata";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -96,37 +98,18 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     };
   }
 
-  const canonical = absoluteUrl(`/services/${slug}`);
+  const searchContent = SERVICE_SEARCH_CONTENT[slug];
 
   return {
-    title: `${service.name} in Scotland`,
-    description: service.metaDescription,
+    ...buildPageMetadata({
+      title: searchContent?.metadataTitle ?? `${service.name} in Scotland`,
+      description: searchContent?.metadataDescription ?? service.metaDescription,
+      path: `/services/${slug}`,
+    }),
     robots:
       service.indexable === false
         ? { index: false, follow: true }
         : { index: true, follow: true },
-    alternates: {
-      canonical,
-    },
-    openGraph: {
-      title: `${service.name} | SpeedyVan`,
-      description: service.metaDescription,
-      url: canonical,
-      images: [
-        {
-          url: SITE_OG_IMAGE,
-          width: 1200,
-          height: 630,
-          alt: `${service.name} – SpeedyVan`,
-        },
-      ],
-    },
-    twitter: {
-      card: "summary_large_image",
-      title: `${service.name} | SpeedyVan`,
-      description: service.metaDescription,
-      images: [SITE_OG_IMAGE],
-    },
   };
 }
 
@@ -136,6 +119,7 @@ export default async function ServicePage({ params }: Props) {
   if (!service) notFound();
 
   const priceLabel = getServicePriceLabel(service);
+  const searchContent = SERVICE_SEARCH_CONTENT[service.slug];
   const planning = SERVICE_PLANNING[service.slug];
   const featuredAreas = FEATURED_AREAS;
   const canonical = absoluteUrl(`/services/${slug}`);
@@ -152,7 +136,7 @@ export default async function ServicePage({ params }: Props) {
           ]),
           buildServiceSchema(
             service.name,
-            service.metaDescription,
+            searchContent?.metadataDescription ?? service.metaDescription,
             canonical,
             service.startingFrom,
             service.priceUnit
@@ -190,13 +174,13 @@ export default async function ServicePage({ params }: Props) {
               {service.icon}
             </span>
             <h1 className="text-4xl sm:text-5xl font-black leading-tight text-white">
-              {service.name}
+              {searchContent?.headline ?? service.name}
             </h1>
             <p className="mt-2 text-xl text-amber-400 font-bold">
               {service.tagline}
             </p>
             <p className="mt-6 text-lg leading-relaxed" style={{ color: "rgba(255,255,255,0.70)" }}>
-              {service.longDescription}
+              {searchContent?.introduction ?? service.longDescription}
             </p>
             <div className="mt-8 flex flex-wrap items-center gap-3">
               <Link
@@ -371,6 +355,16 @@ export default async function ServicePage({ params }: Props) {
 
           <div className="mt-10">
             <h3 className="font-black text-white">Choosing the right service</h3>
+            <p className="mt-3 max-w-3xl text-white/70 leading-relaxed">
+              For help comparing the load, preparation and lifting support, read our{" "}
+              <Link
+                href="/guides/man-and-van-or-house-removals"
+                className="rounded font-semibold text-amber-400 underline underline-offset-4 hover:text-amber-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-amber-400"
+              >
+                man and van or house removals guide
+              </Link>
+              .
+            </p>
             <ul className="mt-4 grid gap-3 md:grid-cols-2" role="list">
               {SERVICE_DECISION_LINKS.filter((item) => item.slug !== service.slug).map((item) => (
                 <li key={item.slug}>

@@ -312,17 +312,17 @@ export const AREAS: Area[] = [
     name: "Aberdeen",
     region: "Grampian",
     postcode: "AB10–AB25",
-    headline: "Man and Van & Removals in Aberdeen",
+    headline: "Man and Van in Aberdeen",
     description:
-      "Moving a flat, a family home or furniture in Aberdeen? Request a quote with your collection and delivery addresses, item list and preferred date. Include shared stairs, lift access and any loading restrictions so the vehicle, crew and time allowance can be assessed before you book.",
+      "Get a man and van quote for your Aberdeen furniture collection, flat move or house removal. Moving a sofa, a student room or a full home? Share your items, both addresses and preferred date to plan the right vehicle and lifting help. Local moves, office removals and longer journeys start with your route and access details.",
     highlights: [
-      "House, flat and student moves",
-      "Furniture collection and delivery",
-      "Access and route checked before booking",
+      "Furniture collection and small moves",
+      "House, flat and office removals",
+      "Local and long-distance moving quotes",
     ],
     nearbyAreas: ["inverurie", "stonehaven", "elgin", "banchory"],
     metaDescription:
-      "Request an Aberdeen man and van or removals quote for flats, houses, furniture and office moves. Share your load, route and access details before booking.",
+      "Get an Aberdeen man and van quote for furniture, flats and house removals. Plan local or long-distance moves with the right vehicle and lifting help.",
   },
   {
     slug: "inverurie",
@@ -346,17 +346,17 @@ export const AREAS: Area[] = [
     name: "Inverness",
     region: "Highlands",
     postcode: "IV1–IV3",
-    headline: "Man and Van & Removals in Inverness",
+    headline: "Man and Van in Inverness",
     description:
-      "Plan an Inverness move around your load, both properties and the full journey. Request a quote for a small move, furniture delivery or a home removal, with details of stairs, carrying distance and van access. Longer Highland routes and your preferred date need confirmation before booking.",
+      "Get a man and van quote in Inverness for furniture collection, a small move or house removals. Share your items, collection and delivery addresses, and preferred date to check the price and availability. Planning a longer Highland journey? Include the full route and property access so the right vehicle and crew can be arranged.",
     highlights: [
-      "Home, flat and furniture moves",
-      "Longer Highland routes assessed individually",
-      "Vehicle access and delivery timing checked",
+      "Sofa, bed and furniture collections",
+      "Student, flat and house moves",
+      "Local and longer-route quote enquiries",
     ],
     nearbyAreas: ["fort-william", "aviemore", "nairn", "dingwall"],
     metaDescription:
-      "Request an Inverness man and van or removals quote for homes, flats and furniture. Check access, crew needs and longer Highland routes before booking.",
+      "Get a quote for man and van in Inverness, furniture collection and house removals. Share your items and route to check price and availability.",
   },
   {
     slug: "fort-william",
