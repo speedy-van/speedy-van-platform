@@ -144,8 +144,11 @@ const INTENT_ALIASES: Record<string, BookingIntentId> = {
   "house-removals": "house-removals",
   "house-removal": "house-removals",
   "long-distance-removals": "house-removals",
+  house: "house-removals",
+  "packing-service": "house-removals",
   furniture: "furniture",
   "furniture-delivery": "furniture",
+  "ikea-delivery": "furniture",
   storage: "storage",
   office: "office",
   "office-removal": "office",
@@ -153,6 +156,11 @@ const INTENT_ALIASES: Record<string, BookingIntentId> = {
   "man-and-van": "other",
   "flat-removals": "other",
   "small-moves": "other",
+  "student-move": "other",
+  "piano-moving": "other",
+  "same-day-delivery": "other",
+  "same-day": "other",
+  "rubbish-removal": "other",
 };
 
 export function normalizeBookingIntentId(value?: string | null): BookingIntentId | null {

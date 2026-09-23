@@ -12,8 +12,8 @@ import {
 import type { BedroomCount, InventoryMode, InventoryRoom } from "./room-inventory";
 import { resolveBookingService } from "./booking-service-options";
 
-const STORAGE_KEY = "sv_booking_draft_v1";
-const STORAGE_TTL_MS = 24 * 60 * 60 * 1000; // 24h
+export const BOOKING_DRAFT_STORAGE_KEY = "sv_booking_draft_v1";
+export const BOOKING_DRAFT_TTL_MS = 24 * 60 * 60 * 1000; // 24h
 
 // ─── Types ─────────────────────────────────────────────────────────────────
 
@@ -91,6 +91,48 @@ export interface BookingState {
 
   // Navigation
   step: 1 | 2 | 3 | 4 | 5;
+}
+
+export type RestorableBookingState = Partial<BookingState> & {
+  serviceSlug: string;
+  step: 2 | 3 | 4 | 5;
+};
+
+export interface BookingDraftEnvelope {
+  savedAt: number;
+  state: RestorableBookingState;
+}
+
+function isRestorableStep(value: unknown): value is RestorableBookingState["step"] {
+  return value === 2 || value === 3 || value === 4 || value === 5;
+}
+
+export function parseBookingDraft(raw: string | null, now = Date.now()): BookingDraftEnvelope | null {
+  if (!raw) return null;
+
+  try {
+    const parsed = JSON.parse(raw) as {
+      savedAt?: unknown;
+      state?: Partial<BookingState>;
+    };
+    const savedAt = typeof parsed.savedAt === "number" ? parsed.savedAt : NaN;
+    const state = parsed.state;
+    const serviceSlug = typeof state?.serviceSlug === "string" ? state.serviceSlug.trim() : "";
+
+    if (!Number.isFinite(savedAt) || now - savedAt > BOOKING_DRAFT_TTL_MS) return null;
+    if (!state || !serviceSlug || !isRestorableStep(state.step)) return null;
+
+    return {
+      savedAt,
+      state: {
+        ...state,
+        serviceSlug,
+        step: state.step,
+      },
+    };
+  } catch {
+    return null;
+  }
 }
 
 export const INITIAL_BOOKING_STATE: BookingState = {
@@ -390,19 +432,79 @@ export function BookingProvider({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(bookingReducer, INITIAL_BOOKING_STATE);
   const hydrated = useRef(false);
   const [ready, setReady] = useState(false);
+  const skippedInitialPersist = useRef(false);
+  const restoringDraft = useRef(false);
 
   useEffect(() => {
     if (hydrated.current) return;
     hydrated.current = true;
     try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      const draft = restoreBookingDraft(raw);
-      const service = new URLSearchParams(window.location.search).get("service");
-      // Resolve against the restored draft before mounting a previous service's quote step.
-      const restored = draft ?? INITIAL_BOOKING_STATE;
-      const next = service ? bookingReducer(restored, { type: "APPLY_SERVICE_ENTRY", slug: service }) : restored;
-      if (next !== INITIAL_BOOKING_STATE) dispatch({ type: "RESTORE", state: next });
-      else if (raw) localStorage.removeItem(STORAGE_KEY);
+      const raw = localStorage.getItem(BOOKING_DRAFT_STORAGE_KEY);
+      if (!raw) return;
+      const parsed = parseBookingDraft(raw);
+      if (!parsed) {
+        localStorage.removeItem(BOOKING_DRAFT_STORAGE_KEY);
+      } else {
+        restoringDraft.current = true;
+        const draft = {
+          ...parsed.state,
+          clientSecret: "",
+          bookingId: "",
+          bookingRef: "",
+        };
+        if (draft.serviceSlug) {
+          dispatch({
+            type: "SET_SERVICE",
+            slug: draft.serviceSlug,
+            name: draft.serviceName ?? draft.serviceSlug,
+            sourceSlug: draft.entryServiceSlug || draft.serviceSlug,
+          });
+        }
+        if (draft.serviceVariant) dispatch({ type: "SET_VARIANT", variant: draft.serviceVariant });
+        if (draft.inventoryMode) dispatch({ type: "SET_INVENTORY_MODE", mode: draft.inventoryMode });
+        if (draft.bedroomCount) {
+          dispatch({
+            type: "SET_BEDROOM_COUNT",
+            bedroomCount: draft.bedroomCount,
+            exactBedroomCount: draft.exactBedroomCount || 5,
+          });
+        }
+        if (draft.inventoryRooms?.length) {
+          dispatch({ type: "SET_INVENTORY_ROOMS", rooms: draft.inventoryRooms });
+        }
+        if (draft.pickup) dispatch({ type: "SET_PICKUP", value: draft.pickup });
+        if (draft.dropoff) dispatch({ type: "SET_DROPOFF", value: draft.dropoff });
+        if (draft.pickupPropertyType) dispatch({ type: "SET_PICKUP_PROPERTY_TYPE", value: draft.pickupPropertyType });
+        if (draft.pickupFloor) dispatch({ type: "SET_PICKUP_FLOOR", value: draft.pickupFloor });
+        if (draft.pickupHasLift) dispatch({ type: "SET_PICKUP_LIFT", value: true });
+        if (draft.dropoffPropertyType) dispatch({ type: "SET_DROPOFF_PROPERTY_TYPE", value: draft.dropoffPropertyType });
+        if (draft.dropoffFloor) dispatch({ type: "SET_DROPOFF_FLOOR", value: draft.dropoffFloor });
+        if (draft.dropoffHasLift) dispatch({ type: "SET_DROPOFF_LIFT", value: true });
+        if (draft.distanceMiles) dispatch({ type: "SET_DISTANCE", value: draft.distanceMiles });
+        if (draft.items?.length) dispatch({ type: "SET_ITEMS", items: draft.items });
+        if (draft.helpersCount) dispatch({ type: "SET_HELPERS", count: draft.helpersCount });
+        if (draft.needsPacking) dispatch({ type: "SET_PACKING", value: true });
+        if (draft.needsAssembly) dispatch({ type: "SET_ASSEMBLY", value: true });
+        if (draft.selectedDate) dispatch({ type: "SET_DATE", date: draft.selectedDate });
+        if (draft.selectedTimeSlot) dispatch({ type: "SET_SLOT", slot: draft.selectedTimeSlot });
+        if (draft.customerName || draft.customerEmail || draft.customerPhone) {
+          dispatch({
+            type: "SET_CUSTOMER",
+            name: draft.customerName ?? "",
+            email: draft.customerEmail ?? "",
+            phone: draft.customerPhone ?? "",
+          });
+        }
+        if (draft.clientTotal) dispatch({ type: "SET_PRICE", total: draft.clientTotal });
+        if (draft.quoteStatus) {
+          dispatch({
+            type: "SET_QUOTE_STATUS",
+            status: draft.quoteStatus === "valid" ? "stale" : draft.quoteStatus,
+            error: draft.quoteError,
+          });
+        }
+        dispatch({ type: "SET_STEP", step: draft.step });
+      }
     } catch {
       // Storage may be unavailable; the service selector remains usable.
     } finally {
@@ -414,14 +516,25 @@ export function BookingProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (!ready) return;
     if (typeof window === "undefined") return;
-    if (!state.serviceSlug) {
-      try { localStorage.removeItem(STORAGE_KEY); } catch { /* ignore */ }
+    if (!skippedInitialPersist.current) {
+      skippedInitialPersist.current = true;
       return;
     }
+    if (state.bookingRef) {
+      try { localStorage.removeItem(BOOKING_DRAFT_STORAGE_KEY); } catch { /* ignore */ }
+      restoringDraft.current = false;
+      return;
+    }
+    if (!state.serviceSlug || state.step <= 1) {
+      if (restoringDraft.current) return;
+      try { localStorage.removeItem(BOOKING_DRAFT_STORAGE_KEY); } catch { /* ignore */ }
+      return;
+    }
+    restoringDraft.current = false;
     try {
       localStorage.setItem(
-        STORAGE_KEY,
-        serialiseBookingDraft(state)
+        BOOKING_DRAFT_STORAGE_KEY,
+        JSON.stringify({ savedAt: Date.now(), state })
       );
     } catch {
       /* ignore quota */

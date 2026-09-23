@@ -7,12 +7,13 @@ import { SERVICES } from "@/lib/services";
 import { FEATURED_AREAS } from "@/lib/areas";
 
 const QUICK_LINKS = [
-  { href: "/auth/login", label: "Log in" },
-  { href: "/#how-it-works", label: "How it works" },
+  { href: "/about", label: "About us" },
   { href: "/pricing", label: "Pricing" },
   { href: "/guides", label: "Moving guides" },
   { href: "/moving-routes", label: "Routes from Scotland" },
+  { href: "/#how-it-works", label: "How it works" },
   { href: "/#faq", label: "FAQ" },
+  { href: "/auth/login", label: "Log in" },
 ];
 
 export function Footer() {
@@ -164,6 +165,15 @@ export function Footer() {
               </a>
             </div>
           </div>
+        </div>
+
+        {/* NAP — critical for local SEO consistency */}
+        <div className="mt-12 pt-8 border-t" style={{ borderColor: "rgba(255,255,255,0.08)" }}>
+          <address className="not-italic text-xs leading-5 text-center sm:text-left" style={{ color: "rgba(255,255,255,0.30)" }}>
+            <strong className="text-white/40">SpeedyVan</strong> · 1 Barrack Street, Office 2.18, Hamilton, ML3 0HS, Scotland ·{" "}
+            <a href="tel:07909032889" className="hover:text-white/60 transition-colors">07909 032889</a> ·{" "}
+            <a href="mailto:hello@speedyvan.uk" className="hover:text-white/60 transition-colors">hello@speedyvan.uk</a>
+          </address>
         </div>
 
         {/* Bottom bar */}

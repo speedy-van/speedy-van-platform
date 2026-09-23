@@ -20,8 +20,6 @@ export function SearchParamsInitializer() {
     if (!service || !slug) return;
 
     dispatch({ type: "APPLY_SERVICE_ENTRY", slug });
-    // The service is an entry hint, not a later instruction to erase an edited draft.
-    // Keep attribution and other query parameters, the hash and the current history entry.
     const remaining = new URLSearchParams(searchParams.toString());
     remaining.delete("service");
     const query = remaining.toString();

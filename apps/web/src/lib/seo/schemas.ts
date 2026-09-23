@@ -1,5 +1,6 @@
 import { AREAS } from "@/lib/areas";
 import {
+  SITE_EMAIL,
   SITE_LEGAL_NAME,
   SITE_OG_IMAGE,
   SITE_PHONE_E164,
@@ -18,8 +19,14 @@ export interface ServiceCatalogItem {
   priceUnit?: "hour";
 }
 
-export function buildLocalBusinessSchema(): Schema {
-  return {
+export interface AggregateRatingData {
+  ratingValue: number;
+  reviewCount: number;
+  bestRating?: number;
+}
+
+export function buildLocalBusinessSchema(rating?: AggregateRatingData): Schema {
+  const schema: Schema = {
     "@context": "https://schema.org",
     "@type": "MovingCompany",
     "@id": `${SITE_URL}/#organization`,
@@ -27,16 +34,47 @@ export function buildLocalBusinessSchema(): Schema {
     alternateName: "SpeedyVan",
     url: SITE_URL,
     telephone: SITE_PHONE_E164,
+    email: SITE_EMAIL,
     image: SITE_OG_IMAGE,
-    logo: SITE_OG_IMAGE,
+    logo: {
+      "@type": "ImageObject",
+      url: SITE_OG_IMAGE,
+      width: 1200,
+      height: 630,
+    },
     priceRange: "££",
+    currenciesAccepted: "GBP",
+    paymentAccepted: "Cash, Bank Transfer, Credit Card",
     description:
       "Man and van, house removals, office relocations, furniture delivery and small moves across Glasgow, Edinburgh, Dundee, Aberdeen, Stirling, Inverness and beyond.",
+    foundingDate: "2024",
     address: {
       "@type": "PostalAddress",
-      addressCountry: "GB",
+      streetAddress: "1 Barrack Street, Office 2.18",
+      addressLocality: "Hamilton",
+      postalCode: "ML3 0HS",
       addressRegion: "Scotland",
+      addressCountry: "GB",
     },
+    geo: {
+      "@type": "GeoCoordinates",
+      latitude: 55.7773,
+      longitude: -4.0389,
+    },
+    openingHoursSpecification: [
+      {
+        "@type": "OpeningHoursSpecification",
+        dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+        opens: "08:00",
+        closes: "19:00",
+      },
+      {
+        "@type": "OpeningHoursSpecification",
+        dayOfWeek: ["Saturday", "Sunday"],
+        opens: "08:00",
+        closes: "17:00",
+      },
+    ],
     areaServed: AREAS.map((area) => ({
       "@type": area.schemaType ?? "AdministrativeArea",
       name: area.name,
@@ -47,6 +85,18 @@ export function buildLocalBusinessSchema(): Schema {
       "https://wa.me/447909032889",
     ],
   };
+
+  if (rating && rating.reviewCount > 0) {
+    schema.aggregateRating = {
+      "@type": "AggregateRating",
+      ratingValue: rating.ratingValue,
+      reviewCount: rating.reviewCount,
+      bestRating: rating.bestRating ?? 5,
+      worstRating: 1,
+    };
+  }
+
+  return schema;
 }
 
 export function buildWebsiteSchema(): Schema {

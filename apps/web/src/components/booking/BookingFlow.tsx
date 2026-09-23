@@ -13,20 +13,25 @@ import { Step1Service } from "./Step1Service";
 
 function FlowContent() {
   const { state } = useBooking();
+  const canShowBookingShell = Boolean(state.serviceSlug) && state.step >= 2 && state.step <= 5;
 
   return (
-    <BookingShell>
+    <>
+      {/* Always mount so it can redirect to /#get-quote when no valid draft/service */}
       <Suspense fallback={null}>
         <SearchParamsInitializer />
       </Suspense>
 
-      {state.step === 1 && <Step1Service />}
-      {state.step === 2 && <JourneyFields />}
-      {state.step === 3 && <InventorySelector />}
-      {state.step === 4 && <SchedulePicker />}
-      {state.step === 5 && <Step4Payment />}
-      <PriceDropToast />
-    </BookingShell>
+      {canShowBookingShell && (
+        <BookingShell>
+          {state.step === 2 && <JourneyFields />}
+          {state.step === 3 && <InventorySelector />}
+          {state.step === 4 && <SchedulePicker />}
+          {state.step === 5 && <Step4Payment />}
+          <PriceDropToast />
+        </BookingShell>
+      )}
+    </>
   );
 }
 

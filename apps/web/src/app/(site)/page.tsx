@@ -28,7 +28,7 @@ export const metadata: Metadata = {
     absolute: "SpeedyVan | Man and Van, Removals & Delivery Across Scotland",
   },
   description:
-    "Book man and van services across Scotland: house removals from £120, furniture delivery from £60, storage runs from £45, office moves from £150 and flexible van help from £45.",
+    "Man and van Glasgow, Edinburgh, Dundee & Aberdeen from £45/hr. House removals, furniture delivery, office moves and same-day transport across Scotland. Fixed prices, online booking, goods-in-transit cover included.",
   alternates: { canonical: SITE_URL },
   openGraph: {
     title: "SpeedyVan | Man and Van & Removals Across Scotland",
@@ -50,10 +50,10 @@ export const metadata: Metadata = {
 // ─── Static data ──────────────────────────────────────────────────────────────
 
 const TRUST_STATS = [
-  { value: "Online", label: "Instant quote flow" },
-  { value: "Scotland", label: "Service coverage" },
-  { value: "Cover", label: "Goods in transit" },
-  { value: "Dates", label: "Availability checked" },
+  { value: "30+", label: "Areas across Scotland" },
+  { value: "£10k", label: "Goods-in-transit cover" },
+  { value: "7 days", label: "Available every day" },
+  { value: "Fixed", label: "Price shown before you book" },
 ];
 
 const PHOTO_QUOTE_HREF =

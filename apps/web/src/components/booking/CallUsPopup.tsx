@@ -9,14 +9,9 @@ interface Props {
   onClose: () => void;
 }
 
-const PHONE_DISPLAY = "07909 032889";
 const PHONE_TEL = "tel:07909032889";
 const WHATSAPP_URL = "https://wa.me/447909032889";
 
-/**
- * Modal shown when the admin has set a service to "popup" mode
- * (e.g. Same-day delivery → please call us to arrange).
- */
 export function CallUsPopup({ open, serviceName, onClose }: Props) {
   useEffect(() => {
     if (!open) return;
@@ -37,33 +32,38 @@ export function CallUsPopup({ open, serviceName, onClose }: Props) {
 
   return (
     <div
-      className="fixed inset-0 z-[70] flex items-center justify-center bg-black/70 p-4"
+      className="fixed inset-0 z-[70] flex items-center justify-center p-4"
+      style={{ background: "rgba(0,0,0,0.75)", backdropFilter: "blur(6px)" }}
       role="dialog"
       aria-modal="true"
       aria-labelledby="callus-title"
       onClick={onClose}
     >
       <div
-        className="relative w-full max-w-md rounded-2xl bg-white shadow-2xl"
+        className="relative w-full max-w-md rounded-2xl"
+        style={{ background: "#1A1200", boxShadow: "0 0 0 1px rgba(245,158,11,0.20), 0 24px 64px rgba(0,0,0,0.7)" }}
         onClick={(e) => e.stopPropagation()}
       >
         <button
           type="button"
           onClick={onClose}
           aria-label="Close"
-          className="absolute top-3 right-3 h-9 w-9 rounded-full text-slate-500 hover:bg-slate-100"
+          className="absolute top-3 right-3 h-9 w-9 rounded-full text-white/40 hover:bg-white/10 transition-colors flex items-center justify-center"
         >
           ✕
         </button>
 
         <div className="p-6 sm:p-7 text-center">
-          <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-primary-100 text-3xl">
+          <div
+            className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full text-3xl"
+            style={{ background: "rgba(245,158,11,0.15)" }}
+          >
             📞
           </div>
-          <h2 id="callus-title" className="text-xl font-bold text-stone-950">
+          <h2 id="callus-title" className="text-xl font-bold text-white">
             Please call us for {serviceName}
           </h2>
-          <p className="mt-2 text-sm text-slate-600">
+          <p className="mt-2 text-sm text-white/55">
             For {serviceName.toLowerCase()} we coordinate your job by phone so we
             can confirm the soonest available van and give you an accurate quote.
           </p>
@@ -72,9 +72,10 @@ export function CallUsPopup({ open, serviceName, onClose }: Props) {
             <a
               href={PHONE_TEL}
               onClick={() => haptic(10)}
-              className="inline-flex items-center justify-center gap-2 rounded-xl bg-primary-400 px-5 py-3 text-base font-bold text-white shadow hover:bg-primary-500 active:bg-primary-600 focus:outline-none focus:ring-2 focus:ring-primary-400"
+              aria-label="Call us on 07909 032889"
+              className="flex justify-center transition-transform hover:scale-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 rounded-full"
             >
-              📞 Call {PHONE_DISPLAY}
+              <img src="/call-icon.png" alt="Call us" width={64} height={64} />
             </a>
             <a
               href={WHATSAPP_URL}
@@ -88,7 +89,7 @@ export function CallUsPopup({ open, serviceName, onClose }: Props) {
             <button
               type="button"
               onClick={onClose}
-              className="text-sm font-medium text-slate-500 hover:text-slate-700"
+              className="text-sm font-medium text-white/40 hover:text-white/70 transition-colors"
             >
               Choose a different service
             </button>
