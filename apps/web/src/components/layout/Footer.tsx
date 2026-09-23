@@ -4,7 +4,7 @@ import { SITE } from "@speedy-van/config";
 import { CookieSettingsButton } from "./CookieConsent";
 import { Logo } from "./Logo";
 import { SERVICES } from "@/lib/services";
-import { AREAS } from "@/lib/areas";
+import { FEATURED_AREAS } from "@/lib/areas";
 
 const QUICK_LINKS = [
   { href: "/auth/login", label: "Log in" },
@@ -14,7 +14,7 @@ const QUICK_LINKS = [
 ];
 
 export function Footer() {
-  const featuredAreas = AREAS.slice(0, 10);
+  const featuredAreas = FEATURED_AREAS;
 
   return (
     <footer style={{ background: "#0C0900", color: "rgba(255,255,255,0.55)" }}>

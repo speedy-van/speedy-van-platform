@@ -3,9 +3,12 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { AREAS, getAreaBySlug } from "@/lib/areas";
+import { getAreaGuide } from "@/lib/area-guides";
+import { AreaGuideContent } from "@/components/areas/AreaGuideContent";
 import { SERVICES, getServicePriceLabel } from "@/lib/services";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { buildBreadcrumbSchema } from "@/lib/seo/schemas";
+import { buildPageMetadata } from "@/lib/seo/metadata";
 import { SITE_LEGAL_NAME, SITE_OG_IMAGE, SITE_URL, absoluteUrl } from "@/lib/seo/constants";
 
 interface Props {
@@ -26,6 +29,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     };
   }
 
+  const guide = getAreaGuide(slug);
+  if (guide) {
+    return buildPageMetadata({
+      title: guide.metadataTitle,
+      description: area.metaDescription,
+      path: `/areas/${slug}`,
+    });
+  }
   const canonical = absoluteUrl(`/areas/${slug}`);
 
   return {
@@ -60,6 +71,7 @@ export default async function AreaPage({ params }: Props) {
   const { slug } = await params;
   const area = getAreaBySlug(slug);
   if (!area) notFound();
+  const guide = getAreaGuide(slug);
 
   const nearbyAreaData = area.nearbyAreas
     .map((slug) => AREAS.find((a) => a.slug === slug))
@@ -90,7 +102,7 @@ export default async function AreaPage({ params }: Props) {
               url: SITE_URL,
             },
             areaServed: {
-              "@type": "AdministrativeArea",
+              "@type": guide ? "City" : "AdministrativeArea",
               name: area.name,
             },
           },
@@ -176,6 +188,7 @@ export default async function AreaPage({ params }: Props) {
         </div>
       </section>
 
+      {guide ? <AreaGuideContent area={area} guide={guide} /> : <>
       {/* Services in this area */}
       <section
         className="py-16"
@@ -349,6 +362,8 @@ export default async function AreaPage({ params }: Props) {
           </div>
         </section>
       ) : null}
+
+      </>}
 
       {/* Nearby areas */}
       {nearbyAreaData.length > 0 && (

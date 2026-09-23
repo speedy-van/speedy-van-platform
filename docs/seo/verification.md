@@ -102,3 +102,8 @@ Primary references: [Next image-optimisation advisory](https://github.com/vercel
 - **Search outcomes:** Search Console performance was processing. Accepted sitemap/indexing requests are not completed indexing, and neither this build nor these test counts prove ranking gains.
 
 Use [release-checklist.md](release-checklist.md) for local integration, coordinated release, rollback and the Copilot handoff prompt.
+
+
+## Inverness and Aberdeen follow-up — 23 September 2026
+
+Current city-patch evidence is recorded separately in [city-verification-2026-09-23.md](city-verification-2026-09-23.md): typecheck, lint, build, 120 regressions and 498 integrated HTTP checks passed. Interactive mobile visual and provider-payment checks are not claimed.

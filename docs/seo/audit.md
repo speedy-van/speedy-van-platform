@@ -69,3 +69,8 @@ The authenticated business-profile surface opened a create-profile flow; ownersh
 ## Acceptance and outcomes
 
 [verification.md](verification.md) records executed checks and unavailable checks. [release-checklist.md](release-checklist.md) covers coordinated web/API release and rollback. [growth-plan.md](growth-plan.md) separates 30/60/90-day work from measured outcomes. No code change, sitemap submission, indexing request or technical score guarantees first place.
+
+
+## Inverness and Aberdeen follow-up — 23 September 2026
+
+City follow-up: see [city-targeting-2026-09-23.md](city-targeting-2026-09-23.md) for the Inverness/Aberdeen baseline and local implementation. Both live URLs were discovered but not indexed; live tests passed and indexing requests were accepted. No city code was deployed.

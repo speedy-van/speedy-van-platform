@@ -86,3 +86,8 @@ The inspected [AnyVan Glasgow page](https://www.anyvan.com/man-and-van/man-and-v
 `keyword-map.csv` contains 162 deduplicated phrases mapped to 16 existing or prepared canonical targets: five `sampled_query` rows and 157 `inferred_variant` rows. No row represents a measured Search Console query or validated monthly search volume. Empty volume fields mean unavailable.
 
 Inherited 19 September volume and competition numbers were not revalidated and have been removed from the current map; the historical version remains in Git. Priorities reflect relevance, indexing gaps and conversion value, not invented demand or advertising competition. Conditional specialist, packing, retailer and urgent-delivery phrases carry explicit operational limits. Exclude self-drive hire, passenger transport, unverified disposal and unsupported geographic expansion. Do not create a page per query or inflate the map to 10,000 combinations.
+
+
+## Inverness and Aberdeen follow-up — 23 September 2026
+
+For the two-city workstream, use the measured baseline and 30/60/90-day actions in [city-targeting-2026-09-23.md](city-targeting-2026-09-23.md), the 60 inferred phrases in [city-keyword-map.csv](city-keyword-map.csv), and the primary-source research in [city-research-2026-09-23.md](city-research-2026-09-23.md). Do not interpret proposed query phrases as observed demand or forecast traffic.

@@ -312,16 +312,17 @@ export const AREAS: Area[] = [
     name: "Aberdeen",
     region: "Grampian",
     postcode: "AB10–AB25",
-    headline: "Man and Van in Aberdeen",
+    headline: "Man and Van & Removals in Aberdeen",
     description:
-      "Request an Aberdeen moving quote with the exact collection and destination addresses. Include shared stairs, lifts, loading restrictions and any large furniture that needs an access check. For a longer journey, provide the full load and delivery requirements before the route is confirmed.",
+      "Moving a flat, a family home or furniture in Aberdeen? Request a quote with your collection and delivery addresses, item list and preferred date. Include shared stairs, lift access and any loading restrictions so the vehicle, crew and time allowance can be assessed before you book.",
     highlights: [
-      "Flat and household move enquiries",
+      "House, flat and student moves",
       "Furniture collection and delivery",
-      "Longer routes assessed by address"
+      "Access and route checked before booking",
     ],
     nearbyAreas: ["inverurie", "stonehaven", "elgin", "banchory"],
-    metaDescription: "Man and van in Aberdeen for flat moves, furniture and home removals. Share both addresses, your inventory and access details to check availability."
+    metaDescription:
+      "Request an Aberdeen man and van or removals quote for flats, houses, furniture and office moves. Share your load, route and access details before booking.",
   },
   {
     slug: "inverurie",
@@ -345,16 +346,17 @@ export const AREAS: Area[] = [
     name: "Inverness",
     region: "Highlands",
     postcode: "IV1–IV3",
-    headline: "Man and Van in Inverness",
+    headline: "Man and Van & Removals in Inverness",
     description:
-      "Plan an Inverness move with the full load and both property access routes in mind. Include any stairs, long driveway, narrow approach or restrictions on vehicle size. For a longer Highland journey, confirm the complete route and available date before making arrangements.",
+      "Plan an Inverness move around your load, both properties and the full journey. Request a quote for a small move, furniture delivery or a home removal, with details of stairs, carrying distance and van access. Longer Highland routes and your preferred date need confirmation before booking.",
     highlights: [
-      "Home, flat and furniture enquiries",
-      "Longer Highland routes by assessment",
-      "Van access and delivery times considered"
+      "Home, flat and furniture moves",
+      "Longer Highland routes assessed individually",
+      "Vehicle access and delivery timing checked",
     ],
     nearbyAreas: ["fort-william", "aviemore", "nairn", "dingwall"],
-    metaDescription: "Man and van enquiries in Inverness for furniture and household moves. Request a quote with your route, item list, preferred date and access details."
+    metaDescription:
+      "Request an Inverness man and van or removals quote for homes, flats and furniture. Check access, crew needs and longer Highland routes before booking.",
   },
   {
     slug: "fort-william",
@@ -540,3 +542,7 @@ export const AREAS: Area[] = [
 export function getAreaBySlug(slug: string): Area | undefined {
   return AREAS.find((area) => area.slug === slug);
 }
+
+export const FEATURED_AREAS = AREAS.filter(
+  (area, index) => index < 10 || ["aberdeen", "inverness"].includes(area.slug)
+);

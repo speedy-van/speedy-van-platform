@@ -8,7 +8,7 @@ import {
   getServicePriceLabel,
   type ServiceFaq,
 } from "@/lib/services";
-import { AREAS } from "@/lib/areas";
+import { FEATURED_AREAS } from "@/lib/areas";
 import { SERVICE_BOOKING_STEPS, SERVICE_PLANNING } from "@/lib/content/service-planning";
 import { JsonLd } from "@/components/seo/JsonLd";
 import {
@@ -137,7 +137,7 @@ export default async function ServicePage({ params }: Props) {
 
   const priceLabel = getServicePriceLabel(service);
   const planning = SERVICE_PLANNING[service.slug];
-  const featuredAreas = AREAS.slice(0, 10);
+  const featuredAreas = FEATURED_AREAS;
   const canonical = absoluteUrl(`/services/${slug}`);
 
   return (

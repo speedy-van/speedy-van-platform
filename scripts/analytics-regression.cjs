@@ -306,7 +306,7 @@ test("footer contact destinations emit existing interest events once under conse
   const { Footer } = loadComponent("apps/web/src/components/layout/Footer.tsx", {
     "@speedy-van/config": { SITE },
     "@/lib/services": { SERVICES: [] },
-    "@/lib/areas": { AREAS: [] },
+    "@/lib/areas": loadComponent("apps/web/src/lib/areas.ts"),
   });
   const contacts = descendants(Footer()).filter((node) => node.type === "a" && node.props["data-track-event"]);
   assert.equal(contacts.length, 3);
