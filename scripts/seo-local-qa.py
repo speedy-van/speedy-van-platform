@@ -143,10 +143,13 @@ const web = path.join(root, "apps/web/src");
 const sitemap = load(path.join(web, "app/sitemap.ts")).default();
 const { AREAS } = load(path.join(web, "lib/areas.ts"));
 const { SERVICES } = load(path.join(web, "lib/services.ts"));
+const { getNearbyAreaGroups } = load(path.join(web, "lib/nearby-area-guides.ts"));
 process.stdout.write(JSON.stringify({
   urls: sitemap.map((entry) => entry.url),
   area_paths: AREAS.map((area) => `/areas/${area.slug}`),
   service_paths: SERVICES.filter((service) => service.indexable !== false).map((service) => `/services/${service.slug}`),
+  nearby_places: Object.fromEntries(["inverness", "aberdeen"].map((slug) => [slug, getNearbyAreaGroups(slug).flatMap((group) => group.places)])),
+  place_areas: AREAS.filter((area) => area.schemaType === "Place").map((area) => ({ slug: area.slug, name: area.name })),
 }));
 """
     result = subprocess.run(["node", "-e", node_script], cwd=root, capture_output=True, text=True, timeout=30, check=True)
@@ -268,6 +271,18 @@ def main():
         section_links = [link[1:] for link in city_page.main_links if link.startswith("#")]
         check(f"{city}: guide navigation reaches unique section headings", bool(section_links) and all(city_page.ids.count(target_id) == 1 for target_id in section_links))
         check(f"{city}: commercial quote actions preserve draft entry", "/book" in city_page.main_links and not any(link.startswith("/book?") for link in city_page.main_links))
+        places = expected["nearby_places"][city]
+        check(f"{city}: surrounding settlements are present in initial HTML", bool(places) and all(city_page.ids.count(f"{city}-{place['slug']}") == 1 for place in places))
+        check(f"{city}: surrounding settlement links resolve to canonical area pages", all(f"/areas/{place['areaSlug']}" in city_page.main_links and f"/areas/{place['areaSlug']}" in pages for place in places if place.get("areaSlug")))
+        check(f"{city}: surrounding places have unique identities", len({place["slug"] for place in places}) == len(places))
+
+    for area in expected["place_areas"]:
+        path = f"/areas/{area['slug']}"
+        page = pages.get(path, empty_page)
+        nodes = [node for schema in page.schemas for node in schema_nodes(schema)]
+        check(f"{path}: town service uses its actual Place identity", any(node.get("@type") == "Service" and node.get("@id") == PRIMARY + path + "#service" and node.get("areaServed") == {"@type": "Place", "name": area["name"]} for node in nodes))
+        check(f"{path}: town quote actions preserve draft entry", "/book" in page.main_links and not any(link.startswith("/book?") for link in page.main_links))
+        check(f"{path}: contextual link returns to a city hub", any(f"/areas/{city}" in page.main_links for city in ["inverness", "aberdeen"]))
 
     for slug in ["man-and-van", "house-removal", "furniture-delivery", "office-removal", "long-distance-removals", "same-day-delivery"]:
         page = pages.get(f"/services/{slug}", empty_page)

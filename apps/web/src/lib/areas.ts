@@ -8,6 +8,7 @@ export interface Area {
   highlights: string[];
   nearbyAreas: string[];
   metaDescription: string;
+  schemaType?: "City" | "Place" | "AdministrativeArea";
   moveAdvice?: {
     title: string;
     body: string;
@@ -320,13 +321,14 @@ export const AREAS: Area[] = [
       "House, flat and office removals",
       "Local and long-distance moving quotes",
     ],
-    nearbyAreas: ["inverurie", "stonehaven", "elgin", "banchory"],
+    nearbyAreas: ["inverurie", "westhill", "ellon", "stonehaven"],
     metaDescription:
       "Get an Aberdeen man and van quote for furniture, flats and house removals. Plan local or long-distance moves with the right vehicle and lifting help.",
   },
   {
     slug: "inverurie",
     name: "Inverurie",
+    schemaType: "Place",
     region: "Grampian",
     postcode: "AB51",
     headline: "Man and Van in Inverurie",
@@ -337,8 +339,187 @@ export const AREAS: Area[] = [
       "Aberdeen-linked routes by quote",
       "Property approach and turning space reviewed"
     ],
-    nearbyAreas: ["aberdeen", "huntly", "oldmeldrum", "kintore"],
-    metaDescription: "Man and van enquiries in Inverurie for furniture and home moves. Share both addresses, the load and vehicle access details for a route-based quote."
+    nearbyAreas: ["aberdeen", "westhill", "ellon"],
+    metaDescription: "Man and van enquiries in Inverurie for furniture and home moves. Share both addresses, the load and vehicle access details for a route-based quote.",
+    moveAdvice: [
+      {
+        title: "Market Place and Burn Lane loading",
+        body: "Inverurie has council resident permit arrangements around Market Place and Burn Lane. For a flat or business move there, identify the actual entrance and a suitable loading position before booking. A resident's parking arrangement does not establish access for the removal vehicle. Share any restrictions and the carrying distance so the crew can plan the load safely.",
+        source: {
+          label: "Aberdeenshire Council Inverurie parking information",
+          href: "https://www.aberdeenshire.gov.uk/roads-and-travel/car-parking/inverurie"
+        }
+      },
+      {
+        title: "Collections around Kintore and Oldmeldrum",
+        body: "Include the complete address when a collection is outside Inverurie, including Kintore, Oldmeldrum or a property reached by a private road. Provide the entrance location, gate width, surface and turning space where relevant. A postcode alone may leave the loading point unclear. Tell us about additional furniture collections before the route and vehicle are agreed."
+      },
+      {
+        title: "Furniture to Aberdeen or another destination",
+        body: "For an Inverurie furniture purchase being delivered to Aberdeen, confirm when the seller can release the item and whether it needs dismantling. Measure the furniture and the tightest doorway at the destination, including stair turns. If a storage stop or several deliveries are required, list them together so the quote covers the complete journey and handling."
+      }
+    ],
+    faqs: [
+      {
+        question: "Can you move furniture from Inverurie to an Aberdeen flat?",
+        answer: "Yes. Provide the collection and delivery addresses, item dimensions and the floor at the Aberdeen property. Include lift size or stair turns and the seller's collection window. The vehicle, lifting help and time are confirmed for the whole journey."
+      },
+      {
+        question: "Do you collect outside Inverurie towards Kintore and Oldmeldrum?",
+        answer: "Yes, you can request a collection or delivery in these surrounding communities. Send the exact address and explain any private lane, gate or limited turning space. Availability is checked for your date and load; a nearby town name does not set the arrival time."
+      },
+      {
+        question: "What affects the price of an Inverurie move?",
+        answer: "The inventory, collection and destination, crew requirements, stairs and loading distance all contribute. A small furniture collection differs from a full household move with several stops. List packing or dismantling requests in advance so their suitability and any additional cost can be confirmed."
+      }
+    ]
+  },
+  {
+    slug: "westhill",
+    name: "Westhill",
+    schemaType: "Place",
+    region: "Grampian",
+    postcode: "AB32",
+    headline: "Man and Van in Westhill, Aberdeenshire",
+    description:
+      "Book a man and van in Westhill, Aberdeenshire, for furniture delivery, a flat move or house removals. For a move around Westhill and Elrick, share the collection entrance, driveway space and destination access alongside your inventory. An office relocation needs its desks, equipment and building arrangements listed separately so the crew and loading plan match the job.",
+    highlights: [
+      "Westhill and Elrick home moves",
+      "Furniture delivery to and from Aberdeen",
+      "Office access and equipment planning"
+    ],
+    nearbyAreas: ["aberdeen", "inverurie", "ellon", "stonehaven"],
+    metaDescription: "Man and van in Westhill, Aberdeenshire, for furniture delivery, house and office moves. Share your items and access details to get a moving quote.",
+    moveAdvice: [
+      {
+        title: "Identify the Westhill collection address",
+        body: "Use the full AB32 address for Westhill in Aberdeenshire and include Elrick when that is the collection location. Explain whether loading is from a driveway, shared parking area or a separate entrance. Measure any gate or tight approach rather than assuming the van will fit. The address and access notes help prevent confusion with other places named Westhill.",
+        source: {
+          label: "Aberdeenshire Council Westhill and Elrick area information",
+          href: "https://www.aberdeenshire.gov.uk/environment/natural-heritage/local-nature-reserves"
+        }
+      },
+      {
+        title: "Plan an office or business move",
+        body: "For Westhill office removals, identify the reception contact, goods entrance and permitted loading window. List desks, chairs, cabinets and boxed equipment, including items that need dismantling. Agree lift access and any building protection requirements with the premises manager. Specialist machinery or unusually heavy items need separate assessment; an office furniture quote should not be assumed to include them."
+      },
+      {
+        title: "Furniture collections with an Aberdeen stop",
+        body: "If you are collecting furniture in Aberdeen for a Westhill home, give the seller's address and release time as well as your delivery details. Check the destination room, doorway widths and stairs before purchase. Add every collection stop to the enquiry, and confirm whether each item will be assembled or dismantled when the crew arrives to collect it."
+      }
+    ],
+    faqs: [
+      {
+        question: "Is this man and van service for Westhill in Aberdeenshire?",
+        answer: "Yes, this page covers Westhill in Aberdeenshire and neighbouring Elrick. Enter your full address and postcode when requesting a quote. That identifies the correct collection point and allows the route, access and available date to be checked before confirmation."
+      },
+      {
+        question: "Can you collect a sofa in Aberdeen and deliver it to Westhill?",
+        answer: "Yes. Share the seller's collection address, sofa dimensions, delivery address and agreed collection window. Include steps or narrow doorways at either end and say whether the sofa separates into sections. Suitable lifting help and transport are arranged around those details."
+      },
+      {
+        question: "Can I request an office move in Westhill?",
+        answer: "Yes. Provide a desk and furniture inventory, equipment details and the building's loading arrangements. Confirm access times with the premises manager and flag heavy or specialist equipment separately. Packing, dismantling and any work outside normal access hours need agreement in the quote."
+      }
+    ]
+  },
+  {
+    slug: "stonehaven",
+    name: "Stonehaven",
+    schemaType: "Place",
+    region: "Grampian",
+    postcode: "AB39",
+    headline: "Man and Van in Stonehaven",
+    description:
+      "Arrange man and van in Stonehaven for a furniture collection, a flat move or a full house removal. Town-centre loading around Allardice Street and Market Square needs a different plan from a property with its own driveway. Include both addresses, the size of your load and any stairs, then request a quote for a local move or delivery towards Aberdeen and beyond.",
+    highlights: [
+      "Town-centre and household removals",
+      "Sofa, bed and furniture collections",
+      "Aberdeen and coastal-route enquiries"
+    ],
+    nearbyAreas: ["aberdeen", "westhill", "ellon"],
+    metaDescription: "Man and van in Stonehaven for furniture collection, flat and house removals. Plan town-centre loading and your destination, then get a tailored quote.",
+    moveAdvice: [
+      {
+        title: "Allardice Street and Market Square access",
+        body: "The council lists resident parking zones around Allardice Street, Market Square and nearby streets. Check the signs at your actual address and identify a suitable loading position before the move. Share the distance between the entrance and van, plus any steps or shared passage. Parking arrangements for a resident do not automatically settle access for a removal vehicle.",
+        source: {
+          label: "Aberdeenshire Council Stonehaven parking zones",
+          href: "https://www.aberdeenshire.gov.uk/roads-and-travel/car-parking/stonehaven"
+        }
+      },
+      {
+        title: "Harbour-area furniture and flat moves",
+        body: "For a property near Stonehaven Harbour, describe the entrance and route from the room to the street rather than relying on the postcode. Send dimensions for a sofa, bed frame or wardrobe and flag narrow stairs, outside steps or a shared doorway. Agree a safe loading point and collection window before asking a seller or landlord to attend."
+      },
+      {
+        title: "Delivery towards Newtonhill and Aberdeen",
+        body: "A Stonehaven collection with delivery to Newtonhill, Portlethen or Aberdeen needs access details for both ends of the journey. Include any additional stop, key handover time or seller deadline when requesting the quote. For a house move, add the garage and outdoor furniture to the inventory so the vehicle is planned around the full load, not only bedrooms."
+      }
+    ],
+    faqs: [
+      {
+        question: "Can you collect furniture from Stonehaven for delivery to Aberdeen?",
+        answer: "Yes. Give the collection address, seller's time window, destination and item sizes. Tell us about loading restrictions and any stairs at both properties. The quote covers the assessed route and handling, with any extra stops included before the booking is confirmed."
+      },
+      {
+        question: "What do you need for a Stonehaven town-centre flat move?",
+        answer: "Share the floor, stairs or lift details, entrance location and furniture dimensions. Identify where loading can take place and the carrying distance to the door. Check local signs or building rules before the date; nearby public parking does not guarantee a suitable removal loading space."
+      },
+      {
+        question: "Do you cover Newtonhill and Portlethen as well as Stonehaven?",
+        answer: "Yes, collections and deliveries in these surrounding communities can be included. Use the full addresses and list each stop, even for a short coastal journey. The available date, vehicle and lifting help are checked for your specific inventory and property access."
+      }
+    ]
+  },
+  {
+    slug: "ellon",
+    name: "Ellon",
+    schemaType: "Place",
+    region: "Grampian",
+    postcode: "AB41",
+    headline: "Man and Van in Ellon",
+    description:
+      "Get a man and van quote in Ellon for furniture transport, a small move or house removals. Whether collecting near the town centre or from a home outside town, include the exact entrance and loading access. Deliveries to Aberdeen, nearby villages or a longer destination can be planned together when you provide every stop and the full item list.",
+    highlights: [
+      "Ellon and surrounding village collections",
+      "Small moves and full home enquiries",
+      "Town-centre and rural loading plans"
+    ],
+    nearbyAreas: ["aberdeen", "inverurie", "westhill", "stonehaven"],
+    metaDescription: "Man and van in Ellon for furniture, small moves and house removals. Include town-centre or rural access and your delivery route to request a quote.",
+    moveAdvice: [
+      {
+        title: "Market Street, The Square and Station Road",
+        body: "Ellon's council parking information identifies resident permit arrangements around Market Street, The Square, Schoolhill Road and Station Road East. For a collection there, describe the entrance and check the current loading conditions at the property. Discuss any long carry or stair access in advance. A permit or nearby car park should not be treated as a reserved loading space.",
+        source: {
+          label: "Aberdeenshire Council Ellon parking information",
+          href: "https://www.aberdeenshire.gov.uk/roads-and-travel/car-parking/ellon"
+        }
+      },
+      {
+        title: "Village and rural approaches outside Ellon",
+        body: "For collections around Newburgh, Tarves or Pitmedden, include the property name and full address, together with directions to the loading entrance if needed. Note private tracks, gate widths, low branches and whether a van can turn. Tell us about the surface and any long walk from the road so the appropriate vehicle and handling can be assessed."
+      },
+      {
+        title: "Combine furniture collection and delivery details",
+        body: "A furniture collection in Ellon and a delivery to Aberdeen may involve different access constraints at each end. Ask the seller for dimensions and confirm who will release the item, then check your destination doors and stairs. If you are moving an entire home, list boxes and furniture room by room and include any storage stop in the original enquiry."
+      }
+    ],
+    faqs: [
+      {
+        question: "Can I book a small move between Ellon and Aberdeen?",
+        answer: "Yes. List your furniture, boxes and other belongings, then provide both addresses and your preferred date. Include any stairs, loading restrictions or storage stop. A small load still needs a suitable vehicle and lifting plan, so the quote is based on the full job."
+      },
+      {
+        question: "Do you collect in villages outside Ellon?",
+        answer: "Yes, including enquiries from Newburgh, Tarves and Pitmedden. Provide the exact property address and describe private roads, gates or turning limits. The team checks access, the complete route and availability for your requested date before confirming the collection arrangements."
+      },
+      {
+        question: "Can you arrange an urgent furniture collection in Ellon?",
+        answer: "Send the item details, both addresses and the latest collection time you can accept. Short-notice availability depends on the vehicle, crew and route needed. Wait for confirmation of the collection window before promising a seller that the item will be collected that day."
+      }
+    ]
   },
   // Highlands
   {
@@ -354,9 +535,107 @@ export const AREAS: Area[] = [
       "Student, flat and house moves",
       "Local and longer-route quote enquiries",
     ],
-    nearbyAreas: ["fort-william", "aviemore", "nairn", "dingwall"],
+    nearbyAreas: ["nairn", "dingwall", "fort-william"],
     metaDescription:
       "Get a quote for man and van in Inverness, furniture collection and house removals. Share your items and route to check price and availability.",
+  },
+  {
+    slug: "nairn",
+    name: "Nairn",
+    schemaType: "Place",
+    region: "Highlands",
+    postcode: "IV12",
+    headline: "Man and Van in Nairn",
+    description:
+      "Arrange man and van in Nairn for furniture delivery, flat moves and house removals. A collection near Fishertown or the High Street needs clear entrance and loading details; a home outside town may need directions to a driveway or private lane. Share your items and both addresses for a local move or a route between Nairn and Inverness.",
+    highlights: [
+      "Nairn and Inverness furniture deliveries",
+      "Fishertown and town-centre access planning",
+      "Small moves and complete home enquiries"
+    ],
+    nearbyAreas: ["inverness", "dingwall"],
+    metaDescription: "Man and van in Nairn for furniture delivery, flat and house removals. Share your load, access and Nairn or Inverness route to get a moving quote.",
+    moveAdvice: [
+      {
+        title: "Fishertown and High Street entrances",
+        body: "For a Fishertown or High Street collection, identify the actual door, any shared passage and where loading is possible. Measure large furniture against the tightest part of its exit route and mention external steps or narrow turns. Check current parking signs and discuss any permission required with Highland Council; a convenient space nearby does not establish loading access.",
+        source: {
+          label: "Highland Council parking and permits",
+          href: "https://www.highland.gov.uk/parking"
+        }
+      },
+      {
+        title: "Furniture between Nairn and Inverness",
+        body: "For a Nairn to Inverness collection or delivery, give both complete addresses and the seller's agreed release window. Include dimensions for sofas, wardrobes and beds, and check the destination entrance before purchase. If dismantling is required, discuss it before confirmation. Additional collections or storage stops should be included when the full route is quoted rather than added on collection day."
+      },
+      {
+        title: "Homes around Auldearn and Cawdor",
+        body: "For an address around Auldearn or Cawdor, provide the property name and an entrance description as well as the postcode. Flag private lanes, gates, surface conditions and limited turning space. A full house move should include outbuildings and garden furniture in the inventory. Those details help match the vehicle and crew to the property, not simply to a bedroom count."
+      }
+    ],
+    faqs: [
+      {
+        question: "Can you deliver furniture from Inverness to Nairn?",
+        answer: "Yes. Provide the collection address, item sizes, delivery address and seller or retailer collection window. Include the floor and doorway access at your Nairn property. The crew and vehicle are assessed for the items and the route before the booking is confirmed."
+      },
+      {
+        question: "Do you cover Auldearn and Cawdor near Nairn?",
+        answer: "Yes, you can request collections and deliveries in these surrounding communities. Send the full property address and details of any private lane, gate or turning restriction. Availability and access are checked for your preferred date; the postcode district is a guide, not a service boundary."
+      },
+      {
+        question: "What should I include for a Nairn house removal quote?",
+        answer: "List furniture and boxes from each room, plus garden, garage or outbuilding items. Explain access at both properties, including stairs and the distance from the loading point. Add any packing or dismantling request and key handover times so the scope can be agreed in advance."
+      }
+    ]
+  },
+  {
+    slug: "dingwall",
+    name: "Dingwall",
+    schemaType: "Place",
+    region: "Highlands",
+    postcode: "IV15",
+    headline: "Man and Van in Dingwall",
+    description:
+      "Get a man and van quote in Dingwall for a single furniture collection, a flat move or house removals. High Street access needs checking before arranging a loading time, while properties around the town may have private approaches or longer carries. Include the complete load and destination for local moves, Inverness deliveries and surrounding village collections.",
+    highlights: [
+      "Dingwall and surrounding village moves",
+      "Furniture collections to and from Inverness",
+      "High Street loading and property access reviewed"
+    ],
+    nearbyAreas: ["inverness", "nairn"],
+    metaDescription: "Man and van in Dingwall for furniture collection, flat and house removals. Plan High Street or rural access and request a quote for your full route.",
+    moveAdvice: [
+      {
+        title: "Check High Street vehicle access first",
+        body: "Dingwall High Street includes a pedestrian section, so do not plan on loading outside a property without checking current vehicle access arrangements. Give the exact entrance, floor and nearest suitable loading point when requesting your quote. Ask Highland Council about any permission needed and confirm the available window before coordinating a landlord, seller or key handover.",
+        source: {
+          label: "Highland Council Dingwall High Street property information",
+          href: "https://www.highland.gov.uk/directory-record/11205/office-3-mayfield-dingwall"
+        }
+      },
+      {
+        title: "Maryburgh, Conon Bridge and Muir of Ord",
+        body: "For a collection around Maryburgh, Conon Bridge or Muir of Ord, use the exact address instead of only describing it as near Dingwall. Include gates, driveway width and turning space, particularly where the entrance is away from the main road. Note every collection and delivery stop so the route can be quoted together with its loading and unloading requirements."
+      },
+      {
+        title: "Choose the load before choosing the van",
+        body: "For a move between Dingwall and Inverness, list bulky furniture and box quantities before deciding whether it is a small move or a house removal. A short route can still require a larger vehicle or extra lifting help. Tell us about stairs, awkward items and dismantling, and give any key handover deadline so the collection plan reflects the whole job."
+      }
+    ],
+    faqs: [
+      {
+        question: "Can a removal van collect from Dingwall High Street?",
+        answer: "The exact address and current access conditions need checking first because part of High Street is pedestrianised. Share your entrance and proposed loading point. Any council permission or time restriction must be resolved before confirming a collection that relies on driving into a restricted section."
+      },
+      {
+        question: "Do you cover Maryburgh, Conon Bridge and Muir of Ord?",
+        answer: "Yes. Include the full collection and destination addresses, load and preferred date in your enquiry. For a private driveway or lane, describe the entrance, surface and turning space. The team confirms vehicle suitability, access and availability for the specific journey."
+      },
+      {
+        question: "Can I book a man and van from Dingwall to Inverness?",
+        answer: "Yes, for furniture collections, smaller moves or a larger household load. Give an item list and access details at both properties, including stairs and parking. The quote depends on the load, route and required crew; a short drive alone does not determine the price."
+      }
+    ]
   },
   {
     slug: "fort-william",

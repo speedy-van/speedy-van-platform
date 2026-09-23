@@ -2,6 +2,8 @@ import Link from "next/link";
 import type { Area } from "@/lib/areas";
 import type { AreaGuide } from "@/lib/area-guides";
 import { getServiceBySlug } from "@/lib/services";
+import { getNearbyAreaGroups } from "@/lib/nearby-area-guides";
+import { NearbyAreaContent } from "@/components/areas/NearbyAreaContent";
 
 interface AreaGuideContentProps {
   area: Area;
@@ -30,6 +32,13 @@ export function AreaGuideContent({ area, guide }: AreaGuideContentProps) {
             <nav aria-label={`${area.name} moving guide sections`} className="mt-6">
               <p className="font-semibold text-white">Plan your move</p>
               <ul className="mt-3 flex flex-wrap gap-x-5 gap-y-3 text-sm">
+                {getNearbyAreaGroups(area.slug).length > 0 && (
+                  <li className="min-w-0">
+                    <Link href={`#${area.slug}-nearby-places`} className={textLinkClassName}>
+                      Nearby towns and villages
+                    </Link>
+                  </li>
+                )}
                 {guide.sections.map((section) => (
                   <li key={section.id} className="min-w-0">
                     <Link href={`#${area.slug}-${section.id}`} className={textLinkClassName}>
@@ -72,6 +81,8 @@ export function AreaGuideContent({ area, guide }: AreaGuideContentProps) {
           </p>
         </div>
       </section>
+
+      <NearbyAreaContent area={area} />
 
       {guide.sections.map((section, index) => {
         const headingId = `${area.slug}-${section.id}`;

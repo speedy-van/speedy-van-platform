@@ -38,7 +38,7 @@ export function buildLocalBusinessSchema(): Schema {
       addressRegion: "Scotland",
     },
     areaServed: AREAS.map((area) => ({
-      "@type": "AdministrativeArea",
+      "@type": area.schemaType ?? "AdministrativeArea",
       name: area.name,
     })),
     sameAs: [
@@ -164,7 +164,7 @@ export function buildServiceSchema(
       url: SITE_URL,
     },
     areaServed: AREAS.map((area) => ({
-      "@type": "AdministrativeArea",
+      "@type": area.schemaType ?? "AdministrativeArea",
       name: area.name,
     })),
   };

@@ -102,7 +102,7 @@ export default async function AreaPage({ params }: Props) {
               url: SITE_URL,
             },
             areaServed: {
-              "@type": guide ? "City" : "AdministrativeArea",
+              "@type": area.schemaType ?? (guide ? "City" : "AdministrativeArea"),
               name: area.name,
             },
           },
@@ -360,7 +360,7 @@ export default async function AreaPage({ params }: Props) {
             <div className="space-y-3">
               {area.faqs.map((faq) => (
                 <details key={faq.question} className="rounded-xl border border-amber-900/20 bg-white/[0.04]">
-                  <summary className="cursor-pointer px-5 py-4 font-bold text-white hover:bg-white/5">
+                  <summary className="cursor-pointer rounded-xl px-5 py-4 font-bold text-white hover:bg-white/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0A0A0A]">
                     {faq.question}
                   </summary>
                   <p className="px-5 pb-5 leading-relaxed text-white/70">{faq.answer}</p>
