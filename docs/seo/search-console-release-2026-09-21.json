@@ -1,0 +1,56 @@
+{
+  "observed_at_utc": "2026-09-21T16:23:11.049005+00:00",
+  "source": "Authenticated Search Console UI in the owner-selected account",
+  "property": "sc-domain:speedyvan.uk",
+  "url": "https://www.speedyvan.uk/services/man-and-van",
+  "index_inspection": {
+    "status": "Discovered - currently not indexed",
+    "last_crawl": null,
+    "user_declared_canonical": null,
+    "google_selected_canonical": null,
+    "note": "Index snapshot before the post-release live test; null means unavailable, not a canonical conflict."
+  },
+  "live_test": {
+    "tested_at_utc": "2026-09-21T16:18:01Z",
+    "displayed_time": "21 Sept 2026, 17:18:01 BST",
+    "status": "URL is available to Google",
+    "page_availability": "Page can be indexed",
+    "crawler": "Google Inspection Tool smartphone",
+    "crawl_allowed": true,
+    "page_fetch": "Successful",
+    "indexing_allowed": true,
+    "user_declared_canonical": "https://www.speedyvan.uk/services/man-and-van",
+    "google_selected_canonical": null,
+    "google_canonical_note": "Only determined after indexing",
+    "valid_breadcrumb_items": 1
+  },
+  "indexing_request": {
+    "accepted": true,
+    "observed_dialogue": "Indexing requested",
+    "purpose": "Reinspect the changed production page after the verified release",
+    "completed_indexing": false,
+    "note": "Google says duplicate requests do not change queue position; no further repeat requests made."
+  },
+  "sitemap": {
+    "url": "https://www.speedyvan.uk/sitemap.xml",
+    "live_http_status": 200,
+    "live_url_count": 47,
+    "resubmission_accepted": true,
+    "observed_dialogue": "Sitemap submitted successfully",
+    "last_processed_display_status": "Success",
+    "last_processed_discovered_pages": 45,
+    "note": "45 is the previous processed discovery count, not an indexed total or the current live sitemap size."
+  },
+  "performance": {
+    "status": "processing_data",
+    "clicks": null,
+    "impressions": null,
+    "ctr": null,
+    "average_position": null
+  },
+  "limits": [
+    "A live URL test establishes availability, not completed indexing or ranking.",
+    "One URL inspection is not a complete-site index report.",
+    "No ranking improvement can be inferred minutes after deployment."
+  ]
+}

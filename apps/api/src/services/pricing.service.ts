@@ -1,7 +1,8 @@
 // Pricing engine.
 //
 // Reads pricing values from the DB-backed PricingConfig table (with a 5-minute
-// in-memory cache) and falls back to DEFAULT_PRICING_CONFIG when a key is missing.
+// in-memory cache). Documented defaults apply only to missing keys after a
+// successful configuration read, never to a database outage.
 
 import { db } from "@speedy-van/db";
 import {
@@ -23,11 +24,26 @@ import { getWeatherSurcharge } from "./weather.service";
 type ConfigCache = { values: Record<string, Record<string, number>>; loadedAt: number };
 const CACHE_TTL_MS = 5 * 60 * 1000;
 let cache: ConfigCache | null = null;
+const londonCalendarDate = new Intl.DateTimeFormat("en-GB", {
+  timeZone: "Europe/London",
+  year: "numeric",
+  month: "2-digit",
+  day: "2-digit",
+});
+
+function currentBookingDate(now: Date): Date {
+  const parts = Object.fromEntries(londonCalendarDate.formatToParts(now).map((part) => [part.type, part.value]));
+  // Represent the London civil date at UTC midnight for date-only arithmetic.
+  // This is not a conversion of the actual London midnight instant.
+  return new Date(Date.UTC(Number(parts.year), Number(parts.month) - 1, Number(parts.day)));
+}
 
 async function loadConfig(): Promise<Record<string, Record<string, number>>> {
   if (cache && Date.now() - cache.loadedAt < CACHE_TTL_MS) return cache.values;
 
-  const rows = await db.pricingConfig.findMany().catch(() => []);
+  const rows = await db.pricingConfig.findMany().catch((cause: unknown) => {
+    throw new Error("PRICING_CONFIG_UNAVAILABLE", { cause });
+  });
   const values: Record<string, Record<string, number>> = {};
   for (const row of rows) {
     if (!values[row.category]) values[row.category] = {};
@@ -247,7 +263,7 @@ export async function calculatePrice(input: PricingCalculateInput): Promise<Pric
     ) / 100;
 
   // 14-day x 3-slot price calendar
-  const today = new Date();
+  const today = currentBookingDate(new Date());
   const days: DayPrice[] = [];
   const allPrices: number[] = [];
 
@@ -292,9 +308,13 @@ export async function calculatePriceForSlot(
   date: Date,
   slot: "morning" | "afternoon" | "evening",
 ): Promise<number> {
+  if (!Number.isFinite(date.getTime())) throw new Error("SELECTED_SLOT_UNAVAILABLE");
   const result = await calculatePrice(input);
   const iso = date.toISOString().slice(0, 10);
   const day = result.days.find((d) => d.date === iso);
   const slotPrice = day?.slots.find((s) => s.slot === slot)?.price;
-  return slotPrice ?? result.staticSubtotal;
+  if (typeof slotPrice !== "number" || !Number.isFinite(slotPrice) || slotPrice <= 0) {
+    throw new Error("SELECTED_SLOT_UNAVAILABLE");
+  }
+  return slotPrice;
 }

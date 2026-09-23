@@ -3,11 +3,12 @@ import Image from "next/image";
 interface LogoProps {
   variant?: "full" | "mono";
   className?: string;
+  priority?: boolean;
 }
 
 const BRAND_LOGO_SRC = "/logo.png?v=amber-20260921-1";
 
-export function Logo({ variant = "full", className = "" }: LogoProps) {
+export function Logo({ variant = "full", className = "", priority = false }: LogoProps) {
   const textColor = variant === "full" ? "#FFFFFF" : "white";
   const accent = variant === "full" ? "#F59E0B" : "rgba(255,255,255,0.75)";
 
@@ -20,8 +21,8 @@ export function Logo({ variant = "full", className = "" }: LogoProps) {
           alt="SpeedyVan logo"
           width={56}
           height={56}
-          priority
-          unoptimized
+          sizes="56px"
+          priority={priority}
           className="relative z-10 h-[52px] w-[52px] rounded-full object-cover"
         />
       </span>

@@ -6,7 +6,9 @@ export default function robots(): MetadataRoute.Robots {
     rules: {
       userAgent: "*",
       allow: "/",
-      disallow: ["/admin/", "/driver/", "/auth/", "/api/"],
+      // Private HTML routes send noindex headers and must be crawlable to read them.
+      // Authentication remains enforced independently of crawler directives.
+      disallow: ["/api$", "/api/"],
     },
     sitemap: absoluteUrl("/sitemap.xml"),
   };

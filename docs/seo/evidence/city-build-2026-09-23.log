@@ -1,0 +1,79 @@
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> @speedyvan/web@1.0.0 build
+> next build
+
+   ▲ Next.js 15.5.25
+
+   Creating an optimized production build ...
+ ✓ Compiled successfully in 33.8s
+   Skipping linting
+   Checking validity of types ...
+   Collecting page data ...
+   Generating static pages (0/75) ...
+   Generating static pages (18/75)
+   Generating static pages (37/75)
+   Generating static pages (56/75)
+ ✓ Generating static pages (75/75)
+   Finalizing page optimization ...
+   Collecting build traces ...
+
+Route (app)                                 Size  First Load JS
+┌ ○ /                                    6.45 kB         129 kB
+├ ○ /_not-found                             1 kB         103 kB
+├ ○ /admin                               2.95 kB         109 kB
+├ ○ /admin/analytics                      127 kB         229 kB
+├ ○ /admin/bookings                      2.76 kB         108 kB
+├ ƒ /admin/bookings/[id]                  6.8 kB         109 kB
+├ ○ /admin/content                       2.79 kB         105 kB
+├ ○ /admin/drivers                       3.88 kB         106 kB
+├ ○ /admin/enquiries                     4.18 kB         106 kB
+├ ○ /admin/jobs                          3.14 kB         109 kB
+├ ○ /admin/pricing                       2.99 kB         105 kB
+├ ○ /admin/services                      2.73 kB         105 kB
+├ ○ /admin/settings                      1.23 kB         103 kB
+├ ○ /admin/visitors                      2.52 kB         105 kB
+├ ƒ /api/auth/[...nextauth]                145 B         102 kB
+├ ○ /areas                                 183 B         106 kB
+├ ● /areas/[slug]                          178 B         111 kB
+├   ├ /areas/glasgow
+├   ├ /areas/glasgow-west-end
+├   ├ /areas/glasgow-southside
+├   └ [+24 more paths]
+├ ○ /auth/login                          1.86 kB         113 kB
+├ ○ /book                                72.4 kB         195 kB
+├ ƒ /book/confirmation                     183 B         106 kB
+├ ƒ /book/review/[reference]             2.31 kB         108 kB
+├ ○ /cookies                               183 B         106 kB
+├ ○ /driver/dashboard                    2.85 kB         112 kB
+├ ○ /driver/earnings                     2.17 kB         104 kB
+├ ○ /driver/login                        2.61 kB         105 kB
+├ ○ /driver/messages                     3.33 kB         110 kB
+├ ○ /driver/my-jobs                      3.47 kB         113 kB
+├ ƒ /driver/my-jobs/[id]                  5.7 kB         112 kB
+├ ○ /driver/stats                        2.26 kB         105 kB
+├ ○ /jobs                                4.31 kB         107 kB
+├ ○ /pricing                               179 B         111 kB
+├ ○ /privacy                               183 B         106 kB
+├ ○ /robots.txt                            145 B         102 kB
+├ ○ /services                              183 B         106 kB
+├ ● /services/[slug]                     3.15 kB         114 kB
+├   ├ /services/man-and-van
+├   ├ /services/flat-removals
+├   ├ /services/small-moves
+├   └ [+10 more paths]
+├ ○ /services/european-removals             4 kB         115 kB
+├ ○ /sitemap.xml                           145 B         102 kB
+├ ○ /terms                                 183 B         106 kB
+└ ○ /track                               6.74 kB         118 kB
++ First Load JS shared by all             102 kB
+  ├ chunks/1255-623a1bc706ecd6cc.js      46.1 kB
+  ├ chunks/4bd1b696-100b9d70ed4e49c1.js  54.2 kB
+  └ other shared chunks (total)          1.96 kB
+
+
+ƒ Middleware                             34.4 kB
+
+○  (Static)   prerendered as static content
+●  (SSG)      prerendered as static HTML (uses generateStaticParams)
+ƒ  (Dynamic)  server-rendered on demand

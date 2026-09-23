@@ -1,28 +1,27 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { AREAS, getAreaBySlug } from "@/lib/areas";
-import { SERVICES } from "@/lib/services";
+import { getAreaGuide } from "@/lib/area-guides";
+import { AreaGuideContent } from "@/components/areas/AreaGuideContent";
+import { SERVICES, getServicePriceLabel } from "@/lib/services";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { buildBreadcrumbSchema } from "@/lib/seo/schemas";
+import { buildPageMetadata } from "@/lib/seo/metadata";
 import { SITE_LEGAL_NAME, SITE_OG_IMAGE, SITE_URL, absoluteUrl } from "@/lib/seo/constants";
 
 interface Props {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }
-
-const money = new Intl.NumberFormat("en-GB", {
-  style: "currency",
-  currency: "GBP",
-  maximumFractionDigits: 0,
-});
 
 export function generateStaticParams() {
   return AREAS.map((area) => ({ slug: area.slug }));
 }
 
-export function generateMetadata({ params }: Props): Metadata {
-  const area = getAreaBySlug(params.slug);
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { slug } = await params;
+  const area = getAreaBySlug(slug);
   if (!area) {
     return {
       title: "Area Not Found",
@@ -30,7 +29,15 @@ export function generateMetadata({ params }: Props): Metadata {
     };
   }
 
-  const canonical = absoluteUrl(`/areas/${params.slug}`);
+  const guide = getAreaGuide(slug);
+  if (guide) {
+    return buildPageMetadata({
+      title: guide.metadataTitle,
+      description: area.metaDescription,
+      path: `/areas/${slug}`,
+    });
+  }
+  const canonical = absoluteUrl(`/areas/${slug}`);
 
   return {
     title: area.headline,
@@ -60,9 +67,11 @@ export function generateMetadata({ params }: Props): Metadata {
   };
 }
 
-export default function AreaPage({ params }: Props) {
-  const area = getAreaBySlug(params.slug);
+export default async function AreaPage({ params }: Props) {
+  const { slug } = await params;
+  const area = getAreaBySlug(slug);
   if (!area) notFound();
+  const guide = getAreaGuide(slug);
 
   const nearbyAreaData = area.nearbyAreas
     .map((slug) => AREAS.find((a) => a.slug === slug))
@@ -72,19 +81,20 @@ export default function AreaPage({ params }: Props) {
   return (
     <>
       <JsonLd
-        id={`area-breadcrumb-${params.slug}`}
+        id={`area-breadcrumb-${slug}`}
         data={[
           buildBreadcrumbSchema([
             { name: "Home", url: "/" },
-            { name: "Areas", url: "/#areas" },
-            { name: area.name, url: `/areas/${params.slug}` },
+            { name: "Areas", url: "/areas" },
+            { name: area.name, url: `/areas/${slug}` },
           ]),
           {
             "@context": "https://schema.org",
             "@type": "Service",
+            "@id": `${absoluteUrl(`/areas/${slug}`)}#service`,
             name: `${area.name} man and van and removals`,
             description: area.metaDescription,
-            url: absoluteUrl(`/areas/${params.slug}`),
+            url: absoluteUrl(`/areas/${slug}`),
             provider: {
               "@type": "MovingCompany",
               "@id": `${SITE_URL}/#organization`,
@@ -92,14 +102,8 @@ export default function AreaPage({ params }: Props) {
               url: SITE_URL,
             },
             areaServed: {
-              "@type": "AdministrativeArea",
+              "@type": area.schemaType ?? (guide ? "City" : "AdministrativeArea"),
               name: area.name,
-              address: {
-                "@type": "PostalAddress",
-                postalCode: area.postcode,
-                addressRegion: area.region,
-                addressCountry: "GB",
-              },
             },
           },
         ]}
@@ -111,7 +115,7 @@ export default function AreaPage({ params }: Props) {
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <nav aria-label="Breadcrumb" className="mb-6">
-            <ol className="flex items-center gap-2 text-sm" style={{ color: "rgba(255,255,255,0.40)" }}>
+            <ol className="flex flex-wrap items-center gap-2 text-sm" style={{ color: "rgba(255,255,255,0.65)" }}>
               <li>
                 <Link href="/" className="hover:text-white transition-colors">
                   Home
@@ -119,7 +123,7 @@ export default function AreaPage({ params }: Props) {
               </li>
               <li aria-hidden="true">/</li>
               <li>
-                <Link href="/#areas" className="hover:text-white transition-colors">
+                <Link href="/areas" className="hover:text-white transition-colors">
                   Areas
                 </Link>
               </li>
@@ -134,14 +138,11 @@ export default function AreaPage({ params }: Props) {
             <div className="inline-flex items-center gap-2 bg-amber-400/10 border border-amber-400/30 rounded-full px-3 py-1 text-amber-300 text-sm font-medium mb-4">
               <span aria-hidden="true">📍</span>
               <span>{area.region}</span>
-              {area.postcode && (
-                <span className="text-amber-400/70">· {area.postcode}</span>
-              )}
             </div>
             <h1 className="text-4xl sm:text-5xl font-black leading-tight text-white">
               {area.headline}
             </h1>
-            <p className="mt-6 text-lg leading-relaxed" style={{ color: "rgba(255,255,255,0.55)" }}>
+            <p className="mt-6 text-lg leading-relaxed" style={{ color: "rgba(255,255,255,0.70)" }}>
               {area.description}
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
@@ -170,23 +171,32 @@ export default function AreaPage({ params }: Props) {
             <div className="mt-8 flex flex-col sm:flex-row gap-3">
               <Link
                 href="/book"
-                className="inline-flex items-center justify-center rounded-lg px-8 py-4 text-base font-black text-black transition-transform hover:scale-105"
+                className="inline-flex items-center justify-center rounded-lg px-8 py-4 text-center text-base font-black text-black motion-safe:transition-transform motion-safe:hover:scale-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0A0A0A]"
                 style={{ background: "linear-gradient(135deg, #F59E0B 0%, #EA580C 100%)" }}
               >
-                Start an Online Quote
+                {guide ? "Get a Moving Quote" : "Start an Online Quote"}
               </Link>
               <a
                 href="tel:07909032889"
                 aria-label="Call us on 07909 032889"
-                className="transition-transform hover:scale-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 rounded-full"
+                className="transition-transform motion-safe:hover:scale-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 rounded-full"
               >
-                <img src="/call-icon.png" alt="Call us" width={52} height={52} />
+                <Image src="/call-icon.png" alt="" width={52} height={52} sizes="52px" />
               </a>
+              {guide && (
+                <Link
+                  href={`/pricing#${area.slug}`}
+                  className="inline-flex items-center justify-center rounded-lg px-4 py-3 text-center font-semibold text-amber-300 underline underline-offset-4 hover:text-amber-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400"
+                >
+                  Man and van pricing guide
+                </Link>
+              )}
             </div>
           </div>
         </div>
       </section>
 
+      {guide ? <AreaGuideContent area={area} guide={guide} /> : <>
       {/* Services in this area */}
       <section
         className="py-16"
@@ -195,9 +205,14 @@ export default function AreaPage({ params }: Props) {
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 id="area-services-heading" className="text-2xl font-black text-white mb-8">
-            Services Available in {area.name}
+            Choose Your Moving Service
           </h2>
-          <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4" role="list">
+          <p className="mb-6 max-w-3xl leading-relaxed text-white/70">
+            Compare the options for your {area.name} move. Share the collection
+            and delivery postcodes to confirm the route, available date and any
+            additional help. Specialist items and unusual access need assessment before booking.
+          </p>
+          <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4" role="list">
             {SERVICES.filter((service) => service.indexable !== false).map((service) => (
               <li key={service.slug}>
                 <Link
@@ -207,11 +222,11 @@ export default function AreaPage({ params }: Props) {
                 >
                   <span className="text-2xl" aria-hidden="true">{service.icon}</span>
                   <div className="min-w-0">
-                    <p className="font-semibold text-sm text-white group-hover:text-amber-400 truncate transition-colors">
+                    <p className="font-semibold text-sm text-white group-hover:text-amber-400 transition-colors">
                       {service.name}
                     </p>
-                    <p className="text-xs" style={{ color: "rgba(255,255,255,0.40)" }}>
-                      From {money.format(service.startingFrom)}
+                    <p className="text-xs" style={{ color: "rgba(255,255,255,0.65)" }}>
+                      From {getServicePriceLabel(service)}
                     </p>
                   </div>
                 </Link>
@@ -221,7 +236,7 @@ export default function AreaPage({ params }: Props) {
         </div>
       </section>
 
-      {/* Why SpeedyVan in this area */}
+      {/* Local move planning */}
       <section
         className="py-16"
         style={{ background: "rgba(245,158,11,0.04)" }}
@@ -230,7 +245,7 @@ export default function AreaPage({ params }: Props) {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-3xl">
             <h2 id="why-us-heading" className="text-2xl font-black text-white mb-6">
-              Why Choose SpeedyVan in {area.name}?
+              Planning a Move in {area.name}
             </h2>
             {area.moveAdvice?.length ? (
               <div className="grid gap-4">
@@ -244,27 +259,32 @@ export default function AreaPage({ params }: Props) {
                     }}
                   >
                     <h3 className="font-black text-white">{point.title}</h3>
-                    <p className="mt-2 text-sm leading-relaxed" style={{ color: "rgba(255,255,255,0.55)" }}>
+                    <p className="mt-2 text-sm leading-relaxed" style={{ color: "rgba(255,255,255,0.70)" }}>
                       {point.body}
                     </p>
+                    {point.source && (
+                      <a href={point.source.href} className="mt-3 inline-block text-sm font-semibold text-amber-400 underline underline-offset-4 hover:text-amber-300">
+                        {point.source.label}
+                      </a>
+                    )}
                   </article>
                 ))}
               </div>
             ) : (
               <div className="space-y-4">
-                <p className="leading-relaxed mb-4" style={{ color: "rgba(255,255,255,0.55)" }}>
+                <p className="leading-relaxed mb-4" style={{ color: "rgba(255,255,255,0.70)" }}>
                   Moving in {area.name} works best when access is clear before
                   the van arrives. Tell us about stairs, lifts, parking limits,
                   loading bays, narrow streets, and any timed handover so we can
                   recommend the right vehicle, crew size, and time allowance.
                 </p>
-                <p className="leading-relaxed mb-4" style={{ color: "rgba(255,255,255,0.55)" }}>
+                <p className="leading-relaxed mb-4" style={{ color: "rgba(255,255,255,0.70)" }}>
                   Whether you&apos;re moving a single piece of furniture or
                   relocating a full home or business, our {area.name} quote is
                   based on the real job details: volume, access, mileage, crew
                   time, parking, and any packing or dismantling support you need.
                 </p>
-                <p className="leading-relaxed" style={{ color: "rgba(255,255,255,0.55)" }}>
+                <p className="leading-relaxed" style={{ color: "rgba(255,255,255,0.70)" }}>
                   You can start online for straightforward moves, or call the
                   team if the job has unusual access, heavy items, a long route,
                   or several collection and delivery points.
@@ -274,10 +294,10 @@ export default function AreaPage({ params }: Props) {
 
             <ul className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-4" role="list">
               {[
-                "Goods-in-transit cover included as standard",
+                "Inventory and handling requirements discussed",
                 "Clear quote before booking",
                 "Access and parking details checked",
-                "Same-day bookings when available",
+                "Preferred date checked against availability",
                 "Useful for homes, flats, furniture, and business moves",
               ].map((point) => (
                 <li key={point} className="flex items-center gap-3" style={{ color: "rgba(255,255,255,0.70)" }}>
@@ -301,6 +321,58 @@ export default function AreaPage({ params }: Props) {
         </div>
       </section>
 
+      <section className="bg-[#0A0A0A] py-16" aria-labelledby="area-quote-heading">
+        <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
+          <h2 id="area-quote-heading" className="text-2xl font-black text-white">
+            How Your {area.name} Moving Quote Works
+          </h2>
+          <p className="mt-4 leading-relaxed text-white/70">
+            Start with both addresses, the items being moved and your preferred date.
+            The price depends on the load, route distance in miles, crew, access and
+            any agreed packing or dismantling. A short journey can still require
+            extra handling when there are stairs or a long carry from the van.
+          </p>
+          <p className="mt-4 leading-relaxed text-white/70">
+            Check the quoted scope and charging basis before confirming. Minimum
+            time, extra stops, waiting and parking arrangements should be discussed
+            for your move. If the details change, contact the team to review the plan.
+          </p>
+          <div className="mt-6 flex flex-wrap gap-x-6 gap-y-3">
+            <Link href="/pricing" className="font-semibold text-amber-400 underline underline-offset-4 hover:text-amber-300">
+              Moving price guide
+            </Link>
+            <Link href="/services/long-distance-removals" className="font-semibold text-amber-400 underline underline-offset-4 hover:text-amber-300">
+              Scottish intercity moves
+            </Link>
+            <Link href="/services" className="font-semibold text-amber-400 underline underline-offset-4 hover:text-amber-300">
+              Compare moving services
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {area.faqs?.length ? (
+        <section className="bg-amber-400/[0.04] py-16" aria-labelledby="area-faq-heading">
+          <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
+            <h2 id="area-faq-heading" className="mb-8 text-2xl font-black text-white">
+              {area.name} Moving Questions
+            </h2>
+            <div className="space-y-3">
+              {area.faqs.map((faq) => (
+                <details key={faq.question} className="rounded-xl border border-amber-900/20 bg-white/[0.04]">
+                  <summary className="cursor-pointer rounded-xl px-5 py-4 font-bold text-white hover:bg-white/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0A0A0A]">
+                    {faq.question}
+                  </summary>
+                  <p className="px-5 pb-5 leading-relaxed text-white/70">{faq.answer}</p>
+                </details>
+              ))}
+            </div>
+          </div>
+        </section>
+      ) : null}
+
+      </>}
+
       {/* Nearby areas */}
       {nearbyAreaData.length > 0 && (
         <section
@@ -310,7 +382,7 @@ export default function AreaPage({ params }: Props) {
         >
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <h2 id="nearby-heading" className="text-2xl font-black text-white mb-6">
-              Also Covering Nearby Areas
+              Other Areas to Explore
             </h2>
             <ul className="flex flex-wrap gap-3" role="list">
               {nearbyAreaData.map((nearby) => (
@@ -336,15 +408,15 @@ export default function AreaPage({ params }: Props) {
       >
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="mx-auto max-w-2xl text-2xl font-black leading-tight text-balance text-white sm:text-3xl">
-            Book Your {area.name} Move Today
+            Get a Quote for Your {area.name} Move
           </h2>
-          <p className="mt-3 text-base sm:text-lg" style={{ color: "rgba(255,255,255,0.55)" }}>
-            Instant quotes · Transparent pricing · Professional drivers
+          <p className="mt-3 text-base sm:text-lg" style={{ color: "rgba(255,255,255,0.70)" }}>
+            Share your items, route and preferred date to check your options.
           </p>
           <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
             <Link
               href="/book"
-              className="inline-flex items-center justify-center gap-2 rounded-lg px-8 py-4 font-black text-black transition-transform hover:scale-105"
+              className="inline-flex items-center justify-center gap-2 rounded-lg px-8 py-4 font-black text-black transition-transform motion-safe:hover:scale-105"
               style={{ background: "linear-gradient(135deg, #F59E0B 0%, #EA580C 100%)" }}
             >
               Start Online Quote
@@ -352,9 +424,9 @@ export default function AreaPage({ params }: Props) {
             <a
               href="tel:07909032889"
               aria-label="Call us on 07909 032889"
-              className="transition-transform hover:scale-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 rounded-full"
+              className="transition-transform motion-safe:hover:scale-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 rounded-full"
             >
-              <img src="/call-icon.png" alt="Call us" width={52} height={52} />
+              <Image src="/call-icon.png" alt="" width={52} height={52} sizes="52px" />
             </a>
             <a
               href="mailto:hello@speedyvan.uk"

@@ -6,9 +6,11 @@ import {
   useEffect,
   useReducer,
   useRef,
+  useState,
   type ReactNode,
 } from "react";
 import type { BedroomCount, InventoryMode, InventoryRoom } from "./room-inventory";
+import { resolveBookingService } from "./booking-service-options";
 
 const STORAGE_KEY = "sv_booking_draft_v1";
 const STORAGE_TTL_MS = 24 * 60 * 60 * 1000; // 24h
@@ -85,12 +87,13 @@ export interface BookingState {
   priceBreakdown: PriceLineItem[];
   quoteStatus: QuoteStatus;
   quoteError: string;
+  checkoutLocked: boolean;
 
   // Navigation
   step: 1 | 2 | 3 | 4 | 5;
 }
 
-const INITIAL: BookingState = {
+export const INITIAL_BOOKING_STATE: BookingState = {
   serviceSlug: "",
   serviceName: "",
   serviceVariant: "",
@@ -124,12 +127,14 @@ const INITIAL: BookingState = {
   priceBreakdown: [],
   quoteStatus: "incomplete",
   quoteError: "",
+  checkoutLocked: false,
   step: 1,
 };
 
 // ─── Actions ────────────────────────────────────────────────────────────────
 
-type Action =
+export type BookingAction =
+  | { type: "APPLY_SERVICE_ENTRY"; slug: string }
   | { type: "SET_SERVICE"; slug: string; name: string; sourceSlug?: string }
   | { type: "SET_VARIANT"; variant: string }
   | { type: "SET_ENTRY_SERVICE"; slug: string }
@@ -158,8 +163,12 @@ type Action =
   | { type: "SET_BREAKDOWN"; items: PriceLineItem[] }
   | { type: "SET_QUOTE_STATUS"; status: QuoteStatus; error?: string }
   | { type: "SET_BOOKING"; bookingId: string; bookingRef: string; clientSecret: string; total: number }
+  | { type: "START_CHECKOUT" }
+  | { type: "CHECKOUT_REJECTED" }
+  | { type: "CHECKOUT_COMPLETE" }
   | { type: "SET_STEP"; step: 1 | 2 | 3 | 4 | 5 }
   | { type: "RESET_UPSELLS" }
+  | { type: "RESTORE"; state: BookingState }
   | { type: "RESET" };
 
 function invalidateQuote(state: BookingState): BookingState {
@@ -168,14 +177,36 @@ function invalidateQuote(state: BookingState): BookingState {
     selectedDate: "",
     selectedTimeSlot: "",
     clientTotal: 0,
+    clientSecret: "",
+    bookingId: "",
+    bookingRef: "",
     priceBreakdown: [],
     quoteStatus: state.clientTotal > 0 || state.selectedDate ? "stale" : "incomplete",
     quoteError: "",
   };
 }
 
-function reducer(state: BookingState, action: Action): BookingState {
+function serviceEntryIdentity(service: Pick<BookingState, "serviceSlug" | "entryServiceSlug" | "serviceName">): string {
+  const entry = resolveBookingService(service.entryServiceSlug);
+  const canonical = resolveBookingService(service.serviceSlug);
+  const name = service.serviceName.trim().toLowerCase();
+  // Public aliases share a booking service; distinct flat/small/intercity intents retain their names.
+  const isDefaultName = [entry?.serviceName, canonical?.serviceName]
+    .some((candidate) => candidate?.trim().toLowerCase() === name);
+  return [service.serviceSlug, entry?.entryServiceSlug ?? service.entryServiceSlug, isDefaultName ? "" : name].join(":");
+}
+
+export function bookingReducer(state: BookingState, action: BookingAction): BookingState {
+  // An unresolved checkout must survive Back/Edit, query initialisation and late quotes.
+  if (state.checkoutLocked && !["SET_BOOKING", "CHECKOUT_REJECTED", "CHECKOUT_COMPLETE"].includes(action.type)) {
+    return state;
+  }
   switch (action.type) {
+    case "APPLY_SERVICE_ENTRY": {
+      const service = resolveBookingService(action.slug);
+      if (!service || serviceEntryIdentity(state) === serviceEntryIdentity(service)) return state;
+      return { ...INITIAL_BOOKING_STATE, ...service, step: 2 };
+    }
     case "SET_SERVICE":
       return {
         ...invalidateQuote(state),
@@ -185,7 +216,7 @@ function reducer(state: BookingState, action: Action): BookingState {
         entryServiceSlug: action.sourceSlug ?? action.slug,
       };
     case "SET_VARIANT": return { ...invalidateQuote(state), serviceVariant: action.variant };
-    case "SET_ENTRY_SERVICE": return { ...state, entryServiceSlug: action.slug };
+    case "SET_ENTRY_SERVICE": return { ...invalidateQuote(state), entryServiceSlug: action.slug };
     case "SET_PICKUP": return { ...invalidateQuote(state), distanceMiles: 0, pickup: action.value };
     case "CLEAR_PICKUP": return { ...invalidateQuote(state), distanceMiles: 0, pickup: null };
     case "SET_DROPOFF": return { ...invalidateQuote(state), distanceMiles: 0, dropoff: action.value };
@@ -193,164 +224,212 @@ function reducer(state: BookingState, action: Action): BookingState {
     case "SET_PICKUP_PROPERTY_TYPE": return {
       ...invalidateQuote(state),
       pickupPropertyType: action.value,
-      pickupFloor: action.value === "flat" && state.pickupFloor === 0 ? 1 : state.pickupFloor,
+      pickupFloor: ["flat", "office", "studio"].includes(action.value) ? state.pickupFloor : 0,
+      pickupHasLift: ["flat", "office", "studio"].includes(action.value) ? state.pickupHasLift : false,
     };
     case "SET_PICKUP_FLOOR": return { ...invalidateQuote(state), pickupFloor: action.value };
     case "SET_PICKUP_LIFT": return { ...invalidateQuote(state), pickupHasLift: action.value };
     case "SET_DROPOFF_PROPERTY_TYPE": return {
       ...invalidateQuote(state),
       dropoffPropertyType: action.value,
-      dropoffFloor: action.value === "flat" && state.dropoffFloor === 0 ? 1 : state.dropoffFloor,
+      dropoffFloor: ["flat", "office", "studio"].includes(action.value) ? state.dropoffFloor : 0,
+      dropoffHasLift: ["flat", "office", "studio"].includes(action.value) ? state.dropoffHasLift : false,
     };
     case "SET_DROPOFF_FLOOR": return { ...invalidateQuote(state), dropoffFloor: action.value };
     case "SET_DROPOFF_LIFT": return { ...invalidateQuote(state), dropoffHasLift: action.value };
-    case "SET_DISTANCE": return { ...state, distanceMiles: action.value };
-    case "SET_ITEMS": return { ...state, items: action.items };
+    case "SET_DISTANCE": return action.value === state.distanceMiles ? state : { ...invalidateQuote(state), distanceMiles: action.value };
+    case "SET_ITEMS": return { ...invalidateQuote(state), items: action.items };
     case "SET_INVENTORY_MODE": return { ...state, inventoryMode: action.mode };
     case "SET_BEDROOM_COUNT":
       return {
-        ...state,
+        ...invalidateQuote(state),
         bedroomCount: action.bedroomCount,
         exactBedroomCount: action.exactBedroomCount,
       };
     case "SET_INVENTORY_ROOMS": return { ...state, inventoryRooms: action.rooms };
-    case "SET_DATE": return { ...state, selectedDate: action.date, selectedTimeSlot: "" };
-    case "SET_SLOT": return { ...state, selectedTimeSlot: action.slot };
+    case "SET_DATE": return { ...invalidateQuote(state), selectedDate: action.date, selectedTimeSlot: "" };
+    case "SET_SLOT": return { ...invalidateQuote(state), selectedDate: state.selectedDate, selectedTimeSlot: action.slot };
     case "SET_HELPERS": return { ...invalidateQuote(state), helpersCount: action.count };
     case "SET_PACKING": return { ...invalidateQuote(state), needsPacking: action.value };
     case "SET_ASSEMBLY": return { ...invalidateQuote(state), needsAssembly: action.value };
     case "RESET_UPSELLS": return { ...invalidateQuote(state), needsPacking: false, needsAssembly: false, helpersCount: 0 };
     case "SET_CUSTOMER": return { ...state, customerName: action.name, customerEmail: action.email, customerPhone: action.phone };
-    case "SET_PRICE": return { ...state, clientTotal: action.total };
+    case "SET_PRICE": return action.total === state.clientTotal ? state : { ...state, clientTotal: action.total, clientSecret: "", bookingId: "", bookingRef: "" };
     case "SET_BREAKDOWN": return { ...state, priceBreakdown: action.items };
     case "SET_QUOTE_STATUS": return { ...state, quoteStatus: action.status, quoteError: action.error ?? "" };
-    case "SET_BOOKING": return { ...state, bookingId: action.bookingId, bookingRef: action.bookingRef, clientSecret: action.clientSecret, clientTotal: action.total };
-    case "SET_STEP": return { ...state, step: action.step };
-    case "RESET": return INITIAL;
+    case "SET_BOOKING": return { ...state, checkoutLocked: true, bookingId: action.bookingId, bookingRef: action.bookingRef, clientSecret: action.clientSecret, clientTotal: action.total };
+    case "START_CHECKOUT": return { ...state, checkoutLocked: true };
+    case "CHECKOUT_REJECTED": return state.bookingId || state.clientSecret ? state : { ...state, checkoutLocked: false };
+    case "CHECKOUT_COMPLETE": return INITIAL_BOOKING_STATE;
+    case "SET_STEP": return { ...state, step: getReachableBookingStep(state, action.step) };
+    case "RESTORE": return action.state;
+    case "RESET": return INITIAL_BOOKING_STATE;
     default: return state;
   }
+}
+
+/** Never allow saved or edited data to bypass an incomplete booking step. */
+export function getReachableBookingStep(state: BookingState, requested: BookingState["step"]): BookingState["step"] {
+  if (requested === 1 || !resolveBookingService(state.serviceSlug)) return 1;
+  if (requested === 2 || !state.pickup || !state.dropoff || !Number.isFinite(state.distanceMiles) || state.distanceMiles <= 0) return 2;
+  if (requested === 3 || !state.items.some((item) => Number.isInteger(item.quantity) && item.quantity > 0)) return 3;
+  if (requested === 4 || state.quoteStatus !== "valid" || !state.selectedDate || !state.selectedTimeSlot || !Number.isFinite(state.clientTotal) || state.clientTotal <= 0) return 4;
+  return 5;
+}
+
+function objectValue(value: unknown): Record<string, unknown> | null {
+  return value && typeof value === "object" && !Array.isArray(value) ? value as Record<string, unknown> : null;
+}
+
+function draftAddress(value: unknown): AddressResult | null {
+  const address = objectValue(value);
+  if (!address || typeof address.address !== "string" || !address.address.trim() || typeof address.postcode !== "string" ||
+      typeof address.lat !== "number" || !Number.isFinite(address.lat) || Math.abs(address.lat) > 90 ||
+      typeof address.lng !== "number" || !Number.isFinite(address.lng) || Math.abs(address.lng) > 180) return null;
+  return { address: address.address, postcode: address.postcode, lat: address.lat, lng: address.lng };
+}
+
+/** Restore customer input, but always obtain a fresh server quote before payment. */
+export function restoreBookingDraft(raw: string | null, now = Date.now()): BookingState | null {
+  if (!raw) return null;
+  try {
+    const envelope = objectValue(JSON.parse(raw));
+    if (!envelope || typeof envelope.savedAt !== "number" || !Number.isFinite(envelope.savedAt) || envelope.savedAt > now) return null;
+    const draft = objectValue(envelope.state);
+    if (!draft || typeof draft.serviceSlug !== "string") return null;
+    // Unresolved payment attempts require reconciliation even after ordinary drafts expire.
+    if (now - envelope.savedAt > STORAGE_TTL_MS && draft.checkoutLocked !== true) return null;
+    const service = resolveBookingService(draft.serviceSlug);
+    if (!service) return null;
+    const text = (key: string) => typeof draft[key] === "string" ? draft[key] as string : "";
+    const integer = (key: string, fallback = 0) => typeof draft[key] === "number" && Number.isInteger(draft[key]) && (draft[key] as number) >= 0 ? draft[key] as number : fallback;
+    const propertyType = (key: string): PropertyType => ["house", "flat", "bungalow", "office", "studio"].includes(text(key)) ? text(key) as PropertyType : "";
+    const items = Array.isArray(draft.items) ? draft.items.flatMap((value): SelectedItem[] => {
+      const item = objectValue(value);
+      if (!item || typeof item.name !== "string" || !item.name.trim() || typeof item.quantity !== "number" || !Number.isInteger(item.quantity) || item.quantity <= 0) return [];
+      return [{ name: item.name, quantity: item.quantity,
+        ...(typeof item.lineId === "string" ? { lineId: item.lineId } : {}),
+        ...(typeof item.itemId === "string" ? { itemId: item.itemId } : {}),
+        ...(typeof item.roomId === "string" ? { roomId: item.roomId } : {}),
+        ...(typeof item.roomName === "string" ? { roomName: item.roomName } : {}),
+      }];
+    }) : [];
+    const roomKinds = ["studio", "bedroom", "living", "kitchen", "boxes", "dining", "office", "garage", "garden", "unassigned"];
+    const rooms = Array.isArray(draft.inventoryRooms) ? draft.inventoryRooms.flatMap((value): InventoryRoom[] => {
+      const room = objectValue(value);
+      if (!room || typeof room.id !== "string" || typeof room.label !== "string" || typeof room.kind !== "string" || !roomKinds.includes(room.kind)) return [];
+      return [{ id: room.id, label: room.label, kind: room.kind as InventoryRoom["kind"],
+        ...(typeof room.index === "number" && Number.isInteger(room.index) ? { index: room.index } : {}),
+        ...(typeof room.optional === "boolean" ? { optional: room.optional } : {}),
+        ...(typeof room.skipped === "boolean" ? { skipped: room.skipped } : {}),
+      }];
+    }) : [];
+    const date = text("selectedDate");
+    const validDate = /^\d{4}-\d{2}-\d{2}$/.test(date) && Number.isFinite(Date.parse(`${date}T12:00:00Z`)) && new Date(`${date}T12:00:00Z`).toISOString().slice(0, 10) === date;
+    const state: BookingState = {
+      ...INITIAL_BOOKING_STATE,
+      ...service,
+      serviceName: text("serviceName") || service.serviceName,
+      entryServiceSlug: resolveBookingService(text("entryServiceSlug")) ? text("entryServiceSlug") : service.entryServiceSlug,
+      serviceVariant: text("serviceVariant"),
+      pickup: draftAddress(draft.pickup),
+      dropoff: draftAddress(draft.dropoff),
+      pickupPropertyType: propertyType("pickupPropertyType"),
+      dropoffPropertyType: propertyType("dropoffPropertyType"),
+      pickupFloor: integer("pickupFloor"),
+      dropoffFloor: integer("dropoffFloor"),
+      pickupHasLift: draft.pickupHasLift === true,
+      dropoffHasLift: draft.dropoffHasLift === true,
+      distanceMiles: typeof draft.distanceMiles === "number" && Number.isFinite(draft.distanceMiles) && draft.distanceMiles > 0 ? draft.distanceMiles : 0,
+      items,
+      inventoryMode: draft.inventoryMode === "rooms" ? "rooms" : "items",
+      bedroomCount: ["studio", "1", "2", "3", "4", "5+"].includes(text("bedroomCount")) ? text("bedroomCount") as BedroomCount : "",
+      exactBedroomCount: Math.max(5, Math.min(10, integer("exactBedroomCount", 5))),
+      inventoryRooms: rooms,
+      helpersCount: Math.min(4, integer("helpersCount")),
+      needsPacking: draft.needsPacking === true,
+      needsAssembly: draft.needsAssembly === true,
+      selectedDate: validDate ? date : "",
+      selectedTimeSlot: validDate && ["morning", "afternoon", "evening"].includes(text("selectedTimeSlot")) ? text("selectedTimeSlot") as TimeSlot : "",
+      customerName: text("customerName"),
+      customerEmail: text("customerEmail"),
+      customerPhone: text("customerPhone"),
+      quoteStatus: "stale",
+      checkoutLocked: draft.checkoutLocked === true,
+      bookingId: draft.checkoutLocked === true ? text("bookingId") : "",
+      bookingRef: draft.checkoutLocked === true ? text("bookingRef") : "",
+    };
+    const requested = typeof draft.step === "number" && Number.isInteger(draft.step) && draft.step >= 1 && draft.step <= 5 ? draft.step as BookingState["step"] : 2;
+    state.step = state.checkoutLocked ? 5 : getReachableBookingStep(state, requested);
+    return state;
+  } catch {
+    return null;
+  }
+}
+
+export function serialiseBookingDraft(state: BookingState, savedAt = Date.now()): string {
+  return JSON.stringify({ savedAt, state: {
+    ...state,
+    clientSecret: "",
+    bookingId: state.checkoutLocked ? state.bookingId : "",
+    bookingRef: state.checkoutLocked ? state.bookingRef : "",
+  } });
 }
 
 // ─── Context ────────────────────────────────────────────────────────────────
 
 interface BookingContextValue {
   state: BookingState;
-  dispatch: React.Dispatch<Action>;
+  dispatch: React.Dispatch<BookingAction>;
+  ready: boolean;
 }
 
 const BookingContext = createContext<BookingContextValue | null>(null);
 
 export function BookingProvider({ children }: { children: ReactNode }) {
-  const [state, dispatch] = useReducer(reducer, INITIAL);
+  const [state, dispatch] = useReducer(bookingReducer, INITIAL_BOOKING_STATE);
   const hydrated = useRef(false);
+  const [ready, setReady] = useState(false);
 
-  // Hydrate from localStorage once on mount
   useEffect(() => {
-    if (typeof window === "undefined") return;
-    // If a ?service= param is in the URL, SearchParamsInitializer owns initialisation.
-    // Skip hydration entirely so the URL-driven service is not overwritten by a stale draft.
-    if (new URLSearchParams(window.location.search).has("service")) {
-      hydrated.current = true;
-      return;
-    }
+    if (hydrated.current) return;
+    hydrated.current = true;
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
-      if (!raw) {
-        hydrated.current = true;
-        return;
-      }
-      const parsed = JSON.parse(raw) as { savedAt: number; state: BookingState };
-      if (Date.now() - parsed.savedAt > STORAGE_TTL_MS) {
-        localStorage.removeItem(STORAGE_KEY);
-      } else if (parsed.state) {
-        // Don't restore the booking confirmation tail (server-side ids).
-        const draft = {
-          ...parsed.state,
-          clientSecret: "",
-          bookingId: "",
-          bookingRef: "",
-        };
-        // Replay as discrete actions so reducer stays the source of truth.
-        if (draft.serviceSlug) {
-          dispatch({
-            type: "SET_SERVICE",
-            slug: draft.serviceSlug,
-            name: draft.serviceName,
-            sourceSlug: draft.entryServiceSlug || draft.serviceSlug,
-          });
-        }
-        if (draft.serviceVariant) dispatch({ type: "SET_VARIANT", variant: draft.serviceVariant });
-        if (draft.inventoryMode) dispatch({ type: "SET_INVENTORY_MODE", mode: draft.inventoryMode });
-        if (draft.bedroomCount) {
-          dispatch({
-            type: "SET_BEDROOM_COUNT",
-            bedroomCount: draft.bedroomCount,
-            exactBedroomCount: draft.exactBedroomCount || 5,
-          });
-        }
-        if (draft.inventoryRooms?.length) {
-          dispatch({ type: "SET_INVENTORY_ROOMS", rooms: draft.inventoryRooms });
-        }
-        if (draft.pickup) dispatch({ type: "SET_PICKUP", value: draft.pickup });
-        if (draft.dropoff) dispatch({ type: "SET_DROPOFF", value: draft.dropoff });
-        if (draft.pickupPropertyType) dispatch({ type: "SET_PICKUP_PROPERTY_TYPE", value: draft.pickupPropertyType });
-        if (draft.pickupFloor) dispatch({ type: "SET_PICKUP_FLOOR", value: draft.pickupFloor });
-        if (draft.pickupHasLift) dispatch({ type: "SET_PICKUP_LIFT", value: true });
-        if (draft.dropoffPropertyType) dispatch({ type: "SET_DROPOFF_PROPERTY_TYPE", value: draft.dropoffPropertyType });
-        if (draft.dropoffFloor) dispatch({ type: "SET_DROPOFF_FLOOR", value: draft.dropoffFloor });
-        if (draft.dropoffHasLift) dispatch({ type: "SET_DROPOFF_LIFT", value: true });
-        if (draft.distanceMiles) dispatch({ type: "SET_DISTANCE", value: draft.distanceMiles });
-        if (draft.items?.length) dispatch({ type: "SET_ITEMS", items: draft.items });
-        if (draft.helpersCount) dispatch({ type: "SET_HELPERS", count: draft.helpersCount });
-        if (draft.needsPacking) dispatch({ type: "SET_PACKING", value: true });
-        if (draft.needsAssembly) dispatch({ type: "SET_ASSEMBLY", value: true });
-        if (draft.selectedDate) dispatch({ type: "SET_DATE", date: draft.selectedDate });
-        if (draft.selectedTimeSlot) dispatch({ type: "SET_SLOT", slot: draft.selectedTimeSlot });
-        if (draft.customerName || draft.customerEmail || draft.customerPhone) {
-          dispatch({
-            type: "SET_CUSTOMER",
-            name: draft.customerName,
-            email: draft.customerEmail,
-            phone: draft.customerPhone,
-          });
-        }
-        if (draft.clientTotal) dispatch({ type: "SET_PRICE", total: draft.clientTotal });
-        if (draft.quoteStatus) {
-          dispatch({
-            type: "SET_QUOTE_STATUS",
-            status: draft.quoteStatus === "valid" ? "stale" : draft.quoteStatus,
-            error: draft.quoteError,
-          });
-        }
-        if (draft.step && draft.step >= 1 && draft.step <= 5) dispatch({ type: "SET_STEP", step: draft.step });
-      }
+      const draft = restoreBookingDraft(raw);
+      const service = new URLSearchParams(window.location.search).get("service");
+      // Resolve against the restored draft before mounting a previous service's quote step.
+      const restored = draft ?? INITIAL_BOOKING_STATE;
+      const next = service ? bookingReducer(restored, { type: "APPLY_SERVICE_ENTRY", slug: service }) : restored;
+      if (next !== INITIAL_BOOKING_STATE) dispatch({ type: "RESTORE", state: next });
+      else if (raw) localStorage.removeItem(STORAGE_KEY);
     } catch {
-      /* ignore */
+      // Storage may be unavailable; the service selector remains usable.
     } finally {
-      hydrated.current = true;
+      setReady(true);
     }
   }, []);
 
-  // Persist on every change after hydration. Skip after a successful booking.
+  // Preserve inputs across a retry, but never persist a payment client secret.
   useEffect(() => {
-    if (!hydrated.current) return;
+    if (!ready) return;
     if (typeof window === "undefined") return;
-    if (state.bookingRef) {
+    if (!state.serviceSlug) {
       try { localStorage.removeItem(STORAGE_KEY); } catch { /* ignore */ }
       return;
     }
     try {
       localStorage.setItem(
         STORAGE_KEY,
-        JSON.stringify({ savedAt: Date.now(), state })
+        serialiseBookingDraft(state)
       );
     } catch {
       /* ignore quota */
     }
-  }, [state]);
+  }, [ready, state]);
 
   return (
-    <BookingContext.Provider value={{ state, dispatch }}>
+    <BookingContext.Provider value={{ state, dispatch, ready }}>
       {children}
     </BookingContext.Provider>
   );

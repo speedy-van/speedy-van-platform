@@ -1,0 +1,58 @@
+{
+  "date": "2026-09-23",
+  "repository": "speedy-van/speedy-van-platform",
+  "branch": "fix/organic-search-and-booking-2026-09-21",
+  "source_commit": "48fcf7ff73ee4d8e5ba2b97a9f630e24b9e15718",
+  "source_tree": "e06589d61e09c62f3ad5f891732f84abb1dda8b5",
+  "local_source_commit": "62e7b285438ce371d7cfa96a1d8e59f6b1145e8b",
+  "previous_source_commit": "39fbb443baeedcae67a881b70e22db4f9f7e5bba",
+  "preview_deployment": "BshdSqPcKEw9h5GApx6RdrQT9nCp",
+  "preview_ready_at_utc": "2026-09-23T02:18:07Z",
+  "preview_origin": "https://speedy-van-5vamak4fi-wakaaahmad607-9482s-projects.vercel.app",
+  "production_deployment": "GYD2pB6EKuW3iRStSwR9Du96QrMP",
+  "production_origin": "https://www.speedyvan.uk",
+  "production_immutable_origin": "https://speedy-van-d9yrfqxvn-wakaaahmad607-9482s-projects.vercel.app",
+  "rollback_deployment": "DN3yLaAbf1LDGaexyTgBfjf6eu8g",
+  "unchanged_api_deployment": "5woPnYouSe8kAHqwCsp1o5QoxzSg",
+  "unchanged_api_source": "5e5881a27cca0f6a602473c78a25c13369d1afc5",
+  "preview_browser": {
+    "viewport_width": 1348,
+    "horizontal_overflow": false,
+    "cities": [
+      "inverness",
+      "aberdeen"
+    ],
+    "faq_mouse_and_keyboard": "PASS",
+    "city_quote_navigation": "Both /book service-selection screens rendered; Continue disabled with no selection.",
+    "service_links_per_city": 8,
+    "faqs_per_city": 4
+  },
+  "limits": [
+    "360px and 768px browser validation unavailable with the advertised browser capabilities.",
+    "No real booking, payment, notification or provider end-to-end transaction.",
+    "No indexing or ranking gain established."
+  ],
+  "production_ready_at_utc": "2026-09-23T02:21:59Z",
+  "production_state": "READY",
+  "live_http": {
+    "result": "PASS",
+    "checked_at_utc": "2026-09-23T02:22:13.867600+00:00",
+    "route_groups": 16,
+    "sitemap_urls": 47,
+    "evidence": "city-live-http-2026-09-23.json"
+  },
+  "live_browser": {
+    "viewport_width": 1348,
+    "horizontal_overflow": false,
+    "cities": [
+      "inverness",
+      "aberdeen"
+    ],
+    "faq_mouse_and_keyboard": "PASS",
+    "city_quote_navigation": "Both quote links opened /book and rendered the existing draft's Plan the van job screen. No draft fields, items or addresses were edited."
+  },
+  "screenshot_attachment": {
+    "status": "unavailable",
+    "reason": "Screenshot captured and inspected in the browser, but the documented shared-file copy did not appear in the workspace after the five-second poll. No screenshot file is attached."
+  }
+}

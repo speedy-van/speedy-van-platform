@@ -34,6 +34,11 @@ export function AddressSearch({ label, value, onSelect, onClear, placeholder }: 
   const containerRef = useRef<HTMLDivElement>(null);
   const requestSeq = useRef(0);
 
+  useEffect(() => () => {
+    requestSeq.current += 1;
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+  }, []);
+
   useEffect(() => {
     if (value) setQuery(value.address);
   }, [value]);
@@ -69,12 +74,17 @@ export function AddressSearch({ label, value, onSelect, onClear, placeholder }: 
   }
 
   function handleChange(val: string) {
+    requestSeq.current += 1;
+    setLoading(false);
+    setLocating(false);
     setQuery(val);
     setSearchError("");
+    setLocError(null);
+    setResults([]);
+    setOpen(false);
     if (value && val !== value.address) onClear?.();
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
     if (val.trim().length < 3) {
-      requestSeq.current += 1;
       setResults([]);
       setOpen(false);
       return;
@@ -83,6 +93,10 @@ export function AddressSearch({ label, value, onSelect, onClear, placeholder }: 
   }
 
   function handleSelect(r: GeoFeature) {
+    requestSeq.current += 1;
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    setLoading(false);
+    setLocating(false);
     setQuery(r.address);
     setResults([]);
     setOpen(false);
@@ -98,20 +112,28 @@ export function AddressSearch({ label, value, onSelect, onClear, placeholder }: 
     }
     setLocating(true);
     setLocError(null);
+    requestSeq.current += 1;
+    const requestId = requestSeq.current;
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    setLoading(false);
+    setOpen(false);
     navigator.geolocation.getCurrentPosition(
       async (pos) => {
         try {
           const { latitude: lat, longitude: lng } = pos.coords;
           const result = await reverseGeocode(lat, lng);
+          if (requestId !== requestSeq.current) return;
           setQuery(result.address);
           onSelect(result);
         } catch {
+          if (requestId !== requestSeq.current) return;
           setLocError("Failed to fetch your address. Please try again.");
         } finally {
-          setLocating(false);
+          if (requestId === requestSeq.current) setLocating(false);
         }
       },
       (err) => {
+        if (requestId !== requestSeq.current) return;
         setLocating(false);
         if (err.code === 1) {
           setLocError("Location access was denied. Allow location for this site, then try again.");

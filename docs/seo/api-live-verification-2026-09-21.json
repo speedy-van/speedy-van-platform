@@ -1,0 +1,113 @@
+{
+  "checked_at_utc": "2026-09-21T16:10:59.428809+00:00",
+  "base_url": "https://api.speedyvan.uk",
+  "scope": "Nonmutating public health, database-backed catalogue/flags, calculated quotes, validation and CORS; no bookings, payments, credentials or personal data",
+  "passed": 10,
+  "failed": 0,
+  "checks": [
+    {
+      "path": "/health",
+      "method": "GET",
+      "status": 200,
+      "success": true,
+      "code": null,
+      "cors_origin": "https://www.speedyvan.uk",
+      "passed": true
+    },
+    {
+      "path": "/api/health",
+      "method": "GET",
+      "status": 200,
+      "success": true,
+      "code": null,
+      "cors_origin": "https://www.speedyvan.uk",
+      "passed": true
+    },
+    {
+      "path": "/items?type=residential",
+      "method": "GET",
+      "status": 200,
+      "success": true,
+      "code": null,
+      "cors_origin": "https://www.speedyvan.uk",
+      "passed": true,
+      "data_shape": "dict",
+      "data_size": 1
+    },
+    {
+      "path": "/api/items?type=residential",
+      "method": "GET",
+      "status": 200,
+      "success": true,
+      "code": null,
+      "cors_origin": "https://www.speedyvan.uk",
+      "passed": true,
+      "data_shape": "dict",
+      "data_size": 1
+    },
+    {
+      "path": "/service-flags",
+      "method": "GET",
+      "status": 200,
+      "success": true,
+      "code": null,
+      "cors_origin": "https://www.speedyvan.uk",
+      "passed": true,
+      "data_shape": "dict",
+      "data_size": 1
+    },
+    {
+      "path": "/api/service-flags",
+      "method": "GET",
+      "status": 200,
+      "success": true,
+      "code": null,
+      "cors_origin": "https://www.speedyvan.uk",
+      "passed": true,
+      "data_shape": "dict",
+      "data_size": 1
+    },
+    {
+      "path": "/pricing/calculate",
+      "method": "POST",
+      "status": 200,
+      "success": true,
+      "code": null,
+      "cors_origin": "https://www.speedyvan.uk",
+      "passed": true,
+      "day_count": 14,
+      "slot_count": 42,
+      "currency": "GBP"
+    },
+    {
+      "path": "/api/pricing/calculate",
+      "method": "POST",
+      "status": 200,
+      "success": true,
+      "code": null,
+      "cors_origin": "https://www.speedyvan.uk",
+      "passed": true,
+      "day_count": 14,
+      "slot_count": 42,
+      "currency": "GBP"
+    },
+    {
+      "path": "/pricing/calculate",
+      "method": "POST",
+      "status": 400,
+      "success": false,
+      "code": null,
+      "cors_origin": "https://www.speedyvan.uk",
+      "passed": true
+    },
+    {
+      "path": "/pricing/calculate",
+      "method": "OPTIONS",
+      "status": 204,
+      "success": null,
+      "code": null,
+      "cors_origin": "https://www.speedyvan.uk",
+      "passed": true
+    }
+  ]
+}

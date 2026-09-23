@@ -1,6 +1,8 @@
 "use client";
 
-import { useState, useCallback, useEffect, useRef } from "react";
+import { Suspense, useState, useCallback, useEffect, useRef } from "react";
+import { useSearchParams } from "next/navigation";
+import Image from "next/image";
 import Link from "next/link";
 import { ChatWindow } from "@/components/chat/ChatWindow";
 
@@ -62,12 +64,24 @@ interface BookingTrackData {
   liveLocation?: { lat: number; lng: number; updatedAt: string };
 }
 
-export default function TrackPage({
-  searchParams,
-}: {
-  searchParams: { ref?: string };
-}) {
-  const [ref, setRef] = useState(searchParams.ref ?? "");
+export default function TrackPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen bg-[#0A0A0A] px-4 py-10 text-center">
+          <h1 className="text-2xl font-black text-white">Track your booking</h1>
+          <p role="status" className="mt-3 text-white/70">Loading booking form…</p>
+        </div>
+      }
+    >
+      <TrackContent />
+    </Suspense>
+  );
+}
+
+function TrackContent() {
+  const searchParams = useSearchParams();
+  const [ref, setRef] = useState(searchParams.get("ref") ?? "");
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState<BookingTrackData | null>(null);
@@ -494,7 +508,7 @@ export default function TrackPage({
 
         <div className="flex justify-center">
           <a href="tel:07909032889" aria-label="Call us on 07909 032889" className="transition-transform hover:scale-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 rounded-full">
-            <img src="/call-icon.png" alt="Call us" width={52} height={52} />
+            <Image src="/call-icon.png" alt="" width={52} height={52} sizes="52px" />
           </a>
         </div>
       </div>

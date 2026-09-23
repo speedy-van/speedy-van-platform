@@ -1,86 +1,93 @@
-/* SpeedyVan service worker — minimal offline shell + asset cache. */
-const VERSION = "v5-pricing-white";
+/* Cache only public pages and static assets; private journeys require a connection. */
+const VERSION = "v6-public-pages-only";
 const SHELL_CACHE = `sv-shell-${VERSION}`;
 const RUNTIME_CACHE = `sv-runtime-${VERSION}`;
 const OFFLINE_URL = "/offline.html";
+const SHELL_ASSETS = [OFFLINE_URL, "/manifest.json", "/logo.png?v=amber-20260921-1"];
+const PUBLIC_PAGES = new Set(["/", "/privacy", "/terms", "/cookies", "/pricing"]);
 
-const SHELL_ASSETS = [
-  "/",
-  "/offline.html",
-  "/manifest.json",
-  "/logo.png?v=amber-20260921-1",
-];
+function isPublicNavigation(url) {
+  return !url.search && (
+    PUBLIC_PAGES.has(url.pathname) ||
+    /^\/(?:services|areas)\/[a-z0-9-]+$/.test(url.pathname)
+  );
+}
+
+function canCache(response) {
+  const policy = response.headers.get("cache-control") || "";
+  const vary = response.headers.get("vary") || "";
+  return response.status === 200 && response.type === "basic" && !response.redirected &&
+    !/\b(?:private|no-store|no-cache)\b/i.test(policy) && !/(?:^|,)\s*(?:cookie|authorization|\*)\s*(?:,|$)/i.test(vary);
+}
+
+async function offlineResponse() {
+  const shell = await caches.open(SHELL_CACHE);
+  return (await shell.match(OFFLINE_URL)) || new Response(
+    "You are offline. Reconnect before making a booking or payment.",
+    { status: 503, headers: { "Content-Type": "text/plain; charset=utf-8" } },
+  );
+}
 
 self.addEventListener("install", (event) => {
   event.waitUntil(
-    caches
-      .open(SHELL_CACHE)
+    caches.open(SHELL_CACHE)
       .then((cache) => cache.addAll(SHELL_ASSETS).catch(() => undefined))
-      .then(() => self.skipWaiting())
+      .then(() => self.skipWaiting()),
   );
 });
 
 self.addEventListener("activate", (event) => {
   event.waitUntil(
-    caches
-      .keys()
-      .then((keys) =>
-        Promise.all(
-          keys
-            .filter((k) => k !== SHELL_CACHE && k !== RUNTIME_CACHE)
-            .map((k) => caches.delete(k))
-        )
-      )
-      .then(() => self.clients.claim())
+    caches.keys()
+      .then((keys) => Promise.all(keys
+        .filter((key) => /^(?:sv-shell-|sv-runtime-)/.test(key) && key !== SHELL_CACHE && key !== RUNTIME_CACHE)
+        .map((key) => caches.delete(key))))
+      .then(() => self.clients.claim()),
   );
 });
 
-// Network-first for HTML navigations with offline fallback.
-// Cache-first for static assets (images, fonts, css, js).
-// Bypass for API requests.
 self.addEventListener("fetch", (event) => {
-  const req = event.request;
-  if (req.method !== "GET") return;
+  const request = event.request;
+  if (request.method !== "GET") return;
+  const url = new URL(request.url);
+  if (url.origin !== self.location.origin || url.pathname === "/api" || url.pathname.startsWith("/api/")) return;
+  if (request.headers.has("authorization") || request.headers.has("range")) return;
 
-  const url = new URL(req.url);
-
-  // Never cache API calls
-  if (url.hostname.startsWith("api.") || url.pathname.startsWith("/api/")) return;
-
-  // HTML navigations
-  if (req.mode === "navigate") {
-    event.respondWith(
-      fetch(req)
-        .then((res) => {
-          const copy = res.clone();
-          caches.open(RUNTIME_CACHE).then((c) => c.put(req, copy)).catch(() => undefined);
-          return res;
-        })
-        .catch(() =>
-          caches.match(req).then((cached) => cached || caches.match(OFFLINE_URL))
-        )
-    );
+  if (request.mode === "navigate") {
+    const publicPage = isPublicNavigation(url);
+    event.respondWith(fetch(request).then((response) => {
+      if (publicPage && canCache(response) && /text\/html/i.test(response.headers.get("content-type") || "")) {
+        const copy = response.clone();
+        event.waitUntil(caches.open(RUNTIME_CACHE).then((cache) => cache.put(request, copy)).catch(() => undefined));
+      }
+      return response;
+    }).catch(async () => {
+      if (publicPage) {
+        const cache = await caches.open(RUNTIME_CACHE);
+        const cached = await cache.match(request);
+        if (cached) return cached;
+      }
+      return offlineResponse();
+    }));
     return;
   }
 
-  // Static assets (Next /_next/static, images, fonts, etc.)
+  // Only known public asset directories and fixed shell assets may be cached.
   if (
     url.pathname.startsWith("/_next/static/") ||
     url.pathname.startsWith("/images/") ||
-    /\.(?:js|css|png|jpg|jpeg|svg|webp|avif|gif|ico|woff2?)$/i.test(url.pathname)
+    url.pathname.startsWith("/fonts/") ||
+    ["/logo.png", "/favicon.ico", "/manifest.json"].includes(url.pathname)
   ) {
-    event.respondWith(
-      caches.match(req).then(
-        (cached) =>
-          cached ||
-          fetch(req).then((res) => {
-            if (res.ok && res.type === "basic") {
-              const copy = res.clone();
-              caches.open(RUNTIME_CACHE).then((c) => c.put(req, copy)).catch(() => undefined);
-            }
-            return res;
-          })
-      )
-    );
+    event.respondWith(caches.open(RUNTIME_CACHE).then(async (cache) => {
+      const cached = await cache.match(request);
+      if (cached) return cached;
+      const response = await fetch(request);
+      if (canCache(response) && !/text\/html/i.test(response.headers.get("content-type") || "")) {
+        const copy = response.clone();
+        event.waitUntil(cache.put(request, copy).catch(() => undefined));
+      }
+      return response;
+    }));
   }
 });

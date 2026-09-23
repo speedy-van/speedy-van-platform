@@ -1,16 +1,15 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { absoluteUrl } from "@/lib/seo/constants";
+import { buildPageMetadata } from "@/lib/seo/metadata";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildPageMetadata({
   title: "Privacy Policy",
   description:
     "SpeedyVan privacy policy — how we collect, use, store and protect your personal data under the UK GDPR and Data Protection Act 2018.",
-  robots: { index: true, follow: true },
-  alternates: { canonical: absoluteUrl("/privacy") },
-};
+  path: "/privacy",
+});
 
-const LAST_UPDATED = "April 2026";
+const LAST_UPDATED = "21 September 2026";
 
 export default function PrivacyPage() {
   return (
@@ -201,21 +200,23 @@ export default function PrivacyPage() {
           <p>
             We use a small number of cookies to make the site work and, with
             your consent, to understand how it is used. You will see a cookie
-            banner the first time you visit. You can change or withdraw your
-            consent at any time from the cookie settings link in the footer.
+            banner when no choice is saved. You can accept or decline optional
+            analytics and marketing cookies together, and change or withdraw
+            your consent at any time using Cookie settings in the footer.
           </p>
           <ul>
             <li>
               <strong>Strictly necessary</strong> — session, login, CSRF
-              protection, cookie-consent record. Always on; cannot be disabled.
+              protection and your saved cookie preference. These are not
+              controlled by the optional-cookie choice.
             </li>
             <li>
-              <strong>Analytics</strong> — Google Analytics 4. Only loaded after
-              consent.
+              <strong>Analytics</strong> — Google Analytics 4, when enabled.
+              Only loaded after you accept optional cookies.
             </li>
             <li>
-              <strong>Marketing</strong> — Meta (Facebook) Pixel, TikTok Pixel.
-              Only loaded after consent.
+              <strong>Marketing</strong> — Meta (Facebook) Pixel, when enabled.
+              Only loaded after you accept optional cookies.
             </li>
           </ul>
 
@@ -233,7 +234,10 @@ export default function PrivacyPage() {
               <strong>Anonymous visitor / analytics data:</strong> up to 90 days.
             </li>
             <li>
-              <strong>Cookie consent:</strong> 12 months, then re-asked.
+              <strong>Cookie preference:</strong> saved in your browser&apos;s
+              local storage with no scheduled expiry, until you change it or
+              clear the site&apos;s stored data. If storage is unavailable, the
+              choice applies only to the current page.
             </li>
             <li>
               <strong>Support communications:</strong> up to 2 years after

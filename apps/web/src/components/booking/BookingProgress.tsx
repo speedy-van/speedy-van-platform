@@ -18,6 +18,10 @@ export function BookingProgress() {
   const { state, dispatch } = useBooking();
   const current = BOOKING_STEPS.find((step) => step.number === state.step) ?? BOOKING_STEPS[0]!;
 
+  if (state.step === 1) {
+    return <p className="text-sm font-bold text-white">Choose your service to start your quote</p>;
+  }
+
   return (
     <div className="space-y-3">
       <div className="flex items-center justify-between gap-3 md:hidden">
@@ -55,8 +59,9 @@ export function BookingProgress() {
               {complete ? (
                 <button
                   type="button"
+                  disabled={state.checkoutLocked}
                   onClick={() => dispatch({ type: "SET_STEP", step: step.number })}
-                  className="flex min-h-11 w-full items-center gap-2 rounded-xl px-2 text-left transition hover:bg-amber-500/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400"
+                  className="flex min-h-11 w-full items-center gap-2 rounded-xl px-2 text-left transition hover:bg-amber-500/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 disabled:cursor-not-allowed disabled:opacity-40"
                 >
                   {content}
                   <span className="ml-auto text-xs font-semibold text-amber-400">Edit</span>

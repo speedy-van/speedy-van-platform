@@ -1,16 +1,15 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { absoluteUrl } from "@/lib/seo/constants";
+import { buildPageMetadata } from "@/lib/seo/metadata";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildPageMetadata({
   title: "Cookie Policy",
   description:
     "How SpeedyVan uses cookies and similar technologies, and how you can control them.",
-  robots: { index: true, follow: true },
-  alternates: { canonical: absoluteUrl("/cookies") },
-};
+  path: "/cookies",
+});
 
-const LAST_UPDATED = "April 2026";
+const LAST_UPDATED = "21 September 2026";
 
 export default function CookiesPage() {
   return (
@@ -44,7 +43,8 @@ export default function CookiesPage() {
           <p>
             Cookies are small text files placed on your device by websites you
             visit. They are widely used to make websites work, or work more
-            efficiently, and to provide reporting information.
+            efficiently, and to provide reporting information. We also use
+            browser storage to remember your cookie choices.
           </p>
 
           <h2>2. Categories of cookies we use</h2>
@@ -52,27 +52,39 @@ export default function CookiesPage() {
           <p>
             Required for the site to function — for example, to keep you signed
             in, secure your booking session, and remember your cookie choices.
-            These cannot be switched off.
+            These are not controlled by the optional-cookie choice.
           </p>
           <h3>Analytics</h3>
           <p>
-            We use Google Analytics 4 to understand which pages are most useful
-            and how visitors find us. Loaded only after you accept analytics
-            cookies.
+            When enabled, Google Analytics 4 helps us understand which pages
+            are most useful and how visitors find us. It is loaded only after
+            you select Accept optional.
           </p>
           <h3>Marketing</h3>
           <p>
-            Meta (Facebook) Pixel and TikTok Pixel measure the effectiveness of
-            our advertising. Loaded only after you accept marketing cookies.
+            When enabled, Meta (Facebook) Pixel measures the effectiveness of
+            our advertising. It is loaded only after you select Accept optional.
           </p>
 
           <h2>3. Managing your preferences</h2>
           <p>
-            You can update your consent at any time using the cookie banner that
-            appears on first visit, or by clearing your site data in your
-            browser. Most browsers also let you block or delete cookies entirely
-            via their settings — note that blocking strictly necessary cookies
-            may break parts of the site.
+            The banner lets you accept or decline optional analytics and
+            marketing cookies together. You can change or withdraw your choice
+            at any time using Cookie settings in the footer. Declining optional
+            cookies does not prevent you from requesting a quote or booking.
+          </p>
+          <p>
+            We save your accepted or declined preference in your browser&apos;s
+            local storage. This preference has no scheduled expiry: it remains
+            until you change it or clear the site&apos;s stored data. If your
+            browser blocks this storage, we can remember your choice only for
+            the current page and may ask again on a later visit.
+          </p>
+          <p>
+            Most browsers also let you block or delete cookies and other site
+            data through their settings. Blocking strictly necessary cookies
+            may prevent parts of the site from working. Clearing site data also
+            removes your saved cookie preference.
           </p>
 
           <h2>4. Changes</h2>

@@ -1,30 +1,28 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import {
   SERVICES,
-  getBookableService,
   getServiceBySlug,
+  getServicePriceLabel,
   type ServiceFaq,
 } from "@/lib/services";
-import { AREAS } from "@/lib/areas";
+import { FEATURED_AREAS } from "@/lib/areas";
+import { SERVICE_BOOKING_STEPS, SERVICE_PLANNING } from "@/lib/content/service-planning";
+import { SERVICE_SEARCH_CONTENT } from "@/lib/content/service-search-content";
 import { JsonLd } from "@/components/seo/JsonLd";
 import {
   buildBreadcrumbSchema,
   buildServiceSchema,
 } from "@/lib/seo/schemas";
 import { WhatsAppPhotoQuoteButton } from "@/components/WhatsAppPhotoQuoteButton";
-import { SITE_OG_IMAGE, absoluteUrl } from "@/lib/seo/constants";
+import { absoluteUrl } from "@/lib/seo/constants";
+import { buildPageMetadata } from "@/lib/seo/metadata";
 
 interface Props {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }
-
-const money = new Intl.NumberFormat("en-GB", {
-  style: "currency",
-  currency: "GBP",
-  maximumFractionDigits: 0,
-});
 
 const SERVICE_DECISION_LINKS = [
   {
@@ -90,8 +88,9 @@ export function generateStaticParams() {
   return SERVICES.map((service) => ({ slug: service.slug }));
 }
 
-export function generateMetadata({ params }: Props): Metadata {
-  const service = getServiceBySlug(params.slug);
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { slug } = await params;
+  const service = getServiceBySlug(slug);
   if (!service) {
     return {
       title: "Service Not Found",
@@ -99,65 +98,48 @@ export function generateMetadata({ params }: Props): Metadata {
     };
   }
 
-  const canonical = absoluteUrl(`/services/${params.slug}`);
+  const searchContent = SERVICE_SEARCH_CONTENT[slug];
 
   return {
-    title: service.name,
-    description: service.metaDescription,
+    ...buildPageMetadata({
+      title: searchContent?.metadataTitle ?? `${service.name} in Scotland`,
+      description: searchContent?.metadataDescription ?? service.metaDescription,
+      path: `/services/${slug}`,
+    }),
     robots:
       service.indexable === false
         ? { index: false, follow: true }
         : { index: true, follow: true },
-    alternates: {
-      canonical,
-    },
-    openGraph: {
-      title: `${service.name} | SpeedyVan`,
-      description: service.metaDescription,
-      url: canonical,
-      images: [
-        {
-          url: SITE_OG_IMAGE,
-          width: 1200,
-          height: 630,
-          alt: `${service.name} – SpeedyVan`,
-        },
-      ],
-    },
-    twitter: {
-      card: "summary_large_image",
-      title: `${service.name} | SpeedyVan`,
-      description: service.metaDescription,
-      images: [SITE_OG_IMAGE],
-    },
   };
 }
 
-export default function ServicePage({ params }: Props) {
-  const service = getServiceBySlug(params.slug);
+export default async function ServicePage({ params }: Props) {
+  const { slug } = await params;
+  const service = getServiceBySlug(slug);
   if (!service) notFound();
 
-  const bookableService = getBookableService(service);
-  const bookingSlug = bookableService.slug;
-  const bookingName = bookableService.name;
-  const featuredAreas = AREAS.slice(0, 10);
-  const canonical = absoluteUrl(`/services/${params.slug}`);
+  const priceLabel = getServicePriceLabel(service);
+  const searchContent = SERVICE_SEARCH_CONTENT[service.slug];
+  const planning = SERVICE_PLANNING[service.slug];
+  const featuredAreas = FEATURED_AREAS;
+  const canonical = absoluteUrl(`/services/${slug}`);
 
   return (
     <>
       <JsonLd
-        id={`service-jsonld-${params.slug}`}
+        id={`service-jsonld-${slug}`}
         data={[
           buildBreadcrumbSchema([
             { name: "Home", url: "/" },
-            { name: "Services", url: "/#services" },
-            { name: service.name, url: `/services/${params.slug}` },
+            { name: "Services", url: "/services" },
+            { name: service.name, url: `/services/${slug}` },
           ]),
           buildServiceSchema(
             service.name,
-            service.metaDescription,
+            searchContent?.metadataDescription ?? service.metaDescription,
             canonical,
-            service.startingFrom
+            service.startingFrom,
+            service.priceUnit
           ),
         ]}
       />
@@ -168,7 +150,7 @@ export default function ServicePage({ params }: Props) {
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <nav aria-label="Breadcrumb" className="mb-6">
-            <ol className="flex items-center gap-2 text-sm" style={{ color: "rgba(255,255,255,0.40)" }}>
+            <ol className="flex flex-wrap items-center gap-2 text-sm" style={{ color: "rgba(255,255,255,0.65)" }}>
               <li>
                 <Link href="/" className="hover:text-white transition-colors">
                   Home
@@ -176,7 +158,7 @@ export default function ServicePage({ params }: Props) {
               </li>
               <li aria-hidden="true">/</li>
               <li>
-                <Link href="/#services" className="hover:text-white transition-colors">
+                <Link href="/services" className="hover:text-white transition-colors">
                   Services
                 </Link>
               </li>
@@ -192,33 +174,33 @@ export default function ServicePage({ params }: Props) {
               {service.icon}
             </span>
             <h1 className="text-4xl sm:text-5xl font-black leading-tight text-white">
-              {service.name}
+              {searchContent?.headline ?? service.name}
             </h1>
             <p className="mt-2 text-xl text-amber-400 font-bold">
               {service.tagline}
             </p>
-            <p className="mt-6 text-lg leading-relaxed" style={{ color: "rgba(255,255,255,0.55)" }}>
-              {service.longDescription}
+            <p className="mt-6 text-lg leading-relaxed" style={{ color: "rgba(255,255,255,0.70)" }}>
+              {searchContent?.introduction ?? service.longDescription}
             </p>
             <div className="mt-8 flex flex-wrap items-center gap-3">
               <Link
-                href={`/book?service=${bookingSlug}`}
-                className="inline-flex items-center justify-center rounded-lg px-8 py-4 text-base font-black text-black transition-transform hover:scale-105"
+                href={`/book?service=${service.slug}`}
+                className="inline-flex items-center justify-center rounded-lg px-8 py-4 text-base font-black text-black transition-transform motion-safe:hover:scale-105"
                 style={{ background: "linear-gradient(135deg, #F59E0B 0%, #EA580C 100%)" }}
               >
-                Book {bookingName} Online
+                Get an Online Quote
               </Link>
               <a
                 href="tel:07909032889"
                 aria-label="Call us on 07909 032889"
-                className="transition-transform hover:scale-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 rounded-full"
+                className="transition-transform motion-safe:hover:scale-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 rounded-full"
               >
-                <img src="/call-icon.png" alt="Call us" width={52} height={52} />
+                <Image src="/call-icon.png" alt="" width={52} height={52} sizes="52px" />
               </a>
-              <p className="w-full sm:w-auto text-sm" style={{ color: "rgba(255,255,255,0.40)" }}>
+              <p className="w-full sm:w-auto text-sm" style={{ color: "rgba(255,255,255,0.65)" }}>
                 From{" "}
                 <span className="text-white font-black text-xl">
-                  {money.format(service.startingFrom)}
+                  {priceLabel}
                 </span>
               </p>
             </div>
@@ -284,17 +266,17 @@ export default function ServicePage({ params }: Props) {
                   Starting from
                 </p>
                 <p className="text-4xl font-black text-white">
-                  {money.format(service.startingFrom)}
+                  {priceLabel}
                 </p>
-                <p className="text-sm mt-1" style={{ color: "rgba(255,255,255,0.55)" }}>
-                  Transparent pricing · No hidden fees
+                <p className="text-sm mt-1" style={{ color: "rgba(255,255,255,0.70)" }}>
+                  Guide price · Your quote depends on the move
                 </p>
                 <Link
-                  href={`/book?service=${bookingSlug}`}
-                  className="mt-4 block rounded-lg px-5 py-3 text-center font-black text-black transition-transform hover:scale-105"
+                  href={`/book?service=${service.slug}`}
+                  className="mt-4 block rounded-lg px-5 py-3 text-center font-black text-black transition-transform motion-safe:hover:scale-105"
                   style={{ background: "linear-gradient(135deg, #F59E0B 0%, #EA580C 100%)" }}
                 >
-                  Book Online Now
+                  Start an Online Quote
                 </Link>
                 <WhatsAppPhotoQuoteButton
                   serviceName={service.name}
@@ -315,32 +297,29 @@ export default function ServicePage({ params }: Props) {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-3xl">
             <h2 id="service-planning-heading" className="text-2xl font-black text-white">
-              Plan Your {service.name}
+              Plan Your Move
             </h2>
-            <p className="mt-3 leading-relaxed" style={{ color: "rgba(255,255,255,0.55)" }}>
-              A useful quote starts with the details that change the work on the
-              day: load size, access, parking, crew time, mileage, timing, and
-              any packing or dismantling support. Guide prices for this service
-              start from {money.format(service.startingFrom)}, and the confirmed
-              quote is shown before you book.
+            <p className="mt-3 leading-relaxed" style={{ color: "rgba(255,255,255,0.70)" }}>
+              {planning?.suitableFor ??
+                "Share your item list, both addresses and the access at each property. The scope and availability need to be confirmed before booking."}
             </p>
           </div>
 
           <div className="mt-8 grid gap-5 md:grid-cols-3">
-            {[
+            {(planning?.preparation ?? [
               {
                 title: "Access",
-                body: "Tell us about stairs, lifts, narrow closes, loading bays, parking restrictions, long carries, and any timed key handover.",
+                body: "Tell us about stairs, lifts, narrow closes, loading bays, parking restrictions, long carries and any timed key handover.",
               },
               {
                 title: "Items",
-                body: "List bulky, heavy, fragile, high-value or awkward items. Photos and dimensions help us avoid under-quoting the time or crew needed.",
+                body: "List bulky, heavy, fragile or awkward items. Photos and dimensions help assess the handling and crew required.",
               },
               {
                 title: "Preparation",
-                body: "Pack loose items, label boxes by room, reserve legal loading access where required, and flag anything that may need dismantling.",
+                body: "Pack loose items, label boxes by room and flag anything that needs dismantling. Discuss unusual or specialist requirements before booking.",
               },
-            ].map((point) => (
+            ]).map((point) => (
               <article
                 key={point.title}
                 className="rounded-xl p-5"
@@ -350,15 +329,42 @@ export default function ServicePage({ params }: Props) {
                 }}
               >
                 <h3 className="font-black text-white">{point.title}</h3>
-                <p className="mt-2 text-sm leading-relaxed" style={{ color: "rgba(255,255,255,0.55)" }}>
+                <p className="mt-2 text-sm leading-relaxed" style={{ color: "rgba(255,255,255,0.70)" }}>
                   {point.body}
                 </p>
               </article>
             ))}
           </div>
 
+          {planning && (
+            <div className="mt-10 grid gap-8 lg:grid-cols-2">
+              <div>
+                <h3 className="text-xl font-black text-white">Vehicle and crew</h3>
+                <p className="mt-3 leading-relaxed text-white/70">{planning.vehicleAndCrew}</p>
+                <h3 className="mt-6 text-xl font-black text-white">How your quote is worked out</h3>
+                <p className="mt-3 leading-relaxed text-white/70">{planning.pricing}</p>
+              </div>
+              <div>
+                <h3 className="text-xl font-black text-white">What is not included as standard</h3>
+                <ul className="mt-3 list-disc space-y-3 pl-5 leading-relaxed text-white/70">
+                  {planning.notIncluded.map((item) => <li key={item}>{item}</li>)}
+                </ul>
+              </div>
+            </div>
+          )}
+
           <div className="mt-10">
             <h3 className="font-black text-white">Choosing the right service</h3>
+            <p className="mt-3 max-w-3xl text-white/70 leading-relaxed">
+              For help comparing the load, preparation and lifting support, read our{" "}
+              <Link
+                href="/guides/man-and-van-or-house-removals"
+                className="rounded font-semibold text-amber-400 underline underline-offset-4 hover:text-amber-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-amber-400"
+              >
+                man and van or house removals guide
+              </Link>
+              .
+            </p>
             <ul className="mt-4 grid gap-3 md:grid-cols-2" role="list">
               {SERVICE_DECISION_LINKS.filter((item) => item.slug !== service.slug).map((item) => (
                 <li key={item.slug}>
@@ -370,7 +376,7 @@ export default function ServicePage({ params }: Props) {
                     <span className="font-black text-white group-hover:text-amber-400 transition-colors">
                       {item.label}
                     </span>
-                    <span className="mt-1 block text-sm leading-relaxed" style={{ color: "rgba(255,255,255,0.55)" }}>
+                    <span className="mt-1 block text-sm leading-relaxed" style={{ color: "rgba(255,255,255,0.70)" }}>
                       {item.body}
                     </span>
                   </Link>
@@ -385,13 +391,30 @@ export default function ServicePage({ params }: Props) {
                   <span className="font-black text-white group-hover:text-amber-400 transition-colors">
                     Moving Prices
                   </span>
-                  <span className="mt-1 block text-sm leading-relaxed" style={{ color: "rgba(255,255,255,0.55)" }}>
+                  <span className="mt-1 block text-sm leading-relaxed" style={{ color: "rgba(255,255,255,0.70)" }}>
                     compare guide prices and the main factors that change the confirmed quote.
                   </span>
                 </Link>
               </li>
             </ul>
           </div>
+        </div>
+      </section>
+
+      <section className="bg-[#0A0A0A] py-16" aria-labelledby="service-booking-heading">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <h2 id="service-booking-heading" className="text-2xl font-black text-white">
+            How to arrange your move
+          </h2>
+          <ol className="mt-8 grid gap-6 md:grid-cols-3">
+            {SERVICE_BOOKING_STEPS.map((step, index) => (
+              <li key={step.title} className="rounded-xl border border-amber-900/20 bg-white/[0.04] p-5">
+                <span className="text-sm font-bold text-amber-400">Step {index + 1}</span>
+                <h3 className="mt-2 font-black text-white">{step.title}</h3>
+                <p className="mt-3 text-sm leading-relaxed text-white/70">{step.body}</p>
+              </li>
+            ))}
+          </ol>
         </div>
       </section>
 
@@ -426,7 +449,7 @@ export default function ServicePage({ params }: Props) {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                   </svg>
                 </summary>
-                <div className="px-6 pb-5 leading-relaxed" style={{ color: "rgba(255,255,255,0.55)" }}>
+                <div className="px-6 pb-5 leading-relaxed" style={{ color: "rgba(255,255,255,0.70)" }}>
                   {renderFaqAnswer(faq)}
                 </div>
               </details>
@@ -443,8 +466,12 @@ export default function ServicePage({ params }: Props) {
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 id="service-areas-heading" className="text-2xl font-black text-white mb-6">
-            {service.name} Available In
+            Plan a Move in Scotland
           </h2>
+          <p className="mb-6 max-w-3xl leading-relaxed text-white/70">
+            Check the collection and delivery details for your area. Availability,
+            vehicle access and any specialist requirements are confirmed for your route and date.
+          </p>
           <ul className="flex flex-wrap gap-3 mb-4" role="list">
             {featuredAreas.map((area) => (
               <li key={area.slug}>
@@ -459,7 +486,7 @@ export default function ServicePage({ params }: Props) {
             ))}
           </ul>
           <Link
-            href="/#areas"
+            href="/areas"
             className="text-sm font-bold text-amber-400 hover:text-amber-300 transition-colors"
           >
             View all Scottish areas →
@@ -505,25 +532,25 @@ export default function ServicePage({ params }: Props) {
       >
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="mx-auto max-w-2xl text-2xl font-black leading-tight text-balance text-white sm:text-3xl">
-            Book Your {service.name} Today
+            Get a Quote for {service.name}
           </h2>
-          <p className="mt-3 text-base sm:text-lg" style={{ color: "rgba(255,255,255,0.55)" }}>
-            Professional service · Instant quotes · 7 days a week
+          <p className="mt-3 text-base sm:text-lg" style={{ color: "rgba(255,255,255,0.70)" }}>
+            Share your items, addresses and preferred date to check your options.
           </p>
           <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
             <Link
-              href={`/book?service=${bookingSlug}`}
-              className="inline-flex items-center justify-center gap-2 rounded-lg px-8 py-4 font-black text-black transition-transform hover:scale-105"
+              href={`/book?service=${service.slug}`}
+              className="inline-flex items-center justify-center gap-2 rounded-lg px-8 py-4 font-black text-black transition-transform motion-safe:hover:scale-105"
               style={{ background: "linear-gradient(135deg, #F59E0B 0%, #EA580C 100%)" }}
             >
-              Book {bookingName} Online
+              Get an Online Quote
             </Link>
             <a
               href="tel:07909032889"
               aria-label="Call us on 07909 032889"
-              className="transition-transform hover:scale-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 rounded-full"
+              className="transition-transform motion-safe:hover:scale-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 rounded-full"
             >
-              <img src="/call-icon.png" alt="Call us" width={52} height={52} />
+              <Image src="/call-icon.png" alt="" width={52} height={52} sizes="52px" />
             </a>
           </div>
         </div>

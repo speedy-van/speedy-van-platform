@@ -1,5 +1,7 @@
 "use client";
 
+import { trackAnalyticsEvent } from "@/lib/analytics";
+
 import { useState } from "react";
 import Link from "next/link";
 
@@ -25,27 +27,12 @@ const QUICK_ITEMS: QuickItem[] = [
 const BASE_PRICE = 45; // van + driver base
 
 function track(items: string[], total: number) {
-  if (typeof window === "undefined") return;
-  const w = window as Window & {
-    gtag?: (...args: unknown[]) => void;
-    dataLayer?: unknown[];
-  };
-  try {
-    w.gtag?.("event", "item_quote_click", {
-      event_category: "engagement",
-      items: items.join(","),
-      estimated_total: total,
-    });
-  } catch {
-    /* ignore */
-  }
-  try {
-    w.dataLayer?.push({ event: "item_quote_click", items, estimated_total: total });
-  } catch {
-    /* ignore */
-  }
+  trackAnalyticsEvent("item_quote_click", {
+    event_category: "engagement",
+    items: items.join(","),
+    estimated_total: total,
+  });
 }
-
 /**
  * Homepage widget: pick items → see instant price estimate → go to pre-filled
  * booking flow.  Uses local arithmetic only — no API calls required.

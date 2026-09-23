@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
-import { SERVICES } from "@/lib/services";
+import { SERVICES, getServicePriceLabel } from "@/lib/services";
 import { ServiceImageCard } from "@/components/shared/ServiceImageCard";
 import { getServiceImage } from "@/lib/service-images";
 import { AREAS } from "@/lib/areas";
@@ -13,6 +13,7 @@ import { FaqSearch } from "@/components/FaqSearch";
 import { JsonLd } from "@/components/seo/JsonLd";
 import {
   buildLocalBusinessSchema,
+  buildWebsiteSchema,
   buildFaqSchema,
   buildServiceCatalogSchema,
 } from "@/lib/seo/schemas";
@@ -20,7 +21,6 @@ import TypingHeroHeading from "@/components/TypingHeroHeading";
 import { SITE_OG_IMAGE, SITE_URL } from "@/lib/seo/constants";
 import {
   BOOKING_SERVICE_OPTIONS,
-  getBookingServiceStartingFrom,
 } from "@/lib/booking-service-options";
 
 export const metadata: Metadata = {
@@ -53,7 +53,7 @@ const TRUST_STATS = [
   { value: "Online", label: "Instant quote flow" },
   { value: "Scotland", label: "Service coverage" },
   { value: "Cover", label: "Goods in transit" },
-  { value: "7 days", label: "Availability planning" },
+  { value: "Dates", label: "Availability checked" },
 ];
 
 const PHOTO_QUOTE_HREF =
@@ -87,7 +87,7 @@ const CUSTOMER_PATHS = [
     eyebrow: "Full place",
     title: "Home move",
     body: "Use the room-by-room inventory for houses, flats and student moves.",
-    href: "/book?service=house",
+    href: "/book?service=house-removals",
     cta: "Start home quote",
   },
   {
@@ -111,19 +111,19 @@ const HOW_IT_WORKS = [
     step: "1",
     title: "Get an instant quote",
     description:
-      "Tell us what you need to move, where, and when. Our transparent pricing means you know the cost upfront — no haggling, no hidden fees.",
+      "Tell us what you need to move, both addresses, access details and your preferred date. The quote should reflect the full job before you pay.",
   },
   {
     step: "2",
     title: "Book your van",
     description:
-      "Choose your preferred date and time. We're available 7 days a week, including evenings and bank holidays. Same-day bookings welcome.",
+      "Choose your preferred date and time. Crew and route availability must be checked; call first for same-day or unusual timing requirements.",
   },
   {
     step: "3",
     title: "We arrive and move",
     description:
-      "Your professional, insured driver arrives on time with the right van. They handle the heavy lifting while you focus on your new start.",
+      "Confirm loading access and keep your contact phone available. The agreed crew loads, transports and unloads the items included in your booking.",
   },
 ];
 
@@ -168,12 +168,13 @@ const money = new Intl.NumberFormat("en-GB", {
   maximumFractionDigits: 0,
 });
 
-const SEO_SERVICE_CATALOG_ITEMS = BOOKING_SERVICE_OPTIONS.map((choice) => ({
-  name: choice.label,
-  description: choice.description,
-  url: `/book?service=${choice.id}`,
-  startingFrom: getBookingServiceStartingFrom(choice),
-  bookingDetail: choice.pathBadge,
+const SEO_SERVICE_CATALOG_ITEMS = SERVICES.filter((service) => service.indexable !== false).map((service) => ({
+  name: service.name,
+  description: service.description,
+  url: `/services/${service.slug}`,
+  startingFrom: service.startingFrom,
+  priceUnit: service.priceUnit,
+  bookingUrl: `/book?service=${service.slug}`,
 }));
 
 const MOVE_DECISION_POINTS = [
@@ -199,7 +200,7 @@ const FAQS = [
   {
     question: "How do I get a quote?",
     answer:
-      "Click 'Book Now' above and fill in your move details. You'll receive an instant price online. For complex or larger moves, call us on 07909 032889 and we'll prepare a detailed quote within the hour.",
+      "Choose a service above and add the addresses, access details, items and date. Review the available quote before payment. Call us on 07909 032889 for complex moves or if an online quote is unavailable.",
   },
   {
     question: "How far in advance do I need to book?",
@@ -209,12 +210,12 @@ const FAQS = [
   {
     question: "Are my belongings insured during the move?",
     answer:
-      "Yes. SpeedyVan moves are covered by goods-in-transit insurance up to £10,000 as standard. If you have higher-value items, tell us before booking so any extra cover options can be confirmed in writing.",
+      "Ask the team to confirm the goods-in-transit cover, limits and exclusions for your booking. Declare fragile and higher-value items in advance and obtain any additional arrangements in writing.",
   },
   {
     question: "What areas of Scotland do you cover?",
     answer:
-      "We cover over 30 locations across Scotland including Glasgow, Edinburgh, Dundee, Aberdeen, Stirling, Inverness, Hamilton, East Kilbride, Paisley, Ayr, Falkirk, and the Scottish Borders. View our full areas list to find your nearest coverage zone.",
+      "Our service-area pages include Glasgow, Edinburgh, Dundee, Aberdeen, Stirling, Inverness and other Scottish towns. Give us both postcodes so the route and availability can be checked before a booking is confirmed.",
   },
   {
     question: "Do you offer fixed prices or hourly rates?",
@@ -224,12 +225,12 @@ const FAQS = [
   {
     question: "Do you move between Scottish cities?",
     answer:
-      "Absolutely. We handle long-distance moves across Scotland every day — Glasgow to Edinburgh, Aberdeen to Inverness, Dundee to Stirling, and anywhere in between. Fixed-price quotes available for all intercity routes.",
+      "We can quote for intercity moves such as Glasgow to Edinburgh or Dundee to Stirling. The collection and delivery addresses, load, access and date determine whether the route can be scheduled and the price agreed.",
   },
   {
     question: "What if my move takes longer than expected?",
     answer:
-      "For hourly bookings, you simply pay for the additional time at the same hourly rate. For fixed-price moves, reasonable delays are included. We'll always communicate clearly if extra time is needed.",
+      "Check the agreed scope and charging basis before booking. Tell the team about delayed keys, extra items or changed access as soon as possible so any effect on time or price can be discussed.",
   },
 ];
 
@@ -242,6 +243,7 @@ export default function HomePage() {
         id="home-jsonld"
         data={[
           buildLocalBusinessSchema(),
+          buildWebsiteSchema(),
           buildServiceCatalogSchema(SEO_SERVICE_CATALOG_ITEMS),
           buildFaqSchema(FAQS),
         ]}
@@ -303,7 +305,7 @@ export default function HomePage() {
 
               <ul className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-5" role="list">
                 {BOOKING_SERVICE_OPTIONS.map((choice, idx) => {
-                  const price = getBookingServiceStartingFrom(choice);
+                  const pricedService = SERVICES.find((service) => service.slug === choice.serviceSlug);
                   const imageSrc = getServiceImage(choice.imageSlug);
 
                   return (
@@ -315,10 +317,14 @@ export default function HomePage() {
                         className="hero-service-card group relative flex h-full min-h-[240px] flex-col overflow-hidden rounded-2xl text-left text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:ring-offset-2 focus-visible:ring-offset-stone-950 sm:min-h-[220px]"
                         style={{ animationDelay: `${idx * 0.55}s` }}
                       >
-                        <div
-                          className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-105"
-                          style={{ backgroundImage: `url('${imageSrc}')` }}
-                          aria-hidden="true"
+                        <Image
+                          src={imageSrc}
+                          alt=""
+                          fill
+                          sizes="(max-width: 639px) 100vw, (max-width: 1023px) 50vw, 20vw"
+                          priority={idx === 0}
+                          fetchPriority={idx === 0 ? "high" : undefined}
+                          className="object-cover object-center transition-transform duration-500 group-hover:scale-105"
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/94 via-black/20 to-black/10" aria-hidden="true" />
 
@@ -339,9 +345,9 @@ export default function HomePage() {
                             {choice.description}
                           </span>
                           <div className="mt-3 flex flex-wrap items-center gap-1.5">
-                            {price !== null && (
+                            {pricedService && (
                               <span className="rounded-full bg-amber-400 px-2.5 py-0.5 text-[11px] font-bold text-stone-950">
-                                From {money.format(price)}
+                                From {getServicePriceLabel(pricedService)}
                               </span>
                             )}
                             <span className="rounded-full bg-white/10 px-2 py-0.5 text-[10px] font-medium text-white/70 backdrop-blur-sm">
@@ -542,7 +548,7 @@ export default function HomePage() {
             </h2>
             <p className="section-subheading mx-auto">
               From a single item to an entire office, we have a service that fits.
-              All bookings include a professional driver and goods-in-transit insurance.
+              Check what is included, access requirements and the agreed quote before booking.
             </p>
           </div>
 
@@ -556,7 +562,7 @@ export default function HomePage() {
                   slug={service.slug}
                   title={service.name}
                   description={service.description}
-                  price={`From ${money.format(service.startingFrom)}`}
+                  price={`From ${getServicePriceLabel(service)}`}
                   imagePath={getServiceImage(service.slug)}
                   href={`/services/${service.slug}`}
                   variant="homepage"
@@ -731,7 +737,7 @@ export default function HomePage() {
                 <p className="text-sm mt-1 text-white/50">{tier.capacity}</p>
                 <div className="mt-4 mb-6">
                   <span className="text-4xl font-black text-white">{money.format(tier.price)}</span>
-                  <span className="text-sm text-white/40">/hr</span>
+                  <span className="text-sm text-white/70">/hr</span>
                 </div>
                 <ul className="space-y-2" role="list">
                   {tier.features.map((feature) => (
@@ -756,7 +762,7 @@ export default function HomePage() {
             ))}
           </ul>
 
-          <p className="mt-8 text-center text-sm text-white/35">
+          <p className="mt-8 text-center text-sm text-white/70">
             All prices are per hour. Minimum 2-hour booking. Fixed-price quotes available for house removals.
           </p>
         </div>

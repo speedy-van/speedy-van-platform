@@ -14,7 +14,7 @@ const PROPERTY_TYPES: PropertyTypeOption[] = [
   { value: "flat",     label: "Flat",     icon: "🏢", multiFloor: true  },
   { value: "bungalow", label: "Bungalow", icon: "🏡", multiFloor: false },
   { value: "office",   label: "Office",   icon: "🏗️", multiFloor: true  },
-  { value: "studio",   label: "Studio",   icon: "🛋️", multiFloor: false },
+  { value: "studio",   label: "Studio",   icon: "🛋️", multiFloor: true  },
 ];
 
 interface PropertyTypePickerProps {

@@ -24,7 +24,6 @@ const VAN_SIZES = ["SMALL", "MEDIUM", "LARGE", "LUTON"];
 type Modal = null | "add" | { type: "edit"; driver: Driver } | { type: "reset"; driver: Driver };
 
 const cardStyle = { background: "rgba(255,255,255,0.04)", boxShadow: "0 0 0 1px rgba(245,158,11,0.15), 0 8px 32px rgba(0,0,0,0.4)" };
-const inputCls = "w-full px-3 py-2 text-sm border border-amber-900/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500/50 text-white bg-white/5 placeholder-white/30";
 
 export default function DriversPage() {
   const [drivers, setDrivers] = useState<Driver[]>([]);

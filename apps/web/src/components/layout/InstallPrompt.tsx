@@ -1,5 +1,7 @@
 "use client";
 
+import { trackAnalyticsEvent } from "@/lib/analytics";
+
 import { useEffect, useState } from "react";
 import { haptic } from "@/lib/haptic";
 
@@ -13,15 +15,8 @@ interface BeforeInstallPromptEvent extends Event {
 }
 
 function track(name: string, payload: Record<string, unknown> = {}) {
-  if (typeof window === "undefined") return;
-  const w = window as Window & {
-    gtag?: (...a: unknown[]) => void;
-    dataLayer?: unknown[];
-  };
-  try { w.gtag?.("event", name, { event_category: "pwa", ...payload }); } catch { /* ignore */ }
-  try { w.dataLayer?.push({ event: name, ...payload }); } catch { /* ignore */ }
+  trackAnalyticsEvent(name, { event_category: "pwa", ...payload });
 }
-
 export function InstallPrompt() {
   const [evt, setEvt] = useState<BeforeInstallPromptEvent | null>(null);
   const [show, setShow] = useState(false);

@@ -17,6 +17,7 @@ export interface Service {
   includes: string[];
   whyUs: string[];
   startingFrom: number;
+  priceUnit?: "hour";
   metaDescription: string;
   faqs: ServiceFaq[];
   bookingServiceSlug?: string;
@@ -33,7 +34,7 @@ export const SERVICES: Service[] = [
     description:
       "A professional driver and van for small moves, single-item pickups, marketplace collections, and flexible local transport.",
     longDescription:
-      "Our man and van service is built for smaller loads, studio moves, single-room moves, furniture pickups, storage runs, and short-notice jobs where a full removal lorry would be too much. Tell us what needs moving, the access at both addresses, and your preferred time so the quote can reflect the real job.",
+      "Need a man with a van for a smaller move? Our man and van service suits single rooms, a few pieces of furniture, marketplace collections and storage runs across Scotland. A driver helps with loading and unloading; the van and any additional crew depend on the items and access. Share both addresses, your item list and preferred date to get a quote for the work you need.",
     includes: [
       "Professional driver with the right van for the load",
       "Loading and unloading assistance",
@@ -47,6 +48,7 @@ export const SERVICES: Service[] = [
       "Useful for single items, flat moves, and local business deliveries",
     ],
     startingFrom: 45,
+    priceUnit: "hour",
     metaDescription:
       "Man and van, man with a van and van-with-driver moves across Scotland from £45/hr. Ideal for small moves, single items, furniture pickups and flat moves.",
     faqs: [
@@ -58,7 +60,7 @@ export const SERVICES: Service[] = [
       {
         question: "How many hours do I need for a man and van move?",
         answer:
-          "A studio or one-bed flat often takes 2-4 hours depending on distance, stairs, parking, and how well items are packed. Larger or multi-stop jobs can be quoted before booking.",
+          "There is no reliable duration from bedroom count alone. The item list, distance, stairs, parking, walking distance to the van and packing all affect the time. Give us those details so the quote can allow for your move; ask about any minimum booking period before confirming.",
       },
       {
         question: "Can I help with loading?",
@@ -75,7 +77,7 @@ export const SERVICES: Service[] = [
     description:
       "Careful flat removals for studios, apartments, tenements, student rooms, and one or two-bedroom homes.",
     longDescription:
-      "Flat removals have their own moving problems: shared entrances, stairs, lifts, controlled parking, tight hallways, and timed loading bays. This page covers apartment moves, studio moves, one-bed flat moves, student moves, and tenement access where a compact van and the right crew can save time.",
+      "Moving a flat, apartment or studio means planning the route from your front door to the van. Shared stairs, lift size, tight hallways, loading bays and the floor at each address can matter as much as the number of bedrooms. We quote for the furniture and boxes you are taking, with crew and vehicle requirements based on the full load and access.",
     includes: [
       "Studio, one-bed, and two-bed flat move planning",
       "Lift, stair, and tight-access guidance before move day",
@@ -86,9 +88,10 @@ export const SERVICES: Service[] = [
     whyUs: [
       "Built around access details, not just mileage",
       "Strong fit for city flats and apartment blocks",
-      "Book online using the man and van quote flow",
+      "Quote based on your furniture, boxes and access",
     ],
     startingFrom: 45,
+    priceUnit: "hour",
     metaDescription:
       "Flat removals across Scotland for apartments, studios, student rooms and one-bed moves. Van with driver and crew options from £45/hr.",
     bookingServiceSlug: "man-and-van",
@@ -102,12 +105,12 @@ export const SERVICES: Service[] = [
       {
         question: "Is a studio move cheaper than a house removal?",
         answer:
-          "Usually, yes. Studio and small apartment moves often fit the man and van model, while larger flats may need a bigger crew or fixed quote.",
+          "A smaller load can require less van space and crew time, but stairs, parking and travel still affect the cost. A lightly furnished studio and a fully furnished upper-floor flat can need very different quotes.",
       },
       {
         question: "Can you handle student moves?",
         answer:
-          "Yes. For student rooms, halls, and shared flats, use the student move page or book through the man and van flow if the load is small.",
+          "Yes. Include the halls or flat address, your floor, the furniture and boxes, and any check-in or check-out slot. If several housemates are moving, list each collection and destination before requesting a quote.",
       },
     ],
   },
@@ -129,10 +132,11 @@ export const SERVICES: Service[] = [
     ],
     whyUs: [
       "No need to book a full removal package",
-      "Good fit for urgent or short-notice moves",
-      "Routes can be quoted from the existing man and van flow",
+      "Short-notice enquiries checked against availability",
+      "Price based on the items and journey you provide",
     ],
     startingFrom: 45,
+    priceUnit: "hour",
     metaDescription:
       "Small moves across Scotland from £45/hr. Move a few items, one room, bulky furniture, storage loads or marketplace collections.",
     bookingServiceSlug: "man-and-van",
@@ -163,12 +167,12 @@ export const SERVICES: Service[] = [
     description:
       "House removals for home moves of every size, with crew, van, loading support, and careful planning.",
     longDescription:
-      "Our house removals service covers home removals, full-house removals, small house moves, and larger family moves across Scotland. We plan around access, parking, volume, fragile items, dismantling needs, and route distance so your quote reflects the real job rather than a vague estimate.",
+      "Plan a house removal around everything you are taking, from the main rooms to a garage, loft or garden store. Our full-house and smaller home moves across Scotland are quoted using your inventory, both addresses and access details. Tell us about fragile pieces, dismantling, key collection and packing help so the vehicle, crew and schedule fit the move.",
     includes: [
       "Crew and van matched to the property size",
       "Large or Luton van options where suitable",
       "Furniture dismantling and reassembly options",
-      "Wardrobe boxes and protective blankets",
+      "Protective blankets, with packing materials available by quote",
       "Fixed-price quotes available for larger home moves",
     ],
     whyUs: [
@@ -205,7 +209,7 @@ export const SERVICES: Service[] = [
     description:
       "Long-distance removals and intercity moving for customers travelling between Scottish towns and cities.",
     longDescription:
-      "Long-distance removals cover moves such as Glasgow to Edinburgh, Edinburgh to Dundee, Aberdeen to Inverness, Dundee to Stirling, and other Scotland-wide routes. The quote depends on load size, crew time, mileage, access, and whether the journey is dedicated or can be scheduled efficiently.",
+      "For a move between Scottish towns or cities, plan the collection and delivery together. Long-distance removals can suit a full home, a flat or a smaller load travelling further. The quote takes account of the items, route distance in miles, loading time and access at both ends. Include key handover times and every stop before the journey is confirmed.",
     includes: [
       "Scotland intercity and longer local routes",
       "Dedicated van quotes for direct moves",
@@ -216,7 +220,7 @@ export const SERVICES: Service[] = [
     whyUs: [
       "Clear route-based quote before booking",
       "Useful for city-to-city moves and rural access",
-      "Booking maps to the house removals quote flow",
+      "Collection and delivery requirements agreed together",
     ],
     startingFrom: 120,
     metaDescription:
@@ -237,13 +241,7 @@ export const SERVICES: Service[] = [
       {
         question: "Do you move outside Scotland?",
         answer:
-          "For European moves, use the European removals enquiry page. Other UK-wide routes should be quoted before booking so the scope is clear.",
-        links: [
-          {
-            label: "European removals enquiry page",
-            href: "/services/european-removals",
-          },
-        ],
+          "Routes outside Scotland need separate confirmation. Contact the team with both postcodes and your item list before making plans; an online enquiry does not confirm coverage or a collection slot.",
       },
     ],
   },
@@ -253,15 +251,15 @@ export const SERVICES: Service[] = [
     tagline: "Business, office, and commercial relocations",
     icon: "💼",
     description:
-      "Office removals and business relocations planned around downtime, access, equipment, and staff return-to-work needs.",
+      "Office removals and business relocations planned around your equipment, building access and staff handover.",
     longDescription:
-      "A business move needs more structure than a standard van job. Our office removals service covers office relocation, business removals, commercial moves, shop moves, stock transfers, and equipment transport where the scope can be planned safely.",
+      "An office removal starts with an inventory and a plan for both buildings. Desks, chairs, filing cabinets, boxed equipment and suitable commercial stock need clear labels and agreed destinations. Tell us about loading bays, service lifts, access permissions and the time your team needs to resume work. Shop, studio and other business moves are assessed against the items and handling required.",
     includes: [
       "Out-of-hours and weekend scheduling where available",
       "Desk, chair, file, and equipment moving",
       "Labelled loading and room-by-room unloading",
       "Crates or packing materials on request",
-      "Proof of insurance available for building management when required",
+      "Building access and handover requirements discussed before confirmation",
     ],
     whyUs: [
       "Planned around downtime and access windows",
@@ -339,13 +337,13 @@ export const SERVICES: Service[] = [
     description:
       "Furniture removals, collection and delivery from retailers, private sellers, storage units, and homes.",
     longDescription:
-      "Furniture jobs are often more about access than distance. We collect and deliver sofas, beds, wardrobes, tables, appliances, and bulky items from shops, marketplaces, family homes, and storage units, then place them in the right room where access allows.",
+      "Arrange furniture removals, collection and delivery for a sofa, bed, wardrobe, table or several bulky pieces. Collections can be from a home, retailer, private seller or storage unit, with delivery to the agreed room where the item fits and access is safe. Measure the furniture and the route through doors, stairs and lifts at both addresses before requesting your quote.",
     includes: [
       "Collection from retailers, showrooms, storage, or private sellers",
       "Protective blankets and strapping",
       "Room-of-choice placement where access is safe",
       "Assembly or dismantling support by quote",
-      "Photo or call updates where needed for private-seller collections",
+      "Collection and delivery contacts recorded for the job",
     ],
     whyUs: [
       "Built for bulky and awkward items",
@@ -359,7 +357,7 @@ export const SERVICES: Service[] = [
       {
         question: "Can you collect furniture from a private seller?",
         answer:
-          "Yes. Share the seller address, contact details, item dimensions, and any payment or access instructions before the job.",
+          "Yes. Share the collection address, seller contact details, item dimensions and agreed collection window. Settle the purchase with the seller and confirm that the item is ready to release before the van arrives.",
       },
       {
         question: "Do you deliver furniture upstairs?",
@@ -433,7 +431,7 @@ export const SERVICES: Service[] = [
     ],
     whyUs: [
       "Clear distinction from moving services",
-      "No automatic claim of waste handling for every job",
+      "Acceptance confirmed for each individual enquiry",
       "Phone confirmation before booking",
     ],
     startingFrom: 90,
@@ -596,4 +594,15 @@ export function getBookableService(service: Service): Service {
   }
 
   return service;
+}
+
+const servicePriceFormatter = new Intl.NumberFormat("en-GB", {
+  style: "currency",
+  currency: "GBP",
+  maximumFractionDigits: 0,
+});
+
+export function getServicePriceLabel(service: Service): string {
+  const price = servicePriceFormatter.format(service.startingFrom);
+  return service.priceUnit === "hour" ? `${price}/hour` : price;
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { api } from "@/lib/api";
 import {
   EUROPEAN_COUNTRIES,
@@ -56,6 +56,8 @@ export default function EuropeanEnquiryForm() {
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  const submitInFlight = useRef(false);
+
   const minDate = useMemo(() => todayPlus(7), []);
   const showBedrooms = !NO_BEDROOMS_TYPES.includes(form.propertyType);
 
@@ -63,9 +65,22 @@ export default function EuropeanEnquiryForm() {
     setForm((prev) => ({ ...prev, [key]: value }));
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (submitting) return;
+    if (submitInFlight.current || !e.currentTarget.reportValidity()) return;
+    if ([form.customerName, form.fromAddress, form.toCity].some((value) => value.trim().length < 2)) {
+      setError("Enter your name, collection address and destination city using at least two characters each.");
+      return;
+    }
+    if (!/^[+()\-\s\d]{7,20}$/.test(form.customerPhone.trim()) || form.customerPhone.replace(/\D/g, "").length < 7) {
+      setError("Enter a valid contact phone number, including the country code where needed.");
+      return;
+    }
+    if (!form.flexibleDate && (!form.preferredDate || form.preferredDate < minDate)) {
+      setError("Choose an available future date or select flexible dates.");
+      return;
+    }
+    submitInFlight.current = true;
     setError(null);
     setSubmitting(true);
     try {
@@ -98,6 +113,7 @@ export default function EuropeanEnquiryForm() {
       console.error("[european-enquiry] submit failed:", err);
       setError(err instanceof Error ? err.message : "Could not submit your enquiry.");
     } finally {
+      submitInFlight.current = false;
       setSubmitting(false);
     }
   };
@@ -115,9 +131,8 @@ export default function EuropeanEnquiryForm() {
           Thanks — your enquiry is in
         </h3>
         <p className="mt-3 text-emerald-800 max-w-xl mx-auto">
-          We&apos;ve received your details and emailed you a confirmation. One of
-          our European removals specialists will send you a detailed,
-          fixed-price quote within <strong>24 hours</strong>.
+          We&apos;ve received your enquiry. The team will review your route,
+          inventory and preferred date before confirming availability and a quote.
         </p>
         <p className="mt-4 text-sm text-emerald-700">
           Need to talk now? Call{" "}
@@ -144,7 +159,6 @@ export default function EuropeanEnquiryForm() {
       onSubmit={handleSubmit}
       className="space-y-5"
       aria-labelledby="enquiry-heading"
-      noValidate
     >
       <div className="rounded-2xl border border-slate-200 bg-white p-6 sm:p-8 shadow-sm">
         <div className="flex items-start gap-3 mb-6">
@@ -156,7 +170,7 @@ export default function EuropeanEnquiryForm() {
               Get Your Free European Move Quote
             </h3>
             <p className="mt-1 text-sm text-slate-600">
-              We&apos;ll respond within 24 hours with a detailed, fixed-price quote.
+              Tell us about your route and load so the team can check availability and prepare a quote.
             </p>
           </div>
         </div>
@@ -203,7 +217,6 @@ export default function EuropeanEnquiryForm() {
                   id="cust-phone"
                   type="tel"
                   required
-                  pattern="[+()\-\s\d]{7,20}"
                   value={form.customerPhone}
                   onChange={(e) => update("customerPhone", e.target.value)}
                   className={inputClass}
@@ -325,6 +338,7 @@ export default function EuropeanEnquiryForm() {
                   id="pref-date"
                   type="date"
                   min={minDate}
+                  required={!form.flexibleDate}
                   disabled={form.flexibleDate}
                   value={form.preferredDate}
                   onChange={(e) => update("preferredDate", e.target.value)}
