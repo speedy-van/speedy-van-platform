@@ -1,0 +1,639 @@
+{
+  "reviewedAt": "2026-09-23",
+  "scope": "48 individually authored guides: 8 existing Scottish cities and 6 existing service intents. No generated copy or unregistered combinations.",
+  "method": "Official council, university, government and heritage sources establish local facts. Moving recommendations are original conditional planning advice, not reports of completed jobs or site inspections. No source proves demand or actual property access.",
+  "retrievalLimitations": [
+    "Some council pages returned 403 or a JavaScript shell; only the stated facts visible in official indexed extracts are used.",
+    "The Perth draft conservation appraisal was not used: direct retrieval failed because the PDF was too large.",
+    "No current loading hours, parking fees, named road closures, driving times, local driver availability, residence partnerships, job counts or reviews have been invented.",
+    "Historic built-form sources describe local context only; they do not establish the present access of an individual property."
+  ],
+  "sources": [
+    {
+      "id": "gpark",
+      "label": "Glasgow parking suspensions and dispensations",
+      "href": "https://www.glasgow.gov.uk/article/3801/Apply-for-Dispensation-or-a-Parking-Suspension",
+      "facts": [
+        "Council provides separate dispensation and suspension applications."
+      ],
+      "retrieval": "Official search extract verified; direct open returned 403."
+    },
+    {
+      "id": "gclose",
+      "label": "Glasgow common property guidance",
+      "href": "https://www.glasgow.gov.uk/article/3523/Common-Property-Repairs-and-Maintenance",
+      "facts": [
+        "Glasgow tenements have shared common elements including closes and stairs."
+      ],
+      "retrieval": "official indexed extract; direct read not attempted"
+    },
+    {
+      "id": "glez",
+      "label": "Glasgow LEZ information",
+      "href": "https://www.glasgow.gov.uk/article/3982/Glasgow-s-LEZ-Key-Information",
+      "facts": [
+        "Glasgow has a city-centre LEZ that operates continuously."
+      ],
+      "retrieval": "official indexed extract; direct read not attempted"
+    },
+    {
+      "id": "guni",
+      "label": "University of Glasgow arrival and key collection information",
+      "href": "https://www.gla.ac.uk/myglasgow/accommodation/arrivalsessentials/arrivalinformation-keycollection/",
+      "facts": [
+        "Residence-specific arrival and key collection information; Lister House has limited office hours."
+      ],
+      "retrieval": "official indexed extract; direct read not attempted"
+    },
+    {
+      "id": "epark",
+      "label": "Edinburgh dispensations and suspensions",
+      "href": "https://www.edinburgh.gov.uk/parking-spaces/dispensations-suspensions",
+      "facts": [
+        "Council distinguishes extended loading dispensations from bay suspensions; furniture and house removals are listed uses."
+      ],
+      "retrieval": "Direct official HTML read."
+    },
+    {
+      "id": "eclose",
+      "label": "Edinburgh World Heritage: Old Town",
+      "href": "https://ewh.org.uk/the-old-town/",
+      "facts": [
+        "Old Town has narrow wynds and closes."
+      ],
+      "retrieval": "official indexed extract; direct read not attempted"
+    },
+    {
+      "id": "euni",
+      "label": "University of Edinburgh moving-in information",
+      "href": "https://www.accom.ed.ac.uk/living-with-us/moving-in",
+      "facts": [
+        "Moving-in arrangements include arrival slots and key collection."
+      ],
+      "retrieval": "official indexed extract; direct read not attempted"
+    },
+    {
+      "id": "epollock",
+      "label": "University of Edinburgh transport to Pollock Halls",
+      "href": "https://transport.ed.ac.uk/travelling-here/pollock",
+      "facts": [
+        "Parking during arrivals is for drop-off only."
+      ],
+      "retrieval": "official indexed extract; direct read not attempted"
+    },
+    {
+      "id": "alez",
+      "label": "Scottish Government LEZ information",
+      "href": "https://www.mygov.scot/low-emission-zones",
+      "facts": [
+        "Aberdeen, Dundee, Edinburgh and Glasgow city-centre LEZs operate 24 hours daily."
+      ],
+      "retrieval": "official indexed extract; direct read not attempted"
+    },
+    {
+      "id": "abus",
+      "label": "Aberdeen bus gate route guidance",
+      "href": "https://www.aberdeencity.gov.uk/Council-Services/roads-parking-and-travel/bus-lanes-and-bus-gates/information/bus-gates-frequently-asked-questions",
+      "facts": [
+        "Council provides route maps and guidance for navigating bus gates."
+      ],
+      "retrieval": "Official indexed extract verified; direct page supplied JavaScript shell only. No gate-specific permissions inferred."
+    },
+    {
+      "id": "asteps",
+      "label": "Aberdeen museums: Back Wynd",
+      "href": "https://emuseum.aberdeencity.gov.uk/sites/247/back-wynd",
+      "facts": [
+        "Back Wynd steps connect the south side of Union Street down to the Green."
+      ],
+      "retrieval": "Direct official HTML read."
+    },
+    {
+      "id": "auni",
+      "label": "University of Aberdeen before arrival",
+      "href": "https://www.abdn.ac.uk/accommodation/resident-info/arrival/",
+      "facts": [
+        "Hillhead reception on Don Street is a key collection point, including for some residences elsewhere; students must follow their arrival instructions."
+      ],
+      "retrieval": "official indexed extract; direct read not attempted"
+    },
+    {
+      "id": "imap",
+      "label": "Highland waiting and loading information",
+      "href": "https://www.highland.gov.uk/parking-fines-enforcement/decriminalised-parking-enforcement",
+      "facts": [
+        "Council provides live waiting and loading order map."
+      ],
+      "retrieval": "Direct official HTML read and official indexed extract."
+    },
+    {
+      "id": "ibridge",
+      "label": "Highland Historic Environment Record: Greig Street bridge",
+      "href": "https://her.highland.gov.uk/monument/MHG3867",
+      "facts": [
+        "Greig Street bridge is a footbridge in Inverness."
+      ],
+      "retrieval": "official indexed extract; direct read not attempted"
+    },
+    {
+      "id": "irose",
+      "label": "Highland Council Rose Street car park",
+      "href": "https://www.highland.gov.uk/parking-permits/rose-street-multi-storey-car-park",
+      "facts": [
+        "Rose Street is a multi-storey public car park. No van height or loading permission inferred."
+      ],
+      "retrieval": "official indexed extract; direct read not attempted"
+    },
+    {
+      "id": "iuni",
+      "label": "UHI Inverness accommodation",
+      "href": "https://www.inverness.uhi.ac.uk/study/accommodation/",
+      "facts": [
+        "UHI student residences are on Inverness Campus; rooms share kitchens and living areas."
+      ],
+      "retrieval": "official indexed extract; direct read not attempted"
+    },
+    {
+      "id": "dlez",
+      "label": "Dundee LEZ boundary and vehicle guidance",
+      "href": "https://www.dundeecity.gov.uk/service-area/city-development/sustainable-transport-and-roads/dundee-low-emission-zone-scheme-lez",
+      "facts": [
+        "LEZ covers area within A991 with named car-park exclusions; listed streets include portions of Nethergate and Seagate; operates continuously."
+      ],
+      "retrieval": "Direct official HTML read."
+    },
+    {
+      "id": "duni",
+      "label": "University of Dundee moving-in guide",
+      "href": "https://www.dundee.ac.uk/guides/moving-student-accommodation",
+      "facts": [
+        "Residences team confirms key readiness and collection location; Belmont Flats and Heathfield use Heathfield office at Old Hawkhill."
+      ],
+      "retrieval": "official indexed extract; direct read not attempted"
+    },
+    {
+      "id": "ppark",
+      "label": "Perth bay suspensions and dispensations",
+      "href": "https://www.pkc.gov.uk/article/22131/Bay-suspensions-and-dispensations",
+      "facts": [
+        "Council has bay suspension/dispensation guidance including pedestrianised zone and King Edward Street. No unrestricted loading hours asserted."
+      ],
+      "retrieval": "official indexed extract; direct read not attempted"
+    },
+    {
+      "id": "porders",
+      "label": "Perth and Kinross traffic orders",
+      "href": "https://www.pkc.gov.uk/article/21896/Traffic-Regulations-Orders",
+      "facts": [
+        "Orders cover waiting/loading, one-way streets, access/turning restrictions and closures."
+      ],
+      "retrieval": "Official indexed extract verified; direct open failed. No historical order treated as current."
+    },
+    {
+      "id": "proads",
+      "label": "Perth and Kinross road restrictions",
+      "href": "https://www.pkc.gov.uk/article/17270/Road-closures-and-restrictions-Current-and-proposed",
+      "facts": [
+        "Council publishes road closures and restrictions. No particular dated closure asserted as currently active."
+      ],
+      "retrieval": "official indexed extract; direct read not attempted"
+    },
+    {
+      "id": "puni",
+      "label": "UHI Perth accommodation",
+      "href": "https://www.perth.uhi.ac.uk/student-life/accommodation/",
+      "facts": [
+        "On-campus accommodation comprises furnished shared flats and cottages."
+      ],
+      "retrieval": "official indexed extract; direct read not attempted"
+    },
+    {
+      "id": "svennel",
+      "label": "Stirling Council historic pedestrian routes",
+      "href": "https://www.stirling.gov.uk/news/drop-in-event-arranged-for-project-to-transform-medieval-stirling-streets/",
+      "facts": [
+        "Kingstables Lane and Upper/Sma Vennels are pedestrian routes; latter link Baker Street and Spittal Street."
+      ],
+      "retrieval": "Official indexed extract verified; direct open returned 403. Proposed upgrades not described as complete."
+    },
+    {
+      "id": "shill",
+      "label": "Historic Environment Scotland: Stirling Castle approach",
+      "href": "https://www.historicenvironment.scot/visit/all/stirling-castle/plan-your-visit/",
+      "facts": [
+        "Castle stands at top of hill in Stirling Old Town; approach includes cobbled/sloping surfaces. No claim every Stirling property has this access."
+      ],
+      "retrieval": "official indexed extract; direct read not attempted"
+    },
+    {
+      "id": "spermit",
+      "label": "Stirling traffic restriction applications",
+      "href": "https://www.stirling.gov.uk/roads-transport-and-parking/roads-and-pavements/apply-for-traffic-restrictions/",
+      "facts": [
+        "Council handles applications for parking suspensions and other traffic restrictions."
+      ],
+      "retrieval": "Official indexed extract verified; direct open returned 403."
+    },
+    {
+      "id": "suni",
+      "label": "University of Stirling moving-in guide",
+      "href": "https://www.stir.ac.uk/student-life/accommodation/accommodation-life/moving-in/",
+      "facts": [
+        "Accommodation Dashboard handles induction/arrival selection; arrival paperwork provides key collection and slot."
+      ],
+      "retrieval": "official indexed extract; direct read not attempted"
+    },
+    {
+      "id": "fpark",
+      "label": "Fife parking dispensations and suspensions",
+      "href": "https://www.fife.gov.uk/roads-travel-parking/parking-and-car-parks/parking-dispensations-and-parking-suspensions",
+      "facts": [
+        "Council assesses dispensations/suspensions; permission is specific to task, not general parking."
+      ],
+      "retrieval": "Direct official HTML read."
+    },
+    {
+      "id": "fsteps",
+      "label": "Fife Council: Making Fife’s Places",
+      "href": "https://www.fife.gov.uk/__data/assets/file/0018/42057/Making-Fifes-Places-Supplementary-Guidance-August-2018.pdf",
+      "facts": [
+        "Guidance illustrates steps at Free School Lane in Dunfermline."
+      ],
+      "retrieval": "Direct official PDF text read; step detail also official indexed extract."
+    },
+    {
+      "id": "froads",
+      "label": "Fife temporary restrictions and closures",
+      "href": "https://www.fife.gov.uk/roads-travel-parking/roads-and-pavements/legal-ordersnotices/temporary-restrictions-and-closures",
+      "facts": [
+        "Council publishes closure/restriction notices with duration and alternative routes."
+      ],
+      "retrieval": "official indexed extract; direct read not attempted"
+    },
+    {
+      "id": "funi",
+      "label": "Fife College Dunfermline City campus",
+      "href": "https://www.fife.ac.uk/campuses-facilities/new-dunfermline-city-campus/",
+      "facts": [
+        "Dunfermline City campus address is Calaiswood Crescent. No college residence/partnership asserted."
+      ],
+      "retrieval": "official indexed extract; direct read not attempted"
+    },
+    {
+      "id": "dwest",
+      "label": "Dundee Council West End Suburbs appraisal",
+      "href": "https://www.dundeecity.gov.uk/sites/default/files/publications/West%20End%20Suburbs%20CA%20Low%20Res.pdf",
+      "facts": [
+        "Appraisal describes tenements around Hawkhill, Blackness Avenue and Perth Road. Historic built-form context only; individual access must be surveyed."
+      ],
+      "retrieval": "official indexed extract; direct read not attempted"
+    },
+    {
+      "id": "pcontact",
+      "label": "UHI Perth accommodation contact and campus address",
+      "href": "https://www.perth.uhi.ac.uk/student-life/accommodation/contact-us/",
+      "facts": [
+        "Accommodation enquiries are handled by the residences team; campus address is Crieff Road."
+      ],
+      "retrieval": "official indexed extract; direct read not attempted"
+    }
+  ],
+  "pages": [
+    {
+      "path": "/areas/glasgow/house-removal",
+      "sourceUrls": [
+        "https://www.glasgow.gov.uk/article/3801/Apply-for-Dispensation-or-a-Parking-Suspension",
+        "https://www.glasgow.gov.uk/article/3523/Common-Property-Repairs-and-Maintenance"
+      ]
+    },
+    {
+      "path": "/areas/glasgow/flat-removals",
+      "sourceUrls": [
+        "https://www.glasgow.gov.uk/article/3523/Common-Property-Repairs-and-Maintenance",
+        "https://www.glasgow.gov.uk/article/3982/Glasgow-s-LEZ-Key-Information"
+      ]
+    },
+    {
+      "path": "/areas/glasgow/furniture-delivery",
+      "sourceUrls": [
+        "https://www.glasgow.gov.uk/article/3523/Common-Property-Repairs-and-Maintenance",
+        "https://www.glasgow.gov.uk/article/3982/Glasgow-s-LEZ-Key-Information"
+      ]
+    },
+    {
+      "path": "/areas/glasgow/office-removal",
+      "sourceUrls": [
+        "https://www.glasgow.gov.uk/article/3982/Glasgow-s-LEZ-Key-Information",
+        "https://www.glasgow.gov.uk/article/3801/Apply-for-Dispensation-or-a-Parking-Suspension"
+      ]
+    },
+    {
+      "path": "/areas/glasgow/student-move",
+      "sourceUrls": [
+        "https://www.gla.ac.uk/myglasgow/accommodation/arrivalsessentials/arrivalinformation-keycollection/",
+        "https://www.glasgow.gov.uk/article/3523/Common-Property-Repairs-and-Maintenance"
+      ]
+    },
+    {
+      "path": "/areas/glasgow/packing-service",
+      "sourceUrls": [
+        "https://www.glasgow.gov.uk/article/3523/Common-Property-Repairs-and-Maintenance",
+        "https://www.glasgow.gov.uk/article/3801/Apply-for-Dispensation-or-a-Parking-Suspension"
+      ]
+    },
+    {
+      "path": "/areas/edinburgh/house-removal",
+      "sourceUrls": [
+        "https://www.edinburgh.gov.uk/parking-spaces/dispensations-suspensions",
+        "https://ewh.org.uk/the-old-town/"
+      ]
+    },
+    {
+      "path": "/areas/edinburgh/flat-removals",
+      "sourceUrls": [
+        "https://ewh.org.uk/the-old-town/",
+        "https://www.edinburgh.gov.uk/parking-spaces/dispensations-suspensions"
+      ]
+    },
+    {
+      "path": "/areas/edinburgh/furniture-delivery",
+      "sourceUrls": [
+        "https://ewh.org.uk/the-old-town/",
+        "https://www.edinburgh.gov.uk/parking-spaces/dispensations-suspensions"
+      ]
+    },
+    {
+      "path": "/areas/edinburgh/office-removal",
+      "sourceUrls": [
+        "https://ewh.org.uk/the-old-town/",
+        "https://www.edinburgh.gov.uk/parking-spaces/dispensations-suspensions"
+      ]
+    },
+    {
+      "path": "/areas/edinburgh/student-move",
+      "sourceUrls": [
+        "https://www.accom.ed.ac.uk/living-with-us/moving-in",
+        "https://transport.ed.ac.uk/travelling-here/pollock"
+      ]
+    },
+    {
+      "path": "/areas/edinburgh/packing-service",
+      "sourceUrls": [
+        "https://ewh.org.uk/the-old-town/",
+        "https://www.edinburgh.gov.uk/parking-spaces/dispensations-suspensions"
+      ]
+    },
+    {
+      "path": "/areas/aberdeen/house-removal",
+      "sourceUrls": [
+        "https://www.aberdeencity.gov.uk/Council-Services/roads-parking-and-travel/bus-lanes-and-bus-gates/information/bus-gates-frequently-asked-questions",
+        "https://emuseum.aberdeencity.gov.uk/sites/247/back-wynd"
+      ]
+    },
+    {
+      "path": "/areas/aberdeen/flat-removals",
+      "sourceUrls": [
+        "https://emuseum.aberdeencity.gov.uk/sites/247/back-wynd",
+        "https://www.mygov.scot/low-emission-zones"
+      ]
+    },
+    {
+      "path": "/areas/aberdeen/furniture-delivery",
+      "sourceUrls": [
+        "https://emuseum.aberdeencity.gov.uk/sites/247/back-wynd",
+        "https://www.aberdeencity.gov.uk/Council-Services/roads-parking-and-travel/bus-lanes-and-bus-gates/information/bus-gates-frequently-asked-questions"
+      ]
+    },
+    {
+      "path": "/areas/aberdeen/office-removal",
+      "sourceUrls": [
+        "https://www.aberdeencity.gov.uk/Council-Services/roads-parking-and-travel/bus-lanes-and-bus-gates/information/bus-gates-frequently-asked-questions",
+        "https://www.mygov.scot/low-emission-zones"
+      ]
+    },
+    {
+      "path": "/areas/aberdeen/student-move",
+      "sourceUrls": [
+        "https://www.abdn.ac.uk/accommodation/resident-info/arrival/",
+        "https://www.aberdeencity.gov.uk/Council-Services/roads-parking-and-travel/bus-lanes-and-bus-gates/information/bus-gates-frequently-asked-questions"
+      ]
+    },
+    {
+      "path": "/areas/aberdeen/packing-service",
+      "sourceUrls": [
+        "https://emuseum.aberdeencity.gov.uk/sites/247/back-wynd",
+        "https://www.aberdeencity.gov.uk/Council-Services/roads-parking-and-travel/bus-lanes-and-bus-gates/information/bus-gates-frequently-asked-questions"
+      ]
+    },
+    {
+      "path": "/areas/inverness/house-removal",
+      "sourceUrls": [
+        "https://her.highland.gov.uk/monument/MHG3867",
+        "https://www.highland.gov.uk/parking-fines-enforcement/decriminalised-parking-enforcement"
+      ]
+    },
+    {
+      "path": "/areas/inverness/flat-removals",
+      "sourceUrls": [
+        "https://her.highland.gov.uk/monument/MHG3867",
+        "https://www.highland.gov.uk/parking-permits/rose-street-multi-storey-car-park"
+      ]
+    },
+    {
+      "path": "/areas/inverness/furniture-delivery",
+      "sourceUrls": [
+        "https://her.highland.gov.uk/monument/MHG3867",
+        "https://www.highland.gov.uk/parking-fines-enforcement/decriminalised-parking-enforcement"
+      ]
+    },
+    {
+      "path": "/areas/inverness/office-removal",
+      "sourceUrls": [
+        "https://her.highland.gov.uk/monument/MHG3867",
+        "https://www.highland.gov.uk/parking-fines-enforcement/decriminalised-parking-enforcement"
+      ]
+    },
+    {
+      "path": "/areas/inverness/student-move",
+      "sourceUrls": [
+        "https://www.inverness.uhi.ac.uk/study/accommodation/"
+      ]
+    },
+    {
+      "path": "/areas/inverness/packing-service",
+      "sourceUrls": [
+        "https://her.highland.gov.uk/monument/MHG3867",
+        "https://www.highland.gov.uk/parking-fines-enforcement/decriminalised-parking-enforcement"
+      ]
+    },
+    {
+      "path": "/areas/dundee/house-removal",
+      "sourceUrls": [
+        "https://www.dundeecity.gov.uk/service-area/city-development/sustainable-transport-and-roads/dundee-low-emission-zone-scheme-lez",
+        "https://www.dundeecity.gov.uk/sites/default/files/publications/West%20End%20Suburbs%20CA%20Low%20Res.pdf"
+      ]
+    },
+    {
+      "path": "/areas/dundee/flat-removals",
+      "sourceUrls": [
+        "https://www.dundeecity.gov.uk/sites/default/files/publications/West%20End%20Suburbs%20CA%20Low%20Res.pdf",
+        "https://www.dundeecity.gov.uk/service-area/city-development/sustainable-transport-and-roads/dundee-low-emission-zone-scheme-lez"
+      ]
+    },
+    {
+      "path": "/areas/dundee/furniture-delivery",
+      "sourceUrls": [
+        "https://www.dundeecity.gov.uk/sites/default/files/publications/West%20End%20Suburbs%20CA%20Low%20Res.pdf",
+        "https://www.dundeecity.gov.uk/service-area/city-development/sustainable-transport-and-roads/dundee-low-emission-zone-scheme-lez"
+      ]
+    },
+    {
+      "path": "/areas/dundee/office-removal",
+      "sourceUrls": [
+        "https://www.dundeecity.gov.uk/service-area/city-development/sustainable-transport-and-roads/dundee-low-emission-zone-scheme-lez"
+      ]
+    },
+    {
+      "path": "/areas/dundee/student-move",
+      "sourceUrls": [
+        "https://www.dundee.ac.uk/guides/moving-student-accommodation",
+        "https://www.dundeecity.gov.uk/sites/default/files/publications/West%20End%20Suburbs%20CA%20Low%20Res.pdf"
+      ]
+    },
+    {
+      "path": "/areas/dundee/packing-service",
+      "sourceUrls": [
+        "https://www.dundeecity.gov.uk/sites/default/files/publications/West%20End%20Suburbs%20CA%20Low%20Res.pdf",
+        "https://www.dundeecity.gov.uk/service-area/city-development/sustainable-transport-and-roads/dundee-low-emission-zone-scheme-lez"
+      ]
+    },
+    {
+      "path": "/areas/perth/house-removal",
+      "sourceUrls": [
+        "https://www.pkc.gov.uk/article/22131/Bay-suspensions-and-dispensations",
+        "https://www.pkc.gov.uk/article/17270/Road-closures-and-restrictions-Current-and-proposed"
+      ]
+    },
+    {
+      "path": "/areas/perth/flat-removals",
+      "sourceUrls": [
+        "https://www.pkc.gov.uk/article/22131/Bay-suspensions-and-dispensations",
+        "https://www.pkc.gov.uk/article/17270/Road-closures-and-restrictions-Current-and-proposed"
+      ]
+    },
+    {
+      "path": "/areas/perth/furniture-delivery",
+      "sourceUrls": [
+        "https://www.pkc.gov.uk/article/22131/Bay-suspensions-and-dispensations",
+        "https://www.pkc.gov.uk/article/17270/Road-closures-and-restrictions-Current-and-proposed"
+      ]
+    },
+    {
+      "path": "/areas/perth/office-removal",
+      "sourceUrls": [
+        "https://www.pkc.gov.uk/article/22131/Bay-suspensions-and-dispensations",
+        "https://www.pkc.gov.uk/article/17270/Road-closures-and-restrictions-Current-and-proposed"
+      ]
+    },
+    {
+      "path": "/areas/perth/student-move",
+      "sourceUrls": [
+        "https://www.perth.uhi.ac.uk/student-life/accommodation/contact-us/",
+        "https://www.perth.uhi.ac.uk/student-life/accommodation/"
+      ]
+    },
+    {
+      "path": "/areas/perth/packing-service",
+      "sourceUrls": [
+        "https://www.pkc.gov.uk/article/22131/Bay-suspensions-and-dispensations",
+        "https://www.pkc.gov.uk/article/17270/Road-closures-and-restrictions-Current-and-proposed"
+      ]
+    },
+    {
+      "path": "/areas/stirling/house-removal",
+      "sourceUrls": [
+        "https://www.historicenvironment.scot/visit/all/stirling-castle/plan-your-visit/",
+        "https://www.stirling.gov.uk/news/drop-in-event-arranged-for-project-to-transform-medieval-stirling-streets/"
+      ]
+    },
+    {
+      "path": "/areas/stirling/flat-removals",
+      "sourceUrls": [
+        "https://www.stirling.gov.uk/news/drop-in-event-arranged-for-project-to-transform-medieval-stirling-streets/",
+        "https://www.historicenvironment.scot/visit/all/stirling-castle/plan-your-visit/",
+        "https://www.stirling.gov.uk/roads-transport-and-parking/roads-and-pavements/apply-for-traffic-restrictions/"
+      ]
+    },
+    {
+      "path": "/areas/stirling/furniture-delivery",
+      "sourceUrls": [
+        "https://www.historicenvironment.scot/visit/all/stirling-castle/plan-your-visit/",
+        "https://www.stirling.gov.uk/news/drop-in-event-arranged-for-project-to-transform-medieval-stirling-streets/"
+      ]
+    },
+    {
+      "path": "/areas/stirling/office-removal",
+      "sourceUrls": [
+        "https://www.stirling.gov.uk/news/drop-in-event-arranged-for-project-to-transform-medieval-stirling-streets/",
+        "https://www.stirling.gov.uk/roads-transport-and-parking/roads-and-pavements/apply-for-traffic-restrictions/"
+      ]
+    },
+    {
+      "path": "/areas/stirling/student-move",
+      "sourceUrls": [
+        "https://www.stir.ac.uk/student-life/accommodation/accommodation-life/moving-in/",
+        "https://www.stirling.gov.uk/news/drop-in-event-arranged-for-project-to-transform-medieval-stirling-streets/"
+      ]
+    },
+    {
+      "path": "/areas/stirling/packing-service",
+      "sourceUrls": [
+        "https://www.historicenvironment.scot/visit/all/stirling-castle/plan-your-visit/",
+        "https://www.stirling.gov.uk/news/drop-in-event-arranged-for-project-to-transform-medieval-stirling-streets/",
+        "https://www.stirling.gov.uk/roads-transport-and-parking/roads-and-pavements/apply-for-traffic-restrictions/"
+      ]
+    },
+    {
+      "path": "/areas/dunfermline/house-removal",
+      "sourceUrls": [
+        "https://www.fife.gov.uk/roads-travel-parking/parking-and-car-parks/parking-dispensations-and-parking-suspensions",
+        "https://www.fife.gov.uk/__data/assets/file/0018/42057/Making-Fifes-Places-Supplementary-Guidance-August-2018.pdf"
+      ]
+    },
+    {
+      "path": "/areas/dunfermline/flat-removals",
+      "sourceUrls": [
+        "https://www.fife.gov.uk/__data/assets/file/0018/42057/Making-Fifes-Places-Supplementary-Guidance-August-2018.pdf",
+        "https://www.fife.gov.uk/roads-travel-parking/parking-and-car-parks/parking-dispensations-and-parking-suspensions"
+      ]
+    },
+    {
+      "path": "/areas/dunfermline/furniture-delivery",
+      "sourceUrls": [
+        "https://www.fife.gov.uk/__data/assets/file/0018/42057/Making-Fifes-Places-Supplementary-Guidance-August-2018.pdf",
+        "https://www.fife.gov.uk/roads-travel-parking/parking-and-car-parks/parking-dispensations-and-parking-suspensions"
+      ]
+    },
+    {
+      "path": "/areas/dunfermline/office-removal",
+      "sourceUrls": [
+        "https://www.fife.gov.uk/roads-travel-parking/parking-and-car-parks/parking-dispensations-and-parking-suspensions",
+        "https://www.fife.gov.uk/roads-travel-parking/roads-and-pavements/legal-ordersnotices/temporary-restrictions-and-closures"
+      ]
+    },
+    {
+      "path": "/areas/dunfermline/student-move",
+      "sourceUrls": [
+        "https://www.fife.ac.uk/campuses-facilities/new-dunfermline-city-campus/",
+        "https://www.fife.gov.uk/roads-travel-parking/parking-and-car-parks/parking-dispensations-and-parking-suspensions"
+      ]
+    },
+    {
+      "path": "/areas/dunfermline/packing-service",
+      "sourceUrls": [
+        "https://www.fife.gov.uk/__data/assets/file/0018/42057/Making-Fifes-Places-Supplementary-Guidance-August-2018.pdf",
+        "https://www.fife.gov.uk/roads-travel-parking/parking-and-car-parks/parking-dispensations-and-parking-suspensions"
+      ]
+    }
+  ]
+}

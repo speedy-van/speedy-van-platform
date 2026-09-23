@@ -1,3 +1,4 @@
+import { ServiceExpansionLinks } from "@/components/areas/ServiceExpansionLinks";
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
@@ -457,6 +458,8 @@ export default async function ServicePage({ params }: Props) {
           </div>
         </div>
       </section>
+
+      <ServiceExpansionLinks serviceSlug={slug} />
 
       {/* Available areas */}
       <section

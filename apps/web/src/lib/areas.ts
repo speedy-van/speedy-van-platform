@@ -1,3 +1,8 @@
+import { EXPANSION_TOWNS_1 } from "@/lib/content/scotland-towns-1";
+import { EXPANSION_TOWNS_2 } from "@/lib/content/scotland-towns-2";
+import { EXPANSION_TOWNS_3 } from "@/lib/content/scotland-towns-3";
+import { EXPANSION_TOWNS_4 } from "@/lib/content/scotland-towns-4";
+
 export interface Area {
   slug: string;
   name: string;
@@ -17,7 +22,7 @@ export interface Area {
   faqs?: { question: string; answer: string }[];
 }
 
-export const AREAS: Area[] = [
+const EXISTING_AREAS: Area[] = [
   // Greater Glasgow
   {
     slug: "glasgow",
@@ -1556,6 +1561,14 @@ export const AREAS: Area[] = [
       }
     ]
   }
+];
+
+export const AREAS: Area[] = [
+  ...EXISTING_AREAS,
+  ...EXPANSION_TOWNS_1,
+  ...EXPANSION_TOWNS_2,
+  ...EXPANSION_TOWNS_3,
+  ...EXPANSION_TOWNS_4,
 ];
 
 export function getAreaBySlug(slug: string): Area | undefined {

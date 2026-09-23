@@ -1,0 +1,74 @@
+{
+  "checked_at": "2026-09-23T20:07:26.869082+00:00",
+  "baseline_commit": "f5592cb0b60d1d3c53f256d0c8288b7a60458427",
+  "runtime_source_checkpoint_tree": "8546bcc8078ed23e5409b4abc759d4e96a787b60",
+  "recovery": "Rebuilt from the saved GitHub baseline after original unpublished files became unavailable; earlier test results are not reused.",
+  "build_id": "5DmDBDMiyzuNcfBM9wQuO",
+  "sitemap": {
+    "total": 250,
+    "baseline": 54,
+    "added": 196,
+    "areas": 160,
+    "local_services": 48,
+    "moving_routes": 19,
+    "new_route_hub": 1,
+    "remaining_to_research": 3250
+  },
+  "checks": {
+    "npm_ci": "passed; lockfile unchanged",
+    "prisma_generate": "passed; client generation only, no database mutations",
+    "db_package_build": "passed",
+    "web_typecheck": "passed",
+    "web_lint": "passed; no warnings/errors",
+    "regressions": {
+      "passed": 123,
+      "failed": 0
+    },
+    "web_build": "passed",
+    "all_sitemap_urls_prerendered": true,
+    "local_http": {
+      "passed": 3091,
+      "failed": []
+    },
+    "existing_32_area_records": "AST initializer compared verbatim with baseline: identical",
+    "protected_contract_files_changed": [],
+    "diff_whitespace": "passed"
+  },
+  "independent_reviews": [
+    "Town batches1and3: geography, island connections, source restraint and all nearby links passed",
+    "Town batches2and4: geography, vehicle restrictions, distinct practical advice and nearby links passed",
+    "All19 moving routes: Scottish origins, Britain destinations, distinct text and source support passed",
+    "All48 city/service guides: intent distinction, local details, source evidence and claim restraint passed",
+    "Shared components, nested static params, sitemap, plain booking entry and 404 source review passed"
+  ],
+  "browser_acceptance": {
+    "360px": "not yet verified",
+    "768px": "not yet verified",
+    "preview_interaction": "pending new branch preview; HTTP checks are not browser evidence"
+  },
+  "runtime_file_sha256": {
+    "apps/web/src/app/(site)/areas/[slug]/[service]/page.tsx": "a8dbdfd7e340bf872c5a2662a4c810087241de52c013df8b5a816816a6e662b6",
+    "apps/web/src/app/(site)/areas/[slug]/page.tsx": "7c385a4610f094d5762e0196820e324d163e239897e354698540af150a5ed74a",
+    "apps/web/src/app/(site)/areas/page.tsx": "5f5636917ec5d7696feb3a50f7576b489cee6b855bfc4f2a51d1b17e2678d6d1",
+    "apps/web/src/app/(site)/moving-routes/[slug]/page.tsx": "2b078487d85e7eda7b2aa5b435f34bf931eb884ef52b0b1ed5a4fdc1aa529014",
+    "apps/web/src/app/(site)/moving-routes/page.tsx": "448eae16a8c51da0090da840bb39f517e435bfee0f62c2a704de458298c442c5",
+    "apps/web/src/app/(site)/services/[slug]/page.tsx": "219f66c602ad410387fde0b9fc3e8329b746866eb6f21cc33d3eba014752bf80",
+    "apps/web/src/app/sitemap.ts": "11d62867c755bf7e4153bcc16d8875f958d2fe71508c0c4c221d09a9f492d06a",
+    "apps/web/src/components/areas/AreaExpansionLinks.tsx": "743bfe8273735e8e926e6b537060c52607eb3b7ac9829c543cfdb8375634af8f",
+    "apps/web/src/components/areas/MovingContentPage.tsx": "636e841add81b5736dc8a92f4c400bf871d589a677be2f6ee585b8c65c3fd6b5",
+    "apps/web/src/components/areas/ServiceExpansionLinks.tsx": "d16a81cdfdaefb3552eec565b6ee79419d3433b09f23efc2e4942a3d2fbaafff",
+    "apps/web/src/components/layout/Footer.tsx": "63f85a1a8f5cd2ca6711f7b13561c8e9e7cdfb6e4f10711ce090562e56f0668f",
+    "apps/web/src/lib/areas.ts": "5c61769ceef68383e7cdf46a0bd79ab48749ead392971cf20f05f930fa5c06dd",
+    "apps/web/src/lib/content/city-service-pages.ts": "cf5f12fd104ba12276b340c599709a33551909218e148e952edf600cd35719b9",
+    "apps/web/src/lib/content/moving-route-pages.ts": "9e3cf213da7350f3d5475c3051ceaf6c86854e9b01634963408f911e84fa43df",
+    "apps/web/src/lib/content/scotland-towns-1.ts": "b42ead52c8e240db1769db89655fca1cb701b11063b015e15bb04e0443489cbb",
+    "apps/web/src/lib/content/scotland-towns-2.ts": "bad5a507d1a565837ec08ed373807e8ba08aa449ac997489eda3d76b4f4b9cdc",
+    "apps/web/src/lib/content/scotland-towns-3.ts": "dcf1cdfee8b6eb43557f4289d96c66ba774d93c41dff2ace77084e4218af9f0f",
+    "apps/web/src/lib/content/scotland-towns-4.ts": "1f44ce636ffd5cad449afbb9d7c8127c1f5cc7a9537ce511fd79f9b19d2038b8"
+  },
+  "limitations": [
+    "Some official sources were available only as indexed extracts; detailed retrieval limits are in each source evidence file",
+    "No measured demand, Google indexing, ranking, field performance, local fleet allocation or live payment validation claimed",
+    "No merge or production deployment authorized/performed"
+  ]
+}
