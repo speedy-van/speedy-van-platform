@@ -6,7 +6,7 @@ import { useBooking } from "@/lib/booking-store";
 const API_BASE =
   process.env.NODE_ENV === "development"
     ? "http://localhost:4000"
-    : (process.env.NEXT_PUBLIC_API_URL ?? "https://api.speedy-van.co.uk");
+    : (process.env.NEXT_PUBLIC_API_URL ?? "https://api.speedyvan.uk");
 
 export interface UpsellSelection {
   needsPacking: boolean;
@@ -210,7 +210,7 @@ export function UpsellPanel({ initial, initialPrice, onUpdatingChange, onPriceEr
                   {it.icon}
                 </span>
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-semibold text-slate-900 truncate">{it.title}</p>
+                  <p className="text-sm font-semibold text-stone-950 truncate">{it.title}</p>
                   <p className="text-[11px] text-slate-500 leading-tight mt-0.5">{it.blurb}</p>
                 </div>
                 <span

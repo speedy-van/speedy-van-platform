@@ -7,7 +7,7 @@ import { getUser, isAuthenticated } from "@/lib/auth-client";
 const API_BASE =
   process.env.NODE_ENV === "development"
     ? "http://localhost:4000"
-    : (process.env.NEXT_PUBLIC_API_URL ?? "https://api.speedy-van.co.uk");
+    : (process.env.NEXT_PUBLIC_API_URL ?? "https://api.speedyvan.uk");
 
 interface Job {
   id: string;
@@ -200,25 +200,25 @@ export default function JobsPage() {
       <header className="bg-white border-b border-slate-200 sticky top-0 z-20">
         <div className="max-w-2xl mx-auto px-4 py-4 flex items-start justify-between">
           <div>
-            <h1 className="text-xl font-extrabold text-slate-900">🚛 Available Jobs</h1>
+            <h1 className="text-xl font-extrabold text-stone-950">🚛 Available Jobs</h1>
             <p className="text-xs text-slate-400 mt-0.5">Updated {timeUpdated(updatedSecs)} · Auto-refresh</p>
           </div>
-          <a href="/driver/login" className="bg-[#FACC15] hover:bg-yellow-500 text-slate-900 font-bold text-sm px-4 py-2 rounded-lg transition-colors">
+          <a href="/driver/login" className="bg-primary-400 hover:bg-primary-500 active:bg-primary-600 text-white font-bold text-sm px-4 py-2 rounded-lg transition-colors">
             Driver Login
           </a>
         </div>
 
         {/* Filters */}
         <div className="max-w-2xl mx-auto px-4 pb-3 flex flex-wrap gap-2">
-          <select value={filterService} onChange={(e) => setFilterService(e.target.value)} className="px-3 py-1.5 text-sm border border-slate-200 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+          <select value={filterService} onChange={(e) => setFilterService(e.target.value)} className="px-3 py-1.5 text-sm border border-slate-200 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-amber-500">
             <option value="">All Services</option>
             {services.map((s) => <option key={s} value={s}>{s.replace(/-/g, " ")}</option>)}
           </select>
-          <select value={filterArea} onChange={(e) => setFilterArea(e.target.value)} className="px-3 py-1.5 text-sm border border-slate-200 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+          <select value={filterArea} onChange={(e) => setFilterArea(e.target.value)} className="px-3 py-1.5 text-sm border border-slate-200 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-amber-500">
             <option value="">All Areas</option>
             {areas.map((a) => <option key={a} value={a}>{a}</option>)}
           </select>
-          <select value={sort} onChange={(e) => setSort(e.target.value)} className="px-3 py-1.5 text-sm border border-slate-200 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+          <select value={sort} onChange={(e) => setSort(e.target.value)} className="px-3 py-1.5 text-sm border border-slate-200 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-amber-500">
             <option value="newest">Newest First</option>
             <option value="highest">Highest Pay</option>
             <option value="shortest">Shortest Distance</option>
@@ -229,7 +229,7 @@ export default function JobsPage() {
       {/* Job list */}
       <main className="max-w-2xl mx-auto px-4 py-4 space-y-3">
         {loading ? (
-          <div className="flex items-center justify-center h-48"><div className="h-8 w-8 border-2 border-blue-500 border-t-transparent rounded-full animate-spin" /></div>
+          <div className="flex items-center justify-center h-48"><div className="h-8 w-8 border-2 border-amber-500 border-t-transparent rounded-full animate-spin" /></div>
         ) : jobs.length === 0 ? (
           <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-10 text-center">
             <p className="text-4xl mb-3">🎉</p>
@@ -253,7 +253,7 @@ export default function JobsPage() {
                     <div className="flex items-center gap-2">
                       <span className="text-2xl">{icon}</span>
                       <div>
-                        <p className="font-bold text-slate-900 text-base leading-tight">{job.booking.serviceName}</p>
+                        <p className="font-bold text-stone-950 text-base leading-tight">{job.booking.serviceName}</p>
                         <p className="text-xs font-mono text-slate-400">{job.booking.reference}</p>
                       </div>
                     </div>
@@ -276,7 +276,7 @@ export default function JobsPage() {
 
                 <button
                   onClick={() => handleAcceptClick(job)}
-                  className="mt-4 w-full bg-[#FACC15] hover:bg-yellow-500 text-slate-900 font-bold text-base py-3 rounded-xl transition-colors min-h-[48px] flex items-center justify-center gap-2"
+                  className="mt-4 w-full bg-primary-400 hover:bg-primary-500 active:bg-primary-600 text-white font-bold text-base py-3 rounded-xl transition-colors min-h-[48px] flex items-center justify-center gap-2"
                 >
                   Accept Job ✅
                 </button>
@@ -293,7 +293,7 @@ export default function JobsPage() {
           href="https://apps.apple.com/gb/app/speedy-van-driver/id6753916830"
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center gap-2 bg-slate-900 text-white text-sm font-semibold px-5 py-3 rounded-xl hover:bg-slate-800 transition-colors"
+          className="inline-flex items-center gap-2 bg-stone-950 text-white text-sm font-semibold px-5 py-3 rounded-xl hover:bg-stone-900 transition-colors"
         >
           🍎 Download iOS Driver App
         </a>
@@ -303,7 +303,7 @@ export default function JobsPage() {
       {confirmJob && (
         <div className="fixed inset-0 bg-black/50 flex items-end sm:items-center justify-center z-50 p-4">
           <div className="bg-white rounded-2xl shadow-2xl w-full max-w-sm p-6 space-y-4">
-            <h3 className="text-lg font-extrabold text-slate-900">Accept this job?</h3>
+            <h3 className="text-lg font-extrabold text-stone-950">Accept this job?</h3>
             <div className="bg-slate-50 rounded-xl p-4 space-y-1.5 text-sm">
               <p className="font-semibold text-slate-800">{confirmJob.booking.serviceName}</p>
               <p className="text-slate-600">📍 {confirmJob.booking.pickupPostcode} → {confirmJob.booking.dropoffPostcode}</p>
@@ -314,7 +314,7 @@ export default function JobsPage() {
               <button onClick={() => setConfirmJob(null)} className="flex-1 py-3 text-sm font-semibold border border-slate-200 rounded-xl hover:bg-slate-50 min-h-[48px]">
                 Cancel
               </button>
-              <button onClick={confirmAccept} disabled={accepting} className="flex-1 py-3 text-sm font-bold bg-[#FACC15] hover:bg-yellow-500 text-slate-900 rounded-xl disabled:opacity-50 min-h-[48px]">
+              <button onClick={confirmAccept} disabled={accepting} className="flex-1 py-3 text-sm font-bold bg-primary-400 hover:bg-primary-500 active:bg-primary-600 text-white rounded-xl disabled:opacity-50 min-h-[48px]">
                 {accepting ? "Accepting…" : "Yes, Accept!"}
               </button>
             </div>

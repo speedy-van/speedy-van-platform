@@ -37,17 +37,7 @@ export default function VisitorTracker() {
       return;
     }
 
-    // Init session
-    post("/tracking/session", {
-      userAgent: navigator.userAgent,
-      referrer: document.referrer || null,
-      landingPage: pathname,
-      screenWidth: window.screen.width,
-    }).then(async (res) => {
-      // We need the response for the session ID — refetch with response capture
-    });
-
-    // Use fetch directly for init to capture sessionId
+    // Use fetch directly for init to capture sessionId.
     (async () => {
       try {
         const res = await fetch(`${API_BASE}/tracking/session`, {

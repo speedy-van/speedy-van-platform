@@ -12,7 +12,7 @@ const money = new Intl.NumberFormat("en-GB", {
 });
 
 export const metadata: Metadata = {
-  title: "Moving Prices in Scotland | SpeedyVan",
+  title: "Moving Prices in Scotland",
   description:
     "Guide prices for man and van, house removals, flat moves, furniture delivery, office removals and long-distance moves across Scotland. Get a confirmed quote online.",
   alternates: { canonical: absoluteUrl("/pricing") },
@@ -53,76 +53,102 @@ export default function PricingPage() {
           { name: "Pricing", url: "/pricing" },
         ])}
       />
-      <section className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white py-16 lg:py-24">
+      {/* Hero */}
+      <section
+        className="text-white py-16 lg:py-24"
+        style={{ background: "linear-gradient(135deg, #0A0A0A 0%, #111 50%, #0A0A0A 100%)" }}
+      >
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-          <p className="inline-flex rounded-full border border-primary-400/30 bg-primary-400/10 px-3 py-1 text-sm font-semibold text-primary-300">
+          <p className="inline-flex rounded-full border border-amber-400/30 bg-amber-400/10 px-3 py-1 text-sm font-semibold text-amber-300">
             Guide prices
           </p>
-          <h1 className="mt-5 text-4xl sm:text-5xl font-extrabold leading-tight">
+          <h1 className="mt-5 text-4xl sm:text-5xl font-black leading-tight text-white">
             Moving Prices in Scotland
           </h1>
-          <p className="mt-6 max-w-3xl text-lg text-slate-300 leading-relaxed">
+          <p className="mt-6 max-w-3xl text-lg leading-relaxed" style={{ color: "rgba(255,255,255,0.55)" }}>
             Use these starting prices to choose the right service. Your confirmed
             quote is based on the actual route, load, access, crew size and
             timing, and is shown before you book.
           </p>
           <div className="mt-8 flex flex-col sm:flex-row gap-3">
-            <Link href="/book" className="btn-primary px-8 py-4 text-base text-center">
+            <Link
+              href="/book"
+              className="inline-flex items-center justify-center rounded-lg px-8 py-4 text-base font-black text-center text-black transition-transform hover:scale-105"
+              style={{ background: "linear-gradient(135deg, #F59E0B 0%, #EA580C 100%)" }}
+            >
               Get a Confirmed Quote
             </Link>
             <a
               href="tel:07909032889"
-              className="inline-flex items-center justify-center rounded-lg border border-white/30 px-8 py-4 font-semibold text-white hover:bg-white/5"
+              aria-label="Call us on 07909 032889"
+              className="transition-transform hover:scale-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 rounded-full"
             >
-              Call 07909 032889
+              <img src="/call-icon.png" alt="Call us" width={52} height={52} />
             </a>
           </div>
         </div>
       </section>
 
-      <section className="py-16 bg-white" aria-labelledby="service-prices-heading">
+      {/* Service Prices Table */}
+      <section
+        className="py-16"
+        style={{ background: "#0A0A0A" }}
+        aria-labelledby="service-prices-heading"
+      >
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-3xl">
-            <h2 id="service-prices-heading" className="text-3xl font-extrabold text-slate-900">
+            <h2 id="service-prices-heading" className="text-3xl font-black text-white">
               Service Starting Prices
             </h2>
-            <p className="mt-3 text-slate-600 leading-relaxed">
+            <p className="mt-3 leading-relaxed" style={{ color: "rgba(255,255,255,0.55)" }}>
               Starting prices are useful for comparing services, but complex
               jobs should be quoted before booking. Prices are shown in GBP.
             </p>
           </div>
 
-          <div className="mt-10 overflow-x-auto rounded-xl border border-slate-200 bg-white shadow-sm">
+          <div
+            className="mt-10 overflow-x-auto rounded-xl"
+            style={{
+              background: "rgba(255,255,255,0.04)",
+              boxShadow: "0 0 0 1px rgba(245,158,11,0.15), 0 8px 32px rgba(0,0,0,0.4)",
+            }}
+          >
             <table className="min-w-[720px] w-full text-left">
-              <thead className="bg-slate-50 text-xs uppercase tracking-wider text-slate-600">
+              <thead
+                className="text-xs uppercase tracking-wider"
+                style={{ background: "rgba(245,158,11,0.08)", color: "rgba(255,255,255,0.55)" }}
+              >
                 <tr>
                   <th className="px-4 py-3 sm:px-6">Service</th>
                   <th className="px-4 py-3 sm:px-6">Best For</th>
                   <th className="px-4 py-3 sm:px-6 text-right">From</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody style={{ borderColor: "rgba(245,158,11,0.08)" }}>
                 {pricedServices.map((service) => {
                   const bookableService = getBookableService(service);
                   return (
-                    <tr key={service.slug}>
+                    <tr
+                      key={service.slug}
+                      style={{ borderTop: "1px solid rgba(245,158,11,0.08)" }}
+                    >
                       <td className="px-4 py-4 sm:px-6 align-top">
                         <Link
                           href={`/services/${service.slug}`}
-                          className="font-semibold text-slate-900 hover:text-primary-700"
+                          className="font-semibold text-white hover:text-amber-400 transition-colors"
                         >
                           {service.name}
                         </Link>
                         {service.bookable === false && (
-                          <p className="mt-1 text-xs text-slate-500">
+                          <p className="mt-1 text-xs" style={{ color: "rgba(255,255,255,0.40)" }}>
                             Booked through {bookableService.name}.
                           </p>
                         )}
                       </td>
-                      <td className="px-4 py-4 sm:px-6 align-top text-sm text-slate-600">
+                      <td className="px-4 py-4 sm:px-6 align-top text-sm" style={{ color: "rgba(255,255,255,0.55)" }}>
                         {service.description}
                       </td>
-                      <td className="px-4 py-4 sm:px-6 align-top text-right font-bold text-slate-900">
+                      <td className="px-4 py-4 sm:px-6 align-top text-right font-bold text-amber-400">
                         {money.format(service.startingFrom)}
                       </td>
                     </tr>
@@ -134,34 +160,57 @@ export default function PricingPage() {
         </div>
       </section>
 
-      <section className="py-16 bg-slate-50" aria-labelledby="price-factors-heading">
+      {/* Price Factors */}
+      <section
+        className="py-16"
+        style={{ background: "rgba(245,158,11,0.04)" }}
+        aria-labelledby="price-factors-heading"
+      >
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 grid gap-10 lg:grid-cols-[1fr_360px]">
           <div>
-            <h2 id="price-factors-heading" className="text-3xl font-extrabold text-slate-900">
+            <h2 id="price-factors-heading" className="text-3xl font-black text-white">
               What Changes the Final Quote?
             </h2>
-            <p className="mt-3 text-slate-600 leading-relaxed">
+            <p className="mt-3 leading-relaxed" style={{ color: "rgba(255,255,255,0.55)" }}>
               Two moves with the same mileage can cost different amounts if one
               has stairs, heavy items, long carrying distance, or extra packing.
               We ask for these details before confirming a price.
             </p>
             <ul className="mt-8 grid gap-3 sm:grid-cols-2" role="list">
               {PRICE_FACTORS.map((factor) => (
-                <li key={factor} className="flex items-start gap-3 rounded-lg bg-white p-4 text-sm text-slate-700 shadow-sm">
-                  <span className="mt-0.5 text-primary-500" aria-hidden="true">✓</span>
+                <li
+                  key={factor}
+                  className="flex items-start gap-3 rounded-lg p-4 text-sm"
+                  style={{
+                    background: "rgba(255,255,255,0.04)",
+                    boxShadow: "0 0 0 1px rgba(245,158,11,0.15), 0 8px 32px rgba(0,0,0,0.4)",
+                    color: "rgba(255,255,255,0.55)",
+                  }}
+                >
+                  <span className="mt-0.5 text-amber-400 font-bold" aria-hidden="true">✓</span>
                   {factor}
                 </li>
               ))}
             </ul>
           </div>
 
-          <aside className="rounded-xl border border-primary-200 bg-primary-50 p-6">
-            <h3 className="text-xl font-bold text-slate-900">Need a fixed price?</h3>
-            <p className="mt-3 text-sm text-slate-700 leading-relaxed">
+          <aside
+            className="rounded-xl p-6 self-start"
+            style={{
+              background: "rgba(255,255,255,0.04)",
+              boxShadow: "0 0 0 1px rgba(245,158,11,0.15), 0 8px 32px rgba(0,0,0,0.4)",
+            }}
+          >
+            <h3 className="text-xl font-black text-white">Need a fixed price?</h3>
+            <p className="mt-3 text-sm leading-relaxed" style={{ color: "rgba(255,255,255,0.55)" }}>
               For full-house, office, long-distance, or multi-stop moves, a fixed
               quote is usually clearer than guessing the hourly time.
             </p>
-            <Link href="/book" className="mt-5 block rounded-lg bg-slate-900 px-5 py-3 text-center font-bold text-white hover:bg-slate-800">
+            <Link
+              href="/book"
+              className="mt-5 block rounded-lg px-5 py-3 text-center font-black text-black transition-transform hover:scale-105"
+              style={{ background: "linear-gradient(135deg, #F59E0B 0%, #EA580C 100%)" }}
+            >
               Start Quote
             </Link>
           </aside>

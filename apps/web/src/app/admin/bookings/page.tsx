@@ -21,6 +21,9 @@ interface Booking {
 
 const STATUSES = ["", "PENDING", "CONFIRMED", "ASSIGNED", "IN_PROGRESS", "COMPLETED", "CANCELLED"];
 
+const cardStyle = { background: "rgba(255,255,255,0.04)", boxShadow: "0 0 0 1px rgba(245,158,11,0.15), 0 8px 32px rgba(0,0,0,0.4)" };
+const inputCls = "px-3 py-2 text-sm border border-amber-900/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500/50 text-white bg-white/5 placeholder-white/30";
+
 export default function BookingsPage() {
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [loading, setLoading] = useState(true);
@@ -54,7 +57,7 @@ export default function BookingsPage() {
   return (
     <div className="space-y-4">
       {error && (
-        <div className="flex items-center gap-3 px-4 py-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-700">
+        <div className="flex items-center gap-3 px-4 py-3 bg-red-500/10 border border-red-500/20 rounded-lg text-sm text-red-400">
           <span className="font-semibold">Error:</span> {error}
           <button onClick={fetch} className="ml-auto text-xs font-medium underline hover:no-underline">Retry</button>
         </div>
@@ -65,28 +68,29 @@ export default function BookingsPage() {
           value={q}
           onChange={(e) => { setQ(e.target.value); setPage(1); }}
           placeholder="Search name, email, reference…"
-          className="flex-1 min-w-[200px] px-3 py-2 text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className={`flex-1 min-w-[200px] ${inputCls}`}
         />
         <select
           value={status}
           onChange={(e) => { setStatus(e.target.value); setPage(1); }}
-          className="px-3 py-2 text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className={inputCls}
+          style={{ background: "rgba(255,255,255,0.05)" }}
         >
-          {STATUSES.map((s) => <option key={s} value={s}>{s || "All statuses"}</option>)}
+          {STATUSES.map((s) => <option key={s} value={s} style={{ background: "#1a1a1a" }}>{s || "All statuses"}</option>)}
         </select>
       </div>
 
       {/* Table */}
-      <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+      <div className="rounded-xl overflow-hidden" style={cardStyle}>
         {loading ? (
           <div className="flex items-center justify-center h-48">
-            <div className="h-8 w-8 border-2 border-blue-500 border-t-transparent rounded-full animate-spin" />
+            <div className="h-8 w-8 border-2 border-amber-400 border-t-transparent rounded-full animate-spin" />
           </div>
         ) : (
           <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-slate-100">
-              <thead className="bg-slate-50">
-                <tr className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
+            <table className="min-w-full divide-y divide-white/8">
+              <thead className="bg-white/3">
+                <tr className="text-xs font-semibold text-white/40 uppercase tracking-wider">
                   <th className="px-4 py-3 text-left">Reference</th>
                   <th className="px-4 py-3 text-left">Customer</th>
                   <th className="px-4 py-3 text-left">Service</th>
@@ -97,26 +101,26 @@ export default function BookingsPage() {
                   <th className="px-4 py-3 text-center"></th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-50">
+              <tbody className="divide-y divide-white/8">
                 {bookings.length === 0 ? (
-                  <tr><td colSpan={8} className="px-4 py-10 text-center text-sm text-slate-400">No bookings found</td></tr>
-                ) : bookings.map((b) => (
-                  <tr key={b.id} className="hover:bg-slate-50">
-                    <td className="px-4 py-3 text-sm font-mono font-semibold text-slate-900">{b.reference}</td>
+                  <tr><td colSpan={8} className="px-4 py-10 text-center text-sm text-white/40">No bookings found</td></tr>
+                ) : bookings.map((b, idx) => (
+                  <tr key={b.id} className="hover:bg-amber-500/6 transition-colors" style={{ background: idx % 2 === 1 ? "rgba(255,255,255,0.02)" : "transparent" }}>
+                    <td className="px-4 py-3 text-sm font-mono font-semibold text-white">{b.reference}</td>
                     <td className="px-4 py-3">
-                      <p className="text-sm font-medium text-slate-900">{b.customerName}</p>
-                      <p className="text-xs text-slate-500">{b.customerEmail}</p>
+                      <p className="text-sm font-medium text-white">{b.customerName}</p>
+                      <p className="text-xs text-white/40">{b.customerEmail}</p>
                     </td>
-                    <td className="px-4 py-3 text-sm text-slate-700">{b.serviceName}</td>
+                    <td className="px-4 py-3 text-sm text-white/55">{b.serviceName}</td>
                     <td className="px-4 py-3">
-                      <p className="text-sm text-slate-700">{new Date(b.scheduledAt).toLocaleDateString("en-GB")}</p>
-                      {b.selectedTimeSlot && <p className="text-xs text-slate-500">{b.selectedTimeSlot}</p>}
+                      <p className="text-sm text-white/55">{new Date(b.scheduledAt).toLocaleDateString("en-GB")}</p>
+                      {b.selectedTimeSlot && <p className="text-xs text-white/40">{b.selectedTimeSlot}</p>}
                     </td>
-                    <td className="px-4 py-3 text-sm text-slate-600">{b.driver?.user.name ?? "—"}</td>
+                    <td className="px-4 py-3 text-sm text-white/55">{b.driver?.user.name ?? "—"}</td>
                     <td className="px-4 py-3"><StatusBadge status={b.status} /></td>
-                    <td className="px-4 py-3 text-sm font-mono font-semibold text-right text-slate-900">£{b.totalPrice.toFixed(2)}</td>
+                    <td className="px-4 py-3 text-sm font-mono font-semibold text-right text-amber-400">£{b.totalPrice.toFixed(2)}</td>
                     <td className="px-4 py-3 text-center">
-                      <Link href={`/admin/bookings/${b.id}`} className="text-xs font-medium text-blue-600 hover:text-blue-800 border border-blue-200 rounded px-2 py-1 hover:bg-blue-50 transition-colors">
+                      <Link href={`/admin/bookings/${b.id}`} className="text-xs font-medium text-amber-400 hover:text-amber-300 border border-amber-900/30 rounded px-2 py-1 hover:bg-amber-500/10 transition-colors">
                         View
                       </Link>
                     </td>
@@ -129,12 +133,12 @@ export default function BookingsPage() {
       </div>
 
       {/* Pagination */}
-      <div className="flex items-center justify-between text-sm text-slate-600">
+      <div className="flex items-center justify-between text-sm text-white/55">
         <span>{total} total</span>
         <div className="flex items-center gap-2">
-          <button disabled={page === 1} onClick={() => setPage((p) => p - 1)} className="px-3 py-1 rounded border border-slate-200 disabled:opacity-40 hover:bg-slate-50">Prev</button>
-          <span className="font-medium">{page} / {pages}</span>
-          <button disabled={page === pages} onClick={() => setPage((p) => p + 1)} className="px-3 py-1 rounded border border-slate-200 disabled:opacity-40 hover:bg-slate-50">Next</button>
+          <button disabled={page === 1} onClick={() => setPage((p) => p - 1)} className="px-3 py-1 rounded border border-amber-900/20 disabled:opacity-40 hover:bg-white/5 text-white/55 hover:text-white">Prev</button>
+          <span className="font-medium text-white">{page} / {pages}</span>
+          <button disabled={page === pages} onClick={() => setPage((p) => p + 1)} className="px-3 py-1 rounded border border-amber-900/20 disabled:opacity-40 hover:bg-white/5 text-white/55 hover:text-white">Next</button>
         </div>
       </div>
     </div>

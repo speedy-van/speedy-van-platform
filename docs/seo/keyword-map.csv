@@ -1,13 +1,31 @@
-keyword,uk_monthly_search_volume,competition,canonical_url,implementation_note
-man with a van,18100,HIGH,/services/man-and-van,Primary synonym covered in service copy
-man and van,9900,HIGH,/services/man-and-van,Primary canonical page and homepage H1
-van and man,9900,HIGH,/services/man-and-van,Synonym mapped to same canonical page
-same day delivery,9900,HIGH,/services/same-day-delivery,Kept as delivery intent, not home-move intent
-house removals,3600,MEDIUM,/services/house-removal,Expanded to full-house and whole-home removals
-furniture removals,880,MEDIUM,/services/furniture-delivery,Expanded to collection and delivery intent
-office removals,390,LOW,/services/office-removal,Expanded to business and commercial relocation
-long distance removals,210,MEDIUM,/services/long-distance-removals,New canonical page for intercity transport
-student moves,140,HIGH,/services/student-move,Student halls/shared-flat coverage retained
-furniture collection and delivery,110,HIGH,/services/furniture-delivery,Synonym mapped to furniture delivery page
-flat removals,90,MEDIUM,/services/flat-removals,New canonical page for flats/apartments/studios
-small moves,90,MEDIUM,/services/small-moves,New canonical page for small/partial/bulky-item moves
+query,observed_uk_monthly_volume,competition,source_date,geography,intent_cluster,target_url,gap,priority,conversion_objective,notes
+man with a van,18100,HIGH,2026-09-19,United Kingdom,core man and van,/services/man-and-van,service copy needed cleaner user-first coverage,P1,book online,Highest volume synonym
+man and van,9900,HIGH,2026-09-19,United Kingdom,core man and van,/services/man-and-van,primary service page,P1,book online,Homepage and service page align
+van and man,9900,HIGH,2026-09-19,United Kingdom,core man and van,/services/man-and-van,synonym support without keyword stuffing,P1,book online,Map to same canonical page
+same day delivery,9900,HIGH,2026-09-19,United Kingdom,same day transport,/services/same-day-delivery,intent can be courier or item move,P2,enquiry or booking,Keep copy honest about capacity
+house removals,3600,MEDIUM,2026-09-19,United Kingdom,house removals,/services/house-removal,needs trust and planning detail,P1,book online,High commercial move intent
+man and van glasgow,1900,HIGH,2026-09-19,United Kingdom,local man and van,/areas/glasgow,local proof needed,P1,book online,Third-party SERP sample did not show SpeedyVan in inspected first page
+furniture collection,1900,HIGH,2026-09-19,United Kingdom,furniture transport,/services/furniture-delivery,needs marketplace collection fit,P1,photo quote or booking,Strong item-moving intent
+furniture removals,880,MEDIUM,2026-09-19,United Kingdom,furniture transport,/services/furniture-delivery,avoid house-removal mismatch,P2,book online,Map to furniture page
+furniture delivery,480,HIGH,2026-09-19,United Kingdom,furniture transport,/services/furniture-delivery,SERP can include retailers,P2,photo quote,Intent ambiguous
+piano moving,480,HIGH,2026-09-19,United Kingdom,specialist item move,/services/piano-moving,requires careful claim control,P2,enquiry,Do not overclaim specialist equipment
+office removals,390,LOW,2026-09-19,United Kingdom,business move,/services/office-removal,needs business checklist support,P2,enquiry or booking,Lower competition
+man and van edinburgh,260,MEDIUM,2026-09-19,United Kingdom,local man and van,/areas/edinburgh,local proof needed,P1,book online,Add practical access advice
+removals scotland,260,MEDIUM,2026-09-19,United Kingdom,broad removals,/,broad intent needs homepage and service links,P3,service selection,Use Scotland coverage carefully
+long distance removals,210,MEDIUM,2026-09-19,United Kingdom,long distance removals,/services/long-distance-removals,route examples needed,P2,enquiry or booking,Intercity opportunity
+packing service removals,210,HIGH,2026-09-19,United Kingdom,packing support,/services/packing-service,needs preparation proof,P2,enquiry,Add pack-before-move details
+house removals glasgow,170,HIGH,2026-09-19,United Kingdom,local house removals,/areas/glasgow,area page can support but no service-area mass page yet,P2,book online,Third-party SERP sample did not show SpeedyVan in inspected first page
+house removals edinburgh,170,MEDIUM,2026-09-19,United Kingdom,local house removals,/areas/edinburgh,area page can support,P2,book online,Combine service plus local proof
+student moves,140,HIGH,2026-09-19,United Kingdom,student moves,/services/student-move,seasonal copy opportunity,P2,book online,Good for August and September planning
+flat removals,90,MEDIUM,2026-09-19,United Kingdom,flat removals,/services/flat-removals,existing coverage from prior work,P2,book online,Useful tenement angle
+small moves,90,MEDIUM,2026-09-19,United Kingdom,small moves,/services/small-moves,existing coverage from prior work,P2,book online,Good conversion fit
+same day courier glasgow,90,LOW,2026-09-19,United Kingdom,local same-day,/services/same-day-delivery,courier vs moving intent split,P3,enquiry,Do not claim courier network
+van with driver,70,HIGH,2026-09-19,United Kingdom,van with driver,/services/man-and-van,needs copy distinction from self-drive hire,P2,book online,Handled in FAQ copy
+moving van hire with driver,40,HIGH,2026-09-19,United Kingdom,van with driver,/services/man-and-van,clarify no self-drive hire,P2,book online,Map to man and van
+office removals glasgow,30,LOW,2026-09-19,United Kingdom,local office move,/areas/glasgow,possible future section only if demand proves,P3,enquiry,Avoid thin service-area page now
+flat removals glasgow,10,HIGH,2026-09-19,United Kingdom,local flat move,/areas/glasgow,local area copy supports,P3,book online,Low observed volume
+student removals glasgow,10,MEDIUM,2026-09-19,United Kingdom,local student move,/areas/glasgow,seasonal section opportunity,P3,book online,Low observed volume
+single item removal,10,MEDIUM,2026-09-19,United Kingdom,single item move,/services/small-moves,phrase support needed,P3,book online,Can support in small moves copy
+ikea delivery glasgow,10,LOW,2026-09-19,United Kingdom,IKEA delivery,/services/ikea-delivery,retailer intent split,P3,book online,Do not imply IKEA affiliation
+furniture delivery glasgow,unavailable,unknown,2026-09-19,United Kingdom,local furniture transport,/services/furniture-delivery,SERP sample included furniture retailers,P3,photo quote,Use careful intent targeting
+removals glasgow to edinburgh,unavailable,unknown,2026-09-19,United Kingdom,city-to-city removals,/services/long-distance-removals,future route guide candidate,P3,enquiry,Need route guide before expecting ranking

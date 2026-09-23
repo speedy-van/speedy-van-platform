@@ -7,7 +7,7 @@ import { ChatInput } from "./ChatInput";
 const API_BASE =
   process.env.NODE_ENV === "development"
     ? "http://localhost:4000"
-    : (process.env.NEXT_PUBLIC_API_URL ?? "https://api.speedy-van.co.uk");
+    : (process.env.NEXT_PUBLIC_API_URL ?? "https://api.speedyvan.uk");
 
 interface Message {
   id: string;
@@ -131,7 +131,7 @@ export function ChatWindow(props: ChatWindowProps) {
       <div className="flex-1 overflow-y-auto px-4 py-4 space-y-3 min-h-[240px] max-h-[400px]">
         {loading && (
           <div className="flex justify-center items-center h-full">
-            <span className="h-5 w-5 animate-spin rounded-full border-2 border-blue-500 border-t-transparent" />
+            <span className="h-5 w-5 animate-spin rounded-full border-2 border-amber-500 border-t-transparent" />
           </div>
         )}
         {!loading && error && (

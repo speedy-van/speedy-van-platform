@@ -2,7 +2,6 @@
 
 import { useEffect, useState, useCallback } from "react";
 import { api } from "@/lib/api";
-import ProgressBar from "@/components/admin/ProgressBar";
 
 interface PricingConfig {
   id: string;
@@ -14,6 +13,9 @@ interface PricingConfig {
 }
 
 interface Grouped { [category: string]: PricingConfig[] }
+
+const cardStyle = { background: "rgba(255,255,255,0.04)", boxShadow: "0 0 0 1px rgba(245,158,11,0.15), 0 8px 32px rgba(0,0,0,0.4)" };
+const inputCls = "px-3 py-2 text-sm border border-amber-900/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500/50 text-white bg-white/5";
 
 export default function PricingPage() {
   const [grouped, setGrouped] = useState<Grouped>({});
@@ -69,11 +71,22 @@ export default function PricingPage() {
   }
 
   async function resetPricing() {
-    if (!confirm("Reset all pricing to defaults?")) return;
+    if (!confirm("Reset all pricing to defaults? This will restore default values for every key.")) return;
     setSaving(true); setError(""); setSuccess("");
     const res = await api.post("/admin/pricing/reset", {});
-    if (res.success) { setSuccess("Pricing reset."); await fetchPricing(); }
+    if (res.success) { setSuccess("Pricing reset to defaults."); await fetchPricing(); }
     else setError(res.error ?? "Failed");
+    setSaving(false);
+  }
+
+  async function seedMissing() {
+    setSaving(true); setError(""); setSuccess("");
+    const res = await api.post("/admin/pricing/seed-missing", {});
+    if (res.success && res.data) {
+      const { added } = res.data as { added: number };
+      setSuccess(added > 0 ? `Added ${added} new pricing row(s).` : "All rows already present — nothing to add.");
+      await fetchPricing();
+    } else setError(res.error ?? "Failed");
     setSaving(false);
   }
 
@@ -81,38 +94,39 @@ export default function PricingPage() {
 
   return (
     <div className="space-y-6">
-      {error && <div className="bg-red-50 border border-red-200 text-red-700 rounded-lg px-4 py-3 text-sm">{error}</div>}
-      {success && <div className="bg-emerald-50 border border-emerald-200 text-emerald-700 rounded-lg px-4 py-3 text-sm">{success}</div>}
+      {error && <div className="bg-red-500/10 border border-red-500/20 text-red-400 rounded-lg px-4 py-3 text-sm">{error}</div>}
+      {success && <div className="bg-emerald-500/15 border border-emerald-500/20 text-emerald-400 rounded-lg px-4 py-3 text-sm">{success}</div>}
 
       {/* Bulk Controls */}
-      <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-5">
-        <h3 className="text-sm font-semibold text-slate-700 uppercase tracking-wider mb-4">Bulk Update</h3>
+      <div className="rounded-xl p-5" style={cardStyle}>
+        <h3 className="text-sm font-semibold text-white/40 uppercase tracking-wider mb-4">Bulk Update</h3>
         <div className="flex flex-wrap gap-3 items-end">
           <div>
-            <label className="block text-xs font-semibold text-slate-500 mb-1">Category (optional)</label>
-            <select value={bulkCat} onChange={(e) => setBulkCat(e.target.value)} className="px-3 py-2 text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-              <option value="">All categories</option>
-              {categories.map((c) => <option key={c} value={c}>{c}</option>)}
+            <label className="block text-xs font-semibold text-white/40 mb-1">Category (optional)</label>
+            <select value={bulkCat} onChange={(e) => setBulkCat(e.target.value)} className={inputCls} style={{ background: "rgba(255,255,255,0.05)" }}>
+              <option value="" style={{ background: "#1a1a1a" }}>All categories</option>
+              {categories.map((c) => <option key={c} value={c} style={{ background: "#1a1a1a" }}>{c}</option>)}
             </select>
           </div>
           <div>
-            <label className="block text-xs font-semibold text-slate-500 mb-1">Change %</label>
-            <input type="number" value={bulkPct} onChange={(e) => setBulkPct(e.target.value)} className="w-24 px-3 py-2 text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="±%" />
+            <label className="block text-xs font-semibold text-white/40 mb-1">Change %</label>
+            <input type="number" value={bulkPct} onChange={(e) => setBulkPct(e.target.value)} className={`w-24 ${inputCls}`} placeholder="±%" />
           </div>
-          <button onClick={bulkUpdate} disabled={saving} className="px-5 py-2 text-sm font-semibold bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50">{saving ? "Applying…" : "Apply"}</button>
-          <button onClick={resetPricing} disabled={saving} className="px-5 py-2 text-sm font-semibold border border-red-200 text-red-600 rounded-lg hover:bg-red-50 disabled:opacity-50">Reset All</button>
+          <button onClick={bulkUpdate} disabled={saving} className="px-5 py-2 text-sm font-black text-black rounded-lg disabled:opacity-50" style={{ background: "linear-gradient(135deg, #F59E0B 0%, #EA580C 100%)" }}>{saving ? "Applying…" : "Apply"}</button>
+          <button onClick={seedMissing} disabled={saving} className="px-5 py-2 text-sm font-semibold border border-emerald-500/20 text-emerald-400 rounded-lg hover:bg-emerald-500/10 disabled:opacity-50">Add Missing Rows</button>
+          <button onClick={resetPricing} disabled={saving} className="px-5 py-2 text-sm font-semibold border border-red-500/20 text-red-400 rounded-lg hover:bg-red-500/10 disabled:opacity-50">Reset All to Defaults</button>
         </div>
       </div>
 
       {loading ? (
-        <div className="flex items-center justify-center h-48"><div className="h-8 w-8 border-2 border-blue-500 border-t-transparent rounded-full animate-spin" /></div>
+        <div className="flex items-center justify-center h-48"><div className="h-8 w-8 border-2 border-amber-400 border-t-transparent rounded-full animate-spin" /></div>
       ) : (
         <>
           {/* Tabs */}
-          <div className="flex gap-1 border-b border-slate-200 overflow-x-auto">
+          <div className="flex gap-1 border-b border-amber-900/20 overflow-x-auto">
             {categories.map((c) => (
               <button key={c} onClick={() => setTab(c)}
-                className={`px-4 py-2 text-sm font-medium whitespace-nowrap transition-colors border-b-2 -mb-px ${tab === c ? "border-blue-500 text-blue-600" : "border-transparent text-slate-500 hover:text-slate-700"}`}>
+                className={`px-4 py-2 text-sm font-medium whitespace-nowrap transition-colors border-b-2 -mb-px ${tab === c ? "border-amber-400 text-amber-400" : "border-transparent text-white/40 hover:text-white"}`}>
                 {c}
               </button>
             ))}
@@ -120,10 +134,10 @@ export default function PricingPage() {
 
           {/* Items */}
           {tab && grouped[tab] && (
-            <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
-              <table className="min-w-full divide-y divide-slate-100">
-                <thead className="bg-slate-50">
-                  <tr className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
+            <div className="rounded-xl overflow-hidden" style={cardStyle}>
+              <table className="min-w-full divide-y divide-white/8">
+                <thead className="bg-white/3">
+                  <tr className="text-xs font-semibold text-white/40 uppercase tracking-wider">
                     <th className="px-4 py-3 text-left">Key</th>
                     <th className="px-4 py-3 text-left">Label</th>
                     <th className="px-4 py-3 text-left">Description</th>
@@ -131,29 +145,29 @@ export default function PricingPage() {
                     <th className="px-4 py-3 text-center">Actions</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-50">
-                  {grouped[tab].map((item) => {
+                <tbody className="divide-y divide-white/8">
+                  {grouped[tab].map((item, idx) => {
                     const edited = edits[item.id] !== undefined;
                     const displayVal = edits[item.id] ?? String(item.value);
                     return (
-                      <tr key={item.id} className="hover:bg-slate-50">
-                        <td className="px-4 py-3 text-sm font-mono text-slate-700">{item.key}</td>
-                        <td className="px-4 py-3 text-sm text-slate-700">{item.label ?? "—"}</td>
-                        <td className="px-4 py-3 text-xs text-slate-500 max-w-[200px]">{item.description ?? ""}</td>
+                      <tr key={item.id} className="hover:bg-amber-500/6 transition-colors" style={{ background: idx % 2 === 1 ? "rgba(255,255,255,0.02)" : "transparent" }}>
+                        <td className="px-4 py-3 text-sm font-mono text-amber-400">{item.key}</td>
+                        <td className="px-4 py-3 text-sm text-white/55">{item.label ?? "—"}</td>
+                        <td className="px-4 py-3 text-xs text-white/40 max-w-[200px]">{item.description ?? ""}</td>
                         <td className="px-4 py-3 text-right">
                           <input
                             type="number"
                             value={displayVal}
                             onChange={(e) => setEdits((ed) => ({ ...ed, [item.id]: e.target.value }))}
                             step="0.01"
-                            className={`w-24 px-2 py-1 text-sm font-mono text-right border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${edited ? "border-amber-300 bg-amber-50" : "border-slate-200"}`}
+                            className={`w-24 px-2 py-1 text-sm font-mono text-right border rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500/50 text-white ${edited ? "border-amber-400/40 bg-amber-500/10" : "border-amber-900/20 bg-white/5"}`}
                           />
                         </td>
                         <td className="px-4 py-3 text-center">
                           <button
                             onClick={() => saveItem(item)}
                             disabled={!edited || saving}
-                            className="text-xs font-medium text-emerald-600 border border-emerald-200 rounded px-2 py-1 hover:bg-emerald-50 disabled:opacity-40">
+                            className="text-xs font-medium text-emerald-400 border border-emerald-500/20 rounded px-2 py-1 hover:bg-emerald-500/10 disabled:opacity-40">
                             Save
                           </button>
                         </td>
@@ -168,16 +182,16 @@ export default function PricingPage() {
       )}
 
       {/* Price Simulator */}
-      <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-5 space-y-4">
-        <h3 className="text-sm font-semibold text-slate-700 uppercase tracking-wider">Price Simulator</h3>
+      <div className="rounded-xl p-5 space-y-4" style={cardStyle}>
+        <h3 className="text-sm font-semibold text-white/40 uppercase tracking-wider">Price Simulator</h3>
         <div className="flex flex-wrap gap-4 items-end">
           <div>
-            <label className="block text-xs font-semibold text-slate-500 mb-1">Items</label>
-            <input type="number" value={simItems} onChange={(e) => setSimItems(e.target.value)} min="1" className="w-20 px-3 py-2 text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
+            <label className="block text-xs font-semibold text-white/40 mb-1">Items</label>
+            <input type="number" value={simItems} onChange={(e) => setSimItems(e.target.value)} min="1" className={`w-20 ${inputCls}`} />
           </div>
           <div>
-            <label className="block text-xs font-semibold text-slate-500 mb-1">Floors</label>
-            <input type="number" value={simFloor} onChange={(e) => setSimFloor(e.target.value)} min="1" className="w-20 px-3 py-2 text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
+            <label className="block text-xs font-semibold text-white/40 mb-1">Floors</label>
+            <input type="number" value={simFloor} onChange={(e) => setSimFloor(e.target.value)} min="1" className={`w-20 ${inputCls}`} />
           </div>
           <button
             onClick={() => {
@@ -186,13 +200,14 @@ export default function PricingPage() {
               const perFloor = grouped["FLOORS"]?.[0]?.value ?? 10;
               setSimResult(base + (parseInt(simItems) - 1) * perItem + (parseInt(simFloor) - 1) * perFloor);
             }}
-            className="px-5 py-2 text-sm font-semibold bg-slate-900 text-white rounded-lg hover:bg-slate-800"
+            className="px-5 py-2 text-sm font-black text-black rounded-lg"
+            style={{ background: "linear-gradient(135deg, #F59E0B 0%, #EA580C 100%)" }}
           >
             Simulate
           </button>
         </div>
         {simResult !== null && (
-          <p className="text-lg font-bold font-mono text-slate-900">Estimated price: <span className="text-blue-600">£{simResult.toFixed(2)}</span></p>
+          <p className="text-lg font-black font-mono text-white">Estimated price: <span className="text-amber-400">£{simResult.toFixed(2)}</span></p>
         )}
       </div>
     </div>

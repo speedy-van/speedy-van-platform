@@ -2,14 +2,6 @@
 
 import { useEffect, useRef, useState } from "react";
 
-interface Props {
-  target: number;
-  duration?: number;
-  prefix?: string;
-  suffix?: string;
-  decimals?: number;
-}
-
 export default function KPICard({
   title,
   value,
@@ -48,23 +40,23 @@ export default function KPICard({
   const fmt = display.toFixed(decimals);
 
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-5">
+    <div className="rounded-xl p-5" style={{ background: "rgba(255,255,255,0.04)", boxShadow: "0 0 0 1px rgba(245,158,11,0.15), 0 8px 32px rgba(0,0,0,0.4)" }}>
       <div className="flex items-start justify-between">
         <div>
-          <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider">{title}</p>
-          <p className="mt-2 text-2xl font-extrabold text-slate-900 font-mono">
+          <p className="text-xs font-semibold text-white/40 uppercase tracking-wider">{title}</p>
+          <p className="mt-2 text-2xl font-black text-white font-mono">
             {prefix}{fmt}{suffix}
           </p>
-          {subtitle && <p className="text-xs text-slate-400 mt-1">{subtitle}</p>}
+          {subtitle && <p className="text-xs text-white/40 mt-1">{subtitle}</p>}
         </div>
         {icon && <span className="text-3xl">{icon}</span>}
       </div>
       {trend !== undefined && (
         <div className="mt-3 flex items-center gap-1">
-          <span className={`text-xs font-semibold ${trend >= 0 ? "text-emerald-600" : "text-red-600"}`}>
+          <span className={`text-xs font-semibold ${trend >= 0 ? "text-emerald-400" : "text-red-400"}`}>
             {trend >= 0 ? "↑" : "↓"} {Math.abs(trend)}%
           </span>
-          <span className="text-xs text-slate-400">vs last month</span>
+          <span className="text-xs text-white/40">vs last month</span>
         </div>
       )}
     </div>

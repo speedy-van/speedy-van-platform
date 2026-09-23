@@ -32,7 +32,7 @@ const baseTemplate = (heading: string, body: string): string => `
 <!doctype html>
 <html><body style="font-family:-apple-system,system-ui,sans-serif;background:#f5f5f5;padding:40px;">
   <div style="max-width:560px;margin:auto;background:white;padding:32px;border-radius:8px;">
-    <h1 style="color:#facc15;margin:0 0 16px;font-size:22px;">${heading}</h1>
+    <h1 style="color:#4f46e5;margin:0 0 16px;font-size:22px;">${heading}</h1>
     ${body}
     <hr style="margin:32px 0;border:none;border-top:1px solid #eee;">
     <p style="color:#777;font-size:12px;">${SITE.name} — ${SITE.email}</p>
@@ -126,7 +126,7 @@ export async function sendPasswordReset(email: string, resetUrl: string): Promis
     baseTemplate(
       "Password reset",
       `<p>Click the link below to set a new password (expires in 1 hour):</p>
-       <p><a href="${resetUrl}" style="color:#facc15;">${resetUrl}</a></p>`,
+       <p><a href="${resetUrl}" style="color:#4f46e5;">${resetUrl}</a></p>`,
     ),
   );
 }
@@ -192,7 +192,7 @@ export async function sendEuropeanEnquiryConfirmation(
        <p>One of our European removals specialists will review your details and
        send you a detailed, fixed-price quote <strong>within 24 hours</strong>.</p>
        <p>If anything is urgent, you can reply to this email or call us on
-       <strong>01202 129746</strong>.</p>`,
+       <strong>07909 032889</strong>.</p>`,
     ),
   );
 }
@@ -228,8 +228,8 @@ export async function sendEuropeanEnquiryAdminAlert(
          ${row("Notes", enquiry.notes ? escapeHtml(enquiry.notes).replace(/\n/g, "<br>") : "—")}
        </table>
        <p style="margin-top:24px;">
-         <a href="https://www.speedy-van.co.uk/admin/enquiries"
-            style="background:#facc15;color:#0f172a;padding:10px 16px;border-radius:6px;text-decoration:none;font-weight:700;">
+         <a href="https://www.speedyvan.uk/admin/enquiries"
+            style="background:#4f46e5;color:#ffffff;padding:10px 16px;border-radius:6px;text-decoration:none;font-weight:700;">
            Open in admin →
          </a>
        </p>`,
@@ -267,7 +267,7 @@ export async function sendEuropeanEnquiryQuote(quote: {
            : ""
        }
        <p>To accept this quote or ask any questions, simply reply to this email
-       or call us on <strong>01202 129746</strong>.</p>`,
+       or call us on <strong>07909 032889</strong>.</p>`,
     ),
   );
 }

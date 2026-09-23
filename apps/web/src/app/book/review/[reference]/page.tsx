@@ -6,7 +6,7 @@ import Link from "next/link";
 const API_BASE =
   process.env.NODE_ENV === "development"
     ? "http://localhost:4000"
-    : (process.env.NEXT_PUBLIC_API_URL ?? "https://api.speedy-van.co.uk");
+    : (process.env.NEXT_PUBLIC_API_URL ?? "https://api.speedyvan.uk");
 
 export default function ReviewPage({
   params,
@@ -59,19 +59,26 @@ export default function ReviewPage({
 
   if (success) {
     return (
-      <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center py-12 px-4">
-        <div className="max-w-md w-full bg-white rounded-3xl border border-slate-200 shadow-sm p-8 text-center">
-          <div className="inline-flex h-16 w-16 items-center justify-center rounded-full bg-yellow-100 mb-6">
+      <div className="min-h-screen bg-[#0A0A0A] flex flex-col items-center justify-center py-12 px-4">
+        <div
+          className="max-w-md w-full rounded-3xl border border-amber-900/20 p-8 text-center"
+          style={{
+            background: "rgba(255,255,255,0.04)",
+            boxShadow: "0 0 0 1px rgba(245,158,11,0.15), 0 8px 32px rgba(0,0,0,0.4)",
+          }}
+        >
+          <div className="inline-flex h-16 w-16 items-center justify-center rounded-full bg-amber-500/15 mb-6">
             <span className="text-3xl">⭐</span>
           </div>
-          <h1 className="text-2xl font-bold text-slate-900 mb-2">Thank you!</h1>
-          <p className="text-slate-600 mb-8">
-            Your review for booking <span className="font-mono font-bold">{reference}</span> has been submitted.
+          <h1 className="text-2xl font-black text-white mb-2">Thank you!</h1>
+          <p className="text-white/55 mb-8">
+            Your review for booking <span className="font-mono font-black text-white">{reference}</span> has been submitted.
             We really appreciate your feedback.
           </p>
           <Link
             href="/"
-            className="inline-block bg-yellow-400 hover:bg-yellow-300 text-slate-900 font-semibold py-3 px-8 rounded-xl text-sm transition"
+            className="inline-block font-black text-black py-3 px-8 rounded-xl text-sm transition hover:opacity-90 active:scale-95"
+            style={{ background: "linear-gradient(135deg, #F59E0B 0%, #EA580C 100%)" }}
           >
             Back to home
           </Link>
@@ -81,29 +88,33 @@ export default function ReviewPage({
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 py-12 px-4">
+    <div className="min-h-screen bg-[#0A0A0A] py-12 px-4">
       <div className="max-w-md mx-auto space-y-6">
         <div className="text-center">
           <Link href="/" className="inline-block mb-5">
-            <span className="text-2xl font-extrabold text-slate-900">
-              Speedy<span className="text-yellow-400">Van</span>
+            <span className="text-2xl font-extrabold text-white">
+              Speedy<span className="text-amber-400">Van</span>
             </span>
           </Link>
-          <h1 className="text-2xl font-bold text-slate-900">Leave a review</h1>
-          <p className="mt-1 text-slate-500 text-sm">
+          <h1 className="text-2xl font-black text-white">Leave a review</h1>
+          <p className="mt-1 text-white/40 text-sm">
             Booking{" "}
-            <span className="font-mono font-semibold text-slate-700">{reference}</span>
+            <span className="font-mono font-semibold text-white/70">{reference}</span>
           </p>
         </div>
 
         <form
           onSubmit={handleSubmit}
-          className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 space-y-5"
+          className="rounded-2xl border border-amber-900/20 p-6 space-y-5"
+          style={{
+            background: "rgba(255,255,255,0.04)",
+            boxShadow: "0 0 0 1px rgba(245,158,11,0.15), 0 8px 32px rgba(0,0,0,0.4)",
+          }}
         >
           {/* Email */}
           {!emailFromQuery && (
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1.5">
+              <label className="block text-sm font-medium text-white/55 mb-1.5">
                 Email address
               </label>
               <input
@@ -112,14 +123,14 @@ export default function ReviewPage({
                 onChange={(e) => setEmail(e.target.value)}
                 required
                 placeholder="The email you booked with"
-                className="w-full rounded-xl border border-slate-300 px-4 py-3 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
+                className="w-full rounded-xl border border-amber-900/20 bg-white/[0.03] px-4 py-3 text-sm text-white placeholder-white/25 focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-transparent"
               />
             </div>
           )}
 
           {/* Stars */}
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-2">
+            <label className="block text-sm font-medium text-white/55 mb-2">
               How would you rate your experience?
             </label>
             <div className="flex gap-2" role="group" aria-label="Star rating">
@@ -133,14 +144,14 @@ export default function ReviewPage({
                   className="text-3xl transition-transform hover:scale-110 focus:outline-none"
                   aria-label={`${star} star${star !== 1 ? "s" : ""}`}
                 >
-                  <span className={star <= (hovered || rating) ? "text-yellow-400" : "text-slate-200"}>
+                  <span className={star <= (hovered || rating) ? "text-amber-400" : "text-white/15"}>
                     ★
                   </span>
                 </button>
               ))}
             </div>
             {rating > 0 && (
-              <p className="text-xs text-slate-400 mt-1">
+              <p className="text-xs text-white/40 mt-1">
                 {["", "Poor", "Below average", "Average", "Good", "Excellent"][rating]}
               </p>
             )}
@@ -148,7 +159,7 @@ export default function ReviewPage({
 
           {/* Comment */}
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1.5">
+            <label className="block text-sm font-medium text-white/55 mb-1.5">
               Your review
             </label>
             <textarea
@@ -158,23 +169,24 @@ export default function ReviewPage({
               required
               maxLength={2000}
               placeholder="Tell us about your experience — how was the driver, the van, punctuality?"
-              className="w-full rounded-xl border border-slate-300 px-4 py-3 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent resize-none"
+              className="w-full rounded-xl border border-amber-900/20 bg-white/[0.03] px-4 py-3 text-sm text-white placeholder-white/25 focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-transparent resize-none"
             />
-            <p className="text-xs text-slate-400 text-right mt-1">{comment.length}/2000</p>
+            <p className="text-xs text-white/40 text-right mt-1">{comment.length}/2000</p>
           </div>
 
           {error && (
-            <p className="text-sm text-red-600 bg-red-50 rounded-lg px-3 py-2">{error}</p>
+            <p className="text-sm text-red-400 bg-red-500/10 border border-red-500/20 rounded-lg px-3 py-2">{error}</p>
           )}
 
           <button
             type="submit"
             disabled={submitting}
-            className="w-full bg-yellow-400 hover:bg-yellow-300 active:scale-95 transition text-slate-900 font-semibold py-3 rounded-xl text-sm disabled:opacity-60"
+            className="w-full font-black text-black py-3 rounded-xl text-sm transition hover:opacity-90 active:scale-95 disabled:opacity-60 disabled:cursor-not-allowed"
+            style={{ background: "linear-gradient(135deg, #F59E0B 0%, #EA580C 100%)" }}
           >
             {submitting ? (
               <span className="flex items-center justify-center gap-2">
-                <span className="h-4 w-4 animate-spin rounded-full border-2 border-slate-900 border-t-transparent" />
+                <span className="h-4 w-4 animate-spin rounded-full border-2 border-black/30 border-t-transparent" />
                 Submitting...
               </span>
             ) : "Submit review"}

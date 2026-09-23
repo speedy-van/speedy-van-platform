@@ -1,80 +1,166 @@
 # SEO Audit Evidence
 
-Date: 2026-09-17
+Date: 2026-09-19
 
-## Highest Priority Findings Revalidated
+## 2026-09-21 Production Update
 
-1. Conflicting host signals:
-   - `www.speedyvan.uk` and `www.speedy-van.co.uk` both serve 200 responses with the same ETag.
-   - Live canonical is `https://speedyvan.uk`, while the sitemap child URLs use `https://www.speedyvan.uk`.
-   - Live `robots.txt` on both hosts points to `https://www.speedy-van.co.uk/sitemap.xml`.
+The production website is now verified on Vercel project `speedy-van-web` (`prj_OkJrabaUpBmsMqNibYZc5cgnIqFg`), not the stale duplicate `speedy-van-co-uk-web`.
 
-2. Homepage H1 is empty in initial HTML:
-   - Live `<h1>` contains animated spans and an aria label, but no raw text node for crawlers without hydration.
-   - Local fix renders `Man and Van Services Across Scotland` in server HTML.
+Current live project map is maintained in `docs/deployment-projects.md`.
 
-3. Repository vs live output differ:
-   - Local `packages/config/src/site.ts` has been aligned to `https://www.speedyvan.uk`.
-   - Live output still has non-www canonical and `.co.uk` robots sitemap until deployment.
-   - `apps/web-v2` from `speedy-van/sv` uses `.co.uk` as primary and is not the active local app.
+## Starting Constraints
 
-4. Commercial moving-intent coverage was thin:
-   - Existing pages covered `man-and-van`, house, office, student, furniture, IKEA, piano, same-day, packing, and rubbish/clearance.
-   - Missing or weak canonical coverage existed for flat/apartment/studio moves, small moves, and intercity/long-distance removals.
+- `AGENTS.md` was checked first as requested. No project `AGENTS.md` exists in `c:\SpeedyVan`; the only match was inside `node_modules/recharts` and was not applicable.
+- The working tree already contained many unpublished changes across web, API, assets, admin and iOS files. They were preserved; no reset, checkout or revert was used.
+- No deployment or live hosting change was made.
 
-## Implementation Summary
+## Checkpoint
 
-Primary fixes implemented in `apps/web`:
+| Item | Value |
+| --- | --- |
+| Current branch | `seo-production-execution-2026-09-17` |
+| Local HEAD | `ce37317993e7b967a8eb09a4f49bb8d6c3e31b3b` |
+| Public GitHub `main` checked with `git ls-remote` | `688632f9948c5189438e50f4d1f61f938d1850a4` |
+| Active app conclusion | `apps/web` is the active local equivalent and inferred production app |
+| Preview | `http://localhost:3002` |
+| Deployment | Not performed |
 
-- Added shared SEO constants in `apps/web/src/lib/seo/constants.ts`.
-- Added App Router `robots.ts` and `sitemap.ts`.
-- Removed stale static robots/sitemap files from `apps/web/public`.
-- Added hostname redirect middleware for non-primary hosts.
-- Made JSON-LD server-rendered instead of `next/script afterInteractive`.
-- Rebuilt homepage H1 as server-rendered visible text.
-- Added `/pricing`.
-- Added canonical service coverage for:
-  - `flat-removals`
-  - `small-moves`
-  - `long-distance-removals`
-- Strengthened content for man and van / van and man / man with a van, house removals, office relocations, student moves, furniture collection and delivery, same-day delivery, and packing.
-- Marked light clearance/rubbish as `indexable: false` and excluded it from sitemap and public service grids.
-- Mapped SEO-only pages to existing bookable services so booking contracts are preserved.
+## Production Application Proof
 
-## Claims And Trust Cleanup
+Active production-serving app is `apps/web`, not `apps/web-v2`.
 
-Removed or softened unverified claims from public output:
+Evidence:
 
-- Fake testimonial carousel content.
-- `4.9/5 from 1,000+ moves`.
-- Live availability copy such as `vans available right now`, `advisors free`, and `bookings in the last hour`.
-- `Trusted by Thousands`.
-- Unverified DBS, customs-handled, and blanket waste-carrier claims.
+- Root `vercel.json` builds `apps/web` and outputs `apps/web/.next`.
+- `.vercel/project.json` now identifies project `speedy-van-web` with project id `prj_OkJrabaUpBmsMqNibYZc5cgnIqFg`.
+- The local workspace does not contain `apps/web-v2`.
+- Live HTML on `https://www.speedyvan.uk/` references App Router chunks under `/_next/static/chunks/app/(site)/...`, matching `apps/web/src/app/(site)`.
+- Public headers do not expose the exact deployed commit. Production commit and deployment branch remain unverified.
 
-Remaining visible trust statements are operational or conditional, for example:
+## Verified Active Equivalents
 
-- Goods-in-transit cover.
-- Quote checked before dispatch.
-- Same-day enquiries reviewed when capacity allows.
+| Requested path | Active local equivalent | Verified symbols and contracts |
+| --- | --- | --- |
+| `apps/web/src/lib/seo.ts` | `apps/web/src/lib/seo/constants.ts` and `apps/web/src/lib/seo/schemas.ts` | `SITE_URL`, `absoluteUrl`, JSON-LD builders |
+| `apps/web-v2/src/lib/site.ts` | `packages/config/src/site.ts` | `SITE.url` is `https://www.speedyvan.uk` |
+| `apps/web-v2/src/lib/services-data.ts` | `apps/web/src/lib/services.ts` | `SERVICES`, `getServiceBySlug`, `getBookableService`; no `getService` in active app |
+| `apps/web-v2/src/lib/areas-data.ts` | `apps/web/src/lib/areas.ts` | `AREAS`, `getAreaBySlug`; no `getArea` in active app |
+| `apps/web-v2/src/app/layout.tsx` | `apps/web/src/app/layout.tsx` | `RootLayout`, `Metadata`, `Viewport` from `next` |
+| `apps/web-v2/src/app/robots.ts` | `apps/web/src/app/robots.ts` | `MetadataRoute` from `next` |
+| `apps/web-v2/src/app/sitemap.ts` | `apps/web/src/app/sitemap.ts` | `MetadataRoute` from `next` |
+| `apps/web-v2/src/app/services/[slug]/page.tsx` | `apps/web/src/app/(site)/services/[slug]/page.tsx` | `Metadata` from `next`; `notFound` from `next/navigation`; `Props = { params: { slug: string } }` |
+| `apps/web-v2/src/app/areas/[slug]/page.tsx` | `apps/web/src/app/(site)/areas/[slug]/page.tsx` | `Metadata` from `next`; `notFound` from `next/navigation`; `Props = { params: { slug: string } }` |
 
-## Search And Conversion Evidence Available
+No active `buildMetadata` helper exists in `apps/web`; metadata is built in each App Router page plus `layout.tsx`.
 
-HYPD Google Ads access was available for account:
+## Shared Contracts Found
 
-```text
-2427152166
-Currency: GBP
-Timezone: Europe/London
-```
+- Booking state and persistence: `apps/web/src/lib/booking-store.tsx`.
+- Service prefill: `apps/web/src/components/booking/SearchParamsInitializer.tsx` reads `?service=`.
+- Booking steps: `Step1Service`, `Step2Addresses`, `Step3Schedule`, `Step4Payment`.
+- Pricing: browser requests `/pricing/calculate`; local development API base is `http://localhost:4000`.
+- Payment and booking: `/booking/create`, `/booking/confirm`, Stripe Elements, and `trackPurchase`.
+- Coverage and postcode UX: `apps/web/src/components/PostcodeCheck.tsx`.
+- Consent and analytics: `CookieConsent`, `AnalyticsPixels`, `trackPurchase`.
 
-Enabled conversion actions visible:
+No new hook or shared contract was invented.
 
-```text
-Contact
-Calls from ads
-Website Calls - 30 Seconds
-```
+## Business Facts Ledger
 
-GA4 properties were not available through HYPD (`accountSummaries: []`). Search Console was not available as a callable connector in this session. Google Ads GAQL returned `INVALID_ARGUMENT`, so campaign/search-term performance was not used.
+| Fact or claim | Source checked | Confidence | Status used in local changes | Review need |
+| --- | --- | --- | --- | --- |
+| Primary public host is `https://www.speedyvan.uk` | Live homepage, robots, sitemap, local config | High | Used for canonical, sitemap and redirect targets | Recheck after deployment |
+| Business phone `07909 032889` | Existing site config and visible site contact surfaces | Medium | Preserved; not changed | Owner should verify before release |
+| Contact email `hello@speedyvan.uk` | Existing site config and footer | Medium | Preserved; not changed | Owner should verify before release |
+| Service area is Scotland-wide with key cities | Existing `AREAS`, live sitemap and visible content | Medium | Preserved; area pages strengthened | Verify actual operational coverage boundaries |
+| Goods-in-transit cover exists | Existing public copy | Medium | Kept as a trust statement without expanding limits | Owner should confirm policy and limits |
+| £50,000 insurance statement | Existing public copy | Low | Removed/softened where touched | Needs written evidence before reuse |
+| Same-day availability | Existing marketing copy | Medium | Kept conditional: when capacity allows | Verify operational cut-off and capacity rules |
+| From-prices | Existing service/pricing data and quote flow | Medium | Explained as guide/starting prices, not guaranteed final quote | Reconcile with pricing authority before release |
+| Google Business Profile details | Not accessible in this environment | Unavailable | No live GBP changes made | GBP owner access required |
+| Search Console indexation/canonical state | Not accessible in this environment | Unavailable | Not claimed | Search Console access required |
+| GA4 organic funnel outcomes | HYPD returned no GA4 account summaries | Unavailable | Not claimed | GA4 access required |
 
-Keyword volumes used for prioritization are documented in `keyword-map.csv`. These are demand signals, not ranking claims.
+## Live Findings
+
+These are live observations from 2026-09-19 before deployment of the local fixes:
+
+- `https://www.speedyvan.uk/` returns 200 on Vercel and is the primary public site.
+- Old hosts redirect to the primary host, but hop counts vary by scheme and host.
+- Live root canonical is already `https://www.speedyvan.uk`.
+- Live `robots.txt` points to `https://www.speedyvan.uk/sitemap.xml` and disallows `/admin/`, `/driver/`, `/auth/`, and `/api/`.
+- Live sitemap has 45 URLs, all on `https://www.speedyvan.uk`, and excludes `rubbish-removal`.
+- Live legal pages `/privacy`, `/terms`, and `/cookies` still expose stale `https://speedy-van.co.uk/...` canonicals.
+- Live service and legal titles duplicate the brand suffix in places, for example `Man and Van | SpeedyVan | SpeedyVan Scotland`.
+- Live `/book` and `/auth/login` are `noindex,nofollow` but inherit a homepage canonical.
+- Live invalid service and area URLs return 404 and noindex but also inherit default homepage-like metadata.
+- Live `Man and Van` copy still contains internal SEO wording such as `one strong service page` and `synonyms`.
+- Live area pages use generic geography copy for key cities where local practical proof is needed.
+
+## External Demand Evidence
+
+HYPD Google Ads access was available for account `2427152166` in GBP and Europe/London timezone.
+
+Highest-volume UK query demand observed:
+
+- `man with a van`: 18,100 monthly searches.
+- `man and van`: 9,900.
+- `van and man`: 9,900.
+- `same day delivery`: 9,900.
+- `house removals`: 3,600.
+- `man and van glasgow`: 1,900.
+- `furniture collection`: 1,900.
+
+GA4 was unavailable through HYPD (`accountSummaries: []`). Search Console was not available as a callable connector. SERP samples from HYPD are third-party snapshots, not official Google ranking proof.
+
+## Prioritised Local Fixes
+
+1. Canonical consistency:
+   - Removed root layout canonical inheritance.
+   - Forced legal canonicals through `absoluteUrl(...)`.
+   - Normalised title templates to avoid duplicate brand suffixes.
+
+2. Non-indexable flow protection:
+   - `/book`, `/auth/login`, `/book/confirmation`, `/track`, and `/jobs` keep noindex intent without inheriting homepage canonical.
+
+3. Service detail content:
+   - Removed visible internal SEO commentary from `Man and Van`.
+   - Added practical planning content to service detail pages.
+   - Added related-service decision links without changing booking mappings.
+
+4. Area proof:
+   - Added practical move advice for Glasgow and Edinburgh.
+   - Added online booking CTAs to area detail pages while preserving phone and email paths.
+
+5. Structured data:
+   - Changed local business and service provider type to `MovingCompany`.
+   - Changed `areaServed` entries from `City` to `AdministrativeArea` to avoid mislabelling towns and neighbourhoods.
+
+6. Redirect safety:
+   - Host redirects now bypass `/api` and non-GET/HEAD requests locally to avoid breaking API, pricing, booking, payment or future webhook flows.
+
+7. Payment safety:
+   - Added a synchronous repeated-submit guard in `Step4Payment` with `useRef`, while keeping the existing disabled UI and error handling.
+
+## Compatibility Notes
+
+- Customer booking state was preserved: no reducer action names, storage key, or draft shape were changed.
+- Pricing payload shape was preserved.
+- Payment endpoints and Stripe handling were preserved.
+- Driver and admin routes were not functionally changed by SEO work.
+- Middleware now avoids redirecting `/api` and non-GET/HEAD requests.
+- SEO-only service pages still map to existing bookable services through `getBookableService`.
+
+## Local Fixes vs Ranking Outcomes
+
+Local fixes are verified in the production build and local private preview. They are not deployed.
+
+Unverified outcomes:
+
+- Google rankings.
+- Search Console canonical state after deployment.
+- Organic traffic or conversion lift.
+- GBP/local-pack visibility.
+- GA4 funnel metrics.
+
+Those require deployment plus external measurement access.

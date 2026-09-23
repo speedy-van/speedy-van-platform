@@ -4,18 +4,18 @@ import { useEffect, useRef, useState } from "react";
 
 interface Props {
   value: number; // 0-100
-  color?: "emerald" | "amber" | "crimson" | "blue";
+  color?: "emerald" | "primary" | "crimson" | "amber";
   className?: string;
 }
 
 const COLOR_CLASSES: Record<string, string> = {
-  emerald: "bg-emerald-500",
-  amber: "bg-amber-500",
+  emerald: "bg-emerald-400",
+  primary: "bg-amber-400",
   crimson: "bg-red-500",
-  blue: "bg-blue-500",
+  amber: "bg-amber-400",
 };
 
-export default function ProgressBar({ value, color = "blue", className = "" }: Props) {
+export default function ProgressBar({ value, color = "amber", className = "" }: Props) {
   const [width, setWidth] = useState(0);
   const raf = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -25,7 +25,7 @@ export default function ProgressBar({ value, color = "blue", className = "" }: P
   }, [value]);
 
   return (
-    <div className={`w-full bg-slate-100 rounded-full h-2 overflow-hidden ${className}`}>
+    <div className={`w-full bg-white/8 rounded-full h-2 overflow-hidden ${className}`}>
       <div
         className={`h-full rounded-full transition-all duration-1000 ease-out ${COLOR_CLASSES[color]}`}
         style={{ width: `${width}%` }}

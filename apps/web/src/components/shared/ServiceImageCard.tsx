@@ -9,6 +9,8 @@ const GRADIENT_FALLBACKS: Record<string, string> = {
   "man-and-van":        "from-[#1e3a5f] to-[#2d5f8a]",
   "flat-removals":      "from-[#283852] to-[#3f628a]",
   "small-moves":        "from-[#24515c] to-[#3f7b86]",
+  "storage":            "from-[#203047] to-[#496178]",
+  "other":              "from-[#253044] to-[#5b6476]",
   "house-removal":      "from-[#2d4a2a] to-[#4a7a44]",
   "long-distance-removals": "from-[#34354f] to-[#59618d]",
   "office-removal":     "from-[#3a3a5c] to-[#5a5a8a]",
@@ -49,7 +51,7 @@ export function ServiceImageCard({
   const fallback = GRADIENT_FALLBACKS[slug] ?? "from-[#1e3a5f] to-[#2d5f8a]";
 
   const sharedClass = [
-    "group relative overflow-hidden rounded-2xl transition-all duration-200",
+    "group relative overflow-hidden rounded-2xl bg-stone-950 transition-all duration-200",
     isBooking ? "h-40" : "h-56",
     isSelected
       ? "ring-[3px] ring-primary-400 shadow-lg shadow-primary-400/20"
@@ -87,7 +89,7 @@ export function ServiceImageCard({
       {/* Selected checkmark (booking only) */}
       {isSelected && isBooking && (
         <div className="absolute top-2.5 right-2.5 z-10 flex h-7 w-7 items-center justify-center rounded-full bg-primary-400 shadow-md">
-          <span className="text-xs font-extrabold text-slate-900" aria-hidden="true">
+          <span className="text-xs font-extrabold text-stone-950" aria-hidden="true">
             ✓
           </span>
         </div>

@@ -1,10 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 import { haptic } from "@/lib/haptic";
 
-const WA_SHORT_LINK = "https://wa.me/message/J6EO772GDPHFO1";
+const WA_SHORT_LINK = "https://wa.me/447909032889";
 
 interface WhatsAppPhotoQuoteButtonProps {
   serviceName?: string;

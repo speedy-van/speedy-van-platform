@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Track Your Delivery | SpeedyVan",
+  title: "Track Your Delivery",
   description: "Track your SpeedyVan booking in real time.",
   robots: {
     index: false,

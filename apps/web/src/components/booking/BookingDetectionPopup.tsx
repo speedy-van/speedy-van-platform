@@ -6,7 +6,7 @@ import Link from "next/link";
 const API_BASE =
   process.env.NODE_ENV === "development"
     ? "http://localhost:4000"
-    : (process.env.NEXT_PUBLIC_API_URL ?? "https://api.speedy-van.co.uk");
+    : (process.env.NEXT_PUBLIC_API_URL ?? "https://api.speedyvan.uk");
 
 const DISMISSED_KEY = "sv-booking-popup-dismissed";
 
@@ -26,12 +26,8 @@ const STATUS_LABELS: Record<string, string> = {
 export function BookingDetectionPopup() {
   const [booking, setBooking] = useState<ActiveBooking | null>(null);
   const [visible, setVisible] = useState(false);
-  const [email, setEmail] = useState("");
 
   useEffect(() => {
-    const dismissed = sessionStorage.getItem(DISMISSED_KEY);
-    if (dismissed) return;
-
     // Only run on non-booking-flow pages
     const path = window.location.pathname;
     if (
@@ -43,11 +39,21 @@ export function BookingDetectionPopup() {
       return;
     }
 
-    // Check if there is a stored email from a previous booking
-    const storedEmail = localStorage.getItem("sv-customer-email");
-    if (!storedEmail) return;
+    try {
+      const dismissed = sessionStorage.getItem(DISMISSED_KEY);
+      if (dismissed) return;
+    } catch {
+      return;
+    }
 
-    setEmail(storedEmail);
+    // Check if there is a stored email from a previous booking
+    let storedEmail: string | null = null;
+    try {
+      storedEmail = localStorage.getItem("sv-customer-email");
+    } catch {
+      return;
+    }
+    if (!storedEmail) return;
 
     fetch(`${API_BASE}/booking/check?email=${encodeURIComponent(storedEmail)}`)
       .then((r) => r.json())
@@ -63,7 +69,7 @@ export function BookingDetectionPopup() {
   }, []);
 
   function dismiss() {
-    sessionStorage.setItem(DISMISSED_KEY, "1");
+    try { sessionStorage.setItem(DISMISSED_KEY, "1"); } catch { /* ignore */ }
     setVisible(false);
   }
 
@@ -74,7 +80,7 @@ export function BookingDetectionPopup() {
       <div className="bg-white rounded-2xl shadow-xl border border-slate-200 p-4">
         <div className="flex items-start justify-between gap-3 mb-3">
           <div>
-            <p className="text-sm font-semibold text-slate-900">You have an active booking</p>
+            <p className="text-sm font-semibold text-stone-950">You have an active booking</p>
             <p className="text-xs text-slate-500 mt-0.5">
               {booking.reference} &mdash;{" "}
               <span className="text-emerald-600 font-medium">
@@ -94,7 +100,7 @@ export function BookingDetectionPopup() {
           <Link
             href={`/track?ref=${booking.reference}`}
             onClick={dismiss}
-            className="flex-1 text-center bg-yellow-400 hover:bg-yellow-300 text-slate-900 text-xs font-semibold py-2.5 rounded-xl transition"
+            className="flex-1 text-center bg-primary-400 hover:bg-primary-500 active:bg-primary-600 text-white text-xs font-semibold py-2.5 rounded-xl transition"
           >
             Track booking
           </Link>

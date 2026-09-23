@@ -121,8 +121,8 @@ export default function EuropeanEnquiryForm() {
         </p>
         <p className="mt-4 text-sm text-emerald-700">
           Need to talk now? Call{" "}
-          <a href="tel:01202129746" className="font-semibold underline">
-            01202 129746
+          <a href="tel:07909032889" className="font-semibold underline">
+            07909 032889
           </a>
           .
         </p>
@@ -131,12 +131,12 @@ export default function EuropeanEnquiryForm() {
   }
 
   const inputClass =
-    "w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-400 focus:border-primary-400";
+    "w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm text-stone-950 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-400 focus:border-primary-400";
   const labelClass = "block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-1.5";
   const fieldsetClass =
     "rounded-xl border border-slate-200 bg-white p-5 sm:p-6 space-y-4";
   const legendClass =
-    "text-sm font-bold text-slate-900 uppercase tracking-wider px-2 -ml-2";
+    "text-sm font-bold text-stone-950 uppercase tracking-wider px-2 -ml-2";
 
   return (
     <form
@@ -152,7 +152,7 @@ export default function EuropeanEnquiryForm() {
             📋
           </div>
           <div>
-            <h3 id="enquiry-heading" className="text-2xl font-extrabold text-slate-900">
+            <h3 id="enquiry-heading" className="text-2xl font-extrabold text-stone-950">
               Get Your Free European Move Quote
             </h3>
             <p className="mt-1 text-sm text-slate-600">
@@ -406,7 +406,7 @@ export default function EuropeanEnquiryForm() {
           <button
             type="submit"
             disabled={submitting}
-            className="w-full inline-flex items-center justify-center gap-2 rounded-lg bg-primary-400 px-6 py-4 text-base font-extrabold text-slate-900 shadow-lg shadow-primary-400/20 transition-colors hover:bg-primary-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400 focus-visible:ring-offset-2 disabled:opacity-60 disabled:cursor-not-allowed"
+            className="w-full inline-flex items-center justify-center gap-2 rounded-lg bg-primary-400 px-6 py-4 text-base font-extrabold text-white shadow-lg shadow-primary-400/20 transition-colors hover:bg-primary-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400 focus-visible:ring-offset-2 disabled:opacity-60 disabled:cursor-not-allowed"
           >
             {submitting ? "Sending…" : "Request Free Quote →"}
           </button>

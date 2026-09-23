@@ -50,7 +50,18 @@ export const DEFAULT_PRICING_CONFIG = {
     businessLargeMultiplier: 1.8,
   },
   base: {
-    serviceBasePrice: 49,
+    houseRemovalsBasePrice: 120,
+    furnitureBasePrice: 60,
+    storageBasePrice: 45,
+    officeBasePrice: 150,
+    otherBasePrice: 45,
+    studentMoveBasePrice: 80,
+    ikeaDeliveryBasePrice: 70,
+    rubbishRemovalBasePrice: 90,
+    pianoMovingBasePrice: 200,
+    sameDayDeliveryBasePrice: 55,
+    packingServiceBasePrice: 100,
+    serviceBasePrice: 49, // fallback for unknown service types
   },
 } as const;
 

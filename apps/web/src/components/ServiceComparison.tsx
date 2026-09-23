@@ -68,9 +68,9 @@ export function ServiceComparison() {
             >
               <div className="flex items-center gap-2 mb-2">
                 <span className="text-xl" aria-hidden="true">{r.icon}</span>
-                <h3 className="font-bold text-slate-900">{r.size}</h3>
+                <h3 className="font-bold text-stone-950">{r.size}</h3>
                 {r.popular && (
-                  <span className="ml-auto text-[10px] font-bold uppercase tracking-wider bg-primary-400 text-slate-900 px-2 py-0.5 rounded-full">
+                  <span className="ml-auto text-[10px] font-bold uppercase tracking-wider bg-primary-400 text-white px-2 py-0.5 rounded-full">
                     Popular
                   </span>
                 )}
@@ -105,11 +105,11 @@ export function ServiceComparison() {
                   key={r.size}
                   className={r.popular ? "bg-primary-50/50" : "bg-white hover:bg-slate-50"}
                 >
-                  <th scope="row" className="px-4 py-3 font-semibold text-slate-900">
+                  <th scope="row" className="px-4 py-3 font-semibold text-stone-950">
                     <span className="inline-flex items-center gap-2">
                       <span aria-hidden="true">{r.icon}</span> {r.size}
                       {r.popular && (
-                        <span className="text-[10px] font-bold uppercase tracking-wider bg-primary-400 text-slate-900 px-1.5 py-0.5 rounded">
+                        <span className="text-[10px] font-bold uppercase tracking-wider bg-primary-400 text-white px-1.5 py-0.5 rounded">
                           Popular
                         </span>
                       )}

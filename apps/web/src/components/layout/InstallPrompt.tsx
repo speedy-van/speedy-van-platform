@@ -5,6 +5,7 @@ import { haptic } from "@/lib/haptic";
 
 const DISMISS_KEY = "sv_pwa_install_dismissed_at";
 const DISMISS_TTL_MS = 14 * 24 * 60 * 60 * 1000; // 14 days
+const BRAND_LOGO_SRC = "/logo.png?v=amber-20260921-1";
 
 interface BeforeInstallPromptEvent extends Event {
   prompt: () => Promise<void>;
@@ -27,6 +28,9 @@ export function InstallPrompt() {
 
   useEffect(() => {
     if (typeof window === "undefined") return;
+    const path = window.location.pathname;
+    if (path.startsWith("/book") && !path.startsWith("/book/confirmation")) return;
+
     try {
       const dismissed = Number(localStorage.getItem(DISMISS_KEY) ?? 0);
       if (dismissed && Date.now() - dismissed < DISMISS_TTL_MS) return;
@@ -38,8 +42,8 @@ export function InstallPrompt() {
     const handler = (e: Event) => {
       e.preventDefault();
       setEvt(e as BeforeInstallPromptEvent);
-      // Slight delay so we don't interrupt first paint
-      window.setTimeout(() => setShow(true), 4000);
+      // Give the landing page room to breathe before showing the install prompt.
+      window.setTimeout(() => setShow(true), path === "/" ? 12000 : 5000);
     };
     window.addEventListener("beforeinstallprompt", handler);
     return () => window.removeEventListener("beforeinstallprompt", handler);
@@ -67,11 +71,12 @@ export function InstallPrompt() {
 
   return (
     <div
-      className="fixed inset-x-3 bottom-24 md:bottom-6 md:left-auto md:right-6 md:max-w-sm z-40 rounded-2xl bg-slate-900 text-white shadow-xl ring-1 ring-white/10 p-4 flex items-start gap-3 animate-in fade-in slide-in-from-bottom-4 duration-300"
+      className="fixed inset-x-3 bottom-32 md:bottom-6 md:left-auto md:right-6 md:max-w-sm z-40 rounded-2xl bg-stone-950 text-white shadow-xl ring-1 ring-white/10 p-4 flex items-start gap-3 animate-in fade-in slide-in-from-bottom-4 duration-300"
       role="dialog"
       aria-label="Install SpeedyVan"
     >
-      <img src="/logo.png" alt="" className="h-10 w-10 rounded-lg object-cover shrink-0" />
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img src={BRAND_LOGO_SRC} alt="" className="h-10 w-10 rounded-lg object-cover shrink-0" />
       <div className="flex-1 min-w-0">
         <p className="text-sm font-bold">Install SpeedyVan</p>
         <p className="text-xs text-slate-300 mt-0.5">
@@ -81,7 +86,7 @@ export function InstallPrompt() {
           <button
             type="button"
             onClick={install}
-            className="rounded-lg bg-primary-400 px-3 py-1.5 text-xs font-extrabold text-slate-900 hover:bg-primary-500"
+            className="rounded-lg bg-primary-400 px-3 py-1.5 text-xs font-extrabold text-black hover:bg-primary-500"
           >
             Install
           </button>

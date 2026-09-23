@@ -36,13 +36,13 @@ export default function LoginForm() {
   return (
     <form onSubmit={handleSubmit} className="space-y-5" noValidate>
       {error && (
-        <div role="alert" className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
+        <div role="alert" className="bg-red-500/10 border border-red-500/20 text-red-400 px-4 py-3 rounded-lg text-sm">
           {error}
         </div>
       )}
 
       <div>
-        <label htmlFor="email" className="block text-sm font-medium text-slate-700 mb-1.5">
+        <label htmlFor="email" className="block text-sm font-medium text-white/55 mb-1.5">
           Email address
         </label>
         <input
@@ -51,14 +51,14 @@ export default function LoginForm() {
           type="email"
           autoComplete="email"
           required
-          className="w-full rounded-xl border border-slate-300 px-4 py-3 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-400 focus:border-transparent"
+          className="w-full rounded-xl border border-amber-900/20 bg-white/[0.03] px-4 py-3 text-sm text-white placeholder-white/25 focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-transparent"
           placeholder="you@example.com"
         />
       </div>
 
       <div>
         <div className="flex items-center justify-between mb-1.5">
-          <label htmlFor="password" className="block text-sm font-medium text-slate-700">
+          <label htmlFor="password" className="block text-sm font-medium text-white/55">
             Password
           </label>
         </div>
@@ -68,7 +68,7 @@ export default function LoginForm() {
           type="password"
           autoComplete="current-password"
           required
-          className="w-full rounded-xl border border-slate-300 px-4 py-3 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-400 focus:border-transparent"
+          className="w-full rounded-xl border border-amber-900/20 bg-white/[0.03] px-4 py-3 text-sm text-white placeholder-white/25 focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-transparent"
           placeholder="••••••••"
         />
       </div>
@@ -76,7 +76,8 @@ export default function LoginForm() {
       <button
         type="submit"
         disabled={isLoading}
-        className="w-full bg-primary-400 hover:bg-primary-500 text-slate-900 font-bold py-3 px-4 rounded-xl text-sm transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+        className="w-full font-black text-black py-3 px-4 rounded-xl text-sm transition hover:opacity-90 active:scale-95 disabled:opacity-60 disabled:cursor-not-allowed"
+        style={{ background: "linear-gradient(135deg, #F59E0B 0%, #EA580C 100%)" }}
       >
         {isLoading ? "Signing in…" : "Sign In"}
       </button>

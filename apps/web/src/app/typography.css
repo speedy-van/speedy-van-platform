@@ -1,0 +1,35 @@
+body {
+  font-weight: 400;
+}
+
+button,
+input,
+optgroup,
+select,
+textarea,
+dialog,
+[role="dialog"] {
+  font-family: inherit;
+}
+
+button,
+[role="button"],
+button.font-medium,
+input[type="button"],
+input[type="reset"],
+input[type="submit"] {
+  font-weight: 600;
+}
+
+input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
+select,
+textarea,
+input.text-xs,
+input.text-sm,
+select.text-xs,
+select.text-sm,
+textarea.text-xs,
+textarea.text-sm {
+  font-size: 1rem;
+  line-height: 1.5rem;
+}

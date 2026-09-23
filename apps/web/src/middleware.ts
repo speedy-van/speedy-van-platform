@@ -10,6 +10,14 @@ const REDIRECT_HOSTS = new Set([
 export function middleware(request: NextRequest) {
   const host = request.headers.get("host")?.toLowerCase().split(":")[0];
 
+  if (request.nextUrl.pathname === "/api" || request.nextUrl.pathname.startsWith("/api/")) {
+    return NextResponse.next();
+  }
+
+  if (request.method !== "GET" && request.method !== "HEAD") {
+    return NextResponse.next();
+  }
+
   if (!host || !REDIRECT_HOSTS.has(host)) {
     return NextResponse.next();
   }

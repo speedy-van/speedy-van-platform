@@ -35,6 +35,9 @@ Thumbs.db
 *.log
 npm-debug.log*
 
+# Expo local state
+.expo/
+
 # IDE
 .vscode/settings.json
 .idea/

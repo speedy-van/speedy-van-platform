@@ -1,74 +1,159 @@
 # Verification
 
-Date: 2026-09-17
+Date: 2026-09-19
 
-## Commands
+## Local Private Preview
 
-```text
-npm run typecheck -w apps/web
-npm run build -w apps/web
-```
-
-Result:
-
-```text
-typecheck passed
-build passed
-Next.js generated 73 static pages
-/robots.txt generated
-/sitemap.xml generated
-middleware generated
-```
-
-## Local Production Server
-
-Built app was started on:
+Preview URL:
 
 ```text
 http://localhost:3002
 ```
 
-Raw HTML verification:
+Current preview process:
+
+```text
+PID 43764
+```
+
+This is local only. Nothing was deployed.
+
+## Commands Run
+
+```text
+npm run typecheck -w apps/web
+npm run build -w apps/web
+npm run lint -w apps/web
+python scripts/seo-local-qa.py
+git ls-remote https://github.com/speedy-van/sv.git refs/heads/main
+```
+
+Results:
+
+| Command | Result |
+| --- | --- |
+| `npm run typecheck -w apps/web` | Passed |
+| `npm run build -w apps/web` | Passed; 73 static pages generated |
+| `npm run lint -w apps/web` | Passed with no ESLint warnings or errors after lint-only cleanup |
+| `python scripts/seo-local-qa.py` | Passed |
+| `git ls-remote ... refs/heads/main` | Confirmed public `main` at `688632f9948c5189438e50f4d1f61f938d1850a4` |
+
+The first build attempt during the session failed with `EPERM` because an existing `next start` process was holding `.next/trace`. That process was stopped and the build then passed.
+
+## Lint Cleanup
+
+`next lint` is now clean. The cleanup removed unused imports/state, converted type-only imports, stabilised the driver job fetch callback dependency and kept existing image behaviour where switching to `next/image` would have risked changing dynamic proof-image handling.
+
+## Browser Tooling
+
+The in-app Browser skill was attempted but the Node REPL bridge failed with:
+
+```text
+sandboxCwd must use the file URI scheme
+```
+
+Independent QA was therefore run with installed Python Playwright 1.62.0.
+
+## Local Metadata Checks
+
+| Path | Status | Title | Canonical | Robots |
+| --- | --- | --- | --- | --- |
+| `/` | 200 | `SpeedyVan | Man and Van, Removals & Delivery Across Scotland` | `https://www.speedyvan.uk` | `index, follow` |
+| `/privacy` | 200 | `Privacy Policy | SpeedyVan` | `https://www.speedyvan.uk/privacy` | `index, follow` |
+| `/terms` | 200 | `Terms & Conditions | SpeedyVan` | `https://www.speedyvan.uk/terms` | `index, follow` |
+| `/cookies` | 200 | `Cookie Policy | SpeedyVan` | `https://www.speedyvan.uk/cookies` | `index, follow` |
+| `/services/man-and-van` | 200 | `Man and Van | SpeedyVan` | `https://www.speedyvan.uk/services/man-and-van` | `index, follow` |
+| `/services/house-removal` | 200 | `House Removals | SpeedyVan` | `https://www.speedyvan.uk/services/house-removal` | `index, follow` |
+| `/areas/glasgow` | 200 | `Man and Van in Glasgow | SpeedyVan` | `https://www.speedyvan.uk/areas/glasgow` | `index, follow` |
+| `/areas/edinburgh` | 200 | `Man and Van in Edinburgh | SpeedyVan` | `https://www.speedyvan.uk/areas/edinburgh` | `index, follow` |
+| `/book` | 200 | `Book Your Van | SpeedyVan` | none | `noindex, nofollow` |
+| `/auth/login` | 200 | `Sign In | SpeedyVan` | none | `noindex, nofollow` |
+| `/services/not-a-real-service` | 404 | default not-found title | none | `noindex` |
+| `/areas/not-a-real-area` | 404 | default not-found title | none | `noindex` |
+
+## Sitemap And Robots
+
+Local `http://localhost:3002/sitemap.xml`:
 
 | Check | Result |
 | --- | --- |
-| Homepage H1 | `Man and Van Services Across Scotland` |
-| Homepage canonical | `https://www.speedyvan.uk` |
-| JSON-LD in initial HTML | 1 script, includes `LocalBusiness` |
-| Invalid service URL | 404 |
-| Sitemap URL count | 45 |
-| Sitemap contains `.co.uk` | false |
-| Sitemap contains non-www `https://speedyvan.uk` | false |
-| Sitemap contains `/services/rubbish-removal` | false |
-| `.co.uk` host redirect | 308 to `https://www.speedyvan.uk/services/man-and-van` |
+| URL count | 45 |
+| URLs on `https://www.speedyvan.uk` | 45 |
+| Contains `speedy-van.co.uk` | 0 |
+| Contains `rubbish-removal` | 0 |
 
-Responsive verification:
+Local `robots.txt`:
 
-| Viewport | Screenshot | Result |
-| --- | --- | --- |
-| 1440x1200 | `.screens/seo-home-desktop-final.png` | H1 visible, no horizontal overflow |
-| 360x900 | `.screens/seo-home-mobile-360-final.png` | H1 visible, no horizontal overflow |
+```text
+User-Agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /driver/
+Disallow: /auth/
+Disallow: /api/
 
-The browser MCP was unavailable because the shared browser profile was already in use. Playwright was run via the local npx cache matching installed Chromium.
+Sitemap: https://www.speedyvan.uk/sitemap.xml
+```
 
-## Live Production Verification Before Deployment
+## Redirect Checks
 
-Live domains still show pre-fix behavior because deployment could not be authorized from the available Vercel account:
-
-| URL | Live status before deployment |
+| Local request | Result |
 | --- | --- |
-| `https://www.speedyvan.uk/` | 200, canonical `https://speedyvan.uk`, raw H1 empty |
-| `https://www.speedy-van.co.uk/` | 200, canonical `https://speedyvan.uk`, raw H1 empty |
-| `https://speedyvan.uk/` | 307 to `https://www.speedyvan.uk/` |
-| `https://speedy-van.co.uk/` | 307 to `https://www.speedy-van.co.uk/` |
-| live robots | sitemap points to `https://www.speedy-van.co.uk/sitemap.xml` |
+| `Host: speedy-van.co.uk` `/services/man-and-van?utm_source=test` | 308 to `https://www.speedyvan.uk/services/man-and-van?utm_source=test` |
+| `Host: speedy-van.co.uk` `/api/health` | No redirect; 404 from app |
+| `POST Host: speedy-van.co.uk` `/services/man-and-van` | No redirect; 405 from app |
+| `Host: www.speedyvan.uk` `/services/man-and-van` | 200 |
 
-Deployment remains required before live acceptance can be claimed.
+## Playwright QA
 
-## Access Limitations
+Script:
 
-- Vercel CLI is logged in, but the visible account does not list the SpeedyVan production project.
-- GitHub CLI is not authenticated in this environment.
-- GA4 properties are not connected through HYPD.
-- Search Console is not available as a callable connector in this session.
-- Google Ads keyword research and conversion-action metadata were available; GAQL performance queries returned `INVALID_ARGUMENT`.
+```text
+python scripts/seo-local-qa.py
+```
+
+Key passing checks:
+
+- Home desktop and mobile: no horizontal overflow.
+- Service page: `Plan Your Man and Van` present.
+- Service page: leaked internal SEO phrases absent.
+- Service booking CTA points to `/book?service=man-and-van`.
+- Glasgow area page: practical move advice present.
+- Glasgow area page: booking CTA present.
+- `/book?service=man-and-van`: prefilled service advances to details.
+- Empty address validation shows `Please enter a pickup address.`
+- Postcode invalid state works.
+- Out-of-coverage state works.
+- Pricing failure state shows `Quote unavailable` and `Retry quote`.
+- Repeated payment submit guard: submit button shows `Processing...`, is disabled, and only one `/booking/create` request is observed.
+- Payment failure state shows the server error message.
+
+Screenshots written to `.screens/`:
+
+```text
+seo-home-desktop-2026-09-19.png
+seo-home-mobile-2026-09-19.png
+seo-service-man-and-van-desktop-2026-09-19.png
+seo-area-glasgow-mobile-2026-09-19.png
+seo-book-validation-2026-09-19.png
+seo-book-payment-failure-2026-09-19.png
+```
+
+## Unverified
+
+- Live deployment of these local fixes.
+- Search Console validation.
+- GA4 funnel impact.
+- Google organic rankings.
+- Local-pack ranking.
+- Google Business Profile state.
+- Field Core Web Vitals.
+- Payment return from a real provider session; no live charge was created.
+
+## Performance And Measurement Notes
+
+- No performance code was changed.
+- Mobile QA at 390px and desktop QA at 1366px found no horizontal overflow on tested pages.
+- Field Core Web Vitals were unavailable; no p75 LCP, INP or CLS claim is made.
+- Existing consent and purchase tracking contracts were inspected, not replaced.
+- Analytics events were not duplicated or newly introduced.
