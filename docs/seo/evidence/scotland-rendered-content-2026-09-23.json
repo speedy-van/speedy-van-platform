@@ -1,0 +1,412 @@
+{
+  "method": "Local production-build HTML parsing; not a browser/mobile test",
+  "checks": 101,
+  "passed": 101,
+  "failed": [],
+  "results": [
+    {
+      "check": "glasgow-west-end: original advice renders once",
+      "passed": true
+    },
+    {
+      "check": "glasgow-west-end: three native FAQs render",
+      "passed": true
+    },
+    {
+      "check": "glasgow-west-end: official sources rendered",
+      "passed": true
+    },
+    {
+      "check": "glasgow-west-end: plain draft-preserving quote link",
+      "passed": true
+    },
+    {
+      "check": "glasgow-southside: original advice renders once",
+      "passed": true
+    },
+    {
+      "check": "glasgow-southside: three native FAQs render",
+      "passed": true
+    },
+    {
+      "check": "glasgow-southside: official sources rendered",
+      "passed": true
+    },
+    {
+      "check": "glasgow-southside: plain draft-preserving quote link",
+      "passed": true
+    },
+    {
+      "check": "paisley: original advice renders once",
+      "passed": true
+    },
+    {
+      "check": "paisley: three native FAQs render",
+      "passed": true
+    },
+    {
+      "check": "paisley: official sources rendered",
+      "passed": true
+    },
+    {
+      "check": "paisley: plain draft-preserving quote link",
+      "passed": true
+    },
+    {
+      "check": "hamilton: original advice renders once",
+      "passed": true
+    },
+    {
+      "check": "hamilton: three native FAQs render",
+      "passed": true
+    },
+    {
+      "check": "hamilton: official sources rendered",
+      "passed": true
+    },
+    {
+      "check": "hamilton: plain draft-preserving quote link",
+      "passed": true
+    },
+    {
+      "check": "east-kilbride: original advice renders once",
+      "passed": true
+    },
+    {
+      "check": "east-kilbride: three native FAQs render",
+      "passed": true
+    },
+    {
+      "check": "east-kilbride: official sources rendered",
+      "passed": true
+    },
+    {
+      "check": "east-kilbride: plain draft-preserving quote link",
+      "passed": true
+    },
+    {
+      "check": "motherwell: original advice renders once",
+      "passed": true
+    },
+    {
+      "check": "motherwell: three native FAQs render",
+      "passed": true
+    },
+    {
+      "check": "motherwell: official sources rendered",
+      "passed": true
+    },
+    {
+      "check": "motherwell: plain draft-preserving quote link",
+      "passed": true
+    },
+    {
+      "check": "stirling: original advice renders once",
+      "passed": true
+    },
+    {
+      "check": "stirling: three native FAQs render",
+      "passed": true
+    },
+    {
+      "check": "stirling: official sources rendered",
+      "passed": true
+    },
+    {
+      "check": "stirling: plain draft-preserving quote link",
+      "passed": true
+    },
+    {
+      "check": "ayr: original advice renders once",
+      "passed": true
+    },
+    {
+      "check": "ayr: three native FAQs render",
+      "passed": true
+    },
+    {
+      "check": "ayr: official sources rendered",
+      "passed": true
+    },
+    {
+      "check": "ayr: plain draft-preserving quote link",
+      "passed": true
+    },
+    {
+      "check": "kilmarnock: original advice renders once",
+      "passed": true
+    },
+    {
+      "check": "kilmarnock: three native FAQs render",
+      "passed": true
+    },
+    {
+      "check": "kilmarnock: official sources rendered",
+      "passed": true
+    },
+    {
+      "check": "kilmarnock: plain draft-preserving quote link",
+      "passed": true
+    },
+    {
+      "check": "oban: original advice renders once",
+      "passed": true
+    },
+    {
+      "check": "oban: three native FAQs render",
+      "passed": true
+    },
+    {
+      "check": "oban: official sources rendered",
+      "passed": true
+    },
+    {
+      "check": "oban: plain draft-preserving quote link",
+      "passed": true
+    },
+    {
+      "check": "falkirk: original advice renders once",
+      "passed": true
+    },
+    {
+      "check": "falkirk: three native FAQs render",
+      "passed": true
+    },
+    {
+      "check": "falkirk: official sources rendered",
+      "passed": true
+    },
+    {
+      "check": "falkirk: plain draft-preserving quote link",
+      "passed": true
+    },
+    {
+      "check": "edinburgh-leith: original advice renders once",
+      "passed": true
+    },
+    {
+      "check": "edinburgh-leith: three native FAQs render",
+      "passed": true
+    },
+    {
+      "check": "edinburgh-leith: official sources rendered",
+      "passed": true
+    },
+    {
+      "check": "edinburgh-leith: plain draft-preserving quote link",
+      "passed": true
+    },
+    {
+      "check": "edinburgh-south: original advice renders once",
+      "passed": true
+    },
+    {
+      "check": "edinburgh-south: three native FAQs render",
+      "passed": true
+    },
+    {
+      "check": "edinburgh-south: official sources rendered",
+      "passed": true
+    },
+    {
+      "check": "edinburgh-south: plain draft-preserving quote link",
+      "passed": true
+    },
+    {
+      "check": "livingston: original advice renders once",
+      "passed": true
+    },
+    {
+      "check": "livingston: three native FAQs render",
+      "passed": true
+    },
+    {
+      "check": "livingston: official sources rendered",
+      "passed": true
+    },
+    {
+      "check": "livingston: plain draft-preserving quote link",
+      "passed": true
+    },
+    {
+      "check": "dundee: original advice renders once",
+      "passed": true
+    },
+    {
+      "check": "dundee: three native FAQs render",
+      "passed": true
+    },
+    {
+      "check": "dundee: official sources rendered",
+      "passed": true
+    },
+    {
+      "check": "dundee: plain draft-preserving quote link",
+      "passed": true
+    },
+    {
+      "check": "perth: original advice renders once",
+      "passed": true
+    },
+    {
+      "check": "perth: three native FAQs render",
+      "passed": true
+    },
+    {
+      "check": "perth: official sources rendered",
+      "passed": true
+    },
+    {
+      "check": "perth: plain draft-preserving quote link",
+      "passed": true
+    },
+    {
+      "check": "kirkcaldy: original advice renders once",
+      "passed": true
+    },
+    {
+      "check": "kirkcaldy: three native FAQs render",
+      "passed": true
+    },
+    {
+      "check": "kirkcaldy: official sources rendered",
+      "passed": true
+    },
+    {
+      "check": "kirkcaldy: plain draft-preserving quote link",
+      "passed": true
+    },
+    {
+      "check": "dunfermline: original advice renders once",
+      "passed": true
+    },
+    {
+      "check": "dunfermline: three native FAQs render",
+      "passed": true
+    },
+    {
+      "check": "dunfermline: official sources rendered",
+      "passed": true
+    },
+    {
+      "check": "dunfermline: plain draft-preserving quote link",
+      "passed": true
+    },
+    {
+      "check": "st-andrews: original advice renders once",
+      "passed": true
+    },
+    {
+      "check": "st-andrews: three native FAQs render",
+      "passed": true
+    },
+    {
+      "check": "st-andrews: official sources rendered",
+      "passed": true
+    },
+    {
+      "check": "st-andrews: plain draft-preserving quote link",
+      "passed": true
+    },
+    {
+      "check": "fort-william: original advice renders once",
+      "passed": true
+    },
+    {
+      "check": "fort-william: three native FAQs render",
+      "passed": true
+    },
+    {
+      "check": "fort-william: official sources rendered",
+      "passed": true
+    },
+    {
+      "check": "fort-william: plain draft-preserving quote link",
+      "passed": true
+    },
+    {
+      "check": "dumfries: original advice renders once",
+      "passed": true
+    },
+    {
+      "check": "dumfries: three native FAQs render",
+      "passed": true
+    },
+    {
+      "check": "dumfries: official sources rendered",
+      "passed": true
+    },
+    {
+      "check": "dumfries: plain draft-preserving quote link",
+      "passed": true
+    },
+    {
+      "check": "galashiels: original advice renders once",
+      "passed": true
+    },
+    {
+      "check": "galashiels: three native FAQs render",
+      "passed": true
+    },
+    {
+      "check": "galashiels: official sources rendered",
+      "passed": true
+    },
+    {
+      "check": "galashiels: plain draft-preserving quote link",
+      "passed": true
+    },
+    {
+      "check": "hub: all eight city links",
+      "passed": true
+    },
+    {
+      "check": "hub: unique IDs",
+      "passed": true
+    },
+    {
+      "check": "hub: all regional fragment targets exist",
+      "passed": true
+    },
+    {
+      "check": "aberdeen: service correctly identifies City",
+      "passed": true
+    },
+    {
+      "check": "dundee: service correctly identifies City",
+      "passed": true
+    },
+    {
+      "check": "dunfermline: service correctly identifies City",
+      "passed": true
+    },
+    {
+      "check": "edinburgh: service correctly identifies City",
+      "passed": true
+    },
+    {
+      "check": "glasgow: service correctly identifies City",
+      "passed": true
+    },
+    {
+      "check": "inverness: service correctly identifies City",
+      "passed": true
+    },
+    {
+      "check": "perth: service correctly identifies City",
+      "passed": true
+    },
+    {
+      "check": "stirling: service correctly identifies City",
+      "passed": true
+    },
+    {
+      "check": "long-distance: confirmed Britain-wide destination scope",
+      "passed": true
+    },
+    {
+      "check": "long-distance: no old outside-Scotland exclusion",
+      "passed": true
+    }
+  ]
+}

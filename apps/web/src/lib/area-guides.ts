@@ -98,7 +98,7 @@ const AREA_GUIDES: Record<string, AreaGuide> = {
         id: "long-distance",
         title: "Long-distance man and van from Aberdeen",
         paragraphs: [
-          "A small load leaving Aberdeen for another Scottish city needs a plan for arrival as well as departure. Provide the destination postcode, key handover time and any final stop at storage. Furniture and boxes for different stops should be identified in the inventory.",
+          "A load leaving Aberdeen for another Scottish city or a destination in England or Wales needs a plan for arrival as well as departure. We accept Scotland-origin moves across Britain. Provide the destination postcode, key handover time and any final stop at storage. Furniture and boxes for different stops should be identified in the inventory.",
           "For a flat-to-flat journey, share the stairs or lift details at both ends. Ask for the complete route and handling to be included in the quote, then agree the available collection and delivery window.",
         ],
       },
@@ -243,7 +243,7 @@ const AREA_GUIDES: Record<string, AreaGuide> = {
         id: "long-distance",
         title: "Long-distance man and van to or from Inverness",
         paragraphs: [
-          "For an intercity move or a longer Highland journey, give the full destination rather than a broad area name. Include the number of stops, when the property will be accessible and whether delivery must fit around keys or a storage facility's opening times.",
+          "For a longer Highland journey or a move from Inverness to England or Wales, give the full destination rather than a broad area name. We accept moves from Scotland to destinations across Britain. Include the number of stops, when the property will be accessible and whether delivery must fit around keys or a storage facility's opening times.",
           "Describe any narrow approach, vehicle-size limit or restricted turning space before the vehicle is selected. Route suitability and the available date are assessed together, with the quote based on the full load and journey in miles.",
         ],
       },

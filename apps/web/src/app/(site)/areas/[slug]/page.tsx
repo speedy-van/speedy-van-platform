@@ -333,7 +333,9 @@ export default async function AreaPage({ params }: Props) {
             extra handling when there are stairs or a long carry from the van.
           </p>
           <p className="mt-4 leading-relaxed text-white/70">
-            Check the quoted scope and charging basis before confirming. Minimum
+            We accept moves within Scotland and from {area.name} to destinations
+            across Britain, including England and Wales. Check the quoted scope
+            and charging basis before confirming. Minimum
             time, extra stops, waiting and parking arrangements should be discussed
             for your move. If the details change, contact the team to review the plan.
           </p>
@@ -342,7 +344,7 @@ export default async function AreaPage({ params }: Props) {
               Moving price guide
             </Link>
             <Link href="/services/long-distance-removals" className="font-semibold text-amber-400 underline underline-offset-4 hover:text-amber-300">
-              Scottish intercity moves
+              Removals from Scotland across Britain
             </Link>
             <Link href="/services" className="font-semibold text-amber-400 underline underline-offset-4 hover:text-amber-300">
               Compare moving services

@@ -204,14 +204,14 @@ export const SERVICES: Service[] = [
   {
     slug: "long-distance-removals",
     name: "Long-Distance Removals",
-    tagline: "Intercity and Scotland-wide transport",
+    tagline: "Across Scotland and from Scotland to anywhere in Britain",
     icon: "🛣️",
     description:
-      "Long-distance removals and intercity moving for customers travelling between Scottish towns and cities.",
+      "Long-distance removals within Scotland and from Scottish cities, towns and villages to destinations across Britain.",
     longDescription:
-      "For a move between Scottish towns or cities, plan the collection and delivery together. Long-distance removals can suit a full home, a flat or a smaller load travelling further. The quote takes account of the items, route distance in miles, loading time and access at both ends. Include key handover times and every stop before the journey is confirmed.",
+      "Moving within Scotland or from Scotland to England or Wales? Plan collection and delivery together, whether you are taking a full home, a flat or a smaller load. The quote covers your items, route distance in miles, crew time and access at both ends. Include key handovers, storage stops and any ferry crossing so the vehicle, delivery window and complete journey can be agreed before booking.",
     includes: [
-      "Scotland intercity and longer local routes",
+      "Moves within Scotland and from Scotland across Britain",
       "Dedicated van quotes for direct moves",
       "Furniture protection for longer journeys",
       "Timing planned around keys, access, and delivery windows",
@@ -224,7 +224,7 @@ export const SERVICES: Service[] = [
     ],
     startingFrom: 120,
     metaDescription:
-      "Long-distance removals across Scotland for intercity home, flat, student and office moves. Clear route-based quotes from £120.",
+      "Long-distance removals within Scotland and from Scotland to England and Wales. Get a quote for your home, flat, furniture or office move and complete route.",
     bookingServiceSlug: "house-removal",
     bookable: false,
     faqs: [
@@ -239,9 +239,9 @@ export const SERVICES: Service[] = [
           "Many long-distance moves work best as a fixed quote because mileage and crew time can be estimated before the job starts.",
       },
       {
-        question: "Do you move outside Scotland?",
+        question: "Can I move from Scotland to anywhere in Britain?",
         answer:
-          "Routes outside Scotland need separate confirmation. Contact the team with both postcodes and your item list before making plans; an online enquiry does not confirm coverage or a collection slot.",
+          "Yes. We accept moves originating in Scotland to destinations across Britain, including England and Wales. Send both addresses, your inventory and the preferred date so the crew, vehicle, price and collection and delivery windows can be agreed. Mention any ferry crossing or restricted access when requesting your quote.",
       },
     ],
   },
