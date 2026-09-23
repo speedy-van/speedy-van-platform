@@ -1,6 +1,8 @@
 # Inverness and Aberdeen implementation
 
-Date: 23 September 2026. Scope: the two existing city landing pages and links to them. Local implementation only; no deployment, push, merge, hosting or DNS change.
+> Release update, 23 September 2026: the city changes are now published from `48fcf7ff73ee4d8e5ba2b97a9f630e24b9e15718`, production deployment `GYD2pB6EKuW3iRStSwR9Du96QrMP` (Ready at 02:21:59 UTC). The earlier local-only and unresolved-production statements below describe the preceding checkpoint. See [the current city release record](city-release-2026-09-23.md) for fresh production mapping, live verification, remaining mobile limits and rollback.
+
+Date: 23 September 2026. Scope: the two existing city landing pages and links to them. This document records the local implementation checkpoint; subsequent authorised GitHub publication and production deployment are recorded in the release update above.
 
 ## Source and release boundary
 
@@ -33,7 +35,7 @@ The 3-month report exposed only 20 September 2026 as a reporting day. Query rege
 
 For context, the unfiltered available day contained 5 clicks and 73 impressions across the site. Qualified calls, accepted quotes, completed bookings and revenue by organic city landing page were not available. Do not treat contact clicks as sales. No Google Business Profile changes were made.
 
-The indexing requests refer to the currently published pages, not this unpublished content. Their acceptance is not evidence of indexing, selected canonicals or improved rankings. Avoid repeated requests for unchanged pages.
+The indexing requests refer to the pages published at the time of those requests, before the new city content was released. Their acceptance is not evidence of indexing, selected canonicals or improved rankings. Avoid repeated requests for unchanged pages.
 
 ## Changes
 

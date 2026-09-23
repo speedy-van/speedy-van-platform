@@ -1,5 +1,7 @@
 # Independent review: Inverness and Aberdeen
 
+> Release update, 23 September 2026: the city changes are now published from `48fcf7ff73ee4d8e5ba2b97a9f630e24b9e15718`, production deployment `GYD2pB6EKuW3iRStSwR9Du96QrMP` (Ready at 02:21:59 UTC). The earlier local-only and unresolved-production statements below describe the preceding checkpoint. See [the current city release record](city-release-2026-09-23.md) for fresh production mapping, live verification, remaining mobile limits and rollback.
+
 Reviewed: 23 September 2026. Final source base: `39fbb443baeedcae67a881b70e22db4f9f7e5bba`, from `fix/organic-search-and-booking-2026-09-21` in `speedy-van/speedy-van-platform`.
 
 ## Decision

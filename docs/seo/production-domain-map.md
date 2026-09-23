@@ -1,5 +1,7 @@
 # Production domain and source map
 
+> Release update, 23 September 2026: the city changes are now published from `48fcf7ff73ee4d8e5ba2b97a9f630e24b9e15718`, production deployment `GYD2pB6EKuW3iRStSwR9Du96QrMP` (Ready at 02:21:59 UTC). The earlier local-only and unresolved-production statements below describe the preceding checkpoint. See [the current city release record](city-release-2026-09-23.md) for fresh production mapping, live verification, remaining mobile limits and rollback.
+
 Verified 21 September 2026 through authenticated hosting inspection, repository metadata and live public requests.
 
 | Role | Project | ID | Root / output |
@@ -60,4 +62,4 @@ The request adapter now accepts both original root routes and the web rewrite's 
 
 ## Inverness and Aberdeen follow-up — 23 September 2026
 
-City follow-up source: the local patch uses repair-branch head `39fbb443baeedcae67a881b70e22db4f9f7e5bba`, not the older main tree. The hosting connector returned a team-scope permission error during the current read-only check, so this task does not refresh the historical live deployment SHA. See [city-targeting-2026-09-23.md](city-targeting-2026-09-23.md).
+City follow-up source: the local patch uses repair-branch head `39fbb443baeedcae67a881b70e22db4f9f7e5bba`, not the older main tree. The connector was unavailable during the initial checkpoint. The subsequent authenticated dashboard check confirmed that exact production base. The city changes are now published as `48fcf7ff73ee4d8e5ba2b97a9f630e24b9e15718`, production deployment `GYD2pB6EKuW3iRStSwR9Du96QrMP`; the API remains unchanged. See [city-release-2026-09-23.md](city-release-2026-09-23.md) for current ownership, build settings and rollback.

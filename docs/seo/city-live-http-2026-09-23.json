@@ -1,0 +1,127 @@
+{
+  "checked_at_utc": "2026-09-23T02:22:13.867600+00:00",
+  "base": "https://www.speedyvan.uk",
+  "mode": "production",
+  "result": "PASS",
+  "checks": [
+    {
+      "path": "/areas/inverness",
+      "status": 200,
+      "final_url": "https://www.speedyvan.uk/areas/inverness",
+      "title": "Man and Van & Removals in Inverness | SpeedyVan",
+      "canonical": "https://www.speedyvan.uk/areas/inverness",
+      "service_links": 8,
+      "link_scope": "main",
+      "quote_and_pricing_links": "present in main",
+      "faq_count": 4,
+      "schema": "Service and BreadcrumbList pass"
+    },
+    {
+      "path": "/areas/aberdeen",
+      "status": 200,
+      "final_url": "https://www.speedyvan.uk/areas/aberdeen",
+      "title": "Man and Van & Removals in Aberdeen | SpeedyVan",
+      "canonical": "https://www.speedyvan.uk/areas/aberdeen",
+      "service_links": 8,
+      "link_scope": "main",
+      "quote_and_pricing_links": "present in main",
+      "faq_count": 4,
+      "schema": "Service and BreadcrumbList pass"
+    },
+    {
+      "path": "/",
+      "status": 200,
+      "final_url": "https://www.speedyvan.uk/",
+      "city_links": "both present",
+      "link_scope": "document"
+    },
+    {
+      "path": "/services/man-and-van",
+      "status": 200,
+      "final_url": "https://www.speedyvan.uk/services/man-and-van",
+      "city_links": "both present",
+      "link_scope": "main"
+    },
+    {
+      "path": "/services/furniture-delivery",
+      "status": 200,
+      "final_url": "https://www.speedyvan.uk/services/furniture-delivery",
+      "city_links": "both present",
+      "link_scope": "main"
+    },
+    {
+      "path": "/services/house-removal",
+      "status": 200,
+      "final_url": "https://www.speedyvan.uk/services/house-removal",
+      "city_links": "both present",
+      "link_scope": "main"
+    },
+    {
+      "path": "/services/flat-removals",
+      "status": 200,
+      "final_url": "https://www.speedyvan.uk/services/flat-removals",
+      "city_links": "both present",
+      "link_scope": "main"
+    },
+    {
+      "path": "/services/office-removal",
+      "status": 200,
+      "final_url": "https://www.speedyvan.uk/services/office-removal",
+      "city_links": "both present",
+      "link_scope": "main"
+    },
+    {
+      "path": "/services/small-moves",
+      "status": 200,
+      "final_url": "https://www.speedyvan.uk/services/small-moves",
+      "city_links": "both present",
+      "link_scope": "main"
+    },
+    {
+      "path": "/services/long-distance-removals",
+      "status": 200,
+      "final_url": "https://www.speedyvan.uk/services/long-distance-removals",
+      "city_links": "both present",
+      "link_scope": "main"
+    },
+    {
+      "path": "/services/student-move",
+      "status": 200,
+      "final_url": "https://www.speedyvan.uk/services/student-move",
+      "city_links": "both present",
+      "link_scope": "main"
+    },
+    {
+      "path": "/areas/city-seo-invalid-slug",
+      "status": 404,
+      "final_url": "https://www.speedyvan.uk/areas/city-seo-invalid-slug",
+      "robots": "noindex"
+    },
+    {
+      "path": "/services/city-seo-invalid-slug",
+      "status": 404,
+      "final_url": "https://www.speedyvan.uk/services/city-seo-invalid-slug",
+      "robots": "noindex"
+    },
+    {
+      "path": "/book",
+      "status": 200,
+      "final_url": "https://www.speedyvan.uk/book",
+      "robots": "noindex"
+    },
+    {
+      "path": "/sitemap.xml",
+      "status": 200,
+      "final_url": "https://www.speedyvan.uk/sitemap.xml",
+      "url_count": 47,
+      "city_entries": "once each"
+    },
+    {
+      "path": "/robots.txt",
+      "status": 200,
+      "final_url": "https://www.speedyvan.uk/robots.txt",
+      "city_crawling": "allowed"
+    }
+  ],
+  "limits": "GET and initial HTML checks only; redirects are not followed. No payment, database mutation, browser interaction or field performance measurement."
+}

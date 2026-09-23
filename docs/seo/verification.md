@@ -1,5 +1,7 @@
 # Verification of the repair branch
 
+> Release update, 23 September 2026: the city changes are now published from `48fcf7ff73ee4d8e5ba2b97a9f630e24b9e15718`, production deployment `GYD2pB6EKuW3iRStSwR9Du96QrMP` (Ready at 02:21:59 UTC). The earlier local-only and unresolved-production statements below describe the preceding checkpoint. See [the current city release record](city-release-2026-09-23.md) for fresh production mapping, live verification, remaining mobile limits and rollback.
+
 Executed 21 September 2026 on `fix/organic-search-and-booking-2026-09-21`, based on `e43ffc760b57b5d70b655760ee4877f1f759a85a`. These results describe the local branch checks. Subsequent cloud preview and production release states are recorded separately below; a successful build is not a completed transaction or ranking result.
 
 ## Executed checks

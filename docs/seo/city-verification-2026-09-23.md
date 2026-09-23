@@ -1,5 +1,7 @@
 # City implementation verification
 
+> Release update, 23 September 2026: the city changes are now published from `48fcf7ff73ee4d8e5ba2b97a9f630e24b9e15718`, production deployment `GYD2pB6EKuW3iRStSwR9Du96QrMP` (Ready at 02:21:59 UTC). The earlier local-only and unresolved-production statements below describe the preceding checkpoint. See [the current city release record](city-release-2026-09-23.md) for fresh production mapping, live verification, remaining mobile limits and rollback.
+
 Final base: `39fbb443baeedcae67a881b70e22db4f9f7e5bba`, repository `speedy-van/speedy-van-platform`. Checked 23 September 2026. Results below were executed on the final city changes, not copied from historical reports.
 
 | Check | Result | Evidence / limit |
@@ -15,10 +17,10 @@ Final base: `39fbb443baeedcae67a881b70e22db4f9f7e5bba`, repository `speedy-van/s
 | Keyword map | Pass | 60 unique inferred queries; 30 per city. Two existing canonical targets, nine valid supporting URLs. Volumes unavailable, not fabricated. |
 | Independent review | Pass; no blocking code finding | `city-independent-qa-2026-09-23.md`. |
 | Patch whitespace | Pass | `git diff --check`. |
-| Browser at 360px | Not completed | Cloud browser rejects localhost and file URLs. No alternate browser or policy workaround was attempted. A standalone HTML preview was produced from the verified local build, with CSS/assets embedded and native FAQs preserved. It has not been visually verified in that browser. |
+| Browser at 360px | Not completed | The cloud preview and public desktop pages were subsequently checked at 1348px. The available browser interface exposes no viewport/device emulation; 360px remains unverified. The earlier local/file preview restriction was not bypassed. |
 | Real provider payment / database writes | Not exercised | No booking was placed and no payment was taken. Existing offline regressions passed; these do not establish a new provider end-to-end transaction. |
 | Field LCP / INP / CLS | Unavailable | No field-performance result or ranking improvement is claimed. No client JavaScript or dependency was added by this change. |
-| Current production SHA | Unresolved fresh check | Repository deployment records identify the historical project/release. Current hosting connector lacks access to the recorded team scope. No release action attempted. |
+| Current production SHA | Verified and published | The authenticated dashboard confirmed base `39fbb443`; the city application was then published as `48fcf7ff`, production `GYD2pB6EKuW3iRStSwR9Du96QrMP`. See the current release record for fresh live checks. |
 
 ## Verified output
 
