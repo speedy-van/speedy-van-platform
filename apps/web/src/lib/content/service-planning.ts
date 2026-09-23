@@ -198,13 +198,13 @@ export const SERVICE_PLANNING: Partial<Record<string, ServicePlanning>> = {
   },
   "long-distance-removals": {
     suitableFor:
-      "Choose long-distance removals when your home, flat, student belongings or furniture are travelling between Scottish towns and cities. Provide the actual collection and destination addresses so both ends of the move can be assessed.",
+      "Choose long-distance removals for a move within Scotland or from Scotland to anywhere in Britain, including England and Wales. This can cover a home, flat, student belongings or furniture. Provide the actual collection and destination addresses so both ends of the move can be planned.",
     vehicleAndCrew:
       "The vehicle must suit the whole agreed load, while the crew must be suitable for access at both properties. A direct van journey can be quoted where appropriate. Discuss additional stops, remote access and any route restrictions before the schedule is agreed.",
     pricing:
-      "A longer journey is quoted using route distance in miles, vehicle and crew requirements, loading and unloading time and agreed extras. Fixed quotes apply to the stated route and inventory. Routes outside Scotland need separate confirmation before booking.",
+      "A longer journey is quoted using route distance in miles, vehicle and crew requirements, loading and unloading time and agreed extras. Fixed quotes apply to the stated route and inventory. For a move from Scotland to England or Wales, include all destination access and timing details in the same enquiry.",
     notIncluded: [
-      "Routes outside Scotland or involving ferries unless separately confirmed.",
+      "Ferry fares, crossings or overnight arrangements unless included in the agreed route and quote.",
       "Overnight storage, additional stops or onward deliveries unless agreed.",
       "Packing, assembly or specialist handling unless included in the quote.",
     ],

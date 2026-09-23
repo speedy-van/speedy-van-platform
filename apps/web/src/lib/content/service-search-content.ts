@@ -39,12 +39,12 @@ export const SERVICE_SEARCH_CONTENT: Partial<Record<string, ServiceSearchContent
       "Move your office with a quote based on the equipment, buildings and schedule your business needs. Our office removals cover desks, chairs, filing cabinets and boxed equipment across Scotland. Shop, studio and other commercial relocation enquiries are assessed against the items and handling required. Share the inventory, destination layout, loading bay and lift arrangements so the crew can plan collection and unloading. Evening and weekend options depend on availability; arrange IT disconnection and reconnection separately with your own team.",
   },
   "long-distance-removals": {
-    metadataTitle: "Long Distance Man and Van & Removals Scotland",
+    metadataTitle: "Long Distance Removals from Scotland Across Britain",
     metadataDescription:
-      "Request a long distance man and van or removals quote across Scotland. Move furniture, a flat or a full home with collection and delivery planned together.",
-    headline: "Long distance man and van moves across Scotland",
+      "Move within Scotland or from Scotland to England and Wales. Request a long distance man and van or removals quote for your furniture, flat or full home.",
+    headline: "Long distance removals from Scotland across Britain",
     introduction:
-      "Moving furniture, a flat or a whole home between Scottish towns and cities? Request a long distance man and van or removals quote for your complete route and load. The price takes account of distance in miles, van space, crew time and access at both ends. Include any storage stops, narrow approaches and key handover times so collection and delivery can be planned together. A dedicated van journey can be quoted where suitable. Routes outside Scotland need separate confirmation.",
+      "Move furniture, a flat or a whole home within Scotland, or from a Scottish city, town or village to anywhere in Britain. We accept onward moves to England and Wales as well as Scottish intercity journeys. Request a long distance man and van or removals quote using your full load and both addresses. Distance in miles, van space, crew time and access shape the price. Include storage stops, key handovers and any ferry requirement so collection and delivery are planned together.",
   },
   "same-day-delivery": {
     metadataTitle: "Urgent Man and Van Delivery Scotland | Get a Quote",
