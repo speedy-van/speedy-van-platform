@@ -1,5 +1,7 @@
 # Production domain and source map
 
+> Current release, 23 September 2026 at 10:47:09 UTC: commercial city targeting, moving guides and pricing guidance are published from application commit `9bf77d65066d3b505ffa14eee9e7d3425eb8b6aa`, matching source tree `26d33175c487a936e448b5e7d7ef489fbc5539e2`, production deployment `BL6r4WMVZ66vtaVXwGoycHNMo1Ht`. The previous web deployment `GYD2pB6EKuW3iRStSwR9Du96QrMP` is the rollback point. API production remains `5woPnYouSe8kAHqwCsp1o5QoxzSg`. See [the commercial release record](commercial-release-2026-09-23.md) for source mapping, verification and limitations. Older updates below are historical.
+
 > Release update, 23 September 2026: the city changes are now published from `48fcf7ff73ee4d8e5ba2b97a9f630e24b9e15718`, production deployment `GYD2pB6EKuW3iRStSwR9Du96QrMP` (Ready at 02:21:59 UTC). The earlier local-only and unresolved-production statements below describe the preceding checkpoint. See [the current city release record](city-release-2026-09-23.md) for fresh production mapping, live verification, remaining mobile limits and rollback.
 
 Verified 21 September 2026 through authenticated hosting inspection, repository metadata and live public requests.
