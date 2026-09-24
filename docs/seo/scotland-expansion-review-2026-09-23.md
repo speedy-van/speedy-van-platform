@@ -52,3 +52,19 @@ Review this first increment's content and mobile behaviour before release. After
 ## Copilot handoff
 
 Preserve the explicit Area, LocalServicePage and MovingRoutePage registries in `apps/web/src/lib/areas.ts` and `apps/web/src/lib/content/`. Review the nested page routes and `MovingContentPage`, `AreaExpansionLinks` and `ServiceExpansionLinks` without introducing client fetching or changing booking contracts. Run the inventory, regression, build and local HTTP checks. Verify 250 sitemap URLs, 160 area guides, 48 registered local-service guides, 19 Scotland-origin routes and one route hub. Check unknown paths, keyboard navigation, native FAQs, visible focus, 360px/768px layouts and plain `/book` navigation. Report unperformed checks honestly. Do not merge or deploy without release authorization.
+
+---
+
+## Integration status update — 2026-09-24 (branch `integration/seo-1000-2026-09-23`, HEAD `ed8ae095`)
+
+This document's "250 sitemap URLs" figure was accurate at `d5a5d5f`. Since then, one URL was added (`/about` in commit `f5572913`). The current verified count is **251**.
+
+| Check | Status |
+|---|---|
+| 360px and 768px layout (overflow, focus, FAQ, CTA) | **PASS** — verified 2026-09-24, Playwright headless, 5 page types × 2 viewports |
+| Booking draft write, navigate, restore | **PASS** — verified 2026-09-24, serviceSlug and step preserved across navigation |
+| 68 staged URLs returning genuine 404 | **PASS** — verified HTTP 404 against running production build |
+| 251 sitemap `<loc>` entries, 0 staged slugs | **PASS** — verified against live `/sitemap.xml` |
+| Production deployment | **Pending** — release authorisation required |
+| Google Search Console indexing | **Pending** — no deployment yet |
+| Canonical errors check | **Pending** — requires live crawl after deployment |

@@ -1,15 +1,19 @@
 # Stage 2 URL Inventory — Path to 1,000 Pages
 **Date:** 2026-09-24
 **Branch:** `integration/seo-1000-2026-09-23`
-**HEAD:** `5e403779`
+**HEAD:** `ed8ae095`
 
 ---
 
 ## Measured verification results (2026-09-24)
 
+### What the build count means
+The production build generated **279 static pages**. This includes admin, driver, auth, and booking routes that are not SEO landing pages. The SEO-relevant count is **251** — these are the URLs registered in the generated sitemap. The 279 figure is an internal build count only.
+
 ### Production build
 - Command: `next build` from `apps/web/`
-- Result: ✓ 279 static pages generated (includes admin/driver/auth routes)
+- Result: ✓ 279 static pages generated (internal build count — includes admin/driver/auth routes)
+- SEO sitemap URLs: **251** (the meaningful count)
 - TypeScript: ✓ no errors
 - ESLint: ✓ no warnings or errors
 - Build warnings: non-fatal `lockfile missing swc dependencies` — does not affect output
@@ -20,32 +24,58 @@ All 75 checks passed (0 failures):
 | Category | URLs tested | Expected | Result |
 |---|---|---|---|
 | Published samples | 7 | HTTP 200 | ✓ all 200 |
-| Staged routes (moving-routes-stage2.ts) | 20 | HTTP 404 | ✓ all 404 |
-| Staged town service pages (town-service-pages-1.ts) | 48 | HTTP 404 | ✓ all 404 |
+| Staged routes (moving-route-pages-stage2.ts) | 20 | HTTP 404 | ✓ all genuine 404 |
+| Staged town service pages (town-service-pages-1.ts) | 48 | HTTP 404 | ✓ all genuine 404 |
 
-Published samples verified 200: `/`, `/about`, `/areas/glasgow`, `/areas/glasgow/house-removal`, `/moving-routes/glasgow-to-london`, `/services/man-and-van`, `/sitemap.xml`
+Published samples verified HTTP 200: `/`, `/about`, `/areas/glasgow`, `/areas/glasgow/house-removal`, `/moving-routes/glasgow-to-london`, `/services/man-and-van`, `/sitemap.xml`
 
 ### Sitemap verification
-- Total `<loc>` entries: **251** (matches expected count)
+- Total `<loc>` entries: **251** (matches expected count exactly)
 - Staged slugs present in sitemap: **0** (verified by pattern match against all 68 staged slugs)
 
-### Browser checks (Playwright headless Chromium)
+### Browser checks (Playwright headless Chromium v1.62)
 Tested 5 page types × 2 viewports (360px, 768px) = 10 checks:
 
 | Check | Result |
 |---|---|
 | Horizontal overflow | ✓ PASS — body width = viewport width on all 10 |
-| Visible focus ring (5 Tab stops) | ✓ PASS — all 50 focus targets had visible outline |
+| Visible focus ring (5 Tab stops per page) | ✓ PASS — all 50 focus targets had visible outline |
 | FAQ toggle (details/summary) | ✓ PASS — toggles correctly on all 10 |
 | Booking CTA present | ✓ PASS — `/book` link found on all 10 |
 
 Pages tested: homepage, /about, /areas/glasgow, /areas/glasgow/house-removal, /moving-routes/glasgow-to-london
 
-### Booking draft preservation
-- Draft key: `sv_booking_draft_v1` (24h TTL) — confirmed in `booking-store.tsx`
-- Logic confirmed by code review: draft written when `serviceSlug` set AND `step > 1`; restored on hydration
-- Runtime test: form advanced to cookie consent only — step 2+ requires API backend (not running locally)
-- Status: **logic confirmed correct; end-to-end runtime test requires API — pending**
+### Booking draft preservation — PASS (runtime verified)
+Tested via Playwright headless against the running production build:
+
+1. Navigated to `/book?service=house-removals` — `SearchParamsInitializer` dispatched `APPLY_SERVICE_ENTRY`, state advanced to step 2 (`serviceSlug=house-removal`)
+2. `sv_booking_draft_v1` written to `localStorage` — `serviceSlug=house-removal`, `step=2`, `savedAt=1790213090789`
+3. Navigated to `/areas/glasgow` — draft present in localStorage during content page visit
+4. Clicked `See local pricing` CTA (href `/book`) on the content page
+5. Returned to `/book` — form rendered "Journey" (JourneyFields, step 2) — draft restored
+6. Verified: `serviceSlug` unchanged, `step` unchanged, `savedAt` unchanged
+
+**Confirmed PASS:** Draft persists across same-origin navigation and is restored on /book load.
+
+**Caveat:** Addresses were not entered. The production build calls `https://api.speedyvan.uk` for geocoding; no results returned from localhost origin. Draft persistence at step 2 is confirmed; full address entry requires the API running locally (dev mode).
+
+### Source citation quality
+- Original citations: 48 (one per page in section 1)
+- After removing office-removal, student-move, packing-service, furniture-delivery sections: 16
+- After removing flat-removal stair/entrance sections that cited parking pages: **8 final**
+- All 8 remaining citations are on house-removal section 1 (loading position, road conditions, driveway, pedestrianised access) — each source directly addresses the specific external claim in its section
+
+### Production deployment status
+- **Not yet deployed to production**
+- Release authorisation required before merging to main or deploying
+
+### Google Search Console indexing
+- **Not applicable** — branch not deployed; no impressions data available
+- Stage 1 gate remains open until production deployment and one week of crawl data
+
+---
+
+## URL count reconciliation
 
 ---
 
@@ -138,15 +168,32 @@ Not imported into `LOCAL_SERVICE_PAGES`. `apps/web/src/app/(site)/areas/[slug]/[
 
 ---
 
+## Page count arithmetic
+
+| Step | Action | Total |
+|---|---|---|
+| Current published | 251 sitemap URLs (verified by HTTP 200 and sitemap.xml) | 251 |
+| + Batch 1 (town service pages) | Activate `town-service-pages-1.ts` | 251 + 48 = **299** |
+| + Batch 2 (staged routes) | Activate `moving-route-pages-stage2.ts` | 299 + 20 = **319** |
+| Remaining to reach 1,000 | Further batches required | 1,000 − 319 = **681** |
+
+All 68 staged pages remain unpublished until the Stage 1 review gate is cleared.
+
+---
+
 ## Stage 1 review gate (REQUIRED before activating any staged content)
 
 Do not import any staged content files until all five conditions are met:
 
-1. Production deployment of the 251-page branch
-2. Google Search Console confirms indexing has begun on the current pages (impressions visible)
-3. At least one week of crawl data available
-4. No canonical errors on current area or route pages
-5. Mobile layout acceptance checks at 360px and 768px passed (see `scotland-expansion-review-2026-09-23.md`)
+| Condition | Status |
+|---|---|
+| 1. Production deployment of the 251-page branch | **Pending** — release authorisation required |
+| 2. Google Search Console confirms indexing has begun (impressions visible) | **Pending** — no deployment yet |
+| 3. At least one week of crawl data available | **Pending** — depends on condition 2 |
+| 4. No canonical errors on current area or route pages | **Pending** — requires live crawl |
+| 5. Mobile layout 360px and 768px acceptance checks | **PASS** — verified 2026-09-24 via Playwright |
+
+Seven elapsed days after deployment is NOT automatic approval to expand. Each condition must be measured and recorded.
 
 ---
 
