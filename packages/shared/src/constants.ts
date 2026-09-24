@@ -49,10 +49,10 @@ export const REFUND_POLICY = {
   halfRefundHours: 24,
 } as const;
 
-// Tiered pricing colors (shown on price calendar)
+// Pricing tier identifiers returned by the pricing API.
 export const PRICE_TIER = {
   GREEN: "green",
-  YELLOW: "yellow",
+  STANDARD: "yellow",
   RED: "red",
 } as const;
 export type PriceTier = (typeof PRICE_TIER)[keyof typeof PRICE_TIER];

@@ -38,7 +38,7 @@ const root = path.join(__dirname, "..");
 const shell = process.env.COMSPEC || "C:\\Windows\\System32\\cmd.exe";
 
 const CYAN   = "\x1b[36m";
-const YELLOW = "\x1b[33m";
+const INDIGO = "\x1b[35m";
 const RESET  = "\x1b[0m";
 const BOLD   = "\x1b[1m";
 
@@ -64,8 +64,8 @@ function startProcess(name, color, cmd, cwd, extraEnv = {}) {
 }
 
 console.log(`${BOLD}Starting SpeedyVan dev servers...${RESET}`);
-console.log(`  ${CYAN}web${RESET}  → http://localhost:3000`);
-console.log(`  ${YELLOW}api${RESET}  → http://localhost:4000\n`);
+console.log(`  ${CYAN}web${RESET}  → http://localhost:3002`);
+console.log(`  ${INDIGO}api${RESET}  → http://localhost:4000\n`);
 
 // Load .env.local files for each app so vars are injected directly into the
 // child process environment — no dependency on dotenv-cli being in PATH.
@@ -74,13 +74,13 @@ const apiEnv = loadEnvFile(path.join(root, "apps", "api", ".env.local"));
 
 const webProc = startProcess(
   "web", CYAN,
-  "next dev",
+  "next dev -p 3002",
   path.join(root, "apps", "web"),
   webEnv
 );
 
 const apiProc = startProcess(
-  "api", YELLOW,
+  "api", INDIGO,
   "tsx watch src/index.ts",
   path.join(root, "apps", "api"),
   apiEnv

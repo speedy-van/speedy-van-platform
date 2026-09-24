@@ -13,6 +13,9 @@ interface ContentItem {
 
 interface Grouped { [section: string]: ContentItem[] }
 
+const cardStyle = { background: "rgba(255,255,255,0.04)", boxShadow: "0 0 0 1px rgba(245,158,11,0.15), 0 8px 32px rgba(0,0,0,0.4)" };
+const inputCls = "px-3 py-2 text-sm border border-amber-900/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500/50 text-white bg-white/5 placeholder-white/30";
+
 export default function ContentPage() {
   const [grouped, setGrouped] = useState<Grouped>({});
   const [tab, setTab] = useState("");
@@ -90,47 +93,49 @@ export default function ContentPage() {
 
   return (
     <div className="space-y-6">
-      {error && <div className="bg-red-50 border border-red-200 text-red-700 rounded-lg px-4 py-3 text-sm">{error}</div>}
-      {success && <div className="bg-emerald-50 border border-emerald-200 text-emerald-700 rounded-lg px-4 py-3 text-sm">{success}</div>}
+      {error && <div className="bg-red-500/10 border border-red-500/20 text-red-400 rounded-lg px-4 py-3 text-sm">{error}</div>}
+      {success && <div className="bg-emerald-500/15 border border-emerald-500/20 text-emerald-400 rounded-lg px-4 py-3 text-sm">{success}</div>}
 
       <div className="flex items-center justify-between">
-        <p className="text-sm text-slate-500">
-          Edit copy that appears across the site. Group entries by <span className="font-mono text-slate-700">section</span> and reference them by <span className="font-mono text-slate-700">key</span>.
+        <p className="text-sm text-white/55">
+          Edit copy that appears across the site. Group entries by <span className="font-mono text-amber-400">section</span> and reference them by <span className="font-mono text-amber-400">key</span>.
         </p>
         <button
           type="button"
           onClick={() => setShowAdd((v) => !v)}
-          className="text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-lg px-3 py-1.5"
+          className="text-sm font-black text-black rounded-lg px-3 py-1.5"
+          style={{ background: "linear-gradient(135deg, #F59E0B 0%, #EA580C 100%)" }}
         >
           {showAdd ? "Cancel" : "+ New entry"}
         </button>
       </div>
 
       {showAdd && (
-        <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-5 space-y-3">
-          <h2 className="text-sm font-semibold text-slate-900">Create content entry</h2>
+        <div className="rounded-xl border border-amber-900/20 p-5 space-y-3" style={{ background: "rgba(255,255,255,0.04)" }}>
+          <h2 className="text-sm font-semibold text-white">Create content entry</h2>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <input
               value={draft.section}
               onChange={(e) => setDraft((d) => ({ ...d, section: e.target.value }))}
               placeholder="Section (e.g. home_hero)"
-              className="px-3 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className={inputCls}
             />
             <input
               value={draft.key}
               onChange={(e) => setDraft((d) => ({ ...d, key: e.target.value }))}
               placeholder="Key (e.g. headline)"
-              className="px-3 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className={inputCls}
             />
             <select
               value={draft.type}
               onChange={(e) => setDraft((d) => ({ ...d, type: e.target.value }))}
-              className="px-3 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className={inputCls}
+              style={{ background: "rgba(255,255,255,0.05)" }}
             >
-              <option value="text">Text</option>
-              <option value="html">HTML</option>
-              <option value="markdown">Markdown</option>
-              <option value="json">JSON</option>
+              <option value="text" style={{ background: "#1a1a1a" }}>Text</option>
+              <option value="html" style={{ background: "#1a1a1a" }}>HTML</option>
+              <option value="markdown" style={{ background: "#1a1a1a" }}>Markdown</option>
+              <option value="json" style={{ background: "#1a1a1a" }}>JSON</option>
             </select>
           </div>
           <textarea
@@ -138,14 +143,15 @@ export default function ContentPage() {
             onChange={(e) => setDraft((d) => ({ ...d, value: e.target.value }))}
             placeholder="Value"
             rows={3}
-            className="w-full px-3 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-y"
+            className={`w-full resize-y ${inputCls}`}
           />
           <div className="flex justify-end">
             <button
               type="button"
               onClick={createItem}
               disabled={saving}
-              className="text-sm font-semibold text-white bg-emerald-600 hover:bg-emerald-700 rounded-lg px-4 py-2 disabled:opacity-50"
+              className="text-sm font-black text-black rounded-lg px-4 py-2 disabled:opacity-50"
+              style={{ background: "linear-gradient(135deg, #F59E0B 0%, #EA580C 100%)" }}
             >
               {saving ? "Saving…" : "Create"}
             </button>
@@ -154,19 +160,19 @@ export default function ContentPage() {
       )}
 
       {loading ? (
-        <div className="flex items-center justify-center h-48"><div className="h-8 w-8 border-2 border-blue-500 border-t-transparent rounded-full animate-spin" /></div>
+        <div className="flex items-center justify-center h-48"><div className="h-8 w-8 border-2 border-amber-400 border-t-transparent rounded-full animate-spin" /></div>
       ) : sections.length === 0 ? (
-        <div className="bg-white rounded-xl border border-dashed border-slate-300 p-10 text-center">
+        <div className="rounded-xl border border-dashed border-amber-900/20 p-10 text-center bg-white/3">
           <p className="text-3xl mb-2" aria-hidden>📝</p>
-          <p className="text-sm font-semibold text-slate-900">No content entries yet</p>
-          <p className="text-xs text-slate-500 mt-1">Click <strong>+ New entry</strong> above to add your first piece of content.</p>
+          <p className="text-sm font-semibold text-white">No content entries yet</p>
+          <p className="text-xs text-white/40 mt-1">Click <strong className="text-white/70">+ New entry</strong> above to add your first piece of content.</p>
         </div>
       ) : (
         <>
-          <div className="flex gap-1 border-b border-slate-200 overflow-x-auto">
+          <div className="flex gap-1 border-b border-amber-900/20 overflow-x-auto">
             {sections.map((s) => (
               <button key={s} onClick={() => setTab(s)}
-                className={`px-4 py-2 text-sm font-medium whitespace-nowrap transition-colors border-b-2 -mb-px ${tab === s ? "border-blue-500 text-blue-600" : "border-transparent text-slate-500 hover:text-slate-700"}`}>
+                className={`px-4 py-2 text-sm font-medium whitespace-nowrap transition-colors border-b-2 -mb-px ${tab === s ? "border-amber-400 text-amber-400" : "border-transparent text-white/40 hover:text-white"}`}>
                 {s}
               </button>
             ))}
@@ -179,24 +185,24 @@ export default function ContentPage() {
                 const edited = edits[item.id] !== undefined;
                 const isLong = item.type === "TEXT" || (item.value?.length ?? 0) > 100;
                 return (
-                  <div key={item.id} className="bg-white rounded-xl shadow-sm border border-slate-200 p-5 space-y-3">
+                  <div key={item.id} className="rounded-xl p-5 space-y-3" style={cardStyle}>
                     <div className="flex items-start justify-between">
                       <div>
-                        <p className="text-sm font-semibold text-slate-900">{item.key}</p>
-                        <p className="text-xs text-slate-400">{item.section} · {item.type}</p>
+                        <p className="text-sm font-semibold text-white">{item.key}</p>
+                        <p className="text-xs text-white/40">{item.section} · {item.type}</p>
                       </div>
                       <div className="flex gap-2">
                         <button
                           onClick={() => saveItem(item)}
                           disabled={!edited || saving}
-                          className="text-xs font-medium text-emerald-600 border border-emerald-200 rounded px-2.5 py-1 hover:bg-emerald-50 disabled:opacity-40"
+                          className="text-xs font-medium text-emerald-400 border border-emerald-500/20 rounded px-2.5 py-1 hover:bg-emerald-500/10 disabled:opacity-40"
                         >
                           Save
                         </button>
                         <button
                           onClick={() => deleteItem(item)}
                           disabled={saving}
-                          className="text-xs font-medium text-red-500 border border-red-200 rounded px-2.5 py-1 hover:bg-red-50 disabled:opacity-40"
+                          className="text-xs font-medium text-red-400 border border-red-500/20 rounded px-2.5 py-1 hover:bg-red-500/10 disabled:opacity-40"
                         >
                           Delete
                         </button>
@@ -207,13 +213,13 @@ export default function ContentPage() {
                         value={val}
                         onChange={(e) => setEdits((ed) => ({ ...ed, [item.id]: e.target.value }))}
                         rows={4}
-                        className={`w-full px-3 py-2 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-y ${edited ? "border-amber-300 bg-amber-50" : "border-slate-200"}`}
+                        className={`w-full resize-y ${inputCls} ${edited ? "border-amber-400/40 bg-amber-500/10" : ""}`}
                       />
                     ) : (
                       <input
                         value={val}
                         onChange={(e) => setEdits((ed) => ({ ...ed, [item.id]: e.target.value }))}
-                        className={`w-full px-3 py-2 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${edited ? "border-amber-300 bg-amber-50" : "border-slate-200"}`}
+                        className={`w-full ${inputCls} ${edited ? "border-amber-400/40 bg-amber-500/10" : ""}`}
                       />
                     )}
                   </div>

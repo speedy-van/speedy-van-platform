@@ -68,12 +68,32 @@ app.post(
 );
 
 app.post("/reset", async (c) => {
-  await db.$transaction([
-    db.pricingConfig.deleteMany({}),
-    db.pricingConfig.createMany({ data: DEFAULT_PRICING_CONFIG_ROWS }),
-  ]);
+  await db.$transaction(
+    DEFAULT_PRICING_CONFIG_ROWS.map((row) =>
+      db.pricingConfig.upsert({
+        where: { category_key: { category: row.category, key: row.key } },
+        update: { value: row.value, description: row.description ?? null },
+        create: { category: row.category, key: row.key, value: row.value, description: row.description ?? null },
+      }),
+    ),
+  );
   clearPricingCache();
   return c.json(ok({ success: true, count: DEFAULT_PRICING_CONFIG_ROWS.length }));
+});
+
+// Adds any rows defined in DEFAULT_PRICING_CONFIG_ROWS that don't yet exist in the DB.
+// Safe to call at any time — never overwrites values the admin has already set.
+app.post("/seed-missing", async (c) => {
+  const existing = await db.pricingConfig.findMany({ select: { category: true, key: true } });
+  const existingSet = new Set(existing.map((r) => `${r.category}::${r.key}`));
+  const missing = DEFAULT_PRICING_CONFIG_ROWS.filter(
+    (r) => !existingSet.has(`${r.category}::${r.key}`),
+  );
+  if (missing.length > 0) {
+    await db.pricingConfig.createMany({ data: missing });
+    clearPricingCache();
+  }
+  return c.json(ok({ added: missing.length, total: DEFAULT_PRICING_CONFIG_ROWS.length }));
 });
 
 export default app;

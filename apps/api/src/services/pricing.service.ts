@@ -1,7 +1,8 @@
 // Pricing engine.
 //
 // Reads pricing values from the DB-backed PricingConfig table (with a 5-minute
-// in-memory cache) and falls back to DEFAULT_PRICING_CONFIG when a key is missing.
+// in-memory cache). Documented defaults apply only to missing keys after a
+// successful configuration read, never to a database outage.
 
 import { db } from "@speedy-van/db";
 import {
@@ -16,17 +17,33 @@ import {
   TIME_SLOTS,
   CURRENCY,
   type PricingCalculateInput,
+  PRICE_TIER,
 } from "@speedy-van/shared";
 import { getWeatherSurcharge } from "./weather.service";
 
 type ConfigCache = { values: Record<string, Record<string, number>>; loadedAt: number };
 const CACHE_TTL_MS = 5 * 60 * 1000;
 let cache: ConfigCache | null = null;
+const londonCalendarDate = new Intl.DateTimeFormat("en-GB", {
+  timeZone: "Europe/London",
+  year: "numeric",
+  month: "2-digit",
+  day: "2-digit",
+});
+
+function currentBookingDate(now: Date): Date {
+  const parts = Object.fromEntries(londonCalendarDate.formatToParts(now).map((part) => [part.type, part.value]));
+  // Represent the London civil date at UTC midnight for date-only arithmetic.
+  // This is not a conversion of the actual London midnight instant.
+  return new Date(Date.UTC(Number(parts.year), Number(parts.month) - 1, Number(parts.day)));
+}
 
 async function loadConfig(): Promise<Record<string, Record<string, number>>> {
   if (cache && Date.now() - cache.loadedAt < CACHE_TTL_MS) return cache.values;
 
-  const rows = await db.pricingConfig.findMany().catch(() => []);
+  const rows = await db.pricingConfig.findMany().catch((cause: unknown) => {
+    throw new Error("PRICING_CONFIG_UNAVAILABLE", { cause });
+  });
   const values: Record<string, Record<string, number>> = {};
   for (const row of rows) {
     if (!values[row.category]) values[row.category] = {};
@@ -81,6 +98,32 @@ function slotMultiplier(values: Record<string, Record<string, number>>, slot: st
   if (slot === "evening") return readConfig(values, "slot", "eveningMultiplier");
   return readConfig(values, "slot", "afternoonMultiplier");
 }
+const SERVICE_BASE_PRICE_KEY: Record<string, string> = {
+  "house-removals": "houseRemovalsBasePrice",
+  "house-removal": "houseRemovalsBasePrice",
+  "long-distance-removals": "houseRemovalsBasePrice",
+  "furniture": "furnitureBasePrice",
+  "furniture-delivery": "furnitureBasePrice",
+  "storage": "storageBasePrice",
+  "office": "officeBasePrice",
+  "office-removal": "officeBasePrice",
+  "other": "otherBasePrice",
+  "man-and-van": "otherBasePrice",
+  "flat-removals": "otherBasePrice",
+  "small-moves": "otherBasePrice",
+  "student-move": "studentMoveBasePrice",
+  "ikea-delivery": "ikeaDeliveryBasePrice",
+  "rubbish-removal": "rubbishRemovalBasePrice",
+  "piano-moving": "pianoMovingBasePrice",
+  "same-day-delivery": "sameDayDeliveryBasePrice",
+  "packing-service": "packingServiceBasePrice",
+};
+
+function serviceBasePrice(values: Record<string, Record<string, number>>, serviceType: string): number {
+  const key = SERVICE_BASE_PRICE_KEY[serviceType] ?? "serviceBasePrice";
+  return readConfig(values, "base", key);
+}
+
 function variantMultiplier(values: Record<string, Record<string, number>>, variant?: string): number {
   if (!variant) return 1.0;
   const v = variant.toLowerCase();
@@ -149,20 +192,20 @@ function computeAddons(
 }
 
 function tierFor(price: number, sorted: number[]): PriceTier {
-  if (sorted.length === 0) return "yellow";
+  if (sorted.length === 0) return PRICE_TIER.STANDARD;
   const third = Math.floor(sorted.length / 3);
   const lowCutoff = sorted[third] ?? sorted[0]!;
   const highCutoff = sorted[Math.max(0, sorted.length - third - 1)] ?? sorted[sorted.length - 1]!;
-  if (price <= lowCutoff) return "green";
-  if (price >= highCutoff) return "red";
-  return "yellow";
+  if (price <= lowCutoff) return PRICE_TIER.GREEN;
+  if (price >= highCutoff) return PRICE_TIER.RED;
+  return PRICE_TIER.STANDARD;
 }
 
 export async function calculatePrice(input: PricingCalculateInput): Promise<PricingResult> {
   const values = await loadConfig();
 
   // Static (date-independent) line items first
-  const base = readConfig(values, "base", "serviceBasePrice");
+  const base = serviceBasePrice(values, input.serviceType);
   const variantMul = variantMultiplier(values, input.serviceVariant);
   const baseAdjusted = Math.round(base * variantMul * 100) / 100;
 
@@ -220,7 +263,7 @@ export async function calculatePrice(input: PricingCalculateInput): Promise<Pric
     ) / 100;
 
   // 14-day x 3-slot price calendar
-  const today = new Date();
+  const today = currentBookingDate(new Date());
   const days: DayPrice[] = [];
   const allPrices: number[] = [];
 
@@ -235,7 +278,7 @@ export async function calculatePrice(input: PricingCalculateInput): Promise<Pric
       const slotMul = slotMultiplier(values, slot);
       const total = Math.round(staticSubtotal * urgency * weekend * peak * eom * slotMul * 100) / 100;
       allPrices.push(total);
-      return { slot, price: total, tier: "yellow" as PriceTier };
+      return { slot, price: total, tier: PRICE_TIER.STANDARD as PriceTier };
     });
 
     days.push({ date: d.toISOString().slice(0, 10), slots });
@@ -265,9 +308,13 @@ export async function calculatePriceForSlot(
   date: Date,
   slot: "morning" | "afternoon" | "evening",
 ): Promise<number> {
+  if (!Number.isFinite(date.getTime())) throw new Error("SELECTED_SLOT_UNAVAILABLE");
   const result = await calculatePrice(input);
   const iso = date.toISOString().slice(0, 10);
   const day = result.days.find((d) => d.date === iso);
   const slotPrice = day?.slots.find((s) => s.slot === slot)?.price;
-  return slotPrice ?? result.staticSubtotal;
+  if (typeof slotPrice !== "number" || !Number.isFinite(slotPrice) || slotPrice <= 0) {
+    throw new Error("SELECTED_SLOT_UNAVAILABLE");
+  }
+  return slotPrice;
 }

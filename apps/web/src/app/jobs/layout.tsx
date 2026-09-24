@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Driver Jobs | SpeedyVan",
+  title: "Driver Jobs",
   description: "Internal driver job board.",
   robots: {
     index: false,

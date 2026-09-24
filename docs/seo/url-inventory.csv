@@ -1,48 +1,57 @@
-url,type,indexable,source,status_after_local_build,notes
-https://www.speedyvan.uk/,home,yes,static page,200,Canonical primary homepage
-https://www.speedyvan.uk/pricing,pricing,yes,static page,200,New guide-pricing page
-https://www.speedyvan.uk/privacy,legal,yes,static page,200,Included in sitemap
-https://www.speedyvan.uk/terms,legal,yes,static page,200,Included in sitemap
-https://www.speedyvan.uk/cookies,legal,yes,static page,200,Included in sitemap
-https://www.speedyvan.uk/areas/glasgow,area,yes,AREAS,200,Area page
-https://www.speedyvan.uk/areas/glasgow-west-end,area,yes,AREAS,200,Area page
-https://www.speedyvan.uk/areas/glasgow-southside,area,yes,AREAS,200,Area page
-https://www.speedyvan.uk/areas/paisley,area,yes,AREAS,200,Area page
-https://www.speedyvan.uk/areas/edinburgh,area,yes,AREAS,200,Area page
-https://www.speedyvan.uk/areas/edinburgh-leith,area,yes,AREAS,200,Area page
-https://www.speedyvan.uk/areas/edinburgh-south,area,yes,AREAS,200,Area page
-https://www.speedyvan.uk/areas/livingston,area,yes,AREAS,200,Area page
-https://www.speedyvan.uk/areas/dundee,area,yes,AREAS,200,Area page
-https://www.speedyvan.uk/areas/perth,area,yes,AREAS,200,Area page
-https://www.speedyvan.uk/areas/kirkcaldy,area,yes,AREAS,200,Area page
-https://www.speedyvan.uk/areas/dunfermline,area,yes,AREAS,200,Area page
-https://www.speedyvan.uk/areas/st-andrews,area,yes,AREAS,200,Area page
-https://www.speedyvan.uk/areas/aberdeen,area,yes,AREAS,200,Area page
-https://www.speedyvan.uk/areas/inverurie,area,yes,AREAS,200,Area page
-https://www.speedyvan.uk/areas/inverness,area,yes,AREAS,200,Area page
-https://www.speedyvan.uk/areas/fort-william,area,yes,AREAS,200,Area page
-https://www.speedyvan.uk/areas/stirling,area,yes,AREAS,200,Area page
-https://www.speedyvan.uk/areas/falkirk,area,yes,AREAS,200,Area page
-https://www.speedyvan.uk/areas/hamilton,area,yes,AREAS,200,Area page
-https://www.speedyvan.uk/areas/east-kilbride,area,yes,AREAS,200,Area page
-https://www.speedyvan.uk/areas/motherwell,area,yes,AREAS,200,Area page
-https://www.speedyvan.uk/areas/ayr,area,yes,AREAS,200,Area page
-https://www.speedyvan.uk/areas/kilmarnock,area,yes,AREAS,200,Area page
-https://www.speedyvan.uk/areas/oban,area,yes,AREAS,200,Area page
-https://www.speedyvan.uk/areas/dumfries,area,yes,AREAS,200,Area page
-https://www.speedyvan.uk/areas/galashiels,area,yes,AREAS,200,Area page
-https://www.speedyvan.uk/services/man-and-van,service,yes,SERVICES,200,Canonical for man and van/man with a van/van and man
-https://www.speedyvan.uk/services/flat-removals,service,yes,SERVICES,200,New SEO page mapped to man-and-van booking
-https://www.speedyvan.uk/services/small-moves,service,yes,SERVICES,200,New SEO page mapped to man-and-van booking
-https://www.speedyvan.uk/services/house-removal,service,yes,SERVICES,200,House and full-house removals
-https://www.speedyvan.uk/services/long-distance-removals,service,yes,SERVICES,200,New intercity/long-distance removals page
-https://www.speedyvan.uk/services/office-removal,service,yes,SERVICES,200,Office/business/commercial relocation
-https://www.speedyvan.uk/services/student-move,service,yes,SERVICES,200,Student moves
-https://www.speedyvan.uk/services/furniture-delivery,service,yes,SERVICES,200,Furniture removals collection and delivery
-https://www.speedyvan.uk/services/ikea-delivery,service,yes,SERVICES,200,IKEA collection/delivery/assembly help
-https://www.speedyvan.uk/services/piano-moving,service,yes,SERVICES,200,Piano moving enquiries
-https://www.speedyvan.uk/services/same-day-delivery,service,yes,SERVICES,200,Same-day item transport
-https://www.speedyvan.uk/services/packing-service,service,yes,SERVICES,200,Packing support
-https://www.speedyvan.uk/services/european-removals,service,yes,static page,200,Canonical corrected to primary hostname
-https://www.speedyvan.uk/services/rubbish-removal,service,no,SERVICES,200 noindex,Excluded from sitemap/public service grids
-https://www.speedyvan.uk/services/not-a-real-service,invalid,no,notFound,404,Verified genuine 404 locally
+url,path,template,branch_http_status,branch_canonical,indexing_intent,sitemap_membership,checked_at,live_note
+https://www.speedyvan.uk,/,static,200,https://www.speedyvan.uk,index_follow,yes,2026-09-21T13:41:07.623218+00:00,Existing live page; this branch content not deployed
+https://www.speedyvan.uk/services,/services,hub,200,https://www.speedyvan.uk/services,index_follow,yes,2026-09-21T13:41:07.623218+00:00,New on repair branch; not deployed
+https://www.speedyvan.uk/areas,/areas,hub,200,https://www.speedyvan.uk/areas,index_follow,yes,2026-09-21T13:41:07.623218+00:00,New on repair branch; not deployed
+https://www.speedyvan.uk/pricing,/pricing,static,200,https://www.speedyvan.uk/pricing,index_follow,yes,2026-09-21T13:41:07.623218+00:00,Existing live page; this branch content not deployed
+https://www.speedyvan.uk/privacy,/privacy,static,200,https://www.speedyvan.uk/privacy,index_follow,yes,2026-09-21T13:41:07.623218+00:00,Existing live page; this branch content not deployed
+https://www.speedyvan.uk/terms,/terms,static,200,https://www.speedyvan.uk/terms,index_follow,yes,2026-09-21T13:41:07.623218+00:00,Existing live page; this branch content not deployed
+https://www.speedyvan.uk/cookies,/cookies,static,200,https://www.speedyvan.uk/cookies,index_follow,yes,2026-09-21T13:41:07.623218+00:00,Existing live page; this branch content not deployed
+https://www.speedyvan.uk/areas/glasgow,/areas/glasgow,area,200,https://www.speedyvan.uk/areas/glasgow,index_follow,yes,2026-09-21T13:41:07.623218+00:00,Existing live page; this branch content not deployed
+https://www.speedyvan.uk/areas/glasgow-west-end,/areas/glasgow-west-end,area,200,https://www.speedyvan.uk/areas/glasgow-west-end,index_follow,yes,2026-09-21T13:41:07.623218+00:00,Existing live page; this branch content not deployed
+https://www.speedyvan.uk/areas/glasgow-southside,/areas/glasgow-southside,area,200,https://www.speedyvan.uk/areas/glasgow-southside,index_follow,yes,2026-09-21T13:41:07.623218+00:00,Existing live page; this branch content not deployed
+https://www.speedyvan.uk/areas/paisley,/areas/paisley,area,200,https://www.speedyvan.uk/areas/paisley,index_follow,yes,2026-09-21T13:41:07.623218+00:00,Existing live page; this branch content not deployed
+https://www.speedyvan.uk/areas/edinburgh,/areas/edinburgh,area,200,https://www.speedyvan.uk/areas/edinburgh,index_follow,yes,2026-09-21T13:41:07.623218+00:00,Existing live page; this branch content not deployed
+https://www.speedyvan.uk/areas/edinburgh-leith,/areas/edinburgh-leith,area,200,https://www.speedyvan.uk/areas/edinburgh-leith,index_follow,yes,2026-09-21T13:41:07.623218+00:00,Existing live page; this branch content not deployed
+https://www.speedyvan.uk/areas/edinburgh-south,/areas/edinburgh-south,area,200,https://www.speedyvan.uk/areas/edinburgh-south,index_follow,yes,2026-09-21T13:41:07.623218+00:00,Existing live page; this branch content not deployed
+https://www.speedyvan.uk/areas/livingston,/areas/livingston,area,200,https://www.speedyvan.uk/areas/livingston,index_follow,yes,2026-09-21T13:41:07.623218+00:00,Existing live page; this branch content not deployed
+https://www.speedyvan.uk/areas/dundee,/areas/dundee,area,200,https://www.speedyvan.uk/areas/dundee,index_follow,yes,2026-09-21T13:41:07.623218+00:00,Existing live page; this branch content not deployed
+https://www.speedyvan.uk/areas/perth,/areas/perth,area,200,https://www.speedyvan.uk/areas/perth,index_follow,yes,2026-09-21T13:41:07.623218+00:00,Existing live page; this branch content not deployed
+https://www.speedyvan.uk/areas/kirkcaldy,/areas/kirkcaldy,area,200,https://www.speedyvan.uk/areas/kirkcaldy,index_follow,yes,2026-09-21T13:41:07.623218+00:00,Existing live page; this branch content not deployed
+https://www.speedyvan.uk/areas/dunfermline,/areas/dunfermline,area,200,https://www.speedyvan.uk/areas/dunfermline,index_follow,yes,2026-09-21T13:41:07.623218+00:00,Existing live page; this branch content not deployed
+https://www.speedyvan.uk/areas/st-andrews,/areas/st-andrews,area,200,https://www.speedyvan.uk/areas/st-andrews,index_follow,yes,2026-09-21T13:41:07.623218+00:00,Existing live page; this branch content not deployed
+https://www.speedyvan.uk/areas/aberdeen,/areas/aberdeen,area,200,https://www.speedyvan.uk/areas/aberdeen,index_follow,yes,2026-09-21T13:41:07.623218+00:00,Existing live page; this branch content not deployed
+https://www.speedyvan.uk/areas/inverurie,/areas/inverurie,area,200,https://www.speedyvan.uk/areas/inverurie,index_follow,yes,2026-09-21T13:41:07.623218+00:00,Existing live page; this branch content not deployed
+https://www.speedyvan.uk/areas/inverness,/areas/inverness,area,200,https://www.speedyvan.uk/areas/inverness,index_follow,yes,2026-09-21T13:41:07.623218+00:00,Existing live page; this branch content not deployed
+https://www.speedyvan.uk/areas/fort-william,/areas/fort-william,area,200,https://www.speedyvan.uk/areas/fort-william,index_follow,yes,2026-09-21T13:41:07.623218+00:00,Existing live page; this branch content not deployed
+https://www.speedyvan.uk/areas/stirling,/areas/stirling,area,200,https://www.speedyvan.uk/areas/stirling,index_follow,yes,2026-09-21T13:41:07.623218+00:00,Existing live page; this branch content not deployed
+https://www.speedyvan.uk/areas/falkirk,/areas/falkirk,area,200,https://www.speedyvan.uk/areas/falkirk,index_follow,yes,2026-09-21T13:41:07.623218+00:00,Existing live page; this branch content not deployed
+https://www.speedyvan.uk/areas/hamilton,/areas/hamilton,area,200,https://www.speedyvan.uk/areas/hamilton,index_follow,yes,2026-09-21T13:41:07.623218+00:00,Existing live page; this branch content not deployed
+https://www.speedyvan.uk/areas/east-kilbride,/areas/east-kilbride,area,200,https://www.speedyvan.uk/areas/east-kilbride,index_follow,yes,2026-09-21T13:41:07.623218+00:00,Existing live page; this branch content not deployed
+https://www.speedyvan.uk/areas/motherwell,/areas/motherwell,area,200,https://www.speedyvan.uk/areas/motherwell,index_follow,yes,2026-09-21T13:41:07.623218+00:00,Existing live page; this branch content not deployed
+https://www.speedyvan.uk/areas/ayr,/areas/ayr,area,200,https://www.speedyvan.uk/areas/ayr,index_follow,yes,2026-09-21T13:41:07.623218+00:00,Existing live page; this branch content not deployed
+https://www.speedyvan.uk/areas/kilmarnock,/areas/kilmarnock,area,200,https://www.speedyvan.uk/areas/kilmarnock,index_follow,yes,2026-09-21T13:41:07.623218+00:00,Existing live page; this branch content not deployed
+https://www.speedyvan.uk/areas/oban,/areas/oban,area,200,https://www.speedyvan.uk/areas/oban,index_follow,yes,2026-09-21T13:41:07.623218+00:00,Existing live page; this branch content not deployed
+https://www.speedyvan.uk/areas/dumfries,/areas/dumfries,area,200,https://www.speedyvan.uk/areas/dumfries,index_follow,yes,2026-09-21T13:41:07.623218+00:00,Existing live page; this branch content not deployed
+https://www.speedyvan.uk/areas/galashiels,/areas/galashiels,area,200,https://www.speedyvan.uk/areas/galashiels,index_follow,yes,2026-09-21T13:41:07.623218+00:00,Existing live page; this branch content not deployed
+https://www.speedyvan.uk/services/man-and-van,/services/man-and-van,service,200,https://www.speedyvan.uk/services/man-and-van,index_follow,yes,2026-09-21T13:41:07.623218+00:00,Existing live page; this branch content not deployed
+https://www.speedyvan.uk/services/flat-removals,/services/flat-removals,service,200,https://www.speedyvan.uk/services/flat-removals,index_follow,yes,2026-09-21T13:41:07.623218+00:00,Existing live page; this branch content not deployed
+https://www.speedyvan.uk/services/small-moves,/services/small-moves,service,200,https://www.speedyvan.uk/services/small-moves,index_follow,yes,2026-09-21T13:41:07.623218+00:00,Existing live page; this branch content not deployed
+https://www.speedyvan.uk/services/house-removal,/services/house-removal,service,200,https://www.speedyvan.uk/services/house-removal,index_follow,yes,2026-09-21T13:41:07.623218+00:00,Existing live page; this branch content not deployed
+https://www.speedyvan.uk/services/long-distance-removals,/services/long-distance-removals,service,200,https://www.speedyvan.uk/services/long-distance-removals,index_follow,yes,2026-09-21T13:41:07.623218+00:00,Existing live page; this branch content not deployed
+https://www.speedyvan.uk/services/office-removal,/services/office-removal,service,200,https://www.speedyvan.uk/services/office-removal,index_follow,yes,2026-09-21T13:41:07.623218+00:00,Existing live page; this branch content not deployed
+https://www.speedyvan.uk/services/student-move,/services/student-move,service,200,https://www.speedyvan.uk/services/student-move,index_follow,yes,2026-09-21T13:41:07.623218+00:00,Existing live page; this branch content not deployed
+https://www.speedyvan.uk/services/furniture-delivery,/services/furniture-delivery,service,200,https://www.speedyvan.uk/services/furniture-delivery,index_follow,yes,2026-09-21T13:41:07.623218+00:00,Existing live page; this branch content not deployed
+https://www.speedyvan.uk/services/ikea-delivery,/services/ikea-delivery,service,200,https://www.speedyvan.uk/services/ikea-delivery,index_follow,yes,2026-09-21T13:41:07.623218+00:00,Existing live page; this branch content not deployed
+https://www.speedyvan.uk/services/piano-moving,/services/piano-moving,service,200,https://www.speedyvan.uk/services/piano-moving,index_follow,yes,2026-09-21T13:41:07.623218+00:00,Existing live page; this branch content not deployed
+https://www.speedyvan.uk/services/same-day-delivery,/services/same-day-delivery,service,200,https://www.speedyvan.uk/services/same-day-delivery,index_follow,yes,2026-09-21T13:41:07.623218+00:00,Existing live page; this branch content not deployed
+https://www.speedyvan.uk/services/packing-service,/services/packing-service,service,200,https://www.speedyvan.uk/services/packing-service,index_follow,yes,2026-09-21T13:41:07.623218+00:00,Existing live page; this branch content not deployed
+https://www.speedyvan.uk/services/european-removals,/services/european-removals,service,200,https://www.speedyvan.uk/services/european-removals,index_follow,yes,2026-09-21T13:41:07.623218+00:00,Existing live page; this branch content not deployed
+https://www.speedyvan.uk/book,/book,private,200,,noindex_nofollow,no,2026-09-21T13:41:07.623218+00:00,Branch HTTP and metadata verified
+https://www.speedyvan.uk/book/review/QA-NONEXISTENT,/book/review/QA-NONEXISTENT,private,200,,noindex_nofollow,no,2026-09-21T13:41:07.623218+00:00,Branch HTTP and metadata verified
+https://www.speedyvan.uk/auth/login,/auth/login,private,200,,noindex_nofollow,no,2026-09-21T13:41:07.623218+00:00,Branch HTTP and metadata verified
+https://www.speedyvan.uk/driver/login,/driver/login,private,200,,noindex_nofollow,no,2026-09-21T13:41:07.623218+00:00,Branch HTTP and metadata verified
+https://www.speedyvan.uk/track,/track,private,200,,noindex_nofollow,no,2026-09-21T13:41:07.623218+00:00,Branch HTTP and metadata verified
+https://www.speedyvan.uk/jobs,/jobs,private,200,,noindex_nofollow,no,2026-09-21T13:41:07.623218+00:00,Branch HTTP and metadata verified
+https://www.speedyvan.uk/services/qa-invalid-service,/services/qa-invalid-service,invalid,404,,noindex,no,2026-09-21T13:41:07.623218+00:00,Invalid-route probe
+https://www.speedyvan.uk/areas/qa-invalid-area,/areas/qa-invalid-area,invalid,404,,noindex,no,2026-09-21T13:41:07.623218+00:00,Invalid-route probe
+https://www.speedyvan.uk/qa-not-a-page,/qa-not-a-page,invalid,404,,noindex,no,2026-09-21T13:41:07.623218+00:00,Invalid-route probe

@@ -1,43 +1,30 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useBooking } from "@/lib/booking-store";
-import { SERVICES, getBookableService } from "@/lib/services";
+import { resolveBookingService } from "@/lib/booking-service-options";
 
-/**
- * Reads `?service=<slug>` from the URL on mount and pre-selects that service,
- * automatically advancing to step 2.
- *
- * Must be rendered inside <BookingProvider> and wrapped in <Suspense> by the
- * caller (Next.js 14 requirement for useSearchParams in a client component).
- */
+/** Apply recognised service links; direct visits and unknown slugs keep a usable form. */
 export function SearchParamsInitializer() {
   const searchParams = useSearchParams();
-  const { state, dispatch } = useBooking();
-  const ran = useRef(false);
+  const router = useRouter();
+  const { dispatch, ready } = useBooking();
+  const handledService = useRef<string | null | undefined>(undefined);
+  const slug = searchParams.get("service");
 
   useEffect(() => {
-    if (ran.current) return;
-    // Don't clobber a restored draft that already has a service selected.
-    if (state.serviceSlug) return;
+    if (!ready || handledService.current === slug) return;
+    handledService.current = slug;
+    const service = resolveBookingService(slug);
+    if (!service || !slug) return;
 
-    const slug = searchParams.get("service");
-    if (!slug) return;
-
-    const match = SERVICES.find((s) => s.slug === slug);
-    if (!match) return;
-
-    const bookableService = getBookableService(match);
-
-    ran.current = true;
-    dispatch({
-      type: "SET_SERVICE",
-      slug: bookableService.slug,
-      name: bookableService.name,
-    });
-    dispatch({ type: "SET_STEP", step: 2 });
-  }, [searchParams, state.serviceSlug, dispatch]);
+    dispatch({ type: "APPLY_SERVICE_ENTRY", slug });
+    const remaining = new URLSearchParams(searchParams.toString());
+    remaining.delete("service");
+    const query = remaining.toString();
+    router.replace(`${window.location.pathname}${query ? `?${query}` : ""}${window.location.hash}`, { scroll: false });
+  }, [dispatch, ready, router, searchParams, slug]);
 
   return null;
 }

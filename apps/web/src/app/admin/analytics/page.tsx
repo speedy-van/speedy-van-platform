@@ -5,7 +5,7 @@ import { api } from "@/lib/api";
 import {
   LineChart, Line, AreaChart, Area, BarChart, Bar,
   PieChart, Pie, Cell,
-  XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend,
+  XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
 } from "recharts";
 
 interface DayCount { day: string; count: number }
@@ -14,13 +14,14 @@ interface ServiceStat { slug: string; name: string; count: number; revenue: numb
 interface AreaStat { area: string; count: number }
 interface DriverStat { id: string; name: string; completedJobs: number }
 
-const COLORS = ["#3b82f6", "#10b981", "#f59e0b", "#ef4444", "#8b5cf6", "#ec4899"];
+const COLORS = ["#F59E0B", "#10b981", "#EA580C", "#ef4444", "#8b5cf6", "#ec4899"];
 
 const fmtDay = (s: unknown) => {
   if (!s) return "";
   const d = new Date(String(s));
   return d.toLocaleDateString("en-GB", { day: "numeric", month: "short" });
 };
+
 
 export default function AnalyticsPage() {
   const [bookingsPerDay, setBookingsPerDay] = useState<DayCount[]>([]);
@@ -47,7 +48,7 @@ export default function AnalyticsPage() {
   }, []);
 
   if (loading) {
-    return <div className="flex items-center justify-center h-64"><div className="h-8 w-8 border-2 border-blue-500 border-t-transparent rounded-full animate-spin" /></div>;
+    return <div className="flex items-center justify-center h-64"><div className="h-8 w-8 border-2 border-amber-400 border-t-transparent rounded-full animate-spin" /></div>;
   }
 
   const noData = (arr: unknown[]) => arr.length === 0;
@@ -59,11 +60,14 @@ export default function AnalyticsPage() {
         {noData(bookingsPerDay) ? <Empty /> : (
           <ResponsiveContainer width="100%" height={240}>
             <LineChart data={bookingsPerDay}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
-              <XAxis dataKey="day" tickFormatter={fmtDay} tick={{ fontSize: 11 }} />
-              <YAxis tick={{ fontSize: 11 }} />
-              <Tooltip labelFormatter={(v) => fmtDay(v)} />
-              <Line type="monotone" dataKey="count" stroke="#3b82f6" strokeWidth={2} dot={false} name="Bookings" />
+              <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" />
+              <XAxis dataKey="day" tickFormatter={fmtDay} tick={{ fontSize: 11, fill: "rgba(255,255,255,0.4)" }} />
+              <YAxis tick={{ fontSize: 11, fill: "rgba(255,255,255,0.4)" }} />
+              <Tooltip
+                contentStyle={{ background: "#0A0A0A", border: "1px solid rgba(245,158,11,0.2)", borderRadius: "8px", color: "#fff" }}
+                labelFormatter={(v) => fmtDay(v)}
+              />
+              <Line type="monotone" dataKey="count" stroke="#F59E0B" strokeWidth={2} dot={false} name="Bookings" />
             </LineChart>
           </ResponsiveContainer>
         )}
@@ -76,15 +80,19 @@ export default function AnalyticsPage() {
             <AreaChart data={revenuePerDay}>
               <defs>
                 <linearGradient id="revGrad" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#10b981" stopOpacity={0.15} />
-                  <stop offset="95%" stopColor="#10b981" stopOpacity={0} />
+                  <stop offset="5%" stopColor="#F59E0B" stopOpacity={0.2} />
+                  <stop offset="95%" stopColor="#F59E0B" stopOpacity={0} />
                 </linearGradient>
               </defs>
-              <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
-              <XAxis dataKey="day" tickFormatter={fmtDay} tick={{ fontSize: 11 }} />
-              <YAxis tick={{ fontSize: 11 }} tickFormatter={(v) => `£${v}`} />
-              <Tooltip labelFormatter={(v) => fmtDay(v)} formatter={(v: unknown) => [`£${Number(v).toFixed(2)}`, "Revenue"]} />
-              <Area type="monotone" dataKey="revenue" stroke="#10b981" fill="url(#revGrad)" strokeWidth={2} name="Revenue" />
+              <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" />
+              <XAxis dataKey="day" tickFormatter={fmtDay} tick={{ fontSize: 11, fill: "rgba(255,255,255,0.4)" }} />
+              <YAxis tick={{ fontSize: 11, fill: "rgba(255,255,255,0.4)" }} tickFormatter={(v) => `£${v}`} />
+              <Tooltip
+                contentStyle={{ background: "#0A0A0A", border: "1px solid rgba(245,158,11,0.2)", borderRadius: "8px", color: "#fff" }}
+                labelFormatter={(v) => fmtDay(v)}
+                formatter={(v: unknown) => [`£${Number(v).toFixed(2)}`, "Revenue"]}
+              />
+              <Area type="monotone" dataKey="revenue" stroke="#F59E0B" fill="url(#revGrad)" strokeWidth={2} name="Revenue" />
             </AreaChart>
           </ResponsiveContainer>
         )}
@@ -99,7 +107,7 @@ export default function AnalyticsPage() {
                 <Pie data={services} dataKey="count" nameKey="name" cx="50%" cy="50%" outerRadius={80} label={({ name, percent }: { name?: string; percent?: number }) => `${name ?? ""} ${((percent ?? 0) * 100).toFixed(0)}%`} labelLine={false}>
                   {services.map((_, i) => <Cell key={i} fill={COLORS[i % COLORS.length]} />)}
                 </Pie>
-                <Tooltip />
+                <Tooltip contentStyle={{ background: "#0A0A0A", border: "1px solid rgba(245,158,11,0.2)", borderRadius: "8px", color: "#fff" }} />
               </PieChart>
             </ResponsiveContainer>
           )}
@@ -110,11 +118,11 @@ export default function AnalyticsPage() {
           {noData(areas) ? <Empty /> : (
             <ResponsiveContainer width="100%" height={240}>
               <BarChart data={areas.slice(0, 10)} layout="vertical">
-                <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
-                <XAxis type="number" tick={{ fontSize: 11 }} />
-                <YAxis dataKey="area" type="category" width={90} tick={{ fontSize: 11 }} />
-                <Tooltip />
-                <Bar dataKey="count" fill="#8b5cf6" radius={[0, 4, 4, 0]} name="Bookings" />
+                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" />
+                <XAxis type="number" tick={{ fontSize: 11, fill: "rgba(255,255,255,0.4)" }} />
+                <YAxis dataKey="area" type="category" width={90} tick={{ fontSize: 11, fill: "rgba(255,255,255,0.4)" }} />
+                <Tooltip contentStyle={{ background: "#0A0A0A", border: "1px solid rgba(245,158,11,0.2)", borderRadius: "8px", color: "#fff" }} />
+                <Bar dataKey="count" fill="#EA580C" radius={[0, 4, 4, 0]} name="Bookings" />
               </BarChart>
             </ResponsiveContainer>
           )}
@@ -126,11 +134,11 @@ export default function AnalyticsPage() {
         <ChartCard title="Driver Performance (Completed Jobs)">
           <ResponsiveContainer width="100%" height={240}>
             <BarChart data={driverStats}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
-              <XAxis dataKey="name" tick={{ fontSize: 11 }} />
-              <YAxis tick={{ fontSize: 11 }} />
-              <Tooltip />
-              <Bar dataKey="completedJobs" fill="#f59e0b" radius={[4, 4, 0, 0]} name="Completed Jobs" />
+              <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" />
+              <XAxis dataKey="name" tick={{ fontSize: 11, fill: "rgba(255,255,255,0.4)" }} />
+              <YAxis tick={{ fontSize: 11, fill: "rgba(255,255,255,0.4)" }} />
+              <Tooltip contentStyle={{ background: "#0A0A0A", border: "1px solid rgba(245,158,11,0.2)", borderRadius: "8px", color: "#fff" }} />
+              <Bar dataKey="completedJobs" fill="#F59E0B" radius={[4, 4, 0, 0]} name="Completed Jobs" />
             </BarChart>
           </ResponsiveContainer>
         </ChartCard>
@@ -141,13 +149,13 @@ export default function AnalyticsPage() {
 
 function ChartCard({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-5">
-      <h3 className="text-sm font-semibold text-slate-700 uppercase tracking-wider mb-4">{title}</h3>
+    <div className="rounded-xl p-5" style={{ background: "rgba(255,255,255,0.04)", boxShadow: "0 0 0 1px rgba(245,158,11,0.15), 0 8px 32px rgba(0,0,0,0.4)" }}>
+      <h3 className="text-sm font-semibold text-white/40 uppercase tracking-wider mb-4">{title}</h3>
       {children}
     </div>
   );
 }
 
 function Empty() {
-  return <p className="text-sm text-slate-400 text-center py-12">No data yet</p>;
+  return <p className="text-sm text-white/40 text-center py-12">No data yet</p>;
 }

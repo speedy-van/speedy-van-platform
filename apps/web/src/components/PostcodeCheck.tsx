@@ -1,5 +1,7 @@
 "use client";
 
+import { trackAnalyticsEvent } from "@/lib/analytics";
+
 import { useEffect, useMemo, useState } from "react";
 import { UseMyLocationButton } from "./UseMyLocationButton";
 import { OutOfAreaWaitlistPopup } from "./OutOfAreaWaitlistPopup";
@@ -12,23 +14,8 @@ const SCOTLAND_PREFIXES = [
 ];
 
 function track(name: string, payload: Record<string, unknown> = {}) {
-  if (typeof window === "undefined") return;
-  const w = window as Window & {
-    gtag?: (...args: unknown[]) => void;
-    dataLayer?: unknown[];
-  };
-  try {
-    w.gtag?.("event", name, { event_category: "engagement", ...payload });
-  } catch {
-    /* ignore */
-  }
-  try {
-    w.dataLayer?.push({ event: name, ...payload });
-  } catch {
-    /* ignore */
-  }
+  trackAnalyticsEvent(name, { event_category: "engagement", ...payload });
 }
-
 function extractArea(postcode: string): string | null {
   const m = postcode.trim().toUpperCase().match(/^([A-Z]{1,2})/);
   return m ? m[1] : null;
@@ -108,14 +95,14 @@ export function PostcodeCheck() {
           </span>
         )}
         {status.kind === "outside" && (
-          <span className="inline-flex flex-wrap items-center gap-x-2 gap-y-1 text-amber-300 font-semibold">
+          <span className="inline-flex flex-wrap items-center gap-x-2 gap-y-1 text-primary-200 font-semibold">
             <span className="inline-flex items-center gap-1">
               <span aria-hidden="true">📞</span> {status.area} is outside our coverage —
             </span>
             <button
               type="button"
               onClick={() => setWaitlistOpen(true)}
-              className="underline decoration-amber-200 underline-offset-2 hover:text-amber-200"
+              className="underline decoration-primary-200 underline-offset-2 hover:text-white"
             >
               notify me when you launch here
             </button>

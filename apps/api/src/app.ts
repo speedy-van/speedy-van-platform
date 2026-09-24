@@ -1,8 +1,11 @@
 import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { logger } from "hono/logger";
-import { ALLOWED_ORIGINS } from "@speedy-van/config";
+import { isAllowedOrigin } from "@speedy-van/config";
+import { fail } from "@speedy-van/shared";
 import { errorHandler } from "./middleware/error";
+import { getDatabaseConfigError } from "./lib/database-config";
+import { proxyRequest, shouldProxyRequest } from "./lib/dev-proxy";
 
 import healthRoutes from "./routes/health";
 import authRoutes from "./routes/auth";
@@ -24,6 +27,7 @@ import adminDriversRoutes from "./routes/admin/drivers";
 import adminPricingRoutes from "./routes/admin/pricing";
 import adminJobsRoutes from "./routes/admin/jobs";
 import adminContentRoutes from "./routes/admin/content";
+import adminImagesRoutes from "./routes/admin/images";
 import adminAnalyticsRoutes from "./routes/admin/analytics";
 import adminVisitorsRoutes from "./routes/admin/visitors";
 import adminNotificationsRoutes from "./routes/admin/notifications";
@@ -31,17 +35,37 @@ import adminServiceFlagsRoutes from "./routes/admin/service-flags";
 import adminEnquiriesRoutes from "./routes/admin/enquiries";
 
 const app = new Hono();
+const databaseConfigError = getDatabaseConfigError();
+const DATABASE_OPTIONAL_PATH_PREFIXES = ["/geocode", "/weather"];
+
+function canRunWithoutDatabase(path: string): boolean {
+  return DATABASE_OPTIONAL_PATH_PREFIXES.some((prefix) => path === prefix || path.startsWith(`${prefix}/`));
+}
 
 app.use("*", logger());
 app.use(
   "*",
   cors({
-    origin: [...ALLOWED_ORIGINS],
+    origin: (origin) => (isAllowedOrigin(origin) ? origin : undefined),
     credentials: true,
     allowMethods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
     allowHeaders: ["Content-Type", "Authorization", "stripe-signature"],
   }),
 );
+
+app.use("*", async (c, next) => {
+  if (shouldProxyRequest(c.req.path, c.req.method)) {
+    return proxyRequest(c.req.raw, c.req.path);
+  }
+
+  const isHealthCheck = c.req.path === "/" || c.req.path === "/health";
+  if (!databaseConfigError || isHealthCheck || c.req.method === "OPTIONS" || canRunWithoutDatabase(c.req.path)) {
+    await next();
+    return;
+  }
+
+  return c.json(fail(databaseConfigError, "DATABASE_NOT_CONFIGURED"), 503);
+});
 
 app.onError(errorHandler);
 
@@ -66,6 +90,7 @@ app.route("/admin/drivers", adminDriversRoutes);
 app.route("/admin/pricing", adminPricingRoutes);
 app.route("/admin/jobs", adminJobsRoutes);
 app.route("/admin/content", adminContentRoutes);
+app.route("/admin/images", adminImagesRoutes);
 app.route("/admin/analytics", adminAnalyticsRoutes);
 app.route("/admin/visitors", adminVisitorsRoutes);
 app.route("/admin/notifications", adminNotificationsRoutes);

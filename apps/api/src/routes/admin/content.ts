@@ -8,6 +8,12 @@ import { requireAdmin } from "../../middleware/auth";
 const app = new Hono();
 app.use("*", requireAdmin);
 
+function withContentType<T extends { value: string }>(item: T): T & { type: "text" | "json" } {
+  const value = item.value.trim();
+  const type = (value.startsWith("{") && value.endsWith("}")) || (value.startsWith("[") && value.endsWith("]")) ? "json" : "text";
+  return { ...item, type };
+}
+
 app.get(
   "/",
   zValidator("query", z.object({ section: z.string().optional() })),
@@ -17,7 +23,7 @@ app.get(
       where: section ? { section } : {},
       orderBy: [{ section: "asc" }, { key: "asc" }],
     });
-    return c.json(ok({ items }));
+    return c.json(ok({ items: items.map(withContentType) }));
   },
 );
 
@@ -34,12 +40,13 @@ app.put(
   ),
   async (c) => {
     const data = c.req.valid("json");
+    const { section, key, value } = data;
     const item = await db.content.upsert({
-      where: { section_key: { section: data.section, key: data.key } },
-      create: data,
-      update: { value: data.value, type: data.type } as never,
+      where: { section_key: { section, key } },
+      create: { section, key, value },
+      update: { value },
     });
-    return c.json(ok(item));
+    return c.json(ok(withContentType(item)));
   },
 );
 

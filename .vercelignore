@@ -1,0 +1,10 @@
+/.chrome-seo-check/
+/.edge-*/
+/.edge-seo-check*/
+/.edge-seo-check-simple/
+/.playwright-mcp/
+/.screens/
+/test-results/
+/expo-*.log
+/ios-admin*.log
+/*.png

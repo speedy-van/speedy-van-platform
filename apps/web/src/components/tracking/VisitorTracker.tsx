@@ -1,7 +1,9 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
+import { hasAnalyticsConsent } from "@/lib/analytics";
+import { useCookieConsent } from "@/components/layout/CookieConsent";
 
 const API_BASE =
   process.env.NODE_ENV === "development"
@@ -11,6 +13,7 @@ const API_BASE =
 const SESSION_KEY = "sv-visitor-session";
 
 async function post(path: string, body: object) {
+  if (!hasAnalyticsConsent()) return;
   try {
     await fetch(`${API_BASE}${path}`, {
       method: "POST",
@@ -18,88 +21,92 @@ async function post(path: string, body: object) {
       body: JSON.stringify(body),
       keepalive: true,
     });
-  } catch {}
+  } catch { /* Optional measurement must not interrupt navigation. */ }
 }
 
 export default function VisitorTracker() {
-  const sessionId = useRef<string | null>(null);
+  const consent = useCookieConsent();
   const pathname = usePathname();
-  const heartbeatRef = useRef<ReturnType<typeof setInterval> | null>(null);
-  const initialized = useRef(false);
+  const [sessionId, setSessionId] = useState<string | null>(null);
+  const landingPage = useRef(pathname);
+  const lastPage = useRef<string | null>(null);
 
   useEffect(() => {
-    if (initialized.current) return;
-    initialized.current = true;
-
-    const stored = sessionStorage.getItem(SESSION_KEY);
-    if (stored) {
-      sessionId.current = stored;
+    if (consent !== "accepted") {
+      // The server snapshot is null until the client reads a saved choice.
+      if (hasAnalyticsConsent()) return;
+      setSessionId(null);
+      lastPage.current = null;
+      try { sessionStorage.removeItem(SESSION_KEY); } catch { /* Storage may be unavailable. */ }
       return;
     }
+    try {
+      const stored = sessionStorage.getItem(SESSION_KEY);
+      if (stored) {
+        setSessionId(stored);
+        return;
+      }
+    } catch { /* An in-memory session still works when storage is unavailable. */ }
 
-    // Init session
-    post("/tracking/session", {
-      userAgent: navigator.userAgent,
-      referrer: document.referrer || null,
-      landingPage: pathname,
-      screenWidth: window.screen.width,
-    }).then(async (res) => {
-      // We need the response for the session ID — refetch with response capture
-    });
-
-    // Use fetch directly for init to capture sessionId
-    (async () => {
+    const controller = new AbortController();
+    let active = true;
+    async function initialise() {
       try {
-        const res = await fetch(`${API_BASE}/tracking/session`, {
+        const response = await fetch(`${API_BASE}/tracking/session`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
+          signal: controller.signal,
           body: JSON.stringify({
             userAgent: navigator.userAgent,
-            referrer: document.referrer || null,
-            landingPage: pathname,
+            referrer: document.referrer ? new URL(document.referrer).origin : undefined,
+            landingPage: landingPage.current ?? undefined,
             screenWidth: window.screen.width,
           }),
         });
-        if (res.ok) {
-          const data = await res.json();
-          const sid = data?.sessionId ?? data?.id ?? null;
-          if (sid) {
-            sessionId.current = sid;
-            sessionStorage.setItem(SESSION_KEY, sid);
-          }
-        }
-      } catch {}
-    })();
-
-    // Heartbeat every 30s
-    heartbeatRef.current = setInterval(() => {
-      if (sessionId.current) post("/tracking/heartbeat", { sessionId: sessionId.current });
-    }, 30000);
-
-    // Exit beacon
-    function onExit() {
-      if (sessionId.current) post("/tracking/exit", { sessionId: sessionId.current });
+        if (!response.ok) return;
+        const result: unknown = await response.json();
+        if (!active || !hasAnalyticsConsent() || !result || typeof result !== "object") return;
+        const envelope = result as { success?: boolean; data?: { sessionId?: unknown } };
+        const id = envelope.data?.sessionId;
+        if (envelope.success !== true || typeof id !== "string" || !id) return;
+        setSessionId(id);
+        try { sessionStorage.setItem(SESSION_KEY, id); } catch { /* Keep the in-memory session. */ }
+      } catch { /* A failed or cancelled session request is not a customer error. */ }
     }
-    window.addEventListener("beforeunload", onExit);
-
+    void initialise();
     return () => {
-      if (heartbeatRef.current) clearInterval(heartbeatRef.current);
-      window.removeEventListener("beforeunload", onExit);
+      active = false;
+      controller.abort();
     };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [consent]);
 
-  // Page view on route change
   useEffect(() => {
-    if (!sessionId.current) return;
-    post("/tracking/event", {
-      sessionId: sessionId.current,
-      type: "PAGE_VIEW",
+    if (consent !== "accepted" || !sessionId) return;
+    const heartbeat = setInterval(() => {
+      if (document.visibilityState === "visible") {
+        void post("/tracking/heartbeat", { sessionId });
+      }
+    }, 30000);
+    const onExit = () => { void post("/tracking/exit", { sessionId }); };
+    window.addEventListener("pagehide", onExit);
+    return () => {
+      clearInterval(heartbeat);
+      window.removeEventListener("pagehide", onExit);
+    };
+  }, [consent, sessionId]);
+
+  useEffect(() => {
+    if (consent !== "accepted" || !sessionId || !pathname) return;
+    const key = `${sessionId}:${pathname}`;
+    if (lastPage.current === key) return;
+    lastPage.current = key;
+    void post("/tracking/event", {
+      sessionId,
+      type: "page_view",
       page: pathname,
-      element: null,
       metadata: {},
     });
-  }, [pathname]);
+  }, [consent, pathname, sessionId]);
 
   return null;
 }

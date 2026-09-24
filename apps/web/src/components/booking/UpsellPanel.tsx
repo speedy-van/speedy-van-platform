@@ -2,11 +2,12 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useBooking } from "@/lib/booking-store";
+import { trackAnalyticsEvent } from "@/lib/analytics";
 
 const API_BASE =
   process.env.NODE_ENV === "development"
     ? "http://localhost:4000"
-    : (process.env.NEXT_PUBLIC_API_URL ?? "https://api.speedy-van.co.uk");
+    : (process.env.NEXT_PUBLIC_API_URL ?? "https://api.speedyvan.uk");
 
 export interface UpsellSelection {
   needsPacking: boolean;
@@ -26,21 +27,7 @@ export interface UpsellPanelProps {
 }
 
 function track(name: string, payload: Record<string, unknown> = {}) {
-  if (typeof window === "undefined") return;
-  const w = window as Window & {
-    gtag?: (...args: unknown[]) => void;
-    dataLayer?: unknown[];
-  };
-  try {
-    w.gtag?.("event", name, { event_category: "upsell", ...payload });
-  } catch {
-    /* ignore */
-  }
-  try {
-    w.dataLayer?.push({ event: name, ...payload });
-  } catch {
-    /* ignore */
-  }
+  trackAnalyticsEvent(name, { event_category: "upsell", ...payload });
 }
 
 interface SlotData { slot: string; price: number }
@@ -210,7 +197,7 @@ export function UpsellPanel({ initial, initialPrice, onUpdatingChange, onPriceEr
                   {it.icon}
                 </span>
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-semibold text-slate-900 truncate">{it.title}</p>
+                  <p className="text-sm font-semibold text-stone-950 truncate">{it.title}</p>
                   <p className="text-[11px] text-slate-500 leading-tight mt-0.5">{it.blurb}</p>
                 </div>
                 <span

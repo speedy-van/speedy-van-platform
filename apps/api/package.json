@@ -4,19 +4,21 @@
   "scripts": {
     "dev": "dotenv -e .env.local -- tsx watch src/index.ts",
     "build": "tsc",
+    "build:standalone": "node scripts/build-standalone.cjs",
+    "vercel-build": "prisma generate --schema=./prisma/schema.prisma && node scripts/build-server.cjs",
     "start": "node dist/index.js",
     "lint": "eslint src --ext .ts",
     "typecheck": "tsc --noEmit",
     "postinstall": "prisma generate --schema=./prisma/schema.prisma"
   },
   "dependencies": {
-    "@hono/node-server": "^1.13.7",
+    "@hono/node-server": "^1.19.15",
     "@hono/zod-validator": "^0.4.1",
     "@neondatabase/serverless": "0.10.4",
     "@prisma/adapter-neon": "5.22.0",
     "@prisma/client": "^5.22.0",
     "bcryptjs": "^2.4.3",
-    "hono": "^4.6.13",
+    "hono": "^4.13.8",
     "jsonwebtoken": "^9.0.2",
     "pdfkit": "^0.18.0",
     "stripe": "^17.5.0",
@@ -36,6 +38,7 @@
     "@typescript-eslint/parser": "^7.13.0",
     "dotenv-cli": "^7.4.2",
     "eslint": "^8.57.0",
+    "esbuild": "0.28.2",
     "prisma": "^5.14.0",
     "tsx": "^4.15.2",
     "typescript": "^5.4.5"

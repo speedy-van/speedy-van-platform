@@ -1,0 +1,13 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": "nextjs",
+  "installCommand": "npm --prefix ../.. ci --include=dev",
+  "buildCommand": "cd ../.. && npm run db:generate && npm run build --workspace packages/db && npm run build --workspace apps/web",
+  "outputDirectory": ".next",
+  "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": "https://api.speedyvan.uk/api/$1"
+    }
+  ]
+}

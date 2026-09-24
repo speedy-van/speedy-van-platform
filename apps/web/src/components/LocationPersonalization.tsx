@@ -1,5 +1,7 @@
 "use client";
 
+import { trackAnalyticsEvent } from "@/lib/analytics";
+
 import { useEffect, useState } from "react";
 
 /**
@@ -39,23 +41,8 @@ function distanceKm(a: { lat: number; lng: number }, b: { lat: number; lng: numb
 }
 
 function track(name: string, payload: Record<string, unknown> = {}) {
-  if (typeof window === "undefined") return;
-  const w = window as Window & {
-    gtag?: (...args: unknown[]) => void;
-    dataLayer?: unknown[];
-  };
-  try {
-    w.gtag?.("event", name, { event_category: "personalization", ...payload });
-  } catch {
-    /* ignore */
-  }
-  try {
-    w.dataLayer?.push({ event: name, ...payload });
-  } catch {
-    /* ignore */
-  }
+  trackAnalyticsEvent(name, { event_category: "personalization", ...payload });
 }
-
 export function LocationPersonalization() {
   const [location, setLocation] = useState<string | null>(null);
   const [slug, setSlug] = useState<string | null>(null);
@@ -115,7 +102,7 @@ export function LocationPersonalization() {
 
   return (
     <div
-      className="bg-slate-900 text-white"
+      className="bg-stone-950 text-white"
       role="status"
       aria-live="polite"
     >
@@ -126,7 +113,6 @@ export function LocationPersonalization() {
         </p>
         <a
           href={href}
-          data-track-event="personalization_click"
           data-track-location="top_banner"
           onClick={() => track("personalization_click", { destination: href })}
           className="text-xs sm:text-sm font-bold text-primary-400 hover:text-primary-300 underline underline-offset-2 whitespace-nowrap"

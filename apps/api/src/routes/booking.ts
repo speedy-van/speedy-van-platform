@@ -17,6 +17,7 @@ import {
   getBookingForTracking,
 } from "../services/booking.service";
 import { requireAuth } from "../middleware/auth";
+import { PaymentValidationError } from "../lib/payment-validation";
 
 const app = new Hono();
 
@@ -34,6 +35,9 @@ app.post("/create", zValidator("json", CreateBookingSchema), async (c) => {
       201,
     );
   } catch (err) {
+    if (err instanceof PaymentValidationError) {
+      return c.json(fail(err.message, err.code), err.status);
+    }
     if (err instanceof Error && err.name === "PriceChangedError") {
       return c.json(fail(err.message, "PRICE_CHANGED"), 422);
     }
@@ -45,10 +49,13 @@ app.post("/confirm", zValidator("json", ConfirmBookingSchema), async (c) => {
   const { bookingId, stripePaymentIntentId } = c.req.valid("json");
   try {
     const booking = await confirmBooking(bookingId, stripePaymentIntentId);
+    if (booking.status === "CANCELLED") {
+      return c.json(fail("Payment was received, but this booking is cancelled. Please contact support before booking again.", "BOOKING_CANCELLED"), 409);
+    }
     return c.json(ok({ success: true, bookingRef: booking.reference }));
   } catch (err) {
-    if (err instanceof Error && err.name === "PaymentNotSucceeded") {
-      return c.json(fail(err.message, "PAYMENT_NOT_SUCCEEDED"), 400);
+    if (err instanceof PaymentValidationError) {
+      return c.json(fail(err.message, err.code), err.status);
     }
     throw err;
   }
@@ -84,6 +91,7 @@ app.get(
   async (c) => {
     const reference = c.req.param("reference");
     const { email } = c.req.valid("query");
+    c.header("Cache-Control", "private, no-store");
     try {
       const data = await getBookingForTracking(reference, email);
       return c.json(ok(data));
@@ -103,12 +111,19 @@ app.post(
     if (!booking || booking.customerEmail.toLowerCase() !== email.toLowerCase()) {
       return c.json(fail("Booking not found", "NOT_FOUND"), 404);
     }
-    const result = await cancelBooking(booking.id, {
-      reason,
-      actorRole: "CUSTOMER",
-      actorId: booking.userId,
-    });
-    return c.json(ok({ success: true, refundAmount: result.refundAmount }));
+    try {
+      const result = await cancelBooking(booking.id, {
+        reason,
+        actorRole: "CUSTOMER",
+        actorId: booking.userId,
+      });
+      return c.json(ok({ success: true, refundAmount: result.refundAmount }));
+    } catch (err) {
+      if (err instanceof PaymentValidationError) {
+        return c.json(fail(err.message, err.code), err.status);
+      }
+      throw err;
+    }
   },
 );
 
@@ -159,7 +174,7 @@ app.get("/:id/invoice", requireAuth, async (c) => {
     doc.fontSize(26).font("Helvetica-Bold").fillColor("#0F172A").text("SPEEDY VAN", 50, 50);
     doc.fontSize(9).font("Helvetica").fillColor("#64748b");
     doc.text("1 Barrack Street, Office 2.18, Hamilton ML3 0HS", 50, 82);
-    doc.text("support@speedy-van.co.uk  ·  01202 129 746", 50, 93);
+    doc.text("support@speedyvan.uk  ·  +44 7909 032889", 50, 93);
 
     // Invoice label (right)
     doc.fontSize(22).font("Helvetica-Bold").fillColor("#0F172A").text("INVOICE", 400, 50, { align: "right", width: 145 });

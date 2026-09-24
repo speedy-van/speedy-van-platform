@@ -31,13 +31,13 @@ export default function AdminSidebar({ open, onClose }: Props) {
     href === "/admin" ? pathname === "/admin" : pathname.startsWith(href);
 
   const content = (
-    <div className="flex h-full flex-col" style={{ background: "#0F172A" }}>
+    <div className="flex h-full flex-col" style={{ background: "#0A0A0A", borderRight: "1px solid rgba(245,158,11,0.12)" }}>
       {/* Logo */}
-      <div className="flex items-center gap-2 px-5 py-5 border-b border-white/10">
-        <span className="text-lg font-extrabold text-white leading-none">
-          Speedy<span className="text-yellow-400">Van</span>
+      <div className="flex items-center gap-2 px-5 py-5 border-b border-amber-900/20">
+        <span className="text-lg font-black text-white leading-none">
+          Speedy<span className="text-amber-400">Van</span>
         </span>
-        <span className="text-xs font-semibold text-slate-400 ml-1 border border-slate-600 rounded px-1.5 py-0.5">
+        <span className="text-xs font-semibold text-white/40 ml-1 border border-amber-900/30 rounded px-1.5 py-0.5">
           Admin
         </span>
       </div>
@@ -53,8 +53,8 @@ export default function AdminSidebar({ open, onClose }: Props) {
               onClick={onClose}
               className={`flex items-center gap-3 px-3 py-2.5 rounded-lg mb-0.5 text-sm font-medium transition-colors ${
                 active
-                  ? "bg-blue-500/10 text-blue-400 border-l-[3px] border-blue-400 pl-[calc(0.75rem-3px)]"
-                  : "text-slate-400 hover:bg-white/5 hover:text-white"
+                  ? "bg-amber-500/10 text-amber-400 border-l-[3px] border-amber-400 pl-[calc(0.75rem-3px)]"
+                  : "text-white/55 hover:bg-white/5 hover:text-white"
               }`}
             >
               <span className="text-base w-5 text-center">{item.icon}</span>
@@ -65,12 +65,12 @@ export default function AdminSidebar({ open, onClose }: Props) {
       </nav>
 
       {/* User / Logout */}
-      <div className="border-t border-white/10 px-4 py-4">
-        <p className="text-xs text-slate-500 mb-1 truncate">{user?.email}</p>
+      <div className="border-t border-amber-900/20 px-4 py-4">
+        <p className="text-xs text-white/40 mb-1 truncate">{user?.email}</p>
         <p className="text-sm font-medium text-white mb-3 truncate">{user?.name ?? "Admin"}</p>
         <button
           onClick={logout}
-          className="w-full text-left text-sm text-slate-400 hover:text-red-400 transition-colors"
+          className="w-full text-left text-sm text-white/55 hover:text-red-400 transition-colors"
         >
           ← Sign out
         </button>
@@ -81,7 +81,7 @@ export default function AdminSidebar({ open, onClose }: Props) {
   return (
     <>
       {/* Desktop sidebar */}
-      <aside className="hidden lg:flex w-64 flex-shrink-0 flex-col" style={{ background: "#0F172A" }}>
+      <aside className="hidden lg:flex w-64 flex-shrink-0 flex-col" style={{ background: "#0A0A0A" }}>
         {content}
       </aside>
 
@@ -90,7 +90,7 @@ export default function AdminSidebar({ open, onClose }: Props) {
         className={`fixed inset-y-0 left-0 z-30 w-64 flex-col lg:hidden transition-transform duration-200 ${
           open ? "flex translate-x-0" : "flex -translate-x-full"
         }`}
-        style={{ background: "#0F172A" }}
+        style={{ background: "#0A0A0A" }}
       >
         {content}
       </aside>

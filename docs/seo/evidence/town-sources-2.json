@@ -1,0 +1,476 @@
+{
+  "checkedAt": "2026-09-23",
+  "batch": 2,
+  "areaCount": 32,
+  "adviceSectionCount": 96,
+  "faqCount": 64,
+  "method": "Authored individual operational advice from property-access questions and official local context. Official sources searched with both available engines. Directly readable pages were inspected; indexed-only records and retrieval limits are stated per source. No source establishes company performance, fleet availability, customer demand or completed work.",
+  "operationalScope": "Collections originate in Scotland; destinations may be anywhere in Britain. Vehicle, crew, schedule, access and optional preparation remain subject to the actual enquiry.",
+  "limitations": [
+    "No search volumes or local job history were supplied. No driver count or availability has been inferred.",
+    "Historic conservation appraisals and the 2017 Angus study establish physical context only; do not use their dated parking, footfall, retail or demographic figures as current facts.",
+    "Current loading, permissions, roadworks and private access must be checked for the actual property and moving date.",
+    "Postcodes are deliberately empty rather than assigning unsupported area-wide prefixes. Place schema is used for all 32 records.",
+    "Some Stirling, Perth & Kinross and Historic Environment Scotland pages returned 403 on direct open; limited indexed statements are identified below. No access restriction was bypassed."
+  ],
+  "sources": [
+    {
+      "id": "angus",
+      "label": "Angus Council town centre study (2017)",
+      "url": "https://www.angus.gov.uk/sites/default/files/2018-02/Town%20Centre%20Health%20Checks%202017.pdf",
+      "retrieval": "direct PDF read; historic physical context only"
+    },
+    {
+      "id": "angusparking",
+      "label": "Angus Council parking dispensation guidance",
+      "url": "https://www.angus.gov.uk/roads_parking_and_travel/parking/permission_to_park_on_the_street_parking_dispensation",
+      "retrieval": "direct HTML read"
+    },
+    {
+      "id": "fifeheritage",
+      "label": "Fife Council conservation area information",
+      "url": "https://www.fife.gov.uk/planning/built-heritage-and-planning/conservation-areas",
+      "retrieval": "direct HTML read; Cadham and Inverkeithing PDF downloads exceeded search tool size limit"
+    },
+    {
+      "id": "cupar",
+      "label": "Fife Council Cupar conservation appraisal",
+      "url": "https://www.fife.gov.uk/__data/assets/file/0031/93577/CUPAR-final.pdf",
+      "retrieval": "direct PDF read; 2010 physical street context only"
+    },
+    {
+      "id": "leven",
+      "label": "Fife Council Links Road, Leven appraisal",
+      "url": "https://www.fife.gov.uk/__data/assets/file/0028/93583/LINKS-ROAD-LEVEN-CA-final.pdf",
+      "retrieval": "direct PDF read; historic physical context only"
+    },
+    {
+      "id": "glenrothes",
+      "label": "Fife Council Glenrothes roads programme",
+      "url": "https://www.fife.gov.uk/roads-travel-parking/roads-and-pavements/roads-programme/202627/glenrothes-roads-programme-2026-27",
+      "retrieval": "official indexed extract; programme is not a live road closure notice"
+    },
+    {
+      "id": "rosyth",
+      "label": "Historic Environment Scotland: Rosyth Garden City",
+      "url": "https://www.historicenvironment.scot/about-us/news/community-curated-exhibition-marks-centenary-of-garden-city/",
+      "retrieval": "official indexed extract; direct open returned 403"
+    },
+    {
+      "id": "cowdenbeath",
+      "label": "Fife Council Central Car Park, Cowdenbeath",
+      "url": "https://www.fife.gov.uk/facilities/car-park/central-car-park,-cowdenbeath",
+      "retrieval": "direct HTML read"
+    },
+    {
+      "id": "dalgety",
+      "label": "InvestFife West Way business units",
+      "url": "https://www.investfife.co.uk/land-property/business-units/west-way-phase-1-dalgety-bay/",
+      "retrieval": "official local economic development indexed extract; direct open returned tool internal error"
+    },
+    {
+      "id": "pkcheritage",
+      "label": "Perth & Kinross Council conservation areas",
+      "url": "https://www.pkc.gov.uk/article/17644/Conservation-areas",
+      "retrieval": "official indexed extract; direct open returned 403"
+    },
+    {
+      "id": "pkctraffic",
+      "label": "Perth & Kinross Council traffic regulation orders",
+      "url": "https://www.pkc.gov.uk/article/21896/Traffic-Regulations-Orders",
+      "retrieval": "official indexed extract; proposals distinguished from made orders; no limits or fees asserted"
+    },
+    {
+      "id": "blairgowrie",
+      "label": "Historic Environment Scotland: Blairgowrie Bridge",
+      "url": "https://www.trove.scot/place/28746",
+      "retrieval": "official indexed extract; identifies A93 road crossing of the Ericht"
+    },
+    {
+      "id": "kinross",
+      "label": "Perth & Kinross Council Kinross appraisal",
+      "url": "https://www.pkc.gov.uk/media/37649/Kinross-appraisal/pdf/Kinross_appraisal.pdf?m=1475147515723",
+      "retrieval": "official indexed PDF extract; historic street context only"
+    },
+    {
+      "id": "pitlochry",
+      "label": "Perth & Kinross Council Pitlochry appraisal",
+      "url": "https://www.pkc.gov.uk/media/37664/Pitlochry-appraisal/pdf/Pitlochry_appraisal.pdf?m=636107448620800000",
+      "retrieval": "official indexed PDF extract; historic physical context only"
+    },
+    {
+      "id": "dunblane",
+      "label": "Stirling Council parking information",
+      "url": "https://www.stirling.gov.uk/roads-transport-and-parking/parking-and-permits/parking-in-stirling/",
+      "retrieval": "official indexed extract; direct open returned 403; no tariffs reproduced"
+    },
+    {
+      "id": "bridgeofallan",
+      "label": "Stirling Council Fountain Road Park information",
+      "url": "https://www.stirling.gov.uk/community-life-and-leisure/parks-walking-trails-and-cycle-paths/parks-in-stirling/parks-in-stirling/bridge-of-allan-fountain-road-park/",
+      "retrieval": "official indexed extract; direct open returned 403"
+    },
+    {
+      "id": "callander",
+      "label": "National Park: Callander visitor information",
+      "url": "https://www.lochlomond-trossachs.org/discover-the-park/towns-villages/callander/",
+      "retrieval": "direct HTML read; visitor routes are not removal vehicle instructions"
+    },
+    {
+      "id": "doune",
+      "label": "Stirling Council Doune and Moray Park",
+      "url": "https://www.stirling.gov.uk/community-life-and-leisure/parks-walking-trails-and-cycle-paths/parks-in-stirling/parks-in-stirling/doune-moray-park/",
+      "retrieval": "official indexed extract; direct open returned 403"
+    },
+    {
+      "id": "balfron",
+      "label": "Stirling Council active travel projects",
+      "url": "https://www.stirling.gov.uk/roads-transport-and-parking/active-travel/achievements-and-delivered-projects/",
+      "retrieval": "official indexed extract; direct open returned 403"
+    },
+    {
+      "id": "clacks",
+      "label": "Clackmannanshire Council parking and removal access",
+      "url": "https://www.clacks.gov.uk/transport/parking/",
+      "retrieval": "direct HTML read; no car park fees or general legal conclusions reproduced"
+    },
+    {
+      "id": "falkirk",
+      "label": "Falkirk Council car park information",
+      "url": "https://www.falkirk.gov.uk/streets-and-parking/car-parks",
+      "retrieval": "direct HTML read; public parking not treated as reserved removal loading"
+    },
+    {
+      "id": "boness",
+      "label": "Falkirk Council Bo'ness conservation information",
+      "url": "https://www.falkirk.gov.uk/development-management/conservation-areas",
+      "retrieval": "direct HTML read"
+    }
+  ],
+  "areas": [
+    {
+      "slug": "arbroath",
+      "name": "Arbroath",
+      "council": "Angus",
+      "region": "Tayside & Fife",
+      "sources": [
+        "https://www.angus.gov.uk/sites/default/files/2018-02/Town%20Centre%20Health%20Checks%202017.pdf",
+        "https://www.angus.gov.uk/roads_parking_and_travel/parking/permission_to_park_on_the_street_parking_dispensation"
+      ],
+      "advice": "Remaining uncited sections are original preparation questions and conditional operational guidance, not asserted local rules."
+    },
+    {
+      "slug": "forfar",
+      "name": "Forfar",
+      "council": "Angus",
+      "region": "Tayside & Fife",
+      "sources": [
+        "https://www.angus.gov.uk/sites/default/files/2018-02/Town%20Centre%20Health%20Checks%202017.pdf",
+        "https://www.angus.gov.uk/roads_parking_and_travel/parking/permission_to_park_on_the_street_parking_dispensation"
+      ],
+      "advice": "Remaining uncited sections are original preparation questions and conditional operational guidance, not asserted local rules."
+    },
+    {
+      "slug": "montrose",
+      "name": "Montrose",
+      "council": "Angus",
+      "region": "Tayside & Fife",
+      "sources": [
+        "https://www.angus.gov.uk/sites/default/files/2018-02/Town%20Centre%20Health%20Checks%202017.pdf",
+        "https://www.angus.gov.uk/roads_parking_and_travel/parking/permission_to_park_on_the_street_parking_dispensation"
+      ],
+      "advice": "Remaining uncited sections are original preparation questions and conditional operational guidance, not asserted local rules."
+    },
+    {
+      "slug": "brechin",
+      "name": "Brechin",
+      "council": "Angus",
+      "region": "Tayside & Fife",
+      "sources": [
+        "https://www.angus.gov.uk/sites/default/files/2018-02/Town%20Centre%20Health%20Checks%202017.pdf",
+        "https://www.angus.gov.uk/roads_parking_and_travel/parking/permission_to_park_on_the_street_parking_dispensation"
+      ],
+      "advice": "Remaining uncited sections are original preparation questions and conditional operational guidance, not asserted local rules."
+    },
+    {
+      "slug": "carnoustie",
+      "name": "Carnoustie",
+      "council": "Angus",
+      "region": "Tayside & Fife",
+      "sources": [
+        "https://www.angus.gov.uk/sites/default/files/2018-02/Town%20Centre%20Health%20Checks%202017.pdf"
+      ],
+      "advice": "Remaining uncited sections are original preparation questions and conditional operational guidance, not asserted local rules."
+    },
+    {
+      "slug": "kirriemuir",
+      "name": "Kirriemuir",
+      "council": "Angus",
+      "region": "Tayside & Fife",
+      "sources": [
+        "https://www.angus.gov.uk/sites/default/files/2018-02/Town%20Centre%20Health%20Checks%202017.pdf"
+      ],
+      "advice": "Remaining uncited sections are original preparation questions and conditional operational guidance, not asserted local rules."
+    },
+    {
+      "slug": "glenrothes",
+      "name": "Glenrothes",
+      "council": "Fife",
+      "region": "Tayside & Fife",
+      "sources": [
+        "https://www.fife.gov.uk/roads-travel-parking/roads-and-pavements/roads-programme/202627/glenrothes-roads-programme-2026-27"
+      ],
+      "advice": "Remaining uncited sections are original preparation questions and conditional operational guidance, not asserted local rules."
+    },
+    {
+      "slug": "cupar",
+      "name": "Cupar",
+      "council": "Fife",
+      "region": "Tayside & Fife",
+      "sources": [
+        "https://www.fife.gov.uk/__data/assets/file/0031/93577/CUPAR-final.pdf"
+      ],
+      "advice": "Remaining uncited sections are original preparation questions and conditional operational guidance, not asserted local rules."
+    },
+    {
+      "slug": "leven",
+      "name": "Leven",
+      "council": "Fife",
+      "region": "Tayside & Fife",
+      "sources": [
+        "https://www.fife.gov.uk/__data/assets/file/0028/93583/LINKS-ROAD-LEVEN-CA-final.pdf"
+      ],
+      "advice": "Remaining uncited sections are original preparation questions and conditional operational guidance, not asserted local rules."
+    },
+    {
+      "slug": "rosyth",
+      "name": "Rosyth",
+      "council": "Fife",
+      "region": "Tayside & Fife",
+      "sources": [
+        "https://www.historicenvironment.scot/about-us/news/community-curated-exhibition-marks-centenary-of-garden-city/"
+      ],
+      "advice": "Remaining uncited sections are original preparation questions and conditional operational guidance, not asserted local rules."
+    },
+    {
+      "slug": "cowdenbeath",
+      "name": "Cowdenbeath",
+      "council": "Fife",
+      "region": "Tayside & Fife",
+      "sources": [
+        "https://www.fife.gov.uk/facilities/car-park/central-car-park,-cowdenbeath"
+      ],
+      "advice": "Remaining uncited sections are original preparation questions and conditional operational guidance, not asserted local rules."
+    },
+    {
+      "slug": "dalgety-bay",
+      "name": "Dalgety Bay",
+      "council": "Fife",
+      "region": "Tayside & Fife",
+      "sources": [
+        "https://www.investfife.co.uk/land-property/business-units/west-way-phase-1-dalgety-bay/"
+      ],
+      "advice": "Remaining uncited sections are original preparation questions and conditional operational guidance, not asserted local rules."
+    },
+    {
+      "slug": "inverkeithing",
+      "name": "Inverkeithing",
+      "council": "Fife",
+      "region": "Tayside & Fife",
+      "sources": [
+        "https://www.fife.gov.uk/planning/built-heritage-and-planning/conservation-areas"
+      ],
+      "advice": "Remaining uncited sections are original preparation questions and conditional operational guidance, not asserted local rules."
+    },
+    {
+      "slug": "blairgowrie",
+      "name": "Blairgowrie and Rattray",
+      "council": "Perth & Kinross",
+      "region": "Tayside & Fife",
+      "sources": [
+        "https://www.trove.scot/place/28746"
+      ],
+      "advice": "Remaining uncited sections are original preparation questions and conditional operational guidance, not asserted local rules."
+    },
+    {
+      "slug": "crieff",
+      "name": "Crieff",
+      "council": "Perth & Kinross",
+      "region": "Tayside & Fife",
+      "sources": [
+        "https://www.pkc.gov.uk/article/17644/Conservation-areas"
+      ],
+      "advice": "Remaining uncited sections are original preparation questions and conditional operational guidance, not asserted local rules."
+    },
+    {
+      "slug": "auchterarder",
+      "name": "Auchterarder",
+      "council": "Perth & Kinross",
+      "region": "Tayside & Fife",
+      "sources": [
+        "https://www.pkc.gov.uk/article/21896/Traffic-Regulations-Orders"
+      ],
+      "advice": "Remaining uncited sections are original preparation questions and conditional operational guidance, not asserted local rules."
+    },
+    {
+      "slug": "kinross",
+      "name": "Kinross",
+      "council": "Perth & Kinross",
+      "region": "Tayside & Fife",
+      "sources": [
+        "https://www.pkc.gov.uk/media/37649/Kinross-appraisal/pdf/Kinross_appraisal.pdf?m=1475147515723"
+      ],
+      "advice": "Remaining uncited sections are original preparation questions and conditional operational guidance, not asserted local rules."
+    },
+    {
+      "slug": "pitlochry",
+      "name": "Pitlochry",
+      "council": "Perth & Kinross",
+      "region": "Tayside & Fife",
+      "sources": [
+        "https://www.pkc.gov.uk/media/37664/Pitlochry-appraisal/pdf/Pitlochry_appraisal.pdf?m=636107448620800000"
+      ],
+      "advice": "Remaining uncited sections are original preparation questions and conditional operational guidance, not asserted local rules."
+    },
+    {
+      "slug": "aberfeldy",
+      "name": "Aberfeldy",
+      "council": "Perth & Kinross",
+      "region": "Tayside & Fife",
+      "sources": [
+        "https://www.pkc.gov.uk/article/21896/Traffic-Regulations-Orders"
+      ],
+      "advice": "Remaining uncited sections are original preparation questions and conditional operational guidance, not asserted local rules."
+    },
+    {
+      "slug": "dunblane",
+      "name": "Dunblane",
+      "council": "Stirling",
+      "region": "Central Scotland",
+      "sources": [
+        "https://www.stirling.gov.uk/roads-transport-and-parking/parking-and-permits/parking-in-stirling/"
+      ],
+      "advice": "Remaining uncited sections are original preparation questions and conditional operational guidance, not asserted local rules."
+    },
+    {
+      "slug": "bridge-of-allan",
+      "name": "Bridge of Allan",
+      "council": "Stirling",
+      "region": "Central Scotland",
+      "sources": [
+        "https://www.stirling.gov.uk/community-life-and-leisure/parks-walking-trails-and-cycle-paths/parks-in-stirling/parks-in-stirling/bridge-of-allan-fountain-road-park/"
+      ],
+      "advice": "Remaining uncited sections are original preparation questions and conditional operational guidance, not asserted local rules."
+    },
+    {
+      "slug": "callander",
+      "name": "Callander",
+      "council": "Stirling",
+      "region": "Central Scotland",
+      "sources": [
+        "https://www.lochlomond-trossachs.org/discover-the-park/towns-villages/callander/"
+      ],
+      "advice": "Remaining uncited sections are original preparation questions and conditional operational guidance, not asserted local rules."
+    },
+    {
+      "slug": "doune",
+      "name": "Doune",
+      "council": "Stirling",
+      "region": "Central Scotland",
+      "sources": [
+        "https://www.stirling.gov.uk/community-life-and-leisure/parks-walking-trails-and-cycle-paths/parks-in-stirling/parks-in-stirling/doune-moray-park/"
+      ],
+      "advice": "Remaining uncited sections are original preparation questions and conditional operational guidance, not asserted local rules."
+    },
+    {
+      "slug": "balfron",
+      "name": "Balfron",
+      "council": "Stirling",
+      "region": "Central Scotland",
+      "sources": [
+        "https://www.stirling.gov.uk/roads-transport-and-parking/active-travel/achievements-and-delivered-projects/"
+      ],
+      "advice": "Remaining uncited sections are original preparation questions and conditional operational guidance, not asserted local rules."
+    },
+    {
+      "slug": "alloa",
+      "name": "Alloa",
+      "council": "Clackmannanshire",
+      "region": "Central Scotland",
+      "sources": [
+        "https://www.clacks.gov.uk/transport/parking/"
+      ],
+      "advice": "Remaining uncited sections are original preparation questions and conditional operational guidance, not asserted local rules."
+    },
+    {
+      "slug": "alva",
+      "name": "Alva",
+      "council": "Clackmannanshire",
+      "region": "Central Scotland",
+      "sources": [
+        "https://www.clacks.gov.uk/transport/parking/"
+      ],
+      "advice": "Remaining uncited sections are original preparation questions and conditional operational guidance, not asserted local rules."
+    },
+    {
+      "slug": "tillicoultry",
+      "name": "Tillicoultry",
+      "council": "Clackmannanshire",
+      "region": "Central Scotland",
+      "sources": [
+        "https://www.clacks.gov.uk/transport/parking/"
+      ],
+      "advice": "Remaining uncited sections are original preparation questions and conditional operational guidance, not asserted local rules."
+    },
+    {
+      "slug": "dollar",
+      "name": "Dollar",
+      "council": "Clackmannanshire",
+      "region": "Central Scotland",
+      "sources": [
+        "https://www.clacks.gov.uk/transport/parking/"
+      ],
+      "advice": "Remaining uncited sections are original preparation questions and conditional operational guidance, not asserted local rules."
+    },
+    {
+      "slug": "tullibody",
+      "name": "Tullibody",
+      "council": "Clackmannanshire",
+      "region": "Central Scotland",
+      "sources": [
+        "https://www.clacks.gov.uk/transport/parking/"
+      ],
+      "advice": "Remaining uncited sections are original preparation questions and conditional operational guidance, not asserted local rules."
+    },
+    {
+      "slug": "grangemouth",
+      "name": "Grangemouth",
+      "council": "Falkirk",
+      "region": "Central Scotland",
+      "sources": [
+        "https://www.falkirk.gov.uk/streets-and-parking/car-parks"
+      ],
+      "advice": "Remaining uncited sections are original preparation questions and conditional operational guidance, not asserted local rules."
+    },
+    {
+      "slug": "boness",
+      "name": "Bo'ness",
+      "council": "Falkirk",
+      "region": "Central Scotland",
+      "sources": [
+        "https://www.falkirk.gov.uk/development-management/conservation-areas"
+      ],
+      "advice": "Remaining uncited sections are original preparation questions and conditional operational guidance, not asserted local rules."
+    },
+    {
+      "slug": "denny",
+      "name": "Denny",
+      "council": "Falkirk",
+      "region": "Central Scotland",
+      "sources": [
+        "https://www.falkirk.gov.uk/streets-and-parking/car-parks"
+      ],
+      "advice": "Remaining uncited sections are original preparation questions and conditional operational guidance, not asserted local rules."
+    }
+  ]
+}

@@ -1,5 +1,7 @@
 "use client";
 
+import { trackAnalyticsEvent } from "@/lib/analytics";
+
 import { useState } from "react";
 import Link from "next/link";
 
@@ -25,27 +27,12 @@ const QUICK_ITEMS: QuickItem[] = [
 const BASE_PRICE = 45; // van + driver base
 
 function track(items: string[], total: number) {
-  if (typeof window === "undefined") return;
-  const w = window as Window & {
-    gtag?: (...args: unknown[]) => void;
-    dataLayer?: unknown[];
-  };
-  try {
-    w.gtag?.("event", "item_quote_click", {
-      event_category: "engagement",
-      items: items.join(","),
-      estimated_total: total,
-    });
-  } catch {
-    /* ignore */
-  }
-  try {
-    w.dataLayer?.push({ event: "item_quote_click", items, estimated_total: total });
-  } catch {
-    /* ignore */
-  }
+  trackAnalyticsEvent("item_quote_click", {
+    event_category: "engagement",
+    items: items.join(","),
+    estimated_total: total,
+  });
 }
-
 /**
  * Homepage widget: pick items → see instant price estimate → go to pre-filled
  * booking flow.  Uses local arithmetic only — no API calls required.
@@ -90,7 +77,7 @@ export function ItemQuoteWidget() {
   return (
     <section
       id="item-quote"
-      className="py-16 sm:py-20 bg-amber-50"
+      className="py-16 sm:py-20 bg-primary-50"
       aria-labelledby="item-quote-heading"
     >
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -100,7 +87,7 @@ export function ItemQuoteWidget() {
           </span>
           <h2
             id="item-quote-heading"
-            className="mt-3 text-2xl sm:text-3xl font-extrabold text-slate-900"
+            className="mt-3 text-2xl sm:text-3xl font-extrabold text-stone-950"
           >
             What are you moving?
           </h2>
@@ -132,7 +119,7 @@ export function ItemQuoteWidget() {
                 >
                   {isSelected && (
                     <span
-                      className="absolute top-1.5 right-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-primary-400 text-[10px] font-extrabold text-slate-900"
+                      className="absolute top-1.5 right-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-primary-400 text-[10px] font-extrabold text-white"
                       aria-hidden="true"
                     >
                       ✓
@@ -160,7 +147,7 @@ export function ItemQuoteWidget() {
                   <p className="text-[11px] font-semibold uppercase tracking-wide text-slate-400">
                     Estimated price
                   </p>
-                  <p className="text-4xl font-extrabold text-slate-900 leading-none mt-0.5">
+                  <p className="text-4xl font-extrabold text-stone-950 leading-none mt-0.5">
                     From £{total}
                   </p>
                   <p className="text-xs text-slate-400 mt-1">
@@ -177,7 +164,7 @@ export function ItemQuoteWidget() {
             <Link
               href={bookingHref}
               onClick={handleBookClick}
-              className="inline-flex items-center justify-center gap-2 rounded-lg bg-primary-400 px-7 py-3.5 text-sm font-extrabold text-slate-900 shadow-sm hover:bg-primary-500 transition-colors focus:outline-none focus:ring-2 focus:ring-primary-400 focus:ring-offset-2 shrink-0"
+              className="inline-flex items-center justify-center gap-2 rounded-lg bg-primary-400 px-7 py-3.5 text-sm font-extrabold text-white shadow-sm hover:bg-primary-500 transition-colors focus:outline-none focus:ring-2 focus:ring-primary-400 focus:ring-offset-2 shrink-0"
             >
               {hasItems ? "Book collection →" : "Get a full quote →"}
             </Link>

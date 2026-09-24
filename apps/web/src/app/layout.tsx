@@ -1,21 +1,23 @@
 import type { Metadata, Viewport } from "next";
-import { Inter } from "next/font/google";
+import { Manrope } from "next/font/google";
+import "mapbox-gl/dist/mapbox-gl.css";
 import "./globals.css";
+import "./typography.css";
 import { GlobalProviders } from "@/components/layout/GlobalProviders";
 import { ServiceWorkerRegister } from "@/components/layout/ServiceWorkerRegister";
 import { SITE_OG_IMAGE, SITE_URL } from "@/lib/seo/constants";
 
-const inter = Inter({
+const manrope = Manrope({
   subsets: ["latin"],
-  variable: "--font-inter",
+  variable: "--font-manrope",
   display: "swap",
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env["NEXT_PUBLIC_BASE_URL"] ?? SITE_URL),
+  metadataBase: new URL(SITE_URL),
   title: {
     default: "SpeedyVan | Man and Van & Removals Across Scotland",
-    template: "%s | SpeedyVan Scotland",
+    template: "%s | SpeedyVan",
   },
   description:
     "Man and van, removals, office moves and furniture delivery across Glasgow, Edinburgh, Dundee, Aberdeen, Stirling, Inverness and beyond. Fixed prices and online booking.",
@@ -23,7 +25,6 @@ export const metadata: Metadata = {
     type: "website",
     siteName: "SpeedyVan",
     locale: "en_GB",
-    url: SITE_URL,
     images: [
       {
         url: SITE_OG_IMAGE,
@@ -40,24 +41,13 @@ export const metadata: Metadata = {
       "Man and van, removals, office moves and furniture delivery across Scotland with online quotes and booking.",
     images: [SITE_OG_IMAGE],
   },
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-    },
-  },
-  alternates: {
-    canonical: SITE_URL,
-  },
   manifest: "/manifest.json",
   icons: {
     icon: [
-      { url: "/logo.png", sizes: "any" },
+      { url: "/logo.png?v=amber-20260921-1", sizes: "any" },
     ],
     apple: [
-      { url: "/logo.png", sizes: "180x180" },
+      { url: "/logo.png?v=amber-20260921-1", sizes: "180x180" },
     ],
   },
   appleWebApp: {
@@ -71,7 +61,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#FACC15",
+  themeColor: "#F59E0B",
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover",
@@ -83,8 +73,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={inter.variable}>
-      <body>
+    <html lang="en" className={manrope.variable}>
+      <body className="font-sans">
         <GlobalProviders>{children}</GlobalProviders>
         <ServiceWorkerRegister />
       </body>

@@ -1,0 +1,250 @@
+{
+  "method": "Rendered DOM inspection of pages whose bounded raw HTTP request timed out; not raw HTTP or independent initial HTML evidence",
+  "pages": [
+    {
+      "canonical": "https://www.speedyvan.uk/areas/aberdeen",
+      "h1": [
+        "Man and Van in Aberdeen"
+      ],
+      "localityIds": [
+        "aberdeen-balmedie",
+        "aberdeen-ellon",
+        "aberdeen-newmachar",
+        "aberdeen-oldmeldrum",
+        "aberdeen-blackburn",
+        "aberdeen-kintore",
+        "aberdeen-inverurie",
+        "aberdeen-westhill",
+        "aberdeen-peterculter",
+        "aberdeen-portlethen",
+        "aberdeen-newtonhill",
+        "aberdeen-stonehaven"
+      ],
+      "ogUrl": "https://www.speedyvan.uk/areas/aberdeen",
+      "path": "/areas/aberdeen",
+      "schemas": [
+        [
+          {
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+              {
+                "@type": "ListItem",
+                "item": "https://www.speedyvan.uk",
+                "name": "Home",
+                "position": 1
+              },
+              {
+                "@type": "ListItem",
+                "item": "https://www.speedyvan.uk/areas",
+                "name": "Areas",
+                "position": 2
+              },
+              {
+                "@type": "ListItem",
+                "item": "https://www.speedyvan.uk/areas/aberdeen",
+                "name": "Aberdeen",
+                "position": 3
+              }
+            ]
+          },
+          {
+            "@context": "https://schema.org",
+            "@id": "https://www.speedyvan.uk/areas/aberdeen#service",
+            "@type": "Service",
+            "areaServed": {
+              "@type": "City",
+              "name": "Aberdeen"
+            },
+            "description": "Get an Aberdeen man and van quote for furniture, flats and house removals. Plan local or long-distance moves with the right vehicle and lifting help.",
+            "name": "Aberdeen man and van and removals",
+            "provider": {
+              "@id": "https://www.speedyvan.uk/#organization",
+              "@type": "MovingCompany",
+              "name": "Speedy Van",
+              "url": "https://www.speedyvan.uk"
+            },
+            "url": "https://www.speedyvan.uk/areas/aberdeen"
+          }
+        ]
+      ]
+    },
+    {
+      "canonical": "https://www.speedyvan.uk/areas/nairn",
+      "h1": [
+        "Man and Van in Nairn"
+      ],
+      "localityIds": [],
+      "ogUrl": "https://www.speedyvan.uk/areas/nairn",
+      "path": "/areas/nairn",
+      "schemas": [
+        [
+          {
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+              {
+                "@type": "ListItem",
+                "item": "https://www.speedyvan.uk",
+                "name": "Home",
+                "position": 1
+              },
+              {
+                "@type": "ListItem",
+                "item": "https://www.speedyvan.uk/areas",
+                "name": "Areas",
+                "position": 2
+              },
+              {
+                "@type": "ListItem",
+                "item": "https://www.speedyvan.uk/areas/nairn",
+                "name": "Nairn",
+                "position": 3
+              }
+            ]
+          },
+          {
+            "@context": "https://schema.org",
+            "@id": "https://www.speedyvan.uk/areas/nairn#service",
+            "@type": "Service",
+            "areaServed": {
+              "@type": "Place",
+              "name": "Nairn"
+            },
+            "description": "Man and van in Nairn for furniture delivery, flat and house removals. Share your load, access and Nairn or Inverness route to get a moving quote.",
+            "name": "Nairn man and van and removals",
+            "provider": {
+              "@id": "https://www.speedyvan.uk/#organization",
+              "@type": "MovingCompany",
+              "name": "Speedy Van",
+              "url": "https://www.speedyvan.uk"
+            },
+            "url": "https://www.speedyvan.uk/areas/nairn"
+          }
+        ]
+      ]
+    },
+    {
+      "canonical": "https://www.speedyvan.uk/areas/dingwall",
+      "h1": [
+        "Man and Van in Dingwall"
+      ],
+      "localityIds": [],
+      "ogUrl": "https://www.speedyvan.uk/areas/dingwall",
+      "path": "/areas/dingwall",
+      "schemas": [
+        [
+          {
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+              {
+                "@type": "ListItem",
+                "item": "https://www.speedyvan.uk",
+                "name": "Home",
+                "position": 1
+              },
+              {
+                "@type": "ListItem",
+                "item": "https://www.speedyvan.uk/areas",
+                "name": "Areas",
+                "position": 2
+              },
+              {
+                "@type": "ListItem",
+                "item": "https://www.speedyvan.uk/areas/dingwall",
+                "name": "Dingwall",
+                "position": 3
+              }
+            ]
+          },
+          {
+            "@context": "https://schema.org",
+            "@id": "https://www.speedyvan.uk/areas/dingwall#service",
+            "@type": "Service",
+            "areaServed": {
+              "@type": "Place",
+              "name": "Dingwall"
+            },
+            "description": "Man and van in Dingwall for furniture collection, flat and house removals. Plan High Street or rural access and request a quote for your full route.",
+            "name": "Dingwall man and van and removals",
+            "provider": {
+              "@id": "https://www.speedyvan.uk/#organization",
+              "@type": "MovingCompany",
+              "name": "Speedy Van",
+              "url": "https://www.speedyvan.uk"
+            },
+            "url": "https://www.speedyvan.uk/areas/dingwall"
+          }
+        ]
+      ]
+    },
+    {
+      "canonical": "https://www.speedyvan.uk/areas/inverness",
+      "h1": [
+        "Man and Van in Inverness"
+      ],
+      "localityIds": [
+        "inverness-culloden",
+        "inverness-smithton",
+        "inverness-balloch",
+        "inverness-ardersier",
+        "inverness-croy",
+        "inverness-nairn",
+        "inverness-beauly",
+        "inverness-muir-of-ord",
+        "inverness-conon-bridge",
+        "inverness-dingwall",
+        "inverness-drumnadrochit"
+      ],
+      "ogUrl": "https://www.speedyvan.uk/areas/inverness",
+      "path": "/areas/inverness",
+      "schemas": [
+        [
+          {
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+              {
+                "@type": "ListItem",
+                "item": "https://www.speedyvan.uk",
+                "name": "Home",
+                "position": 1
+              },
+              {
+                "@type": "ListItem",
+                "item": "https://www.speedyvan.uk/areas",
+                "name": "Areas",
+                "position": 2
+              },
+              {
+                "@type": "ListItem",
+                "item": "https://www.speedyvan.uk/areas/inverness",
+                "name": "Inverness",
+                "position": 3
+              }
+            ]
+          },
+          {
+            "@context": "https://schema.org",
+            "@id": "https://www.speedyvan.uk/areas/inverness#service",
+            "@type": "Service",
+            "areaServed": {
+              "@type": "City",
+              "name": "Inverness"
+            },
+            "description": "Get a quote for man and van in Inverness, furniture collection and house removals. Share your items and route to check price and availability.",
+            "name": "Inverness man and van and removals",
+            "provider": {
+              "@id": "https://www.speedyvan.uk/#organization",
+              "@type": "MovingCompany",
+              "name": "Speedy Van",
+              "url": "https://www.speedyvan.uk"
+            },
+            "url": "https://www.speedyvan.uk/areas/inverness"
+          }
+        ]
+      ]
+    }
+  ]
+}

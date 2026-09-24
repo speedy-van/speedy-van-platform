@@ -1,0 +1,699 @@
+{
+  "checked_at_utc": "2026-09-23T11:48:28.731137+00:00",
+  "expected_commit": "f8b90f5dd331285f838f1898c54e605606f2fb69",
+  "expected_deployment": "JDVA7y9WFvZEDkdocvtmTfXy8zg4",
+  "hosting_provenance": "Production Ready/source verified separately by lead in hosting dashboard; HTML does not independently establish source commit.",
+  "origin": "https://www.speedyvan.uk",
+  "scope": "Ten public GETs only; no cookies, authentication, booking, API, payment or mutation requests.",
+  "limits": {
+    "workers": 4,
+    "curl_seconds": 8,
+    "subprocess_seconds": 10,
+    "overall_seconds": 40,
+    "retries": 0,
+    "redirects_followed": false
+  },
+  "requests": [
+    {
+      "path": "/areas/aberdeen",
+      "status": 0,
+      "curl_exit_code": 28,
+      "error": "curl: (28) Operation timed out after 8000 milliseconds with 0 bytes received",
+      "headers": {},
+      "complete": false,
+      "bytes": 0,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/areas/inverness",
+      "status": 0,
+      "curl_exit_code": 28,
+      "error": "curl: (28) Operation timed out after 8000 milliseconds with 0 bytes received",
+      "headers": {},
+      "complete": false,
+      "bytes": 0,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/areas/nairn",
+      "status": 0,
+      "curl_exit_code": 28,
+      "error": "curl: (28) Operation timed out after 8000 milliseconds with 0 bytes received",
+      "headers": {},
+      "complete": false,
+      "bytes": 0,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/areas/dingwall",
+      "status": 0,
+      "curl_exit_code": 28,
+      "error": "curl: (28) Operation timed out after 8001 milliseconds with 0 bytes received",
+      "headers": {},
+      "complete": false,
+      "bytes": 0,
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/areas/inverurie",
+      "status": 200,
+      "curl_exit_code": 0,
+      "error": "",
+      "headers": {
+        "content-type": "text/html; charset=utf-8",
+        "x-vercel-id": "lhr1::wn2xv-1790164123793-0e5d4934115e"
+      },
+      "complete": true,
+      "bytes": 127636,
+      "body_sha256": "570f1d450f8104422e9f541e62e2a75d999c436e7f919ea8ff0efdc2c7e90e13",
+      "title": "Man and Van in Inverurie | SpeedyVan",
+      "canonical": [
+        "https://www.speedyvan.uk/areas/inverurie"
+      ],
+      "og_url": [
+        "https://www.speedyvan.uk/areas/inverurie"
+      ],
+      "h1": [
+        "Man and Van in Inverurie"
+      ],
+      "robots": [],
+      "schema_errors": [],
+      "main_links": [
+        "/",
+        "/areas",
+        "/areas/aberdeen",
+        "/areas/ellon",
+        "/areas/westhill",
+        "/book",
+        "/pricing",
+        "/services",
+        "/services/flat-removals",
+        "/services/furniture-delivery",
+        "/services/house-removal",
+        "/services/ikea-delivery",
+        "/services/long-distance-removals",
+        "/services/man-and-van",
+        "/services/office-removal",
+        "/services/packing-service",
+        "/services/piano-moving",
+        "/services/same-day-delivery",
+        "/services/small-moves",
+        "/services/student-move",
+        "https://www.aberdeenshire.gov.uk/roads-and-travel/car-parking/inverurie",
+        "mailto:hello@speedyvan.uk",
+        "tel:07909032889"
+      ],
+      "ids": [
+        "mobile-menu",
+        "main-content",
+        "area-breadcrumb-inverurie",
+        "area-services-heading",
+        "why-us-heading",
+        "area-quote-heading",
+        "area-faq-heading",
+        "nearby-heading",
+        "_R_"
+      ],
+      "service_areaServed": [
+        {
+          "@type": "Place",
+          "name": "Inverurie"
+        }
+      ]
+    },
+    {
+      "path": "/areas/ellon",
+      "status": 200,
+      "curl_exit_code": 0,
+      "error": "",
+      "headers": {
+        "content-type": "text/html; charset=utf-8",
+        "x-vercel-id": "lhr1::dzsgp-1790164123788-07fdb950fb9d"
+      },
+      "complete": true,
+      "bytes": 128124,
+      "body_sha256": "6319ba0c3ff6b428958af3c289b1a140474ba5b1bb2eb3b2b72f06af313a33f1",
+      "title": "Man and Van in Ellon | SpeedyVan",
+      "canonical": [
+        "https://www.speedyvan.uk/areas/ellon"
+      ],
+      "og_url": [
+        "https://www.speedyvan.uk/areas/ellon"
+      ],
+      "h1": [
+        "Man and Van in Ellon"
+      ],
+      "robots": [],
+      "schema_errors": [],
+      "main_links": [
+        "/",
+        "/areas",
+        "/areas/aberdeen",
+        "/areas/inverurie",
+        "/areas/stonehaven",
+        "/areas/westhill",
+        "/book",
+        "/pricing",
+        "/services",
+        "/services/flat-removals",
+        "/services/furniture-delivery",
+        "/services/house-removal",
+        "/services/ikea-delivery",
+        "/services/long-distance-removals",
+        "/services/man-and-van",
+        "/services/office-removal",
+        "/services/packing-service",
+        "/services/piano-moving",
+        "/services/same-day-delivery",
+        "/services/small-moves",
+        "/services/student-move",
+        "https://www.aberdeenshire.gov.uk/roads-and-travel/car-parking/ellon",
+        "mailto:hello@speedyvan.uk",
+        "tel:07909032889"
+      ],
+      "ids": [
+        "mobile-menu",
+        "main-content",
+        "area-breadcrumb-ellon",
+        "area-services-heading",
+        "why-us-heading",
+        "area-quote-heading",
+        "area-faq-heading",
+        "nearby-heading",
+        "_R_"
+      ],
+      "service_areaServed": [
+        {
+          "@type": "Place",
+          "name": "Ellon"
+        }
+      ]
+    },
+    {
+      "path": "/areas/westhill",
+      "status": 200,
+      "curl_exit_code": 0,
+      "error": "",
+      "headers": {
+        "content-type": "text/html; charset=utf-8",
+        "x-vercel-id": "lhr1::rrqz2-1790164123906-dafcc60b2db9"
+      },
+      "complete": true,
+      "bytes": 128582,
+      "body_sha256": "fcc64981b518eae4385891ec0add2ba51a9ccb2daa142fb5fd07193ea92896a7",
+      "title": "Man and Van in Westhill, Aberdeenshire | SpeedyVan",
+      "canonical": [
+        "https://www.speedyvan.uk/areas/westhill"
+      ],
+      "og_url": [
+        "https://www.speedyvan.uk/areas/westhill"
+      ],
+      "h1": [
+        "Man and Van in Westhill, Aberdeenshire"
+      ],
+      "robots": [],
+      "schema_errors": [],
+      "main_links": [
+        "/",
+        "/areas",
+        "/areas/aberdeen",
+        "/areas/ellon",
+        "/areas/inverurie",
+        "/areas/stonehaven",
+        "/book",
+        "/pricing",
+        "/services",
+        "/services/flat-removals",
+        "/services/furniture-delivery",
+        "/services/house-removal",
+        "/services/ikea-delivery",
+        "/services/long-distance-removals",
+        "/services/man-and-van",
+        "/services/office-removal",
+        "/services/packing-service",
+        "/services/piano-moving",
+        "/services/same-day-delivery",
+        "/services/small-moves",
+        "/services/student-move",
+        "https://www.aberdeenshire.gov.uk/environment/natural-heritage/local-nature-reserves",
+        "mailto:hello@speedyvan.uk",
+        "tel:07909032889"
+      ],
+      "ids": [
+        "mobile-menu",
+        "main-content",
+        "area-breadcrumb-westhill",
+        "area-services-heading",
+        "why-us-heading",
+        "area-quote-heading",
+        "area-faq-heading",
+        "nearby-heading",
+        "_R_"
+      ],
+      "service_areaServed": [
+        {
+          "@type": "Place",
+          "name": "Westhill"
+        }
+      ]
+    },
+    {
+      "path": "/areas/stonehaven",
+      "status": 200,
+      "curl_exit_code": 0,
+      "error": "",
+      "headers": {
+        "content-type": "text/html; charset=utf-8",
+        "x-vercel-id": "lhr1::g85lg-1790164123980-41a6a77c1c6d"
+      },
+      "complete": true,
+      "bytes": 127824,
+      "body_sha256": "b556296b4f1bbae1f530b37a3dda0896e4723f28b78a8bd52d325fecb4043161",
+      "title": "Man and Van in Stonehaven | SpeedyVan",
+      "canonical": [
+        "https://www.speedyvan.uk/areas/stonehaven"
+      ],
+      "og_url": [
+        "https://www.speedyvan.uk/areas/stonehaven"
+      ],
+      "h1": [
+        "Man and Van in Stonehaven"
+      ],
+      "robots": [],
+      "schema_errors": [],
+      "main_links": [
+        "/",
+        "/areas",
+        "/areas/aberdeen",
+        "/areas/ellon",
+        "/areas/westhill",
+        "/book",
+        "/pricing",
+        "/services",
+        "/services/flat-removals",
+        "/services/furniture-delivery",
+        "/services/house-removal",
+        "/services/ikea-delivery",
+        "/services/long-distance-removals",
+        "/services/man-and-van",
+        "/services/office-removal",
+        "/services/packing-service",
+        "/services/piano-moving",
+        "/services/same-day-delivery",
+        "/services/small-moves",
+        "/services/student-move",
+        "https://www.aberdeenshire.gov.uk/roads-and-travel/car-parking/stonehaven",
+        "mailto:hello@speedyvan.uk",
+        "tel:07909032889"
+      ],
+      "ids": [
+        "mobile-menu",
+        "main-content",
+        "area-breadcrumb-stonehaven",
+        "area-services-heading",
+        "why-us-heading",
+        "area-quote-heading",
+        "area-faq-heading",
+        "nearby-heading",
+        "_R_"
+      ],
+      "service_areaServed": [
+        {
+          "@type": "Place",
+          "name": "Stonehaven"
+        }
+      ]
+    },
+    {
+      "path": "/sitemap.xml",
+      "status": 200,
+      "curl_exit_code": 0,
+      "error": "",
+      "headers": {
+        "content-type": "application/xml",
+        "x-vercel-id": "lhr1::xhgcv-1790164130192-7425d55b8bef"
+      },
+      "complete": true,
+      "bytes": 6756,
+      "body_sha256": "f5dde50efac2c3489a43420d06adcc2547fc3518878f3564e7a10744b4528c64",
+      "sitemap_urls": [
+        "https://www.speedyvan.uk",
+        "https://www.speedyvan.uk/services",
+        "https://www.speedyvan.uk/areas",
+        "https://www.speedyvan.uk/pricing",
+        "https://www.speedyvan.uk/guides",
+        "https://www.speedyvan.uk/guides/man-and-van-or-house-removals",
+        "https://www.speedyvan.uk/privacy",
+        "https://www.speedyvan.uk/terms",
+        "https://www.speedyvan.uk/cookies",
+        "https://www.speedyvan.uk/areas/glasgow",
+        "https://www.speedyvan.uk/areas/glasgow-west-end",
+        "https://www.speedyvan.uk/areas/glasgow-southside",
+        "https://www.speedyvan.uk/areas/paisley",
+        "https://www.speedyvan.uk/areas/edinburgh",
+        "https://www.speedyvan.uk/areas/edinburgh-leith",
+        "https://www.speedyvan.uk/areas/edinburgh-south",
+        "https://www.speedyvan.uk/areas/livingston",
+        "https://www.speedyvan.uk/areas/dundee",
+        "https://www.speedyvan.uk/areas/perth",
+        "https://www.speedyvan.uk/areas/kirkcaldy",
+        "https://www.speedyvan.uk/areas/dunfermline",
+        "https://www.speedyvan.uk/areas/st-andrews",
+        "https://www.speedyvan.uk/areas/aberdeen",
+        "https://www.speedyvan.uk/areas/inverurie",
+        "https://www.speedyvan.uk/areas/westhill",
+        "https://www.speedyvan.uk/areas/stonehaven",
+        "https://www.speedyvan.uk/areas/ellon",
+        "https://www.speedyvan.uk/areas/inverness",
+        "https://www.speedyvan.uk/areas/nairn",
+        "https://www.speedyvan.uk/areas/dingwall",
+        "https://www.speedyvan.uk/areas/fort-william",
+        "https://www.speedyvan.uk/areas/stirling",
+        "https://www.speedyvan.uk/areas/falkirk",
+        "https://www.speedyvan.uk/areas/hamilton",
+        "https://www.speedyvan.uk/areas/east-kilbride",
+        "https://www.speedyvan.uk/areas/motherwell",
+        "https://www.speedyvan.uk/areas/ayr",
+        "https://www.speedyvan.uk/areas/kilmarnock",
+        "https://www.speedyvan.uk/areas/oban",
+        "https://www.speedyvan.uk/areas/dumfries",
+        "https://www.speedyvan.uk/areas/galashiels",
+        "https://www.speedyvan.uk/services/man-and-van",
+        "https://www.speedyvan.uk/services/flat-removals",
+        "https://www.speedyvan.uk/services/small-moves",
+        "https://www.speedyvan.uk/services/house-removal",
+        "https://www.speedyvan.uk/services/long-distance-removals",
+        "https://www.speedyvan.uk/services/office-removal",
+        "https://www.speedyvan.uk/services/student-move",
+        "https://www.speedyvan.uk/services/furniture-delivery",
+        "https://www.speedyvan.uk/services/ikea-delivery",
+        "https://www.speedyvan.uk/services/piano-moving",
+        "https://www.speedyvan.uk/services/same-day-delivery",
+        "https://www.speedyvan.uk/services/packing-service",
+        "https://www.speedyvan.uk/services/european-removals"
+      ]
+    },
+    {
+      "path": "/areas/qa-invalid-surrounding-area",
+      "status": 404,
+      "curl_exit_code": 0,
+      "error": "",
+      "headers": {
+        "content-type": "text/html; charset=utf-8",
+        "x-vercel-id": "lhr1::iad1::dbmll-1790164130332-cb2fcfc1e001"
+      },
+      "complete": true,
+      "bytes": 36333,
+      "body_sha256": "724622663ca26db2da175d8eebc6858fe9948f91d76676c9946f223e3ba67572",
+      "title": "SpeedyVan | Man and Van & Removals Across Scotland",
+      "canonical": [],
+      "og_url": [],
+      "h1": [],
+      "robots": [
+        "noindex"
+      ],
+      "schema_errors": [],
+      "main_links": [],
+      "ids": [
+        "__next_error__",
+        "_R_"
+      ]
+    }
+  ],
+  "checks": [
+    {
+      "path": "/areas/inverurie",
+      "check": "HTTP 200",
+      "passed": true
+    },
+    {
+      "path": "/areas/inverurie",
+      "check": "Exact canonical",
+      "passed": true
+    },
+    {
+      "path": "/areas/inverurie",
+      "check": "Exact Open Graph URL",
+      "passed": true
+    },
+    {
+      "path": "/areas/inverurie",
+      "check": "Single nonempty H1",
+      "passed": true
+    },
+    {
+      "path": "/areas/inverurie",
+      "check": "Nonempty title and description",
+      "passed": true
+    },
+    {
+      "path": "/areas/inverurie",
+      "check": "Indexable HTML and HTTP directives",
+      "passed": true
+    },
+    {
+      "path": "/areas/inverurie",
+      "check": "Valid JSON-LD present",
+      "passed": true
+    },
+    {
+      "path": "/areas/inverurie",
+      "check": "Plain booking URL without draft-reset query",
+      "passed": true
+    },
+    {
+      "path": "/areas/inverurie",
+      "check": "Service uses correct Place identity",
+      "passed": true
+    },
+    {
+      "path": "/areas/inverurie",
+      "check": "Town links back to its city hub",
+      "passed": true
+    },
+    {
+      "path": "/areas/ellon",
+      "check": "HTTP 200",
+      "passed": true
+    },
+    {
+      "path": "/areas/ellon",
+      "check": "Exact canonical",
+      "passed": true
+    },
+    {
+      "path": "/areas/ellon",
+      "check": "Exact Open Graph URL",
+      "passed": true
+    },
+    {
+      "path": "/areas/ellon",
+      "check": "Single nonempty H1",
+      "passed": true
+    },
+    {
+      "path": "/areas/ellon",
+      "check": "Nonempty title and description",
+      "passed": true
+    },
+    {
+      "path": "/areas/ellon",
+      "check": "Indexable HTML and HTTP directives",
+      "passed": true
+    },
+    {
+      "path": "/areas/ellon",
+      "check": "Valid JSON-LD present",
+      "passed": true
+    },
+    {
+      "path": "/areas/ellon",
+      "check": "Plain booking URL without draft-reset query",
+      "passed": true
+    },
+    {
+      "path": "/areas/ellon",
+      "check": "Service uses correct Place identity",
+      "passed": true
+    },
+    {
+      "path": "/areas/ellon",
+      "check": "Town links back to its city hub",
+      "passed": true
+    },
+    {
+      "path": "/areas/westhill",
+      "check": "HTTP 200",
+      "passed": true
+    },
+    {
+      "path": "/areas/westhill",
+      "check": "Exact canonical",
+      "passed": true
+    },
+    {
+      "path": "/areas/westhill",
+      "check": "Exact Open Graph URL",
+      "passed": true
+    },
+    {
+      "path": "/areas/westhill",
+      "check": "Single nonempty H1",
+      "passed": true
+    },
+    {
+      "path": "/areas/westhill",
+      "check": "Nonempty title and description",
+      "passed": true
+    },
+    {
+      "path": "/areas/westhill",
+      "check": "Indexable HTML and HTTP directives",
+      "passed": true
+    },
+    {
+      "path": "/areas/westhill",
+      "check": "Valid JSON-LD present",
+      "passed": true
+    },
+    {
+      "path": "/areas/westhill",
+      "check": "Plain booking URL without draft-reset query",
+      "passed": true
+    },
+    {
+      "path": "/areas/westhill",
+      "check": "Service uses correct Place identity",
+      "passed": true
+    },
+    {
+      "path": "/areas/westhill",
+      "check": "Town links back to its city hub",
+      "passed": true
+    },
+    {
+      "path": "/areas/stonehaven",
+      "check": "HTTP 200",
+      "passed": true
+    },
+    {
+      "path": "/areas/stonehaven",
+      "check": "Exact canonical",
+      "passed": true
+    },
+    {
+      "path": "/areas/stonehaven",
+      "check": "Exact Open Graph URL",
+      "passed": true
+    },
+    {
+      "path": "/areas/stonehaven",
+      "check": "Single nonempty H1",
+      "passed": true
+    },
+    {
+      "path": "/areas/stonehaven",
+      "check": "Nonempty title and description",
+      "passed": true
+    },
+    {
+      "path": "/areas/stonehaven",
+      "check": "Indexable HTML and HTTP directives",
+      "passed": true
+    },
+    {
+      "path": "/areas/stonehaven",
+      "check": "Valid JSON-LD present",
+      "passed": true
+    },
+    {
+      "path": "/areas/stonehaven",
+      "check": "Plain booking URL without draft-reset query",
+      "passed": true
+    },
+    {
+      "path": "/areas/stonehaven",
+      "check": "Service uses correct Place identity",
+      "passed": true
+    },
+    {
+      "path": "/areas/stonehaven",
+      "check": "Town links back to its city hub",
+      "passed": true
+    },
+    {
+      "path": "/sitemap.xml",
+      "check": "HTTP 200",
+      "passed": true
+    },
+    {
+      "path": "/sitemap.xml",
+      "check": "Exactly 54 unique canonical URLs",
+      "passed": true
+    },
+    {
+      "path": "/sitemap.xml",
+      "check": "Sitemap equals tested source inventory",
+      "passed": true
+    },
+    {
+      "path": "/sitemap.xml",
+      "check": "All eight affected area URLs included",
+      "passed": true
+    },
+    {
+      "path": "/areas/qa-invalid-surrounding-area",
+      "check": "Genuine HTTP 404",
+      "passed": true
+    },
+    {
+      "path": "/areas/qa-invalid-surrounding-area",
+      "check": "Noindex directive present",
+      "passed": true
+    },
+    {
+      "path": "/areas/qa-invalid-surrounding-area",
+      "check": "No inherited canonical",
+      "passed": true
+    }
+  ],
+  "transport_incomplete": [
+    {
+      "path": "/areas/aberdeen",
+      "status": 0,
+      "curl_exit_code": 28,
+      "error": "curl: (28) Operation timed out after 8000 milliseconds with 0 bytes received",
+      "bytes": 0
+    },
+    {
+      "path": "/areas/inverness",
+      "status": 0,
+      "curl_exit_code": 28,
+      "error": "curl: (28) Operation timed out after 8000 milliseconds with 0 bytes received",
+      "bytes": 0
+    },
+    {
+      "path": "/areas/nairn",
+      "status": 0,
+      "curl_exit_code": 28,
+      "error": "curl: (28) Operation timed out after 8000 milliseconds with 0 bytes received",
+      "bytes": 0
+    },
+    {
+      "path": "/areas/dingwall",
+      "status": 0,
+      "curl_exit_code": 28,
+      "error": "curl: (28) Operation timed out after 8001 milliseconds with 0 bytes received",
+      "bytes": 0
+    }
+  ],
+  "unscheduled": [],
+  "browser_and_mobile": "Not tested by this HTTP pass",
+  "result": "PARTIAL_TRANSPORT_OR_DEADLINE",
+  "elapsed_seconds": 22.456,
+  "completed_at_utc": "2026-09-23T11:48:51.187264+00:00",
+  "passed": 47,
+  "failed": [],
+  "complete_response_count": 6,
+  "complete_area_http200_count": 4
+}

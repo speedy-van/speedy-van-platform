@@ -8,6 +8,20 @@ const nextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
+  async redirects() {
+    return [
+      {
+        source: "/booking-luxury",
+        destination: "/book",
+        permanent: true,
+      },
+      {
+        source: "/booking",
+        destination: "/book",
+        permanent: true,
+      },
+    ];
+  },
 };
 
 export default nextConfig;

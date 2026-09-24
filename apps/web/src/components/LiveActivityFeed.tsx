@@ -41,7 +41,7 @@ export function LiveActivityFeed() {
 
   return (
     <div
-      className={`fixed left-3 z-30 max-w-[18rem] transition-all duration-500 bottom-24 md:bottom-6 ${
+      className={`fixed left-3 z-30 hidden max-w-[18rem] transition-all duration-500 bottom-24 md:bottom-6 md:block ${
         visible ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0 pointer-events-none"
       }`}
       role="status"

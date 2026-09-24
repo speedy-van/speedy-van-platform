@@ -1,7 +1,9 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
+import { usePathname } from "next/navigation";
 import Script from "next/script";
+import { initialiseAnalytics, isPublicAnalyticsPath, syncAnalyticsConsent, trackPageView } from "@/lib/analytics";
 import { useCookieConsent } from "./CookieConsent";
 
 const GA_ID = process.env.NEXT_PUBLIC_GA_ID;
@@ -9,47 +11,48 @@ const FB_PIXEL_ID = process.env.NEXT_PUBLIC_FB_PIXEL_ID;
 
 export function AnalyticsPixels() {
   const consent = useCookieConsent();
+  const pathname = usePathname();
+  const [ready, setReady] = useState(false);
+  const lastPage = useRef<string | null>(null);
 
   useEffect(() => {
-    if (consent === "accepted" && typeof window !== "undefined") {
-      // Trigger a page_view now that consent is in
-      if (window.gtag) window.gtag("event", "page_view");
-      if (window.fbq) window.fbq("track", "PageView");
+    if (consent !== "accepted" || !pathname || !isPublicAnalyticsPath(pathname)) {
+      syncAnalyticsConsent(null);
+      setReady(false);
+      lastPage.current = null;
+      return;
     }
-  }, [consent]);
+    try {
+      initialiseAnalytics(GA_ID, FB_PIXEL_ID);
+    } catch {
+      // A blocked tag must not interrupt booking or navigation.
+      return;
+    }
+    setReady(true);
+    if (pathname && lastPage.current !== pathname) {
+      trackPageView(pathname);
+      lastPage.current = pathname;
+    }
+  }, [consent, pathname]);
 
-  if (consent !== "accepted") return null;
+  // No third-party script request is made before an affirmative choice.
+  if (consent !== "accepted" || !ready || !pathname || !isPublicAnalyticsPath(pathname)) return null;
 
   return (
     <>
       {GA_ID && (
-        <>
-          <Script
-            src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
-            strategy="afterInteractive"
-          />
-          <Script id="ga-init" strategy="afterInteractive">
-            {`
-              window.dataLayer = window.dataLayer || [];
-              function gtag(){dataLayer.push(arguments);}
-              gtag('js', new Date());
-              gtag('config', '${GA_ID}', { anonymize_ip: true });
-            `}
-          </Script>
-        </>
+        <Script
+          id="ga-library"
+          src={`https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(GA_ID)}`}
+          strategy="afterInteractive"
+        />
       )}
       {FB_PIXEL_ID && (
-        <Script id="fb-pixel" strategy="afterInteractive">
-          {`
-            !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-            n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
-            n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
-            t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
-            document,'script','https://connect.facebook.net/en_US/fbevents.js');
-            fbq('init', '${FB_PIXEL_ID}');
-            fbq('track', 'PageView');
-          `}
-        </Script>
+        <Script
+          id="fb-pixel-library"
+          src="https://connect.facebook.net/en_US/fbevents.js"
+          strategy="afterInteractive"
+        />
       )}
     </>
   );

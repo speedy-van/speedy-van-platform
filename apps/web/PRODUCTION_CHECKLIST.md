@@ -4,7 +4,7 @@
 - [ ] All placeholder data replaced (phone, email, address confirmed)
 - [ ] Stripe switched from test to live keys
 - [ ] Stripe webhook endpoint configured for production URL
-- [ ] Resend domain verified (speedy-van.co.uk)
+- [ ] Resend domain verified (speedyvan.uk)
 - [ ] Mapbox token set for production
 - [ ] OpenWeatherMap API key set
 - [ ] Neon DB production branch created (separate from dev)
@@ -25,18 +25,18 @@
 - [ ] JSON-LD schemas validate (test with Google Rich Results Test)
 - [ ] OG images set for social sharing
 - [ ] Favicon and apple-touch-icon set
-- [ ] sitemap.xml accessible at https://www.speedy-van.co.uk/sitemap.xml
-- [ ] robots.txt accessible at https://www.speedy-van.co.uk/robots.txt
+- [ ] sitemap.xml accessible at https://www.speedyvan.uk/sitemap.xml
+- [ ] robots.txt accessible at https://www.speedyvan.uk/robots.txt
 
 ## Analytics
-- [ ] GA4 property created, ID added to NEXT_PUBLIC_GA4_ID
+- [ ] GA4 property created, ID added to NEXT_PUBLIC_GA_ID
 - [ ] Facebook Pixel created, ID added to NEXT_PUBLIC_FB_PIXEL_ID
 - [ ] TikTok Pixel created, ID added to NEXT_PUBLIC_TIKTOK_PIXEL_ID
 - [ ] Conversion events verified (purchase, add_to_cart, begin_checkout)
 - [ ] UTM parameter tracking tested
 
 ## iOS App
-- [ ] API URL updated in iOS app to https://api.speedy-van.co.uk
+- [ ] API URL updated in iOS app to https://api.speedyvan.uk
 - [ ] New app build submitted to App Store
 - [ ] App Store listing screenshots updated
 - [ ] App Store description updated with new features
@@ -46,7 +46,7 @@
 - [ ] GoDaddy DNS records updated to Vercel
 - [ ] SSL certificate active (automatic via Vercel)
 - [ ] www redirect configured (www → non-www or vice versa)
-- [ ] api.speedy-van.co.uk resolving to API Vercel project
+- [ ] api.speedyvan.uk resolving to API Vercel project
 - [ ] Old GoDaddy site disabled
 
 ## Environment Variables (Vercel — Web project)
@@ -58,8 +58,8 @@
 - [ ] NEXT_PUBLIC_MAPBOX_TOKEN set
 - [ ] RESEND_API_KEY set
 - [ ] OPENWEATHERMAP_API_KEY set
-- [ ] NEXT_PUBLIC_API_URL=https://api.speedy-van.co.uk
-- [ ] NEXT_PUBLIC_GA4_ID set
+- [ ] NEXT_PUBLIC_API_URL=https://api.speedyvan.uk
+- [ ] NEXT_PUBLIC_GA_ID set
 - [ ] NEXT_PUBLIC_FB_PIXEL_ID set
 - [ ] NEXT_PUBLIC_TIKTOK_PIXEL_ID set
 

@@ -17,19 +17,19 @@ const STATUS_LABELS: Record<string, string> = {
 };
 
 const STATUS_CLASSES: Record<string, string> = {
-  PENDING: "bg-amber-100 text-amber-800",
-  CONFIRMED: "bg-emerald-100 text-emerald-800",
-  ASSIGNED: "bg-blue-100 text-blue-800",
-  IN_PROGRESS: "bg-orange-100 text-orange-800",
-  COMPLETED: "bg-slate-100 text-slate-600",
-  CANCELLED: "bg-red-100 text-red-800",
-  AVAILABLE: "bg-emerald-100 text-emerald-800",
-  CLAIMED: "bg-amber-100 text-amber-800",
-  ACCEPTED: "bg-blue-100 text-blue-800",
-  new: "bg-amber-100 text-amber-800",
-  quoted: "bg-blue-100 text-blue-800",
-  accepted: "bg-emerald-100 text-emerald-800",
-  declined: "bg-slate-100 text-slate-600",
+  PENDING: "bg-amber-500/15 text-amber-400",
+  CONFIRMED: "bg-emerald-500/15 text-emerald-400",
+  ASSIGNED: "bg-amber-500/15 text-amber-400",
+  IN_PROGRESS: "bg-amber-500/15 text-amber-400",
+  COMPLETED: "bg-emerald-500/15 text-emerald-400",
+  CANCELLED: "bg-red-500/15 text-red-400",
+  AVAILABLE: "bg-emerald-500/15 text-emerald-400",
+  CLAIMED: "bg-amber-500/15 text-amber-400",
+  ACCEPTED: "bg-emerald-500/15 text-emerald-400",
+  new: "bg-amber-500/15 text-amber-400",
+  quoted: "bg-amber-500/15 text-amber-400",
+  accepted: "bg-emerald-500/15 text-emerald-400",
+  declined: "bg-red-500/15 text-red-400",
 };
 
 interface Props {
@@ -38,7 +38,7 @@ interface Props {
 }
 
 export default function StatusBadge({ status, size = "sm" }: Props) {
-  const cls = STATUS_CLASSES[status] ?? "bg-slate-100 text-slate-600";
+  const cls = STATUS_CLASSES[status] ?? "bg-white/8 text-white/55";
   const label = STATUS_LABELS[status] ?? status;
   return (
     <span className={`inline-flex items-center rounded-full font-semibold ${size === "sm" ? "px-2.5 py-0.5 text-xs" : "px-3 py-1 text-sm"} ${cls}`}>

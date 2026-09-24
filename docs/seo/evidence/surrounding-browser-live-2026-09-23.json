@@ -1,0 +1,260 @@
+{
+  "production": "JDVA7y9WFvZEDkdocvtmTfXy8zg4",
+  "source": "f8b90f5dd331285f838f1898c54e605606f2fb69",
+  "pages": [
+    {
+      "slug": "aberdeen",
+      "url": "https://www.speedyvan.uk/areas/aberdeen",
+      "view": {
+        "cards": 12,
+        "clientWidth": 1348,
+        "h1": "Man and Van in Aberdeen",
+        "quote": {
+          "href": "/book",
+          "text": "Get a Moving Quote"
+        },
+        "scrollWidth": 1348
+      },
+      "bookUrl": "https://www.speedyvan.uk/book",
+      "draftVisibleStateMatches": true,
+      "visibleFieldCount": 2
+    },
+    {
+      "slug": "inverness",
+      "url": "https://www.speedyvan.uk/areas/inverness",
+      "view": {
+        "cards": 11,
+        "clientWidth": 1348,
+        "h1": "Man and Van in Inverness",
+        "quote": {
+          "href": "/book",
+          "text": "Get a Moving Quote"
+        },
+        "scrollWidth": 1348
+      },
+      "bookUrl": "https://www.speedyvan.uk/book",
+      "draftVisibleStateMatches": true,
+      "visibleFieldCount": 2
+    },
+    {
+      "slug": "nairn",
+      "url": "https://www.speedyvan.uk/areas/nairn",
+      "view": {
+        "cards": 0,
+        "clientWidth": 1348,
+        "h1": "Man and Van in Nairn",
+        "quote": {
+          "href": "/book",
+          "text": "Start an Online Quote"
+        },
+        "scrollWidth": 1348
+      },
+      "bookUrl": "https://www.speedyvan.uk/book",
+      "draftVisibleStateMatches": true,
+      "visibleFieldCount": 2
+    },
+    {
+      "slug": "dingwall",
+      "url": "https://www.speedyvan.uk/areas/dingwall",
+      "view": {
+        "cards": 0,
+        "clientWidth": 1348,
+        "h1": "Man and Van in Dingwall",
+        "quote": {
+          "href": "/book",
+          "text": "Start an Online Quote"
+        },
+        "scrollWidth": 1348
+      },
+      "bookUrl": "https://www.speedyvan.uk/book",
+      "draftVisibleStateMatches": true,
+      "visibleFieldCount": 2
+    },
+    {
+      "slug": "westhill",
+      "url": "https://www.speedyvan.uk/areas/westhill",
+      "view": {
+        "cards": 0,
+        "clientWidth": 1348,
+        "h1": "Man and Van in Westhill, Aberdeenshire",
+        "quote": {
+          "href": "/book",
+          "text": "Start an Online Quote"
+        },
+        "scrollWidth": 1348
+      },
+      "bookUrl": "https://www.speedyvan.uk/book",
+      "draftVisibleStateMatches": true,
+      "visibleFieldCount": 2
+    },
+    {
+      "slug": "stonehaven",
+      "url": "https://www.speedyvan.uk/areas/stonehaven",
+      "view": {
+        "cards": 0,
+        "clientWidth": 1348,
+        "h1": "Man and Van in Stonehaven",
+        "quote": {
+          "href": "/book",
+          "text": "Start an Online Quote"
+        },
+        "scrollWidth": 1348
+      },
+      "bookUrl": "https://www.speedyvan.uk/book",
+      "draftVisibleStateMatches": true,
+      "visibleFieldCount": 2
+    },
+    {
+      "slug": "ellon",
+      "url": "https://www.speedyvan.uk/areas/ellon",
+      "view": {
+        "cards": 0,
+        "clientWidth": 1348,
+        "h1": "Man and Van in Ellon",
+        "quote": {
+          "href": "/book",
+          "text": "Start an Online Quote"
+        },
+        "scrollWidth": 1348
+      },
+      "bookUrl": "https://www.speedyvan.uk/book",
+      "draftVisibleStateMatches": true,
+      "visibleFieldCount": 2
+    },
+    {
+      "slug": "inverurie",
+      "url": "https://www.speedyvan.uk/areas/inverurie",
+      "view": {
+        "cards": 0,
+        "clientWidth": 1348,
+        "h1": "Man and Van in Inverurie",
+        "quote": {
+          "href": "/book",
+          "text": "Start an Online Quote"
+        },
+        "scrollWidth": 1348
+      },
+      "bookUrl": "https://www.speedyvan.uk/book",
+      "draftVisibleStateMatches": true,
+      "visibleFieldCount": 2
+    }
+  ],
+  "sectionChecks": [
+    {
+      "hash": "#inverness-nearby-places",
+      "path": "/areas/inverness",
+      "targetExists": true
+    },
+    {
+      "hash": "#inverness-moving-costs",
+      "path": "/areas/inverness",
+      "targetExists": true
+    },
+    {
+      "hash": "#inverness-furniture-collection",
+      "path": "/areas/inverness",
+      "targetExists": true
+    },
+    {
+      "hash": "#inverness-urgent-moves",
+      "path": "/areas/inverness",
+      "targetExists": true
+    },
+    {
+      "hash": "#inverness-long-distance",
+      "path": "/areas/inverness",
+      "targetExists": true
+    },
+    {
+      "hash": "#inverness-access",
+      "path": "/areas/inverness",
+      "targetExists": true
+    },
+    {
+      "hash": "#inverness-quote",
+      "path": "/areas/inverness",
+      "targetExists": true
+    },
+    {
+      "hash": "#inverness-east-inverness-and-nairn",
+      "path": "/areas/inverness",
+      "targetExists": true
+    },
+    {
+      "hash": "#inverness-beauly-and-dingwall",
+      "path": "/areas/inverness",
+      "targetExists": true
+    },
+    {
+      "hash": "#inverness-loch-ness-communities",
+      "path": "/areas/inverness",
+      "targetExists": true
+    },
+    {
+      "hash": "#aberdeen-nearby-places",
+      "path": "/areas/aberdeen",
+      "targetExists": true
+    },
+    {
+      "hash": "#aberdeen-moving-costs",
+      "method": "Enter after pointer action did not navigate",
+      "path": "/areas/aberdeen",
+      "targetExists": true
+    },
+    {
+      "hash": "#aberdeen-furniture-collection",
+      "method": "Enter",
+      "path": "/areas/aberdeen",
+      "targetExists": true
+    },
+    {
+      "hash": "#aberdeen-urgent-moves",
+      "method": "Enter",
+      "path": "/areas/aberdeen",
+      "targetExists": true
+    },
+    {
+      "hash": "#aberdeen-long-distance",
+      "method": "Enter",
+      "path": "/areas/aberdeen",
+      "targetExists": true
+    },
+    {
+      "hash": "#aberdeen-access",
+      "method": "Enter",
+      "path": "/areas/aberdeen",
+      "targetExists": true
+    },
+    {
+      "hash": "#aberdeen-quote",
+      "method": "Enter",
+      "path": "/areas/aberdeen",
+      "targetExists": true
+    },
+    {
+      "hash": "#aberdeen-north-aberdeen-and-inverurie",
+      "method": "Enter",
+      "path": "/areas/aberdeen",
+      "targetExists": true
+    },
+    {
+      "hash": "#aberdeen-westhill-and-peterculter",
+      "method": "Enter",
+      "path": "/areas/aberdeen",
+      "targetExists": true
+    },
+    {
+      "hash": "#aberdeen-portlethen-to-stonehaven",
+      "method": "Enter",
+      "path": "/areas/aberdeen",
+      "targetExists": true
+    }
+  ],
+  "draftComparison": {
+    "scope": "Rendered booking heading, aside summary and two visible input fields; values not logged",
+    "beforeStillMatched": true
+  },
+  "mobile360and768": "UNVERIFIED; no viewport-control capability",
+  "sectionChecksEnvironment": "Cloud preview AgaihRqQSqiTepaHwiGvHyimLnGF, same application source f8b90f5; pages[] are production",
+  "sectionPointerAttempt": "One Aberdeen cost-link click did not change hash. Fresh DOM and screenshot inspected; Enter then navigated correctly. Cause unproven; no source defect inferred."
+}

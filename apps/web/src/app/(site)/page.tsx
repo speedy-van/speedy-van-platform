@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { SERVICES } from "@/lib/services";
+import Image from "next/image";
+import { SERVICES, getServicePriceLabel } from "@/lib/services";
 import { ServiceImageCard } from "@/components/shared/ServiceImageCard";
 import { getServiceImage } from "@/lib/service-images";
 import { AREAS } from "@/lib/areas";
@@ -10,19 +11,29 @@ import { LiveAvailability } from "@/components/LiveAvailability";
 import { ServiceComparison } from "@/components/ServiceComparison";
 import { FaqSearch } from "@/components/FaqSearch";
 import { JsonLd } from "@/components/seo/JsonLd";
-import { buildLocalBusinessSchema, buildFaqSchema } from "@/lib/seo/schemas";
+import {
+  buildLocalBusinessSchema,
+  buildWebsiteSchema,
+  buildFaqSchema,
+  buildServiceCatalogSchema,
+} from "@/lib/seo/schemas";
 import TypingHeroHeading from "@/components/TypingHeroHeading";
 import { SITE_OG_IMAGE, SITE_URL } from "@/lib/seo/constants";
+import {
+  BOOKING_SERVICE_OPTIONS,
+} from "@/lib/booking-service-options";
 
 export const metadata: Metadata = {
-  title: "SpeedyVan | Man and Van, Removals & Delivery Across Scotland",
+  title: {
+    absolute: "SpeedyVan | Man and Van, Removals & Delivery Across Scotland",
+  },
   description:
-    "Man and van, removals, office moves and furniture delivery across Glasgow, Edinburgh, Dundee, Aberdeen and beyond. Fixed prices and online booking.",
+    "Man and van Glasgow, Edinburgh, Dundee & Aberdeen from £45/hr. House removals, furniture delivery, office moves and same-day transport across Scotland. Fixed prices, online booking, goods-in-transit cover included.",
   alternates: { canonical: SITE_URL },
   openGraph: {
     title: "SpeedyVan | Man and Van & Removals Across Scotland",
     description:
-      "Man and van, removals, office moves and furniture delivery across Scotland with online quotes and booking.",
+      "House removals, furniture delivery, storage runs, office moves and flexible man-and-van help across Scotland with online quotes and booking.",
     type: "website",
     url: SITE_URL,
     images: [
@@ -39,10 +50,60 @@ export const metadata: Metadata = {
 // ─── Static data ──────────────────────────────────────────────────────────────
 
 const TRUST_STATS = [
-  { value: "Online", label: "Instant quote flow" },
-  { value: "Scotland", label: "Service coverage" },
-  { value: "Cover", label: "Goods in transit" },
-  { value: "7 days", label: "Availability planning" },
+  { value: "30+", label: "Areas across Scotland" },
+  { value: "£10k", label: "Goods-in-transit cover" },
+  { value: "7 days", label: "Available every day" },
+  { value: "Fixed", label: "Price shown before you book" },
+];
+
+const PHOTO_QUOTE_HREF =
+  "https://wa.me/447909032889?text=" +
+  encodeURIComponent("Hi SpeedyVan, I want to send photos for a moving quote.");
+
+const CUSTOMER_PATHS = [
+  {
+    eyebrow: "Need it today",
+    title: "Same-day move",
+    body: "Call first so capacity, access and timing can be checked before you start.",
+    href: "tel:07909032889",
+    cta: "Call now",
+  },
+  {
+    eyebrow: "Unsure on volume",
+    title: "Send photos",
+    body: "Share pictures of bulky items, stairs, doorways and parking for a cleaner quote.",
+    href: PHOTO_QUOTE_HREF,
+    cta: "Open WhatsApp",
+    external: true,
+  },
+  {
+    eyebrow: "Small job",
+    title: "Single item",
+    body: "Book furniture, appliances, sofas, beds and marketplace pickups online.",
+    href: "/book?service=furniture",
+    cta: "Price item",
+  },
+  {
+    eyebrow: "Full place",
+    title: "Home move",
+    body: "Use the room-by-room inventory for houses, flats and student moves.",
+    href: "/book?service=house-removals",
+    cta: "Start home quote",
+  },
+  {
+    eyebrow: "Business",
+    title: "Office move",
+    body: "Add access notes, downtime-sensitive timing and business inventory.",
+    href: "/book?service=office",
+    cta: "Plan office move",
+  },
+  {
+    eyebrow: "Already booked",
+    title: "Track booking",
+    body: "Check live booking notes, status changes and driver progress.",
+    href: "/track",
+    cta: "Track move",
+  },
 ];
 
 const HOW_IT_WORKS = [
@@ -50,19 +111,19 @@ const HOW_IT_WORKS = [
     step: "1",
     title: "Get an instant quote",
     description:
-      "Tell us what you need to move, where, and when. Our transparent pricing means you know the cost upfront — no haggling, no hidden fees.",
+      "Tell us what you need to move, both addresses, access details and your preferred date. The quote should reflect the full job before you pay.",
   },
   {
     step: "2",
     title: "Book your van",
     description:
-      "Choose your preferred date and time. We're available 7 days a week, including evenings and bank holidays. Same-day bookings welcome.",
+      "Choose your preferred date and time. Crew and route availability must be checked; call first for same-day or unusual timing requirements.",
   },
   {
     step: "3",
     title: "We arrive and move",
     description:
-      "Your professional, insured driver arrives on time with the right van. They handle the heavy lifting while you focus on your new start.",
+      "Confirm loading access and keep your contact phone available. The agreed crew loads, transports and unloads the items included in your booking.",
   },
 ];
 
@@ -107,6 +168,15 @@ const money = new Intl.NumberFormat("en-GB", {
   maximumFractionDigits: 0,
 });
 
+const SEO_SERVICE_CATALOG_ITEMS = SERVICES.filter((service) => service.indexable !== false).map((service) => ({
+  name: service.name,
+  description: service.description,
+  url: `/services/${service.slug}`,
+  startingFrom: service.startingFrom,
+  priceUnit: service.priceUnit,
+  bookingUrl: `/book?service=${service.slug}`,
+}));
+
 const MOVE_DECISION_POINTS = [
   {
     title: "Access and parking",
@@ -130,7 +200,7 @@ const FAQS = [
   {
     question: "How do I get a quote?",
     answer:
-      "Click 'Book Now' above and fill in your move details. You'll receive an instant price online. For complex or larger moves, call us on 07909 032889 and we'll prepare a detailed quote within the hour.",
+      "Choose a service above and add the addresses, access details, items and date. Review the available quote before payment. Call us on 07909 032889 for complex moves or if an online quote is unavailable.",
   },
   {
     question: "How far in advance do I need to book?",
@@ -140,12 +210,12 @@ const FAQS = [
   {
     question: "Are my belongings insured during the move?",
     answer:
-      "Yes. All SpeedyVan moves are covered by goods-in-transit insurance up to £10,000 as standard. Enhanced cover up to £50,000 is available for an additional fee.",
+      "Ask the team to confirm the goods-in-transit cover, limits and exclusions for your booking. Declare fragile and higher-value items in advance and obtain any additional arrangements in writing.",
   },
   {
     question: "What areas of Scotland do you cover?",
     answer:
-      "We cover over 30 locations across Scotland including Glasgow, Edinburgh, Dundee, Aberdeen, Stirling, Inverness, Hamilton, East Kilbride, Paisley, Ayr, Falkirk, and the Scottish Borders. View our full areas list to find your nearest coverage zone.",
+      "Our service-area pages include Glasgow, Edinburgh, Dundee, Aberdeen, Stirling, Inverness and other Scottish towns. Give us both postcodes so the route and availability can be checked before a booking is confirmed.",
   },
   {
     question: "Do you offer fixed prices or hourly rates?",
@@ -155,12 +225,12 @@ const FAQS = [
   {
     question: "Do you move between Scottish cities?",
     answer:
-      "Absolutely. We handle long-distance moves across Scotland every day — Glasgow to Edinburgh, Aberdeen to Inverness, Dundee to Stirling, and anywhere in between. Fixed-price quotes available for all intercity routes.",
+      "We can quote for intercity moves such as Glasgow to Edinburgh or Dundee to Stirling. The collection and delivery addresses, load, access and date determine whether the route can be scheduled and the price agreed.",
   },
   {
     question: "What if my move takes longer than expected?",
     answer:
-      "For hourly bookings, you simply pay for the additional time at the same hourly rate. For fixed-price moves, reasonable delays are included. We'll always communicate clearly if extra time is needed.",
+      "Check the agreed scope and charging basis before booking. Tell the team about delayed keys, extra items or changed access as soon as possible so any effect on time or price can be discussed.",
   },
 ];
 
@@ -171,47 +241,33 @@ export default function HomePage() {
     <>
       <JsonLd
         id="home-jsonld"
-        data={[buildLocalBusinessSchema(), buildFaqSchema(FAQS)]}
+        data={[
+          buildLocalBusinessSchema(),
+          buildWebsiteSchema(),
+          buildServiceCatalogSchema(SEO_SERVICE_CATALOG_ITEMS),
+          buildFaqSchema(FAQS),
+        ]}
       />
       {/* ── Hero ──────────────────────────────────────────────────────────── */}
       <section
-        className="relative bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white overflow-hidden"
+        className="relative overflow-hidden text-white"
+        style={{
+          background:
+            "radial-gradient(ellipse 80% 60% at 5% 50%, rgba(180,83,9,0.20) 0%, transparent 60%), " +
+            "radial-gradient(ellipse 50% 40% at 95% 20%, rgba(234,88,12,0.10) 0%, transparent 55%), " +
+            "linear-gradient(160deg, #0A0A0A 0%, #130B00 55%, #0A0500 100%)",
+        }}
         aria-labelledby="hero-heading"
       >
-        {/* Background accent */}
-        <div
-          className="absolute inset-0 opacity-10"
-          style={{
-            backgroundImage:
-              "radial-gradient(circle at 20% 50%, #FACC15 0%, transparent 50%), radial-gradient(circle at 80% 20%, #F97316 0%, transparent 40%)",
-          }}
-          aria-hidden="true"
-        />
-
         {/* Moving road animation */}
         <div className="hero-road" aria-hidden="true">
           <div className="hero-road-lines" />
         </div>
 
-        {/* Right-side real-footage video */}
-        <div className="hero-media" aria-hidden="true">
-          <video
-            className="hero-media-video"
-            autoPlay
-            muted
-            loop
-            playsInline
-            preload="metadata"
-          >
-            <source src="/videos/hero-van.mp4" type="video/mp4" />
-          </video>
-          <div className="hero-media-overlay" />
-        </div>
-
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 pb-14 sm:py-20 lg:py-32">
-          <div className="max-w-3xl">
-            <div className="hero-fade-up hero-fade-up-1 inline-flex items-center gap-2 bg-primary-400/10 border border-primary-400/30 rounded-full px-3 py-1 sm:px-4 sm:py-1.5 text-primary-300 text-[11px] sm:text-sm font-medium mb-4 sm:mb-6">
-              <span aria-hidden="true">🚐</span>
+          <div className="max-w-5xl">
+            <div className="hero-fade-up hero-fade-up-1 inline-flex items-center gap-2 rounded-full px-3 py-1 sm:px-4 sm:py-1.5 text-amber-300 text-[11px] sm:text-xs font-semibold tracking-widest mb-4 sm:mb-6" style={{ backgroundColor: "rgba(245,158,11,0.12)", border: "1px solid rgba(245,158,11,0.20)" }}>
+              <span className="inline-block w-1.5 h-1.5 rounded-full bg-amber-400" aria-hidden="true" />
               <span>GLASGOW · EDINBURGH · DUNDEE · ABERDEEN · ACROSS SCOTLAND</span>
             </div>
 
@@ -219,7 +275,7 @@ export default function HomePage() {
               id="hero-heading"
               prefix="Man and Van Services "
               highlight="Across Scotland"
-              className="hero-fade-up hero-fade-up-2 text-3xl sm:text-5xl lg:text-6xl font-extrabold leading-tight"
+              className="hero-fade-up hero-fade-up-2 text-3xl sm:text-5xl lg:text-6xl font-black leading-tight tracking-tight"
             />
 
             <p className="hero-fade-up hero-fade-up-3 mt-4 sm:mt-6 text-base sm:text-xl text-slate-300 leading-relaxed max-w-2xl">
@@ -228,48 +284,92 @@ export default function HomePage() {
               available. Goods-in-transit cover included as standard.
             </p>
 
+            <section
+              id="get-quote"
+              className="hero-fade-up hero-fade-up-4 mt-7 sm:mt-10"
+              aria-labelledby="hero-service-heading"
+            >
+              <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+                <div>
+                  <p className="text-xs font-bold uppercase tracking-[0.08em] text-amber-400">
+                    Step 1 of 5 · Service
+                  </p>
+                  <h2
+                    id="hero-service-heading"
+                    className="mt-1 text-2xl font-extrabold leading-tight text-white sm:text-3xl"
+                  >
+                    What do you need moved?
+                  </h2>
+                </div>
+              </div>
+
+              <ul className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-5" role="list">
+                {BOOKING_SERVICE_OPTIONS.map((choice, idx) => {
+                  const pricedService = SERVICES.find((service) => service.slug === choice.serviceSlug);
+                  const imageSrc = getServiceImage(choice.imageSlug);
+
+                  return (
+                    <li key={choice.id} className="min-w-0">
+                      <Link
+                        href={`/book?service=${choice.id}`}
+                        data-track-event="quote_click"
+                        data-track-location={`hero_service_${choice.id}`}
+                        className="hero-service-card group relative flex h-full min-h-[240px] flex-col overflow-hidden rounded-2xl text-left text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:ring-offset-2 focus-visible:ring-offset-stone-950 sm:min-h-[220px]"
+                        style={{ animationDelay: `${idx * 0.55}s` }}
+                      >
+                        <Image
+                          src={imageSrc}
+                          alt=""
+                          fill
+                          sizes="(max-width: 639px) 100vw, (max-width: 1023px) 50vw, 20vw"
+                          priority={idx === 0}
+                          fetchPriority={idx === 0 ? "high" : undefined}
+                          className="object-cover object-center transition-transform duration-500 group-hover:scale-105"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/94 via-black/20 to-black/10" aria-hidden="true" />
+
+                        {/* Arrow icon — top right, subtle amber on hover */}
+                        <span
+                          className="absolute right-3 top-3 z-10 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-black/40 text-xs font-bold text-white/70 backdrop-blur-sm transition-all duration-300 group-hover:bg-amber-400 group-hover:text-stone-950 group-hover:scale-110"
+                          aria-hidden="true"
+                        >
+                          →
+                        </span>
+
+                        {/* Content — pinned to bottom */}
+                        <div className="relative z-10 mt-auto p-4">
+                          <span className="block text-sm font-bold leading-snug text-white">
+                            {choice.label}
+                          </span>
+                          <span className="mt-0.5 block text-[11px] leading-4 text-white/65">
+                            {choice.description}
+                          </span>
+                          <div className="mt-3 flex flex-wrap items-center gap-1.5">
+                            {pricedService && (
+                              <span className="rounded-full bg-amber-400 px-2.5 py-0.5 text-[11px] font-bold text-stone-950">
+                                From {getServicePriceLabel(pricedService)}
+                              </span>
+                            )}
+                            <span className="rounded-full bg-white/10 px-2 py-0.5 text-[10px] font-medium text-white/70 backdrop-blur-sm">
+                              {choice.pathBadge}
+                            </span>
+                          </div>
+                        </div>
+                      </Link>
+                    </li>
+                  );
+                })}
+              </ul>
+
+              <p className="mt-3 text-sm font-medium text-slate-300">
+                Choose a service to continue with addresses, inventory, schedule, and payment.
+              </p>
+            </section>
+
             {/* Urgency badge */}
-            <div className="hero-fade-up hero-fade-up-4 mt-6 sm:mt-10 mb-3 inline-flex items-center gap-2 rounded-full bg-emerald-500/15 border border-emerald-400/40 px-3 py-1.5 text-[11px] sm:text-xs font-bold uppercase tracking-wide text-emerald-300 urgency-pulse">
-              <span className="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-pulse" aria-hidden="true" />
+            <div className="hero-fade-up hero-fade-up-4 mt-5 inline-flex items-center gap-2 rounded-full bg-amber-500/12 border border-amber-400/30 px-3 py-1.5 text-[11px] sm:text-xs font-bold uppercase tracking-wide text-amber-300 urgency-pulse">
+              <span className="inline-block w-2 h-2 rounded-full bg-amber-400 animate-pulse" aria-hidden="true" />
               Same-day enquiries · Capacity checked before confirmation
-            </div>
-
-            <div id="get-quote" className="hero-fade-up hero-fade-up-4 flex flex-col sm:flex-row sm:items-start gap-3 sm:gap-4">
-              {/* Primary: Call now */}
-              <div className="flex flex-col">
-                <a
-                  href="tel:07909032889"
-                  data-track-event="call_click"
-                  data-track-location="hero_primary"
-                  className="cta-pulse inline-flex items-center justify-center gap-2 rounded-lg bg-primary-400 px-7 sm:px-9 py-4 sm:py-5 text-lg sm:text-xl font-extrabold text-slate-900 shadow-lg shadow-primary-400/20 transition-colors hover:bg-primary-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900"
-                >
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                  </svg>
-                  Call Now 07909 032889
-                </a>
-                <span className="mt-2 inline-flex items-center gap-2 self-center sm:self-start rounded-full bg-slate-900/60 ring-1 ring-primary-400/40 px-3 py-1 text-xs font-semibold text-white shadow-sm">
-                  <span className="inline-flex items-center rounded-md bg-primary-400 text-slate-900 px-2 py-0.5 text-[11px] font-extrabold">
-                    From {money.format(45)}
-                  </span>
-                  <span className="text-slate-100">Instant quote on call</span>
-                </span>
-              </div>
-
-              {/* Secondary: Online quote */}
-              <div className="flex flex-col">
-                <Link
-                  href="/book"
-                  data-track-event="quote_click"
-                  data-track-location="hero_secondary"
-                  className="inline-flex items-center justify-center gap-2 rounded-lg border border-white/30 bg-transparent px-5 sm:px-6 py-3 text-sm font-semibold text-slate-200 transition-colors hover:bg-white/5 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900"
-                >
-                  Get Instant Quote Online
-                </Link>
-                <span className="mt-1.5 text-[11px] text-slate-400 text-center sm:text-left">
-                  Takes 30 seconds · No obligation
-                </span>
-              </div>
             </div>
 
             {/* Live availability microcopy */}
@@ -291,8 +391,9 @@ export default function HomePage() {
               ].map((badge, i) => (
                 <li
                   key={badge}
-                  className={`trust-badge trust-badge-${i + 1} inline-flex items-center rounded-full border border-white/15 bg-white/5 px-2.5 py-1 text-[11px] sm:text-xs font-medium text-slate-200`}
+                  className={`trust-badge trust-badge-${i + 1} inline-flex items-center gap-1.5 rounded-full bg-white/[0.07] px-3 py-1.5 text-[11px] sm:text-xs font-medium text-slate-300`}
                 >
+                  <span className="inline-block w-1 h-1 rounded-full bg-amber-400 shrink-0" aria-hidden="true" />
                   {badge}
                 </li>
               ))}
@@ -300,44 +401,132 @@ export default function HomePage() {
           </div>
         </div>
 
-        {/* Curved transition into yellow stats */}
+        {/* Curved transition */}
         <svg
-          className="absolute bottom-0 left-0 w-full h-8 sm:h-12 text-primary-400"
+          className="absolute bottom-0 left-0 w-full h-8 sm:h-12"
           viewBox="0 0 1440 60"
           preserveAspectRatio="none"
           aria-hidden="true"
         >
           <path
-            fill="currentColor"
+            fill="#0A0A0A"
             d="M0,60 L0,30 C240,60 480,0 720,15 C960,30 1200,60 1440,20 L1440,60 Z"
           />
         </svg>
       </section>
 
       {/* ── Trust bar ─────────────────────────────────────────────────────── */}
-      <section className="bg-primary-400 relative z-10" aria-label="Service highlights">
+      <section
+        className="relative z-10"
+        style={{ background: "rgba(245,158,11,0.08)", borderTop: "1px solid rgba(245,158,11,0.15)", borderBottom: "1px solid rgba(245,158,11,0.15)" }}
+        aria-label="Service highlights"
+      >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <ul
-            className="grid grid-cols-2 md:grid-cols-4 gap-y-5 md:gap-y-0"
-            role="list"
-          >
+          <ul className="grid grid-cols-2 md:grid-cols-4 gap-y-5 md:gap-y-0" role="list">
             {TRUST_STATS.map((stat, i) => (
               <li
                 key={stat.label}
                 className={`flex flex-col items-center text-center px-2 ${
-                  i < TRUST_STATS.length - 1
-                    ? "md:border-r md:border-slate-900/15"
-                    : ""
+                  i < TRUST_STATS.length - 1 ? "md:border-r md:border-amber-500/20" : ""
                 }`}
               >
-                <span className="flex items-baseline justify-center gap-1 text-3xl md:text-4xl font-extrabold text-slate-900 leading-none tracking-tight tabular-nums">
+                <span className="flex items-baseline justify-center gap-1 bg-gradient-to-r from-amber-300 via-amber-400 to-orange-400 bg-clip-text text-3xl md:text-4xl font-black text-transparent leading-none tracking-tight">
                   {stat.value}
                 </span>
-                <span className="mt-1.5 text-[11px] sm:text-xs font-semibold uppercase tracking-wider text-slate-800/80">
+                <span className="mt-1.5 text-[11px] sm:text-xs font-semibold uppercase tracking-wider text-amber-400/60">
                   {stat.label}
                 </span>
               </li>
             ))}
+          </ul>
+        </div>
+      </section>
+
+      {/* ── Customer shortcuts ────────────────────────────────────────────── */}
+      <section
+        className="py-14 sm:py-16"
+        style={{ background: "#0A0A0A" }}
+        aria-labelledby="customer-shortcuts-heading"
+      >
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <p className="text-xs font-black uppercase tracking-[0.12em] text-amber-400">
+                Quick routes
+              </p>
+              <h2 id="customer-shortcuts-heading" className="mt-2 scroll-mt-28 text-2xl font-black text-white sm:text-3xl">
+                Choose the path that fits your move
+              </h2>
+            </div>
+            <p className="max-w-xl text-sm leading-6 text-white/50">
+              Fast options for common situations, especially when booking from a phone.
+            </p>
+          </div>
+
+          <ul className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-3" role="list">
+            {CUSTOMER_PATHS.map((path) => {
+              const content = (
+                <span className="flex h-full flex-col">
+                  <span className="text-[11px] font-black uppercase tracking-[0.12em] text-amber-400">
+                    {path.eyebrow}
+                  </span>
+                  <span className="mt-2 text-lg font-black text-white">
+                    {path.title}
+                  </span>
+                  <span className="mt-2 text-sm leading-6 text-white/55">
+                    {path.body}
+                  </span>
+                  <span className="mt-5 inline-flex min-h-10 items-center justify-center rounded-xl px-4 text-sm font-black text-black transition group-hover:brightness-110" style={{ background: "linear-gradient(135deg, #F59E0B 0%, #EA580C 100%)" }}>
+                    {path.cta} <span className="ml-1" aria-hidden="true">→</span>
+                  </span>
+                </span>
+              );
+
+              if (path.external) {
+                return (
+                  <li key={path.title}>
+                    <a
+                      href={path.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      data-track-event="shortcut_click"
+                      data-track-location={`shortcut_${path.title.toLowerCase().replace(/\s+/g, "_")}`}
+                      className="customer-path-card group block h-full rounded-2xl p-5 transition hover:-translate-y-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400"
+                    >
+                      {content}
+                    </a>
+                  </li>
+                );
+              }
+
+              if (path.href.startsWith("tel:")) {
+                return (
+                  <li key={path.title}>
+                    <a
+                      href={path.href}
+                      data-track-event="shortcut_click"
+                      data-track-location={`shortcut_${path.title.toLowerCase().replace(/\s+/g, "_")}`}
+                      className="customer-path-card group block h-full rounded-2xl p-5 transition hover:-translate-y-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400"
+                    >
+                      {content}
+                    </a>
+                  </li>
+                );
+              }
+
+              return (
+                <li key={path.title}>
+                  <Link
+                    href={path.href}
+                    data-track-event="shortcut_click"
+                    data-track-location={`shortcut_${path.title.toLowerCase().replace(/\s+/g, "_")}`}
+                    className="customer-path-card group block h-full rounded-2xl p-5 transition hover:-translate-y-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400"
+                  >
+                    {content}
+                  </Link>
+                </li>
+              );
+            })}
           </ul>
         </div>
       </section>
@@ -348,7 +537,8 @@ export default function HomePage() {
       {/* ── Services ──────────────────────────────────────────────────────── */}
       <section
         id="services"
-        className="py-20 bg-white"
+        className="py-20"
+        style={{ background: "#0A0A0A" }}
         aria-labelledby="services-heading"
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -358,7 +548,7 @@ export default function HomePage() {
             </h2>
             <p className="section-subheading mx-auto">
               From a single item to an entire office, we have a service that fits.
-              All bookings include a professional driver and goods-in-transit insurance.
+              Check what is included, access requirements and the agreed quote before booking.
             </p>
           </div>
 
@@ -372,7 +562,7 @@ export default function HomePage() {
                   slug={service.slug}
                   title={service.name}
                   description={service.description}
-                  price={`From ${money.format(service.startingFrom)}`}
+                  price={`From ${getServicePriceLabel(service)}`}
                   imagePath={getServiceImage(service.slug)}
                   href={`/services/${service.slug}`}
                   variant="homepage"
@@ -382,7 +572,7 @@ export default function HomePage() {
             <li>
               {/* European Removals — custom image card with "New" badge */}
               <div className="relative">
-                <span className="absolute -top-2 right-4 z-20 inline-flex items-center rounded-full bg-blue-600 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-white shadow">
+                <span className="absolute -top-2 right-4 z-20 inline-flex items-center rounded-full px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-black shadow" style={{ background: "linear-gradient(135deg, #F59E0B, #EA580C)" }}>
                   New
                 </span>
                 <ServiceImageCard
@@ -403,7 +593,8 @@ export default function HomePage() {
       {/* ── How it works ──────────────────────────────────────────────────── */}
       <section
         id="how-it-works"
-        className="py-20 bg-slate-50"
+        className="py-20"
+        style={{ background: "rgba(245,158,11,0.04)", borderTop: "1px solid rgba(245,158,11,0.10)" }}
         aria-labelledby="how-it-works-heading"
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -417,21 +608,23 @@ export default function HomePage() {
           </div>
 
           <ol className="grid grid-cols-1 md:grid-cols-3 gap-8 relative">
-            {/* Connector line on desktop */}
             <div
-              className="hidden md:block absolute top-10 left-1/3 right-1/3 h-0.5 bg-primary-200"
+              className="hidden md:block absolute top-10 left-1/3 right-1/3 h-0.5"
+              style={{ background: "rgba(245,158,11,0.25)" }}
               aria-hidden="true"
             />
-
             {HOW_IT_WORKS.map((step, i) => (
               <li key={step.step} className={`reveal step-card step-card-${i + 1} flex flex-col items-center text-center`}>
-                <div className="step-badge relative z-10 flex items-center justify-center w-20 h-20 rounded-full bg-primary-400 text-slate-900 text-3xl font-extrabold mb-6 shadow-md">
+                <div
+                  className="step-badge relative z-10 flex items-center justify-center w-20 h-20 rounded-full text-black text-3xl font-black mb-6 shadow-lg"
+                  style={{ background: "linear-gradient(135deg, #F59E0B, #EA580C)" }}
+                >
                   {step.step}
                 </div>
-                <h3 className="text-xl font-bold text-slate-900 mb-3">
+                <h3 className="text-xl font-black text-white mb-3">
                   {step.title}
                 </h3>
-                <p className="text-slate-600 leading-relaxed">
+                <p className="text-white/55 leading-relaxed">
                   {step.description}
                 </p>
               </li>
@@ -454,7 +647,8 @@ export default function HomePage() {
       {/* ── Areas ─────────────────────────────────────────────────────────── */}
       <section
         id="areas"
-        className="py-20 bg-white"
+        className="py-20"
+        style={{ background: "#0A0A0A" }}
         aria-labelledby="areas-heading"
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -481,7 +675,7 @@ export default function HomePage() {
             if (regionAreas.length === 0) return null;
             return (
               <div key={region} className="mb-8">
-                <h3 className="text-lg font-bold text-slate-700 mb-4 flex items-center gap-2">
+                <h3 className="text-base font-bold text-amber-400/70 mb-4 flex items-center gap-2">
                   <span aria-hidden="true">📍</span> {region}
                 </h3>
                 <ul className="reveal-stagger grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3" role="list">
@@ -491,7 +685,7 @@ export default function HomePage() {
                         href={`/areas/${area.slug}`}
                         data-track-event="area_card_click"
                         data-track-location={`areas_${area.slug}`}
-                        className="block text-center py-2.5 px-3 rounded-lg border border-slate-200 text-sm font-medium text-slate-700 hover:border-primary-400 hover:bg-primary-50 hover:text-slate-900 transition-all"
+                        className="area-link-card block text-center py-2.5 px-3 rounded-lg text-sm font-medium text-white/60 transition-all hover:text-amber-400"
                       >
                         {area.name}
                       </Link>
@@ -507,69 +701,49 @@ export default function HomePage() {
       {/* ── Pricing ───────────────────────────────────────────────────────── */}
       <section
         id="pricing"
-        className="py-20 bg-slate-900 text-white"
+        className="py-20"
+        style={{ background: "rgba(245,158,11,0.04)", borderTop: "1px solid rgba(245,158,11,0.10)" }}
         aria-labelledby="pricing-heading"
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 id="pricing-heading" className="text-3xl sm:text-4xl font-extrabold">
+            <h2 id="pricing-heading" className="section-heading">
               Simple, Transparent Pricing
             </h2>
-            <p className="mt-4 text-lg text-slate-400 max-w-2xl mx-auto">
-              No hidden fees, no surprise charges. The price we quote is
-              the price you pay — guaranteed.
+            <p className="mt-4 text-lg max-w-2xl mx-auto" style={{ color: "rgba(255,255,255,0.55)" }}>
+              No hidden fees, no surprise charges. Your confirmed quote is
+              shown before you book, based on the route, access, load and date.
             </p>
           </div>
 
-          <ul className="reveal-stagger grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6" role="list">
+          <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6" role="list">
             {PRICING_TIERS.map((tier) => (
               <li
                 key={tier.size}
-                className={`tier-lift relative rounded-2xl p-6 ${
-                  tier.popular
-                    ? "popular-glow bg-primary-400 text-slate-900 ring-4 ring-primary-300"
-                    : "bg-slate-800 text-white"
-                }`}
+                className="tier-lift relative rounded-2xl p-6"
+                style={tier.popular
+                  ? { background: "linear-gradient(135deg, rgba(245,158,11,0.20) 0%, rgba(234,88,12,0.15) 100%)", boxShadow: "0 0 0 2px rgba(245,158,11,0.50), 0 20px 60px rgba(245,158,11,0.15)" }
+                  : { background: "rgba(255,255,255,0.04)", boxShadow: "0 0 0 1px rgba(255,255,255,0.10)" }}
               >
                 {tier.popular && (
                   <div className="absolute -top-3.5 left-1/2 -translate-x-1/2">
-                    <span className="bg-slate-900 text-primary-400 text-xs font-bold px-3 py-1 rounded-full">
+                    <span className="text-xs font-black px-3 py-1 rounded-full text-black" style={{ background: "linear-gradient(135deg, #F59E0B, #EA580C)" }}>
                       Most Popular
                     </span>
                   </div>
                 )}
-                <div className="text-3xl mb-3" aria-hidden="true">
-                  {tier.icon}
-                </div>
-                <h3 className="font-bold text-xl">{tier.size}</h3>
-                <p className={`text-sm mt-1 ${tier.popular ? "text-slate-700" : "text-slate-400"}`}>
-                  {tier.capacity}
-                </p>
+                <div className="text-3xl mb-3" aria-hidden="true">{tier.icon}</div>
+                <h3 className="font-black text-xl text-white">{tier.size}</h3>
+                <p className="text-sm mt-1 text-white/50">{tier.capacity}</p>
                 <div className="mt-4 mb-6">
-                  <span className="text-4xl font-extrabold">{money.format(tier.price)}</span>
-                  <span className={`text-sm ${tier.popular ? "text-slate-700" : "text-slate-400"}`}>
-                    /hr
-                  </span>
+                  <span className="text-4xl font-black text-white">{money.format(tier.price)}</span>
+                  <span className="text-sm text-white/70">/hr</span>
                 </div>
                 <ul className="space-y-2" role="list">
                   {tier.features.map((feature) => (
-                    <li
-                      key={feature}
-                      className={`flex items-center gap-2 text-sm ${
-                        tier.popular ? "text-slate-800" : "text-slate-300"
-                      }`}
-                    >
-                      <svg
-                        className={`w-4 h-4 shrink-0 ${tier.popular ? "text-slate-700" : "text-primary-400"}`}
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
-                        aria-hidden="true"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                          clipRule="evenodd"
-                        />
+                    <li key={feature} className="flex items-center gap-2 text-sm text-white/60">
+                      <svg className="w-4 h-4 shrink-0 text-amber-400" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                       </svg>
                       {feature}
                     </li>
@@ -579,11 +753,8 @@ export default function HomePage() {
                   href="/book"
                   data-track-event="quote_click"
                   data-track-location={`pricing_tier_${tier.size.toLowerCase().replace(/\s+/g, "_")}`}
-                  className={`mt-6 block w-full text-center py-2.5 rounded-lg font-semibold text-sm transition-colors ${
-                    tier.popular
-                      ? "bg-slate-900 text-white hover:bg-slate-800"
-                      : "bg-primary-400 text-slate-900 hover:bg-primary-500"
-                  }`}
+                  className="mt-6 block w-full text-center py-2.5 rounded-xl font-black text-sm text-black transition hover:brightness-110"
+                  style={{ background: "linear-gradient(135deg, #F59E0B 0%, #EA580C 100%)" }}
                 >
                   Book {tier.size}
                 </Link>
@@ -591,7 +762,7 @@ export default function HomePage() {
             ))}
           </ul>
 
-          <p className="mt-8 text-center text-sm text-slate-500">
+          <p className="mt-8 text-center text-sm text-white/70">
             All prices are per hour. Minimum 2-hour booking. Fixed-price quotes available for house removals.
           </p>
         </div>
@@ -601,25 +772,22 @@ export default function HomePage() {
       <ServiceComparison />
 
       {/* ── Move planning ─────────────────────────────────────────────────── */}
-      <section className="py-20 bg-white" aria-labelledby="planning-heading">
+      <section className="py-20" style={{ background: "#0A0A0A" }} aria-labelledby="planning-heading">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 id="planning-heading" className="section-heading">
               What Makes a Quote Accurate?
             </h2>
             <p className="section-subheading mx-auto">
-              A better quote starts with the details that change the work on
-              move day.
+              A better quote starts with the details that change the work on move day.
             </p>
           </div>
 
           <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5" role="list">
             {MOVE_DECISION_POINTS.map((point) => (
-              <li key={point.title} className="rounded-xl border border-slate-200 bg-slate-50 p-5">
-                <h3 className="font-bold text-slate-900">{point.title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-slate-600">
-                  {point.body}
-                </p>
+              <li key={point.title} className="rounded-2xl p-5" style={{ background: "rgba(255,255,255,0.04)", boxShadow: "0 0 0 1px rgba(245,158,11,0.15), 0 8px 32px rgba(0,0,0,0.4)" }}>
+                <h3 className="font-black text-white">{point.title}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-white/55">{point.body}</p>
               </li>
             ))}
           </ul>
@@ -629,7 +797,8 @@ export default function HomePage() {
       {/* ── FAQ ───────────────────────────────────────────────────────────── */}
       <section
         id="faq"
-        className="py-20 bg-slate-50"
+        className="py-20"
+        style={{ background: "rgba(245,158,11,0.04)", borderTop: "1px solid rgba(245,158,11,0.10)" }}
         aria-labelledby="faq-heading"
       >
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -645,37 +814,45 @@ export default function HomePage() {
 
       {/* ── Final CTA ─────────────────────────────────────────────────────── */}
       <section
-        className="py-20 bg-primary-400"
+        className="py-20"
+        style={{ background: "radial-gradient(ellipse 70% 60% at 50% 100%, rgba(245,158,11,0.12) 0%, transparent 70%), #0A0A0A", borderTop: "1px solid rgba(245,158,11,0.15)" }}
         aria-labelledby="cta-heading"
       >
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 id="cta-heading" className="text-3xl sm:text-4xl font-extrabold text-slate-900">
+          <h2 id="cta-heading" className="mx-auto max-w-2xl text-2xl font-black leading-tight text-white sm:text-4xl">
             Ready for a Stress-Free Move?
           </h2>
-          <p className="mt-4 text-lg text-slate-700 max-w-2xl mx-auto">
-            Get a free, no-obligation quote for a local move, full-house
-            removal, furniture delivery, or office relocation.
+          <p className="mt-4 max-w-2xl mx-auto text-base sm:text-lg" style={{ color: "rgba(255,255,255,0.55)" }}>
+            Get a free, no-obligation quote for a local move, full-house removal, furniture delivery, or office relocation.
           </p>
-          <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
+          <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center items-center">
             <a
               href="tel:07909032889"
+              aria-label="Call us on 07909 032889"
               data-track-event="call_click"
               data-track-location="footer_cta"
-              className="inline-flex items-center justify-center gap-2 rounded-lg bg-slate-900 px-8 py-4 font-bold text-white text-base hover:bg-slate-800 transition-colors"
+              className="transition-transform hover:scale-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 rounded-full"
             >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-              </svg>
-              07909 032889
+              <Image src="/call-icon.png" alt="Call us" width={64} height={64} />
             </a>
             <a
               href="mailto:hello@speedyvan.uk"
               data-track-event="email_click"
               data-track-location="footer_cta"
-              className="inline-flex items-center justify-center gap-2 rounded-lg border-2 border-slate-900 px-8 py-4 font-bold text-slate-900 text-base hover:bg-slate-900 hover:text-white transition-colors"
+              className="inline-flex items-center justify-center gap-2 rounded-xl px-8 py-4 font-bold text-white/70 text-base transition hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400"
+              style={{ background: "rgba(255,255,255,0.06)", boxShadow: "0 0 0 1px rgba(255,255,255,0.12)" }}
             >
               hello@speedyvan.uk
             </a>
+            <Link
+              href="/book"
+              data-track-event="quote_click"
+              data-track-location="footer_cta"
+              className="inline-flex items-center justify-center rounded-xl px-8 py-4 font-black text-black text-base transition hover:brightness-110"
+              style={{ background: "linear-gradient(135deg, #F59E0B 0%, #EA580C 100%)" }}
+            >
+              Book Now →
+            </Link>
           </div>
         </div>
       </section>

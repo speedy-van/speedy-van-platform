@@ -6,11 +6,10 @@ import {
   poundsToPence,
 } from "@speedy-van/shared";
 import bcrypt from "bcryptjs";
-import { stripe } from "../lib/stripe";
+import { requireStripe } from "../lib/stripe";
+import { assertBookingPayment, PaymentValidationError } from "../lib/payment-validation";
+import { triggerEvent } from "../lib/pusher";
 import { calculatePriceForSlot } from "./pricing.service";
-import { recordStatusChange, createTrackingEvent } from "./tracking.service";
-import { publishToJobBoard } from "./job.service";
-import { notifyNewBooking } from "./notification.service";
 import { sendBookingConfirmation, sendBookingCancelled } from "./email.service";
 
 const PRICE_TOLERANCE_GBP = 1.0;
@@ -30,11 +29,13 @@ export async function createBooking(input: CreateBookingInput): Promise<{
   booking: Booking;
   clientSecret: string | null;
 }> {
+  // Payment configuration is required before creating a customer or booking.
+  const paymentClient = requireStripe();
   // 1. Verify price server-side
   const scheduledDate = new Date(input.selectedDate);
   const serverPrice = await calculatePriceForSlot(
     {
-      serviceType: input.serviceSlug,
+      serviceType: input.entryServiceSlug || input.serviceSlug,
       serviceVariant: input.serviceVariant,
       distanceMiles: input.distanceMiles,
       pickupFloor: input.pickupFloor,
@@ -59,6 +60,10 @@ export async function createBooking(input: CreateBookingInput): Promise<{
     throw err;
   }
 
+  if (!Number.isFinite(serverPrice) || poundsToPence(serverPrice) <= 0) {
+    throw new PaymentValidationError("PAYMENT_UNAVAILABLE", "A payable quote is not available. Please try again.", 503);
+  }
+
   // 2. Find or create customer
   const customer = await findOrCreateCustomer(
     input.customerEmail,
@@ -71,6 +76,31 @@ export async function createBooking(input: CreateBookingInput): Promise<{
   if (!service) throw new Error("NOT_FOUND");
   const area = await db.area.findFirst({ where: { isActive: true } });
   if (!area) throw new Error("NOT_FOUND");
+
+  const submittedItemIds = Array.from(
+    new Set(
+      input.selectedItems
+        .map((item) => item.itemId)
+        .filter((itemId): itemId is string => Boolean(itemId)),
+    ),
+  );
+  const catalogItems =
+    submittedItemIds.length > 0
+      ? await db.item.findMany({
+          where: {
+            OR: [
+              { id: { in: submittedItemIds } },
+              { slug: { in: submittedItemIds } },
+            ],
+          },
+          select: { id: true, slug: true },
+        })
+      : [];
+  const catalogItemIdBySubmittedId = new Map<string, string>();
+  for (const item of catalogItems) {
+    catalogItemIdBySubmittedId.set(item.id, item.id);
+    catalogItemIdBySubmittedId.set(item.slug, item.id);
+  }
 
   // 4. Create booking
   const reference = generateBookingReference();
@@ -109,182 +139,260 @@ export async function createBooking(input: CreateBookingInput): Promise<{
       totalPrice: serverPrice,
       status: "PENDING",
       items: {
-        create: input.selectedItems.map((it) => ({
-          name: it.name,
-          quantity: it.quantity,
-        })),
+        create: input.selectedItems.map((it) => {
+          const resolvedItemId = it.itemId ? catalogItemIdBySubmittedId.get(it.itemId) : undefined;
+          const itemName = it.roomName ? `${it.roomName}: ${it.name}` : it.name;
+          return {
+            ...(resolvedItemId ? { itemId: resolvedItemId } : {}),
+            name: itemName,
+            quantity: it.quantity,
+          };
+        }),
       },
     },
   });
 
   // 5. Stripe PaymentIntent
-  let clientSecret: string | null = null;
-  if (stripe) {
-    const intent = await stripe.paymentIntents.create({
+  const intent = await paymentClient.paymentIntents.create(
+    {
       amount: poundsToPence(serverPrice),
       currency: "gbp",
       metadata: { bookingId: booking.id, reference: booking.reference },
       automatic_payment_methods: { enabled: true },
-    });
-    clientSecret = intent.client_secret;
-    await db.booking.update({
-      where: { id: booking.id },
-      data: { stripePaymentId: intent.id },
-    });
+    },
+    { idempotencyKey: `booking-payment-${booking.id}` },
+  );
+  const updatedBooking = await db.booking.update({
+    where: { id: booking.id },
+    data: { stripePaymentId: intent.id },
+  });
+  if (!intent.client_secret) {
+    throw new PaymentValidationError("PAYMENT_UNAVAILABLE", "Payment could not be started. Please contact support.", 503);
   }
 
-  return { booking, clientSecret };
+  return { booking: updatedBooking, clientSecret: intent.client_secret };
 }
 
 export async function confirmBooking(
   bookingId: string,
   paymentIntentId: string,
 ): Promise<Booking> {
-  // Verify payment
-  if (stripe) {
-    const intent = await stripe.paymentIntents.retrieve(paymentIntentId);
-    if (intent.status !== "succeeded") {
-      const err = new Error(`PaymentIntent not succeeded: ${intent.status}`);
-      err.name = "PaymentNotSucceeded";
-      throw err;
-    }
-  }
+  const paymentClient = requireStripe();
+  const initialBooking = await db.booking.findUnique({ where: { id: bookingId } });
+  if (!initialBooking) throw new Error("NOT_FOUND");
+  const intent = await paymentClient.paymentIntents.retrieve(paymentIntentId);
+  assertBookingPayment(initialBooking, intent);
 
-  const booking = await db.booking.update({
-    where: { id: bookingId },
-    data: { status: "CONFIRMED", isPaid: true, paidAt: new Date(), stripePaymentId: paymentIntentId },
-  });
+  // The conditional update serialises the browser confirmation and webhook.
+  // Keep all durable first-payment effects in the same transaction so a retry
+  // can finish safely after a database error, without publishing duplicate jobs.
+  const result = await db.$transaction(async (tx) => {
+    const current = await tx.booking.findUnique({ where: { id: bookingId } });
+    if (!current) throw new Error("NOT_FOUND");
+    assertBookingPayment(current, intent);
+    if (current.isPaid) return { booking: current, event: null };
 
-  await createTrackingEvent({
-    bookingId: booking.id,
-    type: "system",
-    status: "CONFIRMED",
-    message: "Payment received",
-  });
-
-  // Conversation between customer + admins (idempotent)
-  try {
-    const existingConversation = await db.conversation.findUnique({
-      where: { bookingId: booking.id },
-      select: { id: true, participants: { select: { userId: true } } },
+    const status = current.status === "PENDING" ? "CONFIRMED" : current.status;
+    const updated = await tx.booking.updateMany({
+      where: {
+        id: bookingId,
+        isPaid: false,
+        status: current.status,
+        stripePaymentId: intent.id,
+        totalPrice: current.totalPrice,
+      },
+      data: { status, isPaid: true, paidAt: new Date() },
     });
-
-    const admins = await db.user.findMany({ where: { role: "ADMIN", isActive: true } });
-
-    // Build deduplicated participant list. Customer takes precedence over ADMIN role
-    // if the booking owner happens to also be an admin user.
-    const participantMap = new Map<string, "CUSTOMER" | "ADMIN">();
-    for (const a of admins) {
-      if (a.id) participantMap.set(a.id, "ADMIN");
+    const booking = await tx.booking.findUnique({ where: { id: bookingId } });
+    if (!booking) throw new Error("NOT_FOUND");
+    if (updated.count === 0) {
+      assertBookingPayment(booking, intent);
+      if (booking.isPaid) return { booking, event: null };
+      throw new PaymentValidationError("BOOKING_STATE_CHANGED", "Booking changed. Please try confirming the payment again.", 409);
     }
-    if (booking.userId) participantMap.set(booking.userId, "CUSTOMER");
 
-    if (!existingConversation) {
-      await db.conversation.create({
-        data: {
-          bookingId: booking.id,
-          participants: {
-            create: Array.from(participantMap.entries()).map(([userId, role]) => ({
-              userId,
-              role,
-            })),
-          },
-        },
+    const cancelled = status === "CANCELLED";
+    const event = await tx.trackingEvent.create({
+      data: {
+        bookingId,
+        type: "system",
+        status,
+        message: cancelled ? "Payment received after cancellation. Payment and refund review required." : "Payment received",
+        isInternal: cancelled,
+      },
+    });
+    if (current.status !== status) {
+      await tx.statusHistory.create({
+        data: { bookingId, fromStatus: current.status, toStatus: status, changedByRole: "SYSTEM", note: "Payment received" },
       });
-    } else {
-      const existingUserIds = new Set(existingConversation.participants.map((p) => p.userId));
-      const toCreate = Array.from(participantMap.entries())
-        .filter(([userId]) => !existingUserIds.has(userId))
-        .map(([userId, role]) => ({
-          conversationId: existingConversation.id,
-          userId,
-          role,
-        }));
-      if (toCreate.length > 0) {
-        await db.conversationParticipant.createMany({ data: toCreate, skipDuplicates: true });
+    }
+
+    const admins = await tx.user.findMany({ where: { role: "ADMIN", isActive: true } });
+    if (!cancelled) {
+      const conversation = await tx.conversation.upsert({
+        where: { bookingId },
+        update: {},
+        create: { bookingId },
+      });
+      const participants = new Map<string, "CUSTOMER" | "ADMIN">();
+      for (const admin of admins) participants.set(admin.id, "ADMIN");
+      participants.set(booking.userId, "CUSTOMER");
+      await tx.conversationParticipant.createMany({
+        data: Array.from(participants, ([userId, role]) => ({ conversationId: conversation.id, userId, role })),
+        skipDuplicates: true,
+      });
+
+      if (status === "CONFIRMED") {
+        const [percentage, minimum] = await Promise.all([
+          tx.pricingConfig.findUnique({ where: { category_key: { category: "driver", key: "driver_pay_percentage" } } }),
+          tx.pricingConfig.findUnique({ where: { category_key: { category: "driver", key: "driver_pay_minimum" } } }),
+        ]);
+        const driverPay = Math.max(booking.totalPrice * ((percentage?.value ?? 60) / 100), minimum?.value ?? 25);
+        await tx.driverJob.upsert({
+          where: { bookingId },
+          update: {},
+          create: { bookingId, status: "AVAILABLE", isPublic: true, driverPay },
+        });
       }
     }
-  } catch (err) {
-    console.error("[booking] conversation setup failed:", err);
+
+    if (admins.length > 0) {
+      const formattedPrice = new Intl.NumberFormat("en-GB", { style: "currency", currency: "GBP" }).format(booking.totalPrice);
+      await tx.notification.createMany({
+        data: admins.map((admin) => ({
+          userId: admin.id,
+          type: cancelled ? "GENERIC" as const : "NEW_BOOKING" as const,
+          title: cancelled ? `Payment review required: ${booking.reference}` : `New payment: ${booking.reference}`,
+          body: cancelled
+            ? `${formattedPrice} received for a cancelled booking. Review the payment and any refund before contacting the customer.`
+            : `${booking.customerName} paid ${formattedPrice}.`,
+          link: `/admin/bookings/${booking.id}`,
+          metadata: { bookingId, paymentIntentId: intent.id },
+        })),
+      });
+    }
+    return { booking, event };
+  });
+
+  if (result.event && !result.event.isInternal) {
+    triggerEvent(`booking-${bookingId}`, "tracking-event", {
+      type: result.event.type,
+      status: result.event.status,
+      message: result.event.message,
+      lat: result.event.lat,
+      lng: result.event.lng,
+      createdAt: result.event.createdAt,
+    });
+    await sendBookingConfirmation({
+      customerEmail: result.booking.customerEmail,
+      customerName: result.booking.customerName,
+      reference: result.booking.reference,
+      serviceName: result.booking.serviceName,
+      scheduledAt: result.booking.scheduledAt,
+      totalPrice: result.booking.totalPrice,
+    }).catch((err) => console.error("[booking] confirmation email failed:", err));
   }
-
-  // Auto-publish to job board
-  await publishToJobBoard(booking.id).catch((err) =>
-    console.error("[booking] publishToJobBoard failed:", err),
-  );
-
-  await sendBookingConfirmation({
-    customerEmail: booking.customerEmail,
-    customerName: booking.customerName,
-    reference: booking.reference,
-    serviceName: booking.serviceName,
-    scheduledAt: booking.scheduledAt,
-    totalPrice: booking.totalPrice,
-  }).catch(() => {});
-
-  await notifyNewBooking({
-    id: booking.id,
-    reference: booking.reference,
-    customerName: booking.customerName,
-    totalPrice: booking.totalPrice,
-  }).catch(() => {});
-
-  return booking;
+  return result.booking;
 }
 
 export async function cancelBooking(
   bookingId: string,
   options: { reason?: string; actorId?: string; actorRole?: string },
 ): Promise<{ booking: Booking; refundAmount: number }> {
-  const booking = await db.booking.findUnique({ where: { id: bookingId } });
-  if (!booking) throw new Error("NOT_FOUND");
-  if (booking.status === "CANCELLED") {
-    return { booking, refundAmount: booking.refundAmount };
-  }
-
-  const refundAmount = booking.isPaid
-    ? calculateRefund(booking.scheduledAt, booking.totalPrice)
-    : 0;
-
-  // Issue Stripe refund if applicable
-  if (refundAmount > 0 && booking.stripePaymentId && stripe) {
-    try {
-      await stripe.refunds.create({
-        payment_intent: booking.stripePaymentId,
-        amount: poundsToPence(refundAmount),
-      });
-    } catch (err) {
-      console.error("[booking] Stripe refund failed:", err);
+  const result = await db.$transaction(async (tx) => {
+    const booking = await tx.booking.findUnique({ where: { id: bookingId } });
+    if (!booking) throw new Error("NOT_FOUND");
+    if (booking.status === "CANCELLED") return { booking, event: null };
+    if (options.actorRole === "CUSTOMER" && booking.status !== "PENDING" && booking.status !== "CONFIRMED") {
+      throw new PaymentValidationError("BOOKING_CANCELLATION_NOT_ALLOWED", "This move can no longer be cancelled online. Please contact support.", 409);
     }
+
+    // Lock the same booking row as confirmation before issuing any refund.
+    const claimed = await tx.booking.updateMany({
+      where: {
+        id: bookingId,
+        status: booking.status,
+        isPaid: booking.isPaid,
+        stripePaymentId: booking.stripePaymentId,
+        totalPrice: booking.totalPrice,
+        refundAmount: booking.refundAmount,
+      },
+      data: { status: "CANCELLED" },
+    });
+    if (claimed.count === 0) {
+      throw new PaymentValidationError("BOOKING_STATE_CHANGED", "Booking changed. Please review it before cancelling again.", 409);
+    }
+
+    const refundableTotal = booking.isPaid ? calculateRefund(booking.scheduledAt, booking.totalPrice) : 0;
+    const remainingPence = Math.max(0, poundsToPence(refundableTotal) - poundsToPence(booking.refundAmount));
+    let refundAmount = booking.refundAmount;
+    if (remainingPence > 0) {
+      const paymentClient = requireStripe();
+      if (!booking.stripePaymentId) {
+        throw new PaymentValidationError("REFUND_NOT_COMPLETED", "The payment could not be identified. Please contact support to cancel.", 409);
+      }
+      let refund = await paymentClient.refunds.create(
+        {
+          payment_intent: booking.stripePaymentId,
+          amount: remainingPence,
+          metadata: { bookingId, reason: "booking_cancellation" },
+        },
+        { idempotencyKey: `booking-cancellation-${bookingId}`, timeout: 8000, maxNetworkRetries: 0 },
+      );
+      // A repeated idempotent request can return the original pending response.
+      if (refund.status !== "succeeded") {
+        refund = await paymentClient.refunds.retrieve(refund.id, {}, { timeout: 8000, maxNetworkRetries: 0 });
+      }
+      if (refund.status !== "succeeded" || refund.amount !== remainingPence || refund.currency !== "gbp") {
+        throw new PaymentValidationError(
+          "REFUND_NOT_COMPLETED",
+          "Cancellation could not be completed because the refund has not succeeded. Please contact support before trying again.",
+          409,
+        );
+      }
+      refundAmount = (poundsToPence(booking.refundAmount) + refund.amount) / 100;
+    }
+
+    const updated = await tx.booking.update({ where: { id: bookingId }, data: { refundAmount } });
+    await tx.driverJob.updateMany({ where: { bookingId }, data: { status: "CANCELLED", isPublic: false } });
+    await tx.statusHistory.create({
+      data: {
+        bookingId,
+        fromStatus: booking.status,
+        toStatus: "CANCELLED",
+        changedById: options.actorId,
+        changedByRole: options.actorRole,
+        note: options.reason,
+      },
+    });
+    const event = await tx.trackingEvent.create({
+      data: {
+        bookingId,
+        type: "status",
+        status: "CANCELLED",
+        message: options.reason,
+        actorId: options.actorId,
+        actorRole: options.actorRole,
+      },
+    });
+    return { booking: updated, event };
+  }, { timeout: 20000 });
+
+  if (result.event) {
+    triggerEvent(`booking-${bookingId}`, "tracking-event", {
+      type: result.event.type,
+      status: result.event.status,
+      message: result.event.message,
+      lat: result.event.lat,
+      lng: result.event.lng,
+      createdAt: result.event.createdAt,
+    });
+    await sendBookingCancelled(
+      { customerEmail: result.booking.customerEmail, reference: result.booking.reference },
+      result.booking.refundAmount,
+    ).catch((err) => console.error("[booking] cancellation email failed:", err));
   }
-
-  const previousStatus = booking.status;
-  const updated = await db.booking.update({
-    where: { id: bookingId },
-    data: { status: "CANCELLED", refundAmount },
-  });
-
-  // If a job exists, mark cancelled
-  await db.driverJob.updateMany({
-    where: { bookingId },
-    data: { status: "CANCELLED", isPublic: false },
-  });
-
-  await recordStatusChange(
-    bookingId,
-    previousStatus,
-    "CANCELLED",
-    options.actorId,
-    options.actorRole,
-    options.reason,
-  );
-
-  await sendBookingCancelled(
-    { customerEmail: updated.customerEmail, reference: updated.reference },
-    refundAmount,
-  ).catch(() => {});
-
-  return { booking: updated, refundAmount };
+  return { booking: result.booking, refundAmount: result.booking.refundAmount };
 }
 
 export async function getBookingForTracking(reference: string, email: string) {
@@ -310,6 +418,7 @@ export async function getBookingForTracking(reference: string, email: string) {
     reference: booking.reference,
     bookingId: booking.id,
     status: booking.status,
+    isPaid: booking.isPaid,
     serviceName: booking.serviceName,
     scheduledAt: booking.scheduledAt.toISOString(),
     pickupPostcode: booking.pickupPostcode,

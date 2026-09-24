@@ -49,10 +49,10 @@ export function ServiceComparison() {
     >
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-8">
-          <h2 id="compare-heading" className="section-heading">
+          <h2 id="compare-heading" className="section-heading text-stone-950">
             Which Van Do I Need?
           </h2>
-          <p className="section-subheading mx-auto">
+          <p className="section-subheading mx-auto text-slate-600">
             A quick side-by-side so you can pick the right size in seconds.
           </p>
         </div>
@@ -68,19 +68,19 @@ export function ServiceComparison() {
             >
               <div className="flex items-center gap-2 mb-2">
                 <span className="text-xl" aria-hidden="true">{r.icon}</span>
-                <h3 className="font-bold text-slate-900">{r.size}</h3>
+                <h3 className="font-bold text-stone-950">{r.size}</h3>
                 {r.popular && (
-                  <span className="ml-auto text-[10px] font-bold uppercase tracking-wider bg-primary-400 text-slate-900 px-2 py-0.5 rounded-full">
+                  <span className="ml-auto text-[10px] font-bold uppercase tracking-wider bg-primary-400 text-stone-950 px-2 py-0.5 rounded-full">
                     Popular
                   </span>
                 )}
               </div>
               <dl className="text-sm space-y-1 text-slate-700">
-                <div className="flex justify-between"><dt className="text-slate-500">Capacity</dt><dd className="font-medium">{r.capacity}</dd></div>
-                <div className="flex justify-between"><dt className="text-slate-500">Cubic ft</dt><dd className="font-medium">{r.cubicFt}</dd></div>
-                <div className="flex justify-between"><dt className="text-slate-500">Crew</dt><dd className="font-medium">{r.crew}</dd></div>
-                <div className="flex justify-between gap-3"><dt className="text-slate-500 shrink-0">Best for</dt><dd className="font-medium text-right">{r.bestFor}</dd></div>
-                <div className="flex justify-between"><dt className="text-slate-500">Intercity</dt><dd className="font-medium">{r.intercity}</dd></div>
+                <div className="flex justify-between"><dt className="text-slate-600">Capacity</dt><dd className="font-medium">{r.capacity}</dd></div>
+                <div className="flex justify-between"><dt className="text-slate-600">Cubic ft</dt><dd className="font-medium">{r.cubicFt}</dd></div>
+                <div className="flex justify-between"><dt className="text-slate-600">Crew</dt><dd className="font-medium">{r.crew}</dd></div>
+                <div className="flex justify-between gap-3"><dt className="text-slate-600 shrink-0">Best for</dt><dd className="font-medium text-right">{r.bestFor}</dd></div>
+                <div className="flex justify-between"><dt className="text-slate-600">Intercity</dt><dd className="font-medium">{r.intercity}</dd></div>
               </dl>
             </div>
           ))}
@@ -105,11 +105,11 @@ export function ServiceComparison() {
                   key={r.size}
                   className={r.popular ? "bg-primary-50/50" : "bg-white hover:bg-slate-50"}
                 >
-                  <th scope="row" className="px-4 py-3 font-semibold text-slate-900">
+                  <th scope="row" className="px-4 py-3 font-semibold text-stone-950">
                     <span className="inline-flex items-center gap-2">
                       <span aria-hidden="true">{r.icon}</span> {r.size}
                       {r.popular && (
-                        <span className="text-[10px] font-bold uppercase tracking-wider bg-primary-400 text-slate-900 px-1.5 py-0.5 rounded">
+                        <span className="text-[10px] font-bold uppercase tracking-wider bg-primary-400 text-stone-950 px-1.5 py-0.5 rounded">
                           Popular
                         </span>
                       )}

@@ -1,10 +1,11 @@
 "use client";
 
+import { trackAnalyticsEvent } from "@/lib/analytics";
+
 import { useState } from "react";
-import Link from "next/link";
 import { haptic } from "@/lib/haptic";
 
-const WA_SHORT_LINK = "https://wa.me/message/J6EO772GDPHFO1";
+const WA_SHORT_LINK = "https://wa.me/447909032889";
 
 interface WhatsAppPhotoQuoteButtonProps {
   serviceName?: string;
@@ -12,27 +13,12 @@ interface WhatsAppPhotoQuoteButtonProps {
 }
 
 function track(service?: string) {
-  if (typeof window === "undefined") return;
-  const w = window as Window & {
-    gtag?: (...args: unknown[]) => void;
-    dataLayer?: unknown[];
-  };
-  try {
-    w.gtag?.("event", "whatsapp_photo_quote_click", {
-      event_category: "engagement",
-      channel: "whatsapp",
-      service: service ?? "unknown",
-    });
-  } catch {
-    /* ignore */
-  }
-  try {
-    w.dataLayer?.push({ event: "whatsapp_photo_quote_click", service });
-  } catch {
-    /* ignore */
-  }
+  trackAnalyticsEvent("whatsapp_photo_quote_click", {
+    event_category: "engagement",
+    channel: "whatsapp",
+    service: service ?? "unknown",
+  });
 }
-
 /**
  * A dedicated "📷 Get a photo quote on WhatsApp" button with a brief
  * instruction to send photos of their items + postcodes. Works alongside

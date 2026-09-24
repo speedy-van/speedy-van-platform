@@ -13,6 +13,8 @@ import { useBooking } from "@/lib/booking-store";
 export function LivePriceBar() {
   const { state } = useBooking();
 
+  if (state.step < 3) return null;
+
   const total = state.clientTotal;
   const stepLabel: Record<number, string> = {
     1: "Pick a service",
@@ -42,7 +44,7 @@ export function LivePriceBar() {
           <p className="text-[10px] font-semibold uppercase tracking-wide text-slate-500 leading-tight">
             Step {state.step} of 4 · {stepLabel[state.step] ?? ""}
           </p>
-          <p className="text-base font-extrabold text-slate-900 leading-tight">
+          <p className="text-base font-extrabold text-stone-950 leading-tight">
             {total > 0 ? (
               <>
                 <span className="text-primary-600">£{total.toFixed(2)}</span>
@@ -56,7 +58,7 @@ export function LivePriceBar() {
         <button
           type="button"
           onClick={continueClick}
-          className="shrink-0 rounded-lg bg-primary-400 px-4 py-2.5 text-sm font-extrabold text-slate-900 hover:bg-primary-500 active:scale-95 transition-all"
+          className="shrink-0 rounded-lg bg-primary-400 px-4 py-2.5 text-sm font-extrabold text-white hover:bg-primary-500 active:scale-95 transition-all"
         >
           {state.step === 4 ? "Pay" : "Continue"}
           <span className="ml-1" aria-hidden="true">→</span>

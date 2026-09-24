@@ -1,0 +1,154 @@
+{
+  "repository": "speedy-van/speedy-van-platform",
+  "branch": "fix/organic-search-and-booking-2026-09-21",
+  "parent": "52279359c910b88dda260e935b57e53ceae3c523",
+  "base_tree": "52303f34c87295e18f735ec2b9225ffa83223989",
+  "candidate_tree": "26d33175c487a936e448b5e7d7ef489fbc5539e2",
+  "paths": [
+    "apps/web/src/app/(site)/areas/[slug]/page.tsx",
+    "apps/web/src/app/(site)/pricing/page.tsx",
+    "apps/web/src/app/(site)/services/[slug]/page.tsx",
+    "apps/web/src/app/(site)/guides/page.tsx",
+    "apps/web/src/app/(site)/guides/man-and-van-or-house-removals/page.tsx",
+    "apps/web/src/app/sitemap.ts",
+    "apps/web/src/components/areas/AreaGuideContent.tsx",
+    "apps/web/src/components/layout/Footer.tsx",
+    "apps/web/src/lib/area-guides.ts",
+    "apps/web/src/lib/areas.ts",
+    "apps/web/src/lib/content/service-search-content.ts",
+    "scripts/seo-local-qa.py"
+  ],
+  "local_build_id": "nd0ekd3528h-Ez-dZ7IN0",
+  "files": [
+    {
+      "path": "apps/web/src/app/(site)/areas/[slug]/page.tsx",
+      "sha256": "d60c5560b4441e3d705750badc7f2c45dfb0877d6cd6f6cbb6bc26078c6e68cb"
+    },
+    {
+      "path": "apps/web/src/app/(site)/pricing/page.tsx",
+      "sha256": "7595d9a36dff0a2a350a9fca3747a0a53c2f33765db65111ac663bad4b57cd22"
+    },
+    {
+      "path": "apps/web/src/app/(site)/services/[slug]/page.tsx",
+      "sha256": "6c8b6016f0b9536f2203522438dca8278d6b37745560d68a9aa2d7aeb576b561"
+    },
+    {
+      "path": "apps/web/src/app/(site)/guides/page.tsx",
+      "sha256": "e6b0b8ae7d40538805f201940fcf98fe1436d2f660a8531ae22c1b5cb6dd5c1c"
+    },
+    {
+      "path": "apps/web/src/app/(site)/guides/man-and-van-or-house-removals/page.tsx",
+      "sha256": "b4a5d73b95e4d6c36c55eaf8864d710eb93d49d47cf697c96343cf5034044e01"
+    },
+    {
+      "path": "apps/web/src/app/sitemap.ts",
+      "sha256": "9525827f5a5a594ce09e3291731c7c58f82498ddfc3786fd20847c3b48f10c18"
+    },
+    {
+      "path": "apps/web/src/components/areas/AreaGuideContent.tsx",
+      "sha256": "933df11d8fb4497a2ebf221bdd3036ebea8674f1b629522b8308325c949abecf"
+    },
+    {
+      "path": "apps/web/src/components/layout/Footer.tsx",
+      "sha256": "9f7c54ebdbc9c7366cf742aeb94aef72cac6e7a68d7d2e0cbef5bb0205517dff"
+    },
+    {
+      "path": "apps/web/src/lib/area-guides.ts",
+      "sha256": "d1592ae0da8583913e6ca7e9795fe4f2d9a097f4409ac9220eaf19eafa08fffe"
+    },
+    {
+      "path": "apps/web/src/lib/areas.ts",
+      "sha256": "d9477eae87185ef4e202efe92b960dd792735764784f1818b312941bbbdfdd18"
+    },
+    {
+      "path": "apps/web/src/lib/content/service-search-content.ts",
+      "sha256": "1f4736dc20c6503848a0de91924e1528b7152feb27bde4da17e2fcb4747fdb7a"
+    },
+    {
+      "path": "scripts/seo-local-qa.py",
+      "sha256": "d2d81e82afe839462a09fb6640e3635dbd356a7dfd821348e41b5987baeedd16"
+    }
+  ],
+  "source_commit": "9bf77d65066d3b505ffa14eee9e7d3425eb8b6aa",
+  "remote_tree_verified": true,
+  "branch_publication": "fast-forward; force=false",
+  "published_at_utc": "2026-09-23T10:41:08.429184+00:00",
+  "rollback_deployment": "GYD2pB6EKuW3iRStSwR9Du96QrMP",
+  "previous_production_source": "48fcf7ff73ee4d8e5ba2b97a9f630e24b9e15718",
+  "api_production": "5woPnYouSe8kAHqwCsp1o5QoxzSg",
+  "api_source": "5e5881a27cca0f6a602473c78a25c13369d1afc5",
+  "production_status": "READY",
+  "owner_authorised_publication": true,
+  "preview_deployment": "EtgHMqQYXaTae4qMuLy5t8TKdpkm",
+  "preview_origin": "https://speedy-van-qdxzo7j4y-wakaaahmad607-9482s-projects.vercel.app",
+  "preview_ready_at_utc": "2026-09-23T10:42:55Z",
+  "production_deployment": "BL6r4WMVZ66vtaVXwGoycHNMo1Ht",
+  "production_immutable_origin": "https://speedy-van-gn8orbmmr-wakaaahmad607-9482s-projects.vercel.app",
+  "promotion_mechanism": "Dashboard Promote to Production: new build using production environment",
+  "preview_browser": {
+    "measured_client_width": 1348,
+    "scroll_width": 1348,
+    "cities": [
+      "inverness",
+      "aberdeen"
+    ],
+    "faq_enter_space_focus": "8 disclosures passed with visible keyboard focus",
+    "city_book_navigation": "both reached /book; empty service selection with disabled Continue",
+    "mobile_360_768": "UNVERIFIED"
+  },
+  "production_ready_at_utc": "2026-09-23T10:47:09Z",
+  "production_origin": "https://www.speedyvan.uk",
+  "production_build_duration_seconds": 112,
+  "live_browser": {
+    "checked_at_utc": "2026-09-23T10:50:13.567072+00:00",
+    "cities": [
+      "inverness",
+      "aberdeen"
+    ],
+    "client_width": 1348,
+    "scroll_width": 1348,
+    "native_faqs": {
+      "count": 8,
+      "enter_opens": true,
+      "space_closes": true,
+      "visible_keyboard_focus": true,
+      "tab_order": "Next question; after last question, Fort William/Inverurie area link"
+    },
+    "city_quote_navigation": "Both exact /book links reached the existing journey screen",
+    "visible_draft_comparison": {
+      "heading": true,
+      "summary": true,
+      "address_input_count": 2,
+      "input_values_unchanged": true,
+      "comparison_passed_for_both_cities": true
+    },
+    "scope": "Visible UI comparison only. No storage reading, field edits, inventory changes, booking or payment submission.",
+    "mobile_360_768": "UNVERIFIED",
+    "console_sample": {
+      "returned_limit": 60,
+      "entries_after_release": 28,
+      "extension_entries": 28,
+      "application_warning_or_error_entries": 0,
+      "scope": "Bounded browser console sample; not a full server log audit"
+    }
+  },
+  "api_production_rechecked_unchanged": true,
+  "proof_screenshot": "docs/seo/evidence/commercial-production-ready-2026-09-23.jpg",
+  "preservation": {
+    "baseline_files": 54,
+    "changed": [],
+    "local_index_unchanged_and_empty": true,
+    "local_HEAD_preserved": "52279359c910b88dda260e935b57e53ceae3c523"
+  },
+  "production_http": {
+    "result": "PARTIAL_TRANSPORT_TIMEOUT_AND_DEADLINE",
+    "sitemap_url_count": 49,
+    "complete_http_200": 31,
+    "assertions_passed": 42,
+    "transport_timeouts": 9,
+    "unscheduled_requests": 14,
+    "dependent_content_assertions_unverified": 13,
+    "demonstrated_content_failures": 0,
+    "evidence": "docs/seo/evidence/commercial-production-curl-2026-09-23.json"
+  }
+}

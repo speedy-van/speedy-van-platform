@@ -1,31 +1,25 @@
 "use client";
 
 import { useEffect } from "react";
+import { usePathname } from "next/navigation";
 
 /**
- * Lightweight IntersectionObserver that adds `.is-visible` to any element
- * with the class `reveal` (or `reveal-stagger > *`) once it enters view.
- * Pure CSS handles the actual animation.
+ * Enhance below-the-fold content only. Server-rendered content stays visible
+ * without JavaScript, and content already in view never waits for animation.
  */
 export function ScrollReveal() {
+  const pathname = usePathname();
+
   useEffect(() => {
-    if (typeof window === "undefined") return;
-
-    const prefersReduced = window.matchMedia(
+    const motionPreference = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
-    ).matches;
-
-    const targets = document.querySelectorAll<HTMLElement>(
-      ".reveal, .reveal-stagger > *",
     );
 
-    if (prefersReduced) {
-      targets.forEach((el) => el.classList.add("is-visible"));
-      return;
-    }
+    const targets = Array.from(
+      document.querySelectorAll<HTMLElement>(".reveal, .reveal-stagger > *"),
+    );
 
-    if (!("IntersectionObserver" in window)) {
-      targets.forEach((el) => el.classList.add("is-visible"));
+    if (motionPreference.matches || !("IntersectionObserver" in window)) {
       return;
     }
 
@@ -38,12 +32,31 @@ export function ScrollReveal() {
           }
         }
       },
-      { rootMargin: "0px 0px -10% 0px", threshold: 0.08 },
+      { rootMargin: "0px 0px 64px 0px", threshold: 0 },
     );
 
-    targets.forEach((el) => io.observe(el));
-    return () => io.disconnect();
-  }, []);
+    targets.forEach((element) => {
+      if (element.getBoundingClientRect().top < window.innerHeight) return;
+      element.classList.add("reveal-pending");
+      io.observe(element);
+    });
+
+    const revealAll = () => {
+      io.disconnect();
+      targets.forEach((element) => {
+        element.classList.remove("reveal-pending", "is-visible");
+      });
+    };
+    const onMotionChange = () => {
+      if (motionPreference.matches) revealAll();
+    };
+    motionPreference.addEventListener("change", onMotionChange);
+
+    return () => {
+      motionPreference.removeEventListener("change", onMotionChange);
+      revealAll();
+    };
+  }, [pathname]);
 
   return null;
 }

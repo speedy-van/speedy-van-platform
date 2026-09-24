@@ -1,0 +1,60 @@
+{
+  "observed_at_utc": "2026-09-21T16:23:11.049005+00:00",
+  "origin": "https://www.speedyvan.uk",
+  "source": "Authenticated browser DOM observations on the public production site",
+  "service_entry": {
+    "from": "/services/man-and-van",
+    "to": "/book?service=man-and-van",
+    "selected_service": "Man and Van",
+    "passed": true
+  },
+  "empty_addresses_block_continue": true,
+  "address_autocomplete": {
+    "pickup": "Central Station, Glasgow, G1 3SQ, United Kingdom",
+    "dropoff": "Queen Street, Glasgow, G1 3BZ, United Kingdom",
+    "synthetic_public_locations": true,
+    "route_distance_miles": 0.6
+  },
+  "inventory": {
+    "category": "Boxes",
+    "item": "Small Box Set",
+    "quantity": 1
+  },
+  "quote": {
+    "calendar_days": 14,
+    "selected_date": "2026-09-24",
+    "selected_slot": "afternoon",
+    "currency": "GBP",
+    "total": 45,
+    "formatted_total": "\u00a345.00",
+    "status": "valid",
+    "note": "One synthetic quote, not a general advertised price or guaranteed operational availability."
+  },
+  "review": {
+    "heading": "Review and pay",
+    "service_preserved": true,
+    "journey_preserved": true,
+    "inventory_preserved": true,
+    "date_slot_total_preserved": true,
+    "contact_fields_rendered": true,
+    "stripe_frame_rendered": true,
+    "pay_button": "Pay \u00a345.00 and confirm \u2192"
+  },
+  "consent": "Optional cookies declined",
+  "desktop_observed": true,
+  "mobile_360px_verified": false,
+  "payment_submitted": false,
+  "booking_created": false,
+  "personal_details_entered": false,
+  "limits": [
+    "No card charge, payment confirmation, refund or actual customer booking executed.",
+    "Stripe iframe rendering does not establish payment success.",
+    "Desktop journey verified; 360px/768px visual and assistive-technology checks remain outstanding."
+  ],
+  "console_sample": {
+    "error_warning_entries": 46,
+    "application_entries": 0,
+    "excluded_entries": "All 46 returned entries were browser-extension metadata transport errors.",
+    "scope": "Observed sample only, not a guarantee of no runtime defects."
+  }
+}

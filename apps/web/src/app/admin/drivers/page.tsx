@@ -23,6 +23,8 @@ const VAN_SIZES = ["SMALL", "MEDIUM", "LARGE", "LUTON"];
 
 type Modal = null | "add" | { type: "edit"; driver: Driver } | { type: "reset"; driver: Driver };
 
+const cardStyle = { background: "rgba(255,255,255,0.04)", boxShadow: "0 0 0 1px rgba(245,158,11,0.15), 0 8px 32px rgba(0,0,0,0.4)" };
+
 export default function DriversPage() {
   const [drivers, setDrivers] = useState<Driver[]>([]);
   const [loading, setLoading] = useState(true);
@@ -144,51 +146,52 @@ export default function DriversPage() {
   return (
     <div className="space-y-6">
       {/* Pay Config */}
-      <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-5">
-        <h3 className="text-sm font-bold text-slate-800 mb-4">💷 Driver Pay Settings</h3>
+      <div className="rounded-xl p-5" style={cardStyle}>
+        <h3 className="text-sm font-black text-white mb-4">💷 Driver Pay Settings</h3>
         <div className="flex flex-wrap items-end gap-4">
           <div>
-            <label className="block text-xs font-semibold text-slate-600 mb-1">Pay % of customer price</label>
+            <label className="block text-xs font-semibold text-white/40 mb-1">Pay % of customer price</label>
             <div className="flex items-center gap-1">
-              <input type="number" min={1} max={100} value={payPct} onChange={(e) => setPayPct(Number(e.target.value))} className="w-20 px-3 py-2 text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
-              <span className="text-sm text-slate-500">%</span>
+              <input type="number" min={1} max={100} value={payPct} onChange={(e) => setPayPct(Number(e.target.value))} className="w-20 px-3 py-2 text-sm border border-amber-900/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500/50 text-white bg-white/5" />
+              <span className="text-sm text-white/40">%</span>
             </div>
           </div>
           <div>
-            <label className="block text-xs font-semibold text-slate-600 mb-1">Minimum pay per job (£)</label>
+            <label className="block text-xs font-semibold text-white/40 mb-1">Minimum pay per job (£)</label>
             <div className="flex items-center gap-1">
-              <span className="text-sm text-slate-500">£</span>
-              <input type="number" min={0} value={payMin} onChange={(e) => setPayMin(Number(e.target.value))} className="w-24 px-3 py-2 text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
+              <span className="text-sm text-white/40">£</span>
+              <input type="number" min={0} value={payMin} onChange={(e) => setPayMin(Number(e.target.value))} className="w-24 px-3 py-2 text-sm border border-amber-900/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500/50 text-white bg-white/5" />
             </div>
           </div>
           <div className="flex items-end gap-2">
-            <button onClick={savePayConfig} disabled={payConfigSaving} className="bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm px-5 py-2 rounded-lg disabled:opacity-50">
+            <button onClick={savePayConfig} disabled={payConfigSaving} className="text-black font-black text-sm px-5 py-2 rounded-lg disabled:opacity-50" style={{ background: "linear-gradient(135deg, #F59E0B 0%, #EA580C 100%)" }}>
               {payConfigSaving ? "Saving…" : "Save Config"}
             </button>
-            {payConfigMsg && <span className={`text-sm font-semibold ${payConfigMsg === "Saved!" ? "text-emerald-600" : "text-red-600"}`}>{payConfigMsg}</span>}
+            {payConfigMsg && <span className={`text-sm font-semibold ${payConfigMsg === "Saved!" ? "text-emerald-400" : "text-red-400"}`}>{payConfigMsg}</span>}
           </div>
         </div>
-        <p className="text-xs text-slate-400 mt-2">Auto-calculated when publishing jobs. Maximum of (price × %) or £{payMin} minimum.</p>
+        <p className="text-xs text-white/40 mt-2">Auto-calculated when publishing jobs. Maximum of (price × %) or £{payMin} minimum.</p>
       </div>
 
       <div className="flex items-center justify-between">
-        <p className="text-sm text-slate-500">{drivers.length} drivers total</p>
+        <p className="text-sm text-white/55">{drivers.length} drivers total</p>
         <button onClick={() => { setModal("add"); setError(""); setSuccess(""); setTempPassword(""); }}
-          className="bg-yellow-400 hover:bg-yellow-500 text-slate-900 font-semibold text-sm px-5 py-2.5 rounded-lg transition-colors">
+          className="text-black font-black text-sm px-5 py-2.5 rounded-lg transition-colors"
+          style={{ background: "linear-gradient(135deg, #F59E0B 0%, #EA580C 100%)" }}>
           + Add Driver
         </button>
       </div>
 
-      <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+      <div className="rounded-xl overflow-hidden" style={cardStyle}>
         {loading ? (
           <div className="flex items-center justify-center h-48">
-            <div className="h-8 w-8 border-2 border-blue-500 border-t-transparent rounded-full animate-spin" />
+            <div className="h-8 w-8 border-2 border-amber-400 border-t-transparent rounded-full animate-spin" />
           </div>
         ) : (
           <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-slate-100">
-              <thead className="bg-slate-50">
-                <tr className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
+            <table className="min-w-full divide-y divide-white/8">
+              <thead className="bg-white/3">
+                <tr className="text-xs font-semibold text-white/40 uppercase tracking-wider">
                   <th className="px-4 py-3 text-left">Name</th>
                   <th className="px-4 py-3 text-left">Email</th>
                   <th className="px-4 py-3 text-left">Phone</th>
@@ -199,28 +202,28 @@ export default function DriversPage() {
                   <th className="px-4 py-3 text-center">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-50">
+              <tbody className="divide-y divide-white/8">
                 {drivers.length === 0 ? (
-                  <tr><td colSpan={8} className="px-4 py-10 text-center text-sm text-slate-400">No drivers yet</td></tr>
-                ) : drivers.map((d) => {
+                  <tr><td colSpan={8} className="px-4 py-10 text-center text-sm text-white/40">No drivers yet</td></tr>
+                ) : drivers.map((d, idx) => {
                   const e = earnings[d.id];
                   return (
-                  <tr key={d.id} className="hover:bg-slate-50">
-                    <td className="px-4 py-3 text-sm font-semibold text-slate-900">{d.user.name}</td>
-                    <td className="px-4 py-3 text-sm text-slate-600">{d.user.email}</td>
-                    <td className="px-4 py-3 text-sm text-slate-600">{d.phone ?? "—"}</td>
-                    <td className="px-4 py-3 text-sm text-slate-700">{d.vanSize}</td>
-                    <td className="px-4 py-3 text-right text-sm font-mono text-slate-700">{e ? `£${e.total.toFixed(2)}` : "—"}</td>
+                  <tr key={d.id} className="hover:bg-amber-500/6 transition-colors" style={{ background: idx % 2 === 1 ? "rgba(255,255,255,0.02)" : "transparent" }}>
+                    <td className="px-4 py-3 text-sm font-semibold text-white">{d.user.name}</td>
+                    <td className="px-4 py-3 text-sm text-white/55">{d.user.email}</td>
+                    <td className="px-4 py-3 text-sm text-white/55">{d.phone ?? "—"}</td>
+                    <td className="px-4 py-3 text-sm text-white/55">{d.vanSize}</td>
+                    <td className="px-4 py-3 text-right text-sm font-mono text-white/55">{e ? `£${e.total.toFixed(2)}` : "—"}</td>
                     <td className="px-4 py-3 text-right">
                       <div className="flex items-center justify-end gap-1.5">
-                        <span className={`text-sm font-mono font-semibold ${e && e.unpaid > 0 ? "text-amber-600" : "text-slate-400"}`}>
+                        <span className={`text-sm font-mono font-semibold ${e && e.unpaid > 0 ? "text-rose-400" : "text-white/40"}`}>
                           {e ? `£${e.unpaid.toFixed(2)}` : "—"}
                         </span>
                         {e && e.unpaid > 0 && (
                           <button
                             onClick={() => markDriverPaid(d.id)}
                             disabled={markingPaid === d.id}
-                            className="text-xs bg-emerald-100 hover:bg-emerald-200 text-emerald-700 font-semibold px-2 py-0.5 rounded transition-colors disabled:opacity-50"
+                            className="text-xs bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-400 font-semibold px-2 py-0.5 rounded transition-colors disabled:opacity-50"
                           >
                             {markingPaid === d.id ? "…" : "Mark Paid"}
                           </button>
@@ -229,14 +232,14 @@ export default function DriversPage() {
                     </td>
                     <td className="px-4 py-3 text-center">
                       <button onClick={() => toggleActive(d)}
-                        className={`relative inline-flex h-5 w-9 rounded-full transition-colors ${d.isActive ? "bg-emerald-500" : "bg-slate-300"}`}>
+                        className={`relative inline-flex h-5 w-9 rounded-full transition-colors ${d.isActive ? "bg-emerald-500" : "bg-white/20"}`}>
                         <span className={`absolute top-0.5 left-0.5 h-4 w-4 rounded-full bg-white shadow transition-transform ${d.isActive ? "translate-x-4" : ""}`} />
                       </button>
                     </td>
                     <td className="px-4 py-3 text-center">
                       <div className="flex items-center justify-center gap-2">
-                        <button onClick={() => openEdit(d)} className="text-xs font-medium text-blue-600 border border-blue-200 rounded px-2 py-1 hover:bg-blue-50">Edit</button>
-                        <button onClick={() => { setModal({ type: "reset", driver: d }); setError(""); setTempPassword(""); }} className="text-xs font-medium text-amber-600 border border-amber-200 rounded px-2 py-1 hover:bg-amber-50">Reset PW</button>
+                        <button onClick={() => openEdit(d)} className="text-xs font-medium text-amber-400 border border-amber-900/30 rounded px-2 py-1 hover:bg-amber-500/10">Edit</button>
+                        <button onClick={() => { setModal({ type: "reset", driver: d }); setError(""); setTempPassword(""); }} className="text-xs font-medium text-rose-400 border border-rose-500/20 rounded px-2 py-1 hover:bg-rose-500/10">Reset PW</button>
                       </div>
                     </td>
                   </tr>
@@ -252,12 +255,12 @@ export default function DriversPage() {
       {modal === "add" && (
         <ModalWrapper title="Add Driver" onClose={() => setModal(null)}>
           {error && <ErrorBanner msg={error} />}
-          {tempPassword && <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-3 text-sm text-emerald-800">Temp password: <span className="font-mono font-bold">{tempPassword}</span></div>}
+          {tempPassword && <div className="bg-emerald-500/15 border border-emerald-500/20 rounded-lg p-3 text-sm text-emerald-400">Temp password: <span className="font-mono font-bold">{tempPassword}</span></div>}
           <InputField label="Name" value={addName} onChange={setAddName} />
           <InputField label="Email" value={addEmail} onChange={setAddEmail} type="email" />
           <InputField label="Phone" value={addPhone} onChange={setAddPhone} type="tel" />
           <SelectField label="Van Size" value={addVan} onChange={setAddVan} options={VAN_SIZES} />
-          <button onClick={addDriver} disabled={saving || !addName || !addEmail} className="w-full bg-yellow-400 hover:bg-yellow-500 text-slate-900 font-semibold py-2 rounded-lg disabled:opacity-50">
+          <button onClick={addDriver} disabled={saving || !addName || !addEmail} className="w-full text-black font-black py-2 rounded-lg disabled:opacity-50" style={{ background: "linear-gradient(135deg, #F59E0B 0%, #EA580C 100%)" }}>
             {saving ? "Adding…" : "Add Driver"}
           </button>
         </ModalWrapper>
@@ -267,11 +270,11 @@ export default function DriversPage() {
       {modal !== null && typeof modal === "object" && modal.type === "edit" && (
         <ModalWrapper title={`Edit — ${modal.driver.user.name}`} onClose={() => setModal(null)}>
           {error && <ErrorBanner msg={error} />}
-          {success && <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-3 text-sm text-emerald-800">{success}</div>}
+          {success && <div className="bg-emerald-500/15 border border-emerald-500/20 rounded-lg p-3 text-sm text-emerald-400">{success}</div>}
           <InputField label="Name" value={editName} onChange={setEditName} />
           <InputField label="Phone" value={editPhone} onChange={setEditPhone} type="tel" />
           <SelectField label="Van Size" value={editVan} onChange={setEditVan} options={VAN_SIZES} />
-          <button onClick={() => editDriver(modal.driver)} disabled={saving} className="w-full bg-blue-600 text-white font-semibold py-2 rounded-lg hover:bg-blue-700 disabled:opacity-50">
+          <button onClick={() => editDriver(modal.driver)} disabled={saving} className="w-full text-black font-black py-2 rounded-lg disabled:opacity-50" style={{ background: "linear-gradient(135deg, #F59E0B 0%, #EA580C 100%)" }}>
             {saving ? "Saving…" : "Save Changes"}
           </button>
         </ModalWrapper>
@@ -282,15 +285,15 @@ export default function DriversPage() {
         <ModalWrapper title={`Reset Password — ${modal.driver.user.name}`} onClose={() => setModal(null)}>
           {error && <ErrorBanner msg={error} />}
           {tempPassword ? (
-            <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-4 text-sm text-emerald-800 space-y-1">
+            <div className="bg-emerald-500/15 border border-emerald-500/20 rounded-lg p-4 text-sm text-emerald-400 space-y-1">
               <p className="font-semibold">New temporary password:</p>
               <p className="font-mono text-lg font-bold">{tempPassword}</p>
-              <p className="text-xs text-emerald-600">Share this with the driver — they should change it after logging in.</p>
+              <p className="text-xs text-emerald-400/70">Share this with the driver — they should change it after logging in.</p>
             </div>
           ) : (
             <>
-              <p className="text-sm text-slate-600">Generate a new temporary password for <span className="font-semibold">{modal.driver.user.name}</span>?</p>
-              <button onClick={() => resetPassword(modal.driver)} disabled={saving} className="w-full bg-amber-500 text-white font-semibold py-2 rounded-lg hover:bg-amber-600 disabled:opacity-50">
+              <p className="text-sm text-white/55">Generate a new temporary password for <span className="font-semibold text-white">{modal.driver.user.name}</span>?</p>
+              <button onClick={() => resetPassword(modal.driver)} disabled={saving} className="w-full bg-rose-500/15 text-rose-400 border border-rose-500/20 font-semibold py-2 rounded-lg hover:bg-rose-500/25 disabled:opacity-50">
                 {saving ? "Resetting…" : "Reset Password"}
               </button>
             </>
@@ -303,11 +306,11 @@ export default function DriversPage() {
 
 function ModalWrapper({ title, onClose, children }: { title: string; onClose: () => void; children: React.ReactNode }) {
   return (
-    <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-xl shadow-xl p-6 w-full max-w-md space-y-4">
+    <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
+      <div className="rounded-xl p-6 w-full max-w-md space-y-4" style={{ background: "#0A0A0A", boxShadow: "0 0 0 1px rgba(245,158,11,0.15), 0 8px 32px rgba(0,0,0,0.4)" }}>
         <div className="flex items-center justify-between">
-          <h3 className="text-lg font-bold text-slate-900">{title}</h3>
-          <button onClick={onClose} className="text-slate-400 hover:text-slate-600 text-xl leading-none">×</button>
+          <h3 className="text-lg font-black text-white">{title}</h3>
+          <button onClick={onClose} className="text-white/40 hover:text-white text-xl leading-none">×</button>
         </div>
         {children}
       </div>
@@ -318,8 +321,8 @@ function ModalWrapper({ title, onClose, children }: { title: string; onClose: ()
 function InputField({ label, value, onChange, type = "text" }: { label: string; value: string; onChange: (v: string) => void; type?: string }) {
   return (
     <div>
-      <label className="block text-xs font-semibold text-slate-600 mb-1">{label}</label>
-      <input type={type} value={value} onChange={(e) => onChange(e.target.value)} className="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
+      <label className="block text-xs font-semibold text-white/40 mb-1">{label}</label>
+      <input type={type} value={value} onChange={(e) => onChange(e.target.value)} className="w-full px-3 py-2 text-sm border border-amber-900/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500/50 text-white bg-white/5 placeholder-white/30" />
     </div>
   );
 }
@@ -327,14 +330,14 @@ function InputField({ label, value, onChange, type = "text" }: { label: string; 
 function SelectField({ label, value, onChange, options }: { label: string; value: string; onChange: (v: string) => void; options: string[] }) {
   return (
     <div>
-      <label className="block text-xs font-semibold text-slate-600 mb-1">{label}</label>
-      <select value={value} onChange={(e) => onChange(e.target.value)} className="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-        {options.map((o) => <option key={o} value={o}>{o}</option>)}
+      <label className="block text-xs font-semibold text-white/40 mb-1">{label}</label>
+      <select value={value} onChange={(e) => onChange(e.target.value)} className="w-full px-3 py-2 text-sm border border-amber-900/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500/50 text-white bg-white/5" style={{ background: "rgba(255,255,255,0.05)" }}>
+        {options.map((o) => <option key={o} value={o} style={{ background: "#1a1a1a" }}>{o}</option>)}
       </select>
     </div>
   );
 }
 
 function ErrorBanner({ msg }: { msg: string }) {
-  return <div className="bg-red-50 border border-red-200 text-red-700 rounded-lg px-4 py-3 text-sm">{msg}</div>;
+  return <div className="bg-red-500/10 border border-red-500/20 text-red-400 rounded-lg px-4 py-3 text-sm">{msg}</div>;
 }

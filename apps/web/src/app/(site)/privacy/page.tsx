@@ -1,33 +1,39 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { buildPageMetadata } from "@/lib/seo/metadata";
 
-export const metadata: Metadata = {
-  title: "Privacy Policy | SpeedyVan",
+export const metadata: Metadata = buildPageMetadata({
+  title: "Privacy Policy",
   description:
     "SpeedyVan privacy policy — how we collect, use, store and protect your personal data under the UK GDPR and Data Protection Act 2018.",
-  robots: { index: true, follow: true },
-  alternates: { canonical: "/privacy" },
-};
+  path: "/privacy",
+});
 
-const LAST_UPDATED = "April 2026";
+const LAST_UPDATED = "21 September 2026";
 
 export default function PrivacyPage() {
   return (
-    <article className="bg-white text-slate-800">
+    <article style={{ background: "#0A0A0A", color: "rgba(255,255,255,0.70)" }}>
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <header className="mb-10 border-b border-slate-200 pb-6">
-          <p className="text-xs font-semibold uppercase tracking-wider text-primary-600">
+        <header
+          className="mb-10 pb-6"
+          style={{ borderBottom: "1px solid rgba(245,158,11,0.15)" }}
+        >
+          <p className="text-xs font-black uppercase tracking-wider text-amber-400">
             Legal
           </p>
-          <h1 className="mt-2 text-3xl sm:text-4xl font-extrabold text-slate-900">
+          <h1 className="mt-2 text-3xl sm:text-4xl font-black text-white">
             Privacy Policy
           </h1>
-          <p className="mt-3 text-sm text-slate-500">
+          <p className="mt-3 text-sm" style={{ color: "rgba(255,255,255,0.40)" }}>
             Last updated: {LAST_UPDATED}
           </p>
         </header>
 
-        <div className="prose prose-slate max-w-none prose-headings:scroll-mt-20 prose-h2:text-2xl prose-h2:font-bold prose-h2:text-slate-900 prose-h2:mt-10 prose-h3:text-lg prose-h3:font-semibold prose-h3:text-slate-900 prose-p:leading-relaxed prose-li:leading-relaxed prose-a:text-primary-600 prose-a:no-underline hover:prose-a:underline">
+        <div
+          className="prose max-w-none prose-headings:scroll-mt-20 prose-h2:text-2xl prose-h2:font-black prose-h2:text-white prose-h2:mt-10 prose-h3:text-lg prose-h3:font-bold prose-h3:text-white prose-p:leading-relaxed prose-li:leading-relaxed prose-a:text-amber-400 prose-a:no-underline hover:prose-a:underline prose-strong:text-white"
+          style={{ color: "rgba(255,255,255,0.60)" }}
+        >
           <p>
             This Privacy Policy explains how <strong>SpeedyVan</strong>
             {" "}(&ldquo;we&rdquo;, &ldquo;us&rdquo;, &ldquo;our&rdquo;)
@@ -51,9 +57,9 @@ export default function PrivacyPage() {
             </li>
             <li>
               <strong>Email:</strong>{" "}
-              <a href="mailto:support@speedy-van.co.uk">support@speedy-van.co.uk</a>
+              <a href="mailto:support@speedyvan.uk">support@speedyvan.uk</a>
             </li>
-            <li><strong>Phone:</strong> 01202 129746</li>
+            <li><strong>Phone:</strong> 07909 032889</li>
           </ul>
           <p>
             We are the data controller for personal data collected through this
@@ -194,21 +200,23 @@ export default function PrivacyPage() {
           <p>
             We use a small number of cookies to make the site work and, with
             your consent, to understand how it is used. You will see a cookie
-            banner the first time you visit. You can change or withdraw your
-            consent at any time from the cookie settings link in the footer.
+            banner when no choice is saved. You can accept or decline optional
+            analytics and marketing cookies together, and change or withdraw
+            your consent at any time using Cookie settings in the footer.
           </p>
           <ul>
             <li>
               <strong>Strictly necessary</strong> — session, login, CSRF
-              protection, cookie-consent record. Always on; cannot be disabled.
+              protection and your saved cookie preference. These are not
+              controlled by the optional-cookie choice.
             </li>
             <li>
-              <strong>Analytics</strong> — Google Analytics 4. Only loaded after
-              consent.
+              <strong>Analytics</strong> — Google Analytics 4, when enabled.
+              Only loaded after you accept optional cookies.
             </li>
             <li>
-              <strong>Marketing</strong> — Meta (Facebook) Pixel, TikTok Pixel.
-              Only loaded after consent.
+              <strong>Marketing</strong> — Meta (Facebook) Pixel, when enabled.
+              Only loaded after you accept optional cookies.
             </li>
           </ul>
 
@@ -226,7 +234,10 @@ export default function PrivacyPage() {
               <strong>Anonymous visitor / analytics data:</strong> up to 90 days.
             </li>
             <li>
-              <strong>Cookie consent:</strong> 12 months, then re-asked.
+              <strong>Cookie preference:</strong> saved in your browser&apos;s
+              local storage with no scheduled expiry, until you change it or
+              clear the site&apos;s stored data. If storage is unavailable, the
+              choice applies only to the current page.
             </li>
             <li>
               <strong>Support communications:</strong> up to 2 years after
@@ -263,7 +274,7 @@ export default function PrivacyPage() {
           </ul>
           <p>
             To exercise any of these rights, please email{" "}
-            <a href="mailto:support@speedy-van.co.uk">support@speedy-van.co.uk</a>.
+            <a href="mailto:support@speedyvan.uk">support@speedyvan.uk</a>.
             We aim to respond within 30 days.
           </p>
 
@@ -297,16 +308,23 @@ export default function PrivacyPage() {
           <p>
             If you have any questions about this policy or how we handle your
             personal data, please contact our team at{" "}
-            <a href="mailto:support@speedy-van.co.uk">support@speedy-van.co.uk</a>{" "}
+            <a href="mailto:support@speedyvan.uk">support@speedyvan.uk</a>{" "}
             or write to us at the address in section&nbsp;1.
           </p>
         </div>
 
-        <footer className="mt-12 pt-6 border-t border-slate-200 flex items-center justify-between text-sm">
-          <Link href="/" className="text-primary-600 hover:underline font-medium">
+        <footer
+          className="mt-12 pt-6 flex items-center justify-between text-sm"
+          style={{ borderTop: "1px solid rgba(245,158,11,0.15)" }}
+        >
+          <Link href="/" className="font-bold text-amber-400 hover:underline">
             ← Back to home
           </Link>
-          <Link href="/terms" className="text-slate-500 hover:text-slate-700">
+          <Link
+            href="/terms"
+            className="hover:text-white transition-colors"
+            style={{ color: "rgba(255,255,255,0.40)" }}
+          >
             View Terms &amp; Conditions →
           </Link>
         </footer>

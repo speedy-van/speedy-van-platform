@@ -29,6 +29,9 @@ interface Enquiry {
 
 const STATUSES = ["", "new", "quoted", "accepted", "declined"];
 
+const inputCls = "px-3 py-2 text-sm rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500/50 text-white placeholder-white/30 border border-amber-900/20 bg-white/5";
+const cardStyle = { background: "rgba(255,255,255,0.04)", boxShadow: "0 0 0 1px rgba(245,158,11,0.15), 0 8px 32px rgba(0,0,0,0.4)" };
+
 export default function AdminEnquiriesPage() {
   const [enquiries, setEnquiries] = useState<Enquiry[]>([]);
   const [loading, setLoading] = useState(true);
@@ -63,8 +66,8 @@ export default function AdminEnquiriesPage() {
   return (
     <div className="space-y-4">
       <div>
-        <h1 className="text-2xl font-extrabold text-slate-900">European Enquiries</h1>
-        <p className="text-sm text-slate-500">
+        <h1 className="text-2xl font-black text-white">European Enquiries</h1>
+        <p className="text-sm text-white/55 mt-1">
           European removals quote requests. Reply with a fixed price within 24 hours.
         </p>
       </div>
@@ -78,7 +81,7 @@ export default function AdminEnquiriesPage() {
             setPage(1);
           }}
           placeholder="Search name, email, country, city…"
-          className="flex-1 min-w-[200px] px-3 py-2 text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className={`flex-1 min-w-[200px] ${inputCls}`}
         />
         <select
           aria-label="Filter by status"
@@ -87,10 +90,11 @@ export default function AdminEnquiriesPage() {
             setStatus(e.target.value);
             setPage(1);
           }}
-          className="px-3 py-2 text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className={inputCls}
+          style={{ background: "rgba(255,255,255,0.05)" }}
         >
           {STATUSES.map((s) => (
-            <option key={s} value={s}>
+            <option key={s} value={s} style={{ background: "#1a1a1a" }}>
               {s ? s[0].toUpperCase() + s.slice(1) : "All statuses"}
             </option>
           ))}
@@ -98,20 +102,20 @@ export default function AdminEnquiriesPage() {
       </div>
 
       {/* Table */}
-      <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+      <div className="rounded-xl overflow-hidden" style={cardStyle}>
         {loading ? (
           <div className="flex items-center justify-center h-48">
-            <div className="h-8 w-8 border-2 border-blue-500 border-t-transparent rounded-full animate-spin" />
+            <div className="h-8 w-8 border-2 border-amber-400 border-t-transparent rounded-full animate-spin" />
           </div>
         ) : enquiries.length === 0 ? (
-          <div className="text-center py-16 text-slate-500">
+          <div className="text-center py-16 text-white/40">
             No enquiries yet.
           </div>
         ) : (
           <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-slate-100">
-              <thead className="bg-slate-50">
-                <tr className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
+            <table className="min-w-full divide-y divide-white/8">
+              <thead className="bg-white/3">
+                <tr className="text-xs font-semibold text-white/40 uppercase tracking-wider">
                   <th className="px-4 py-3 text-left">Date</th>
                   <th className="px-4 py-3 text-left">Customer</th>
                   <th className="px-4 py-3 text-left">Route</th>
@@ -120,10 +124,10 @@ export default function AdminEnquiriesPage() {
                   <th className="px-4 py-3 text-right">Action</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100 text-sm">
-                {enquiries.map((e) => (
-                  <tr key={e.id} className="hover:bg-slate-50">
-                    <td className="px-4 py-3 whitespace-nowrap text-slate-600">
+              <tbody className="divide-y divide-white/8 text-sm">
+                {enquiries.map((e, idx) => (
+                  <tr key={e.id} className="hover:bg-amber-500/6 transition-colors" style={{ background: idx % 2 === 1 ? "rgba(255,255,255,0.02)" : "transparent" }}>
+                    <td className="px-4 py-3 whitespace-nowrap text-white/55">
                       {new Date(e.createdAt).toLocaleDateString("en-GB", {
                         day: "2-digit",
                         month: "short",
@@ -131,22 +135,22 @@ export default function AdminEnquiriesPage() {
                       })}
                     </td>
                     <td className="px-4 py-3">
-                      <div className="font-semibold text-slate-900">{e.customerName}</div>
-                      <div className="text-xs text-slate-500">{e.customerEmail}</div>
+                      <div className="font-semibold text-white">{e.customerName}</div>
+                      <div className="text-xs text-white/40">{e.customerEmail}</div>
                     </td>
-                    <td className="px-4 py-3 text-slate-700">
-                      Scotland → <strong>{e.toCity}, {e.toCountry}</strong>
+                    <td className="px-4 py-3 text-white/55">
+                      Scotland → <strong className="text-white/70">{e.toCity}, {e.toCountry}</strong>
                     </td>
                     <td className="px-4 py-3">
                       <StatusBadge status={e.status} />
                     </td>
-                    <td className="px-4 py-3 text-right font-semibold text-slate-900">
+                    <td className="px-4 py-3 text-right font-semibold text-amber-400">
                       {e.quotedPrice != null ? `£${e.quotedPrice.toFixed(2)}` : "—"}
                     </td>
                     <td className="px-4 py-3 text-right">
                       <button
                         onClick={() => setSelected(e)}
-                        className="text-sm font-semibold text-blue-600 hover:text-blue-700"
+                        className="text-sm font-semibold text-amber-400 hover:text-amber-300"
                       >
                         View →
                       </button>
@@ -165,17 +169,17 @@ export default function AdminEnquiriesPage() {
           <button
             onClick={() => setPage((p) => Math.max(1, p - 1))}
             disabled={page === 1}
-            className="px-3 py-1.5 text-sm border border-slate-300 rounded disabled:opacity-50"
+            className="px-3 py-1.5 text-sm border border-amber-900/20 rounded text-white/55 hover:text-white hover:bg-white/5 disabled:opacity-50"
           >
             ← Prev
           </button>
-          <span className="px-3 py-1.5 text-sm text-slate-600">
+          <span className="px-3 py-1.5 text-sm text-white/55">
             Page {page} of {pages}
           </span>
           <button
             onClick={() => setPage((p) => Math.min(pages, p + 1))}
             disabled={page === pages}
-            className="px-3 py-1.5 text-sm border border-slate-300 rounded disabled:opacity-50"
+            className="px-3 py-1.5 text-sm border border-amber-900/20 rounded text-white/55 hover:text-white hover:bg-white/5 disabled:opacity-50"
           >
             Next →
           </button>
@@ -212,6 +216,8 @@ function EnquiryModal({ enquiry, onClose, onSaved }: ModalProps) {
   const [sending, setSending] = useState(false);
   const [msg, setMsg] = useState<string | null>(null);
 
+  const modalInputCls = "w-full px-3 py-2 text-sm rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500/50 text-white placeholder-white/30 border border-amber-900/20 bg-white/5";
+
   const save = async () => {
     setSaving(true);
     setMsg(null);
@@ -243,7 +249,6 @@ function EnquiryModal({ enquiry, onClose, onSaved }: ModalProps) {
     setSending(true);
     setMsg(null);
     try {
-      // Save first to ensure latest price/notes are persisted
       await api.patch<Enquiry>(`/admin/enquiries/${enquiry.id}`, {
         quotedPrice: quotedPrice.trim() === "" ? null : Number(quotedPrice),
         adminNotes,
@@ -279,25 +284,26 @@ function EnquiryModal({ enquiry, onClose, onSaved }: ModalProps) {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4"
       onClick={onClose}
     >
       <div
-        className="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-2xl bg-white shadow-2xl"
+        className="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-2xl"
+        style={{ background: "#0A0A0A", boxShadow: "0 0 0 1px rgba(245,158,11,0.15), 0 8px 32px rgba(0,0,0,0.6)" }}
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="sticky top-0 bg-white border-b border-slate-200 px-6 py-4 flex items-center justify-between">
+        <div className="sticky top-0 border-b border-amber-900/20 px-6 py-4 flex items-center justify-between" style={{ background: "#0A0A0A" }}>
           <div>
-            <h2 className="text-lg font-extrabold text-slate-900">
+            <h2 className="text-lg font-black text-white">
               Enquiry — {enquiry.customerName}
             </h2>
-            <p className="text-xs text-slate-500">
+            <p className="text-xs text-white/40">
               Scotland → {enquiry.toCity}, {enquiry.toCountry}
             </p>
           </div>
           <button
             onClick={onClose}
-            className="text-slate-400 hover:text-slate-700 text-2xl leading-none"
+            className="text-white/40 hover:text-white text-2xl leading-none"
             aria-label="Close"
           >
             ×
@@ -306,21 +312,21 @@ function EnquiryModal({ enquiry, onClose, onSaved }: ModalProps) {
 
         <div className="px-6 py-5 space-y-5">
           <section>
-            <h3 className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">
+            <h3 className="text-xs font-bold uppercase tracking-wider text-white/40 mb-2">
               Customer
             </h3>
             <dl className="grid grid-cols-3 gap-2 text-sm">
-              <dt className="text-slate-500">Name</dt>
-              <dd className="col-span-2 text-slate-900">{enquiry.customerName}</dd>
-              <dt className="text-slate-500">Email</dt>
+              <dt className="text-white/40">Name</dt>
+              <dd className="col-span-2 text-white">{enquiry.customerName}</dd>
+              <dt className="text-white/40">Email</dt>
               <dd className="col-span-2">
-                <a className="text-blue-600 hover:underline" href={`mailto:${enquiry.customerEmail}`}>
+                <a className="text-amber-400 hover:text-amber-300 hover:underline" href={`mailto:${enquiry.customerEmail}`}>
                   {enquiry.customerEmail}
                 </a>
               </dd>
-              <dt className="text-slate-500">Phone</dt>
+              <dt className="text-white/40">Phone</dt>
               <dd className="col-span-2">
-                <a className="text-blue-600 hover:underline" href={`tel:${enquiry.customerPhone}`}>
+                <a className="text-amber-400 hover:text-amber-300 hover:underline" href={`tel:${enquiry.customerPhone}`}>
                   {enquiry.customerPhone}
                 </a>
               </dd>
@@ -328,60 +334,61 @@ function EnquiryModal({ enquiry, onClose, onSaved }: ModalProps) {
           </section>
 
           <section>
-            <h3 className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">
+            <h3 className="text-xs font-bold uppercase tracking-wider text-white/40 mb-2">
               Move
             </h3>
             <dl className="grid grid-cols-3 gap-2 text-sm">
-              <dt className="text-slate-500">From</dt>
-              <dd className="col-span-2 text-slate-900">{enquiry.fromAddress}</dd>
-              <dt className="text-slate-500">Property</dt>
-              <dd className="col-span-2 text-slate-900">
+              <dt className="text-white/40">From</dt>
+              <dd className="col-span-2 text-white">{enquiry.fromAddress}</dd>
+              <dt className="text-white/40">Property</dt>
+              <dd className="col-span-2 text-white">
                 {enquiry.propertyType}
                 {enquiry.bedrooms > 0 ? ` · ${enquiry.bedrooms} bed` : ""}
               </dd>
-              <dt className="text-slate-500">Destination</dt>
-              <dd className="col-span-2 text-slate-900">
+              <dt className="text-white/40">Destination</dt>
+              <dd className="col-span-2 text-white">
                 {enquiry.toCity}, {enquiry.toCountry}
               </dd>
-              <dt className="text-slate-500">Date</dt>
-              <dd className="col-span-2 text-slate-900">{fmtDate}</dd>
-              <dt className="text-slate-500">Packing</dt>
-              <dd className="col-span-2 text-slate-900">{enquiry.needsPacking ? "Yes" : "No"}</dd>
-              <dt className="text-slate-500">Storage</dt>
-              <dd className="col-span-2 text-slate-900">{enquiry.needsStorage ? "Yes" : "No"}</dd>
+              <dt className="text-white/40">Date</dt>
+              <dd className="col-span-2 text-white">{fmtDate}</dd>
+              <dt className="text-white/40">Packing</dt>
+              <dd className="col-span-2 text-white">{enquiry.needsPacking ? "Yes" : "No"}</dd>
+              <dt className="text-white/40">Storage</dt>
+              <dd className="col-span-2 text-white">{enquiry.needsStorage ? "Yes" : "No"}</dd>
               {enquiry.notes && (
                 <>
-                  <dt className="text-slate-500">Notes</dt>
-                  <dd className="col-span-2 text-slate-900 whitespace-pre-wrap">{enquiry.notes}</dd>
+                  <dt className="text-white/40">Notes</dt>
+                  <dd className="col-span-2 text-white/55 whitespace-pre-wrap">{enquiry.notes}</dd>
                 </>
               )}
             </dl>
           </section>
 
-          <section className="rounded-xl border border-slate-200 bg-slate-50 p-4 space-y-4">
-            <h3 className="text-xs font-bold uppercase tracking-wider text-slate-500">
+          <section className="rounded-xl border border-amber-900/20 p-4 space-y-4 bg-white/3">
+            <h3 className="text-xs font-bold uppercase tracking-wider text-white/40">
               Quote
             </h3>
             <div className="grid sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs font-semibold text-slate-600 mb-1">
+                <label className="block text-xs font-semibold text-white/40 mb-1">
                   Status
                 </label>
                 <select
                   aria-label="Status"
                   value={status}
                   onChange={(e) => setStatus(e.target.value)}
-                  className="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className={modalInputCls}
+                  style={{ background: "rgba(255,255,255,0.05)" }}
                 >
                   {["new", "quoted", "accepted", "declined"].map((s) => (
-                    <option key={s} value={s}>
+                    <option key={s} value={s} style={{ background: "#1a1a1a" }}>
                       {s[0].toUpperCase() + s.slice(1)}
                     </option>
                   ))}
                 </select>
               </div>
               <div>
-                <label className="block text-xs font-semibold text-slate-600 mb-1">
+                <label className="block text-xs font-semibold text-white/40 mb-1">
                   Quoted price (£)
                 </label>
                 <input
@@ -391,12 +398,12 @@ function EnquiryModal({ enquiry, onClose, onSaved }: ModalProps) {
                   value={quotedPrice}
                   onChange={(e) => setQuotedPrice(e.target.value)}
                   placeholder="e.g. 1450"
-                  className="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className={modalInputCls}
                 />
               </div>
             </div>
             <div>
-              <label className="block text-xs font-semibold text-slate-600 mb-1">
+              <label className="block text-xs font-semibold text-white/40 mb-1">
                 Internal/customer notes
               </label>
               <textarea
@@ -404,16 +411,16 @@ function EnquiryModal({ enquiry, onClose, onSaved }: ModalProps) {
                 value={adminNotes}
                 onChange={(e) => setAdminNotes(e.target.value)}
                 placeholder="Notes that will be included in the quote email…"
-                className="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className={modalInputCls}
               />
             </div>
             {enquiry.quoteSentAt && (
-              <p className="text-xs text-emerald-700">
+              <p className="text-xs text-emerald-400">
                 Quote last sent: {new Date(enquiry.quoteSentAt).toLocaleString("en-GB")}
               </p>
             )}
             {msg && (
-              <p className="text-sm text-slate-700 bg-white border border-slate-200 rounded p-2">
+              <p className="text-sm text-white/55 border border-amber-900/20 bg-white/3 rounded p-2">
                 {msg}
               </p>
             )}
@@ -421,14 +428,15 @@ function EnquiryModal({ enquiry, onClose, onSaved }: ModalProps) {
               <button
                 onClick={save}
                 disabled={saving}
-                className="px-4 py-2 text-sm font-semibold border border-slate-300 rounded-lg bg-white hover:bg-slate-50 disabled:opacity-50"
+                className="px-4 py-2 text-sm font-semibold border border-amber-900/20 rounded-lg text-white/55 hover:text-white hover:bg-white/5 disabled:opacity-50"
               >
                 {saving ? "Saving…" : "Save"}
               </button>
               <button
                 onClick={sendQuote}
                 disabled={sending || !quotedPrice || Number(quotedPrice) <= 0}
-                className="px-4 py-2 text-sm font-extrabold rounded-lg bg-primary-400 text-slate-900 hover:bg-primary-500 disabled:opacity-50"
+                className="px-4 py-2 text-sm font-black rounded-lg text-black disabled:opacity-50"
+                style={{ background: "linear-gradient(135deg, #F59E0B 0%, #EA580C 100%)" }}
               >
                 {sending ? "Sending…" : "Send Quote →"}
               </button>

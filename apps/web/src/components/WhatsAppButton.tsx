@@ -1,10 +1,12 @@
 "use client";
 
+import { trackAnalyticsEvent } from "@/lib/analytics";
+
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { haptic } from "@/lib/haptic";
 
-const WA_SHORT_LINK = "https://wa.me/message/J6EO772GDPHFO1";
+const WA_SHORT_LINK = "https://wa.me/447909032889";
 const DEFAULT_MESSAGE = "Hi SpeedyVan, I'd like a quote for a move.";
 
 interface BookingDraft {
@@ -55,23 +57,8 @@ function buildContextualMessage(pathname: string | null): string {
 }
 
 function track(name: string) {
-  if (typeof window === "undefined") return;
-  const w = window as Window & {
-    gtag?: (...args: unknown[]) => void;
-    dataLayer?: unknown[];
-  };
-  try {
-    w.gtag?.("event", name, { event_category: "engagement", channel: "whatsapp" });
-  } catch {
-    /* ignore */
-  }
-  try {
-    w.dataLayer?.push({ event: name, channel: "whatsapp" });
-  } catch {
-    /* ignore */
-  }
+  trackAnalyticsEvent(name, { event_category: "engagement", channel: "whatsapp" });
 }
-
 /**
  * Floating WhatsApp chat button.
  * Sits bottom-right, lifted on mobile to clear the sticky book bar.
@@ -101,7 +88,6 @@ export function WhatsAppButton() {
         haptic(10);
         track("whatsapp_click");
       }}
-      data-track-event="whatsapp_click"
       data-track-location="floating_button"
       aria-label="Chat with us on WhatsApp"
       className={`fixed right-4 z-30 inline-flex h-14 w-14 items-center justify-center rounded-full bg-[#25D366] text-white shadow-xl ring-4 ring-white/40 transition-all duration-500 hover:scale-105 hover:bg-[#1DA851] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#25D366] focus-visible:ring-offset-2 bottom-24 md:bottom-6 ${

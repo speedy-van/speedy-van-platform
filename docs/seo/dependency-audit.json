@@ -1,0 +1,312 @@
+{
+  "checked_at": "2026-09-21T13:41:07.623218+00:00",
+  "node": "24.19.0",
+  "npm": "11.9.0",
+  "web_api_production": {
+    "info": 0,
+    "low": 0,
+    "moderate": 0,
+    "high": 0,
+    "critical": 0,
+    "total": 0
+  },
+  "all_workspaces_production": {
+    "info": 0,
+    "low": 0,
+    "moderate": 14,
+    "high": 10,
+    "critical": 1,
+    "total": 25
+  },
+  "remaining": [
+    {
+      "package": "@expo/bunyan",
+      "severity": "moderate",
+      "paths": [
+        "apps/ios-admin/node_modules/@expo/bunyan"
+      ],
+      "suggested_fix": {
+        "name": "expo",
+        "version": "57.0.24",
+        "isSemVerMajor": true
+      }
+    },
+    {
+      "package": "@expo/cli",
+      "severity": "high",
+      "paths": [
+        "apps/ios-admin/node_modules/@expo/cli"
+      ],
+      "suggested_fix": {
+        "name": "expo",
+        "version": "57.0.24",
+        "isSemVerMajor": true
+      }
+    },
+    {
+      "package": "@expo/config",
+      "severity": "moderate",
+      "paths": [
+        "apps/ios-admin/node_modules/@expo/config"
+      ],
+      "suggested_fix": {
+        "name": "expo",
+        "version": "57.0.24",
+        "isSemVerMajor": true
+      }
+    },
+    {
+      "package": "@expo/config-plugins",
+      "severity": "moderate",
+      "paths": [
+        "apps/ios-admin/node_modules/@expo/config-plugins"
+      ],
+      "suggested_fix": {
+        "name": "expo",
+        "version": "57.0.24",
+        "isSemVerMajor": true
+      }
+    },
+    {
+      "package": "@expo/metro-config",
+      "severity": "moderate",
+      "paths": [
+        "apps/ios-admin/node_modules/@expo/metro-config"
+      ],
+      "suggested_fix": {
+        "name": "expo",
+        "version": "57.0.24",
+        "isSemVerMajor": true
+      }
+    },
+    {
+      "package": "@expo/plist",
+      "severity": "moderate",
+      "paths": [
+        "apps/ios-admin/node_modules/@expo/plist"
+      ],
+      "suggested_fix": true
+    },
+    {
+      "package": "@expo/prebuild-config",
+      "severity": "moderate",
+      "paths": [
+        "apps/ios-admin/node_modules/@expo/prebuild-config"
+      ],
+      "suggested_fix": true
+    },
+    {
+      "package": "@expo/rudder-sdk-node",
+      "severity": "moderate",
+      "paths": [
+        "apps/ios-admin/node_modules/@expo/rudder-sdk-node"
+      ],
+      "suggested_fix": {
+        "name": "expo",
+        "version": "57.0.24",
+        "isSemVerMajor": true
+      }
+    },
+    {
+      "package": "@react-native/community-cli-plugin",
+      "severity": "high",
+      "paths": [
+        "apps/ios-admin/node_modules/@react-native/community-cli-plugin"
+      ],
+      "suggested_fix": {
+        "name": "react-native",
+        "version": "0.87.1",
+        "isSemVerMajor": true
+      }
+    },
+    {
+      "package": "@xmldom/xmldom",
+      "severity": "high",
+      "paths": [
+        "apps/ios-admin/node_modules/@xmldom/xmldom"
+      ],
+      "suggested_fix": true
+    },
+    {
+      "package": "cacache",
+      "severity": "high",
+      "paths": [
+        "apps/ios-admin/node_modules/cacache"
+      ],
+      "suggested_fix": {
+        "name": "expo",
+        "version": "57.0.24",
+        "isSemVerMajor": true
+      }
+    },
+    {
+      "package": "expo",
+      "severity": "high",
+      "paths": [
+        "apps/ios-admin/node_modules/expo"
+      ],
+      "suggested_fix": {
+        "name": "expo",
+        "version": "57.0.24",
+        "isSemVerMajor": true
+      }
+    },
+    {
+      "package": "expo-asset",
+      "severity": "moderate",
+      "paths": [
+        "apps/ios-admin/node_modules/expo/node_modules/expo-asset"
+      ],
+      "suggested_fix": {
+        "name": "expo",
+        "version": "57.0.24",
+        "isSemVerMajor": true
+      }
+    },
+    {
+      "package": "expo-constants",
+      "severity": "moderate",
+      "paths": [
+        "apps/ios-admin/node_modules/expo-constants"
+      ],
+      "suggested_fix": {
+        "name": "expo-constants",
+        "version": "57.0.19",
+        "isSemVerMajor": true
+      }
+    },
+    {
+      "package": "expo-linking",
+      "severity": "moderate",
+      "paths": [
+        "apps/ios-admin/node_modules/expo-linking"
+      ],
+      "suggested_fix": {
+        "name": "expo-linking",
+        "version": "57.0.10",
+        "isSemVerMajor": true
+      }
+    },
+    {
+      "package": "expo-notifications",
+      "severity": "moderate",
+      "paths": [
+        "apps/ios-admin/node_modules/expo-notifications"
+      ],
+      "suggested_fix": {
+        "name": "expo-notifications",
+        "version": "57.0.20",
+        "isSemVerMajor": true
+      }
+    },
+    {
+      "package": "expo-router",
+      "severity": "moderate",
+      "paths": [
+        "apps/ios-admin/node_modules/expo-router"
+      ],
+      "suggested_fix": {
+        "name": "expo-router",
+        "version": "57.0.22",
+        "isSemVerMajor": true
+      }
+    },
+    {
+      "package": "image-size",
+      "severity": "high",
+      "paths": [
+        "apps/ios-admin/node_modules/image-size"
+      ],
+      "suggested_fix": {
+        "name": "react-native",
+        "version": "0.87.1",
+        "isSemVerMajor": true
+      }
+    },
+    {
+      "package": "metro",
+      "severity": "high",
+      "paths": [
+        "apps/ios-admin/node_modules/metro"
+      ],
+      "suggested_fix": {
+        "name": "react-native",
+        "version": "0.87.1",
+        "isSemVerMajor": true
+      }
+    },
+    {
+      "package": "metro-config",
+      "severity": "high",
+      "paths": [
+        "apps/ios-admin/node_modules/metro-config"
+      ],
+      "suggested_fix": {
+        "name": "react-native",
+        "version": "0.87.1",
+        "isSemVerMajor": true
+      }
+    },
+    {
+      "package": "metro-transform-worker",
+      "severity": "high",
+      "paths": [
+        "apps/ios-admin/node_modules/metro-transform-worker"
+      ],
+      "suggested_fix": {
+        "name": "react-native",
+        "version": "0.87.1",
+        "isSemVerMajor": true
+      }
+    },
+    {
+      "package": "react-native",
+      "severity": "high",
+      "paths": [
+        "apps/ios-admin/node_modules/react-native"
+      ],
+      "suggested_fix": {
+        "name": "react-native",
+        "version": "0.87.1",
+        "isSemVerMajor": true
+      }
+    },
+    {
+      "package": "tar",
+      "severity": "critical",
+      "paths": [
+        "apps/ios-admin/node_modules/tar"
+      ],
+      "suggested_fix": {
+        "name": "expo",
+        "version": "57.0.24",
+        "isSemVerMajor": true
+      }
+    },
+    {
+      "package": "uuid",
+      "severity": "moderate",
+      "paths": [
+        "apps/ios-admin/node_modules/uuid",
+        "apps/ios-admin/node_modules/xcode/node_modules/uuid"
+      ],
+      "suggested_fix": {
+        "name": "expo",
+        "version": "57.0.24",
+        "isSemVerMajor": true
+      }
+    },
+    {
+      "package": "xcode",
+      "severity": "moderate",
+      "paths": [
+        "apps/ios-admin/node_modules/xcode"
+      ],
+      "suggested_fix": {
+        "name": "expo",
+        "version": "57.0.24",
+        "isSemVerMajor": true
+      }
+    }
+  ]
+}
