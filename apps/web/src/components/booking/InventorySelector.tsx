@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useBooking, type SelectedItem } from "@/lib/booking-store";
 import { getBookingServiceOptionForState } from "@/lib/booking-service-options";
+import { STEP_PRIMARY_CTA_ID } from "@/lib/booking-steps";
 import { ItemPicker } from "./ItemPicker";
 import {
   bedroomCountToPricingVariant,
@@ -195,7 +196,7 @@ export function InventorySelector({ onBack, onContinue }: InventorySelectorProps
       )}
 
       <button
-        id="booking-primary-action"
+        id={STEP_PRIMARY_CTA_ID}
         type="button"
         onClick={handleContinue}
         className="hidden min-h-12 w-full items-center justify-center rounded-xl px-5 text-base font-black text-black shadow-lg transition hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:ring-offset-2 focus-visible:ring-offset-booking-background lg:flex"

@@ -9,7 +9,6 @@ import { InventorySelector } from "./InventorySelector";
 import { SchedulePicker } from "./SchedulePicker";
 import { Step4Payment } from "./Step4Payment";
 import { PriceDropToast } from "./PriceDropToast";
-import { Step1Service } from "./Step1Service";
 
 function FlowContent() {
   const { state } = useBooking();

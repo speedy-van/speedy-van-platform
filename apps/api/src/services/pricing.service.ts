@@ -19,7 +19,7 @@ import {
   type PricingCalculateInput,
   PRICE_TIER,
 } from "@speedy-van/shared";
-import { getWeatherSurcharge } from "./weather.service";
+import { getWeatherSurchargesByDate } from "./weather.service";
 
 type ConfigCache = { values: Record<string, Record<string, number>>; loadedAt: number };
 const CACHE_TTL_MS = 5 * 60 * 1000;
@@ -224,11 +224,11 @@ export async function calculatePrice(input: PricingCalculateInput): Promise<Pric
     input.needsAssembly,
   );
 
-  // Weather surcharge (best-effort)
-  const weatherSurcharge =
+  // Weather surcharge (best-effort, per forecast date)
+  const weatherSurcharges =
     input.pickupLat !== undefined && input.pickupLng !== undefined
-      ? await getWeatherSurcharge(input.pickupLat, input.pickupLng, values)
-      : 0;
+      ? await getWeatherSurchargesByDate(input.pickupLat, input.pickupLng, values)
+      : new Map<string, number>();
 
   const staticLineItems: PriceLineItem[] = [
     { label: "Base service", amount: baseAdjusted, type: "base" },
@@ -252,14 +252,11 @@ export async function calculatePrice(input: PricingCalculateInput): Promise<Pric
         ]
       : []),
     ...addons.lineItems,
-    ...(weatherSurcharge > 0
-      ? [{ label: "Weather surcharge", amount: weatherSurcharge, type: "surcharge" as const }]
-      : []),
   ];
 
   const staticSubtotal =
     Math.round(
-      (baseAdjusted + distanceCost + pickupFloorCost + dropoffFloorCost + addons.total + weatherSurcharge) * 100,
+      (baseAdjusted + distanceCost + pickupFloorCost + dropoffFloorCost + addons.total) * 100,
     ) / 100;
 
   // 14-day x 3-slot price calendar
@@ -269,6 +266,9 @@ export async function calculatePrice(input: PricingCalculateInput): Promise<Pric
 
   for (let i = 0; i < 14; i++) {
     const d = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate() + i));
+    const date = d.toISOString().slice(0, 10);
+    const weatherSurcharge = weatherSurcharges.get(date) ?? 0;
+    const daySubtotal = Math.round((staticSubtotal + weatherSurcharge) * 100) / 100;
     const urgency = urgencyMultiplier(values, daysFromToday(d, today));
     const weekend = isWeekend(d) ? readConfig(values, "weekend", "multiplier") : 1.0;
     const peak = isPeakMonth(d) ? readConfig(values, "season", "peakMonthMultiplier") : 1.0;
@@ -276,12 +276,18 @@ export async function calculatePrice(input: PricingCalculateInput): Promise<Pric
 
     const slots = TIME_SLOTS.map((slot) => {
       const slotMul = slotMultiplier(values, slot);
-      const total = Math.round(staticSubtotal * urgency * weekend * peak * eom * slotMul * 100) / 100;
+      const total = Math.round(daySubtotal * urgency * weekend * peak * eom * slotMul * 100) / 100;
       allPrices.push(total);
       return { slot, price: total, tier: PRICE_TIER.STANDARD as PriceTier };
     });
 
-    days.push({ date: d.toISOString().slice(0, 10), slots });
+    days.push({
+      date,
+      slots,
+      ...(weatherSurcharge > 0
+        ? { lineItems: [{ label: "Weather surcharge", amount: weatherSurcharge, type: "surcharge" as const }] }
+        : {}),
+    });
   }
 
   // Apply tier coloring across all 42 prices

@@ -7,6 +7,7 @@ export type DayPrice = {
     price: number;
     tier: PriceTier;
   }[];
+  lineItems?: PriceLineItem[];
 };
 
 export type PriceLineItem = {

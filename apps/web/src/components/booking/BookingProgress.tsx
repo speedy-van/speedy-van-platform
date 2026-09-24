@@ -1,22 +1,11 @@
 "use client";
 
 import { useBooking } from "@/lib/booking-store";
-
-export interface BookingProgressStep {
-  number: 1 | 2 | 3 | 4 | 5;
-  label: string;
-}
-
-export const BOOKING_STEPS: BookingProgressStep[] = [
-  { number: 2, label: "Journey" },
-  { number: 3, label: "Items" },
-  { number: 4, label: "Date" },
-  { number: 5, label: "Pay" },
-];
+import { BOOKING_STEPS, stepInfo } from "@/lib/booking-steps";
 
 export function BookingProgress() {
   const { state, dispatch } = useBooking();
-  const current = BOOKING_STEPS.find((step) => step.number === state.step) ?? BOOKING_STEPS[0]!;
+  const current = stepInfo(state.step);
 
   if (state.step === 1) {
     return <p className="text-sm font-bold text-white">Choose your service to start your quote</p>;
@@ -26,15 +15,15 @@ export function BookingProgress() {
     <div className="space-y-3">
       <div className="flex items-center justify-between gap-3 md:hidden">
         <p className="text-xs font-bold uppercase tracking-[0.08em] text-amber-400/60">
-          Step {state.step - 1} of {BOOKING_STEPS.length}
+          Step {current.number} of {current.total}
         </p>
         <p className="text-sm font-bold text-white">{current.label}</p>
       </div>
 
       <ol className="hidden grid-cols-4 gap-2 md:grid" aria-label="Booking progress">
         {BOOKING_STEPS.map((step) => {
-          const complete = state.step > step.number;
-          const active = state.step === step.number;
+          const complete = state.step > step.step;
+          const active = state.step === step.step;
           const content = (
             <>
               <span
@@ -46,7 +35,7 @@ export function BookingProgress() {
                       : "bg-white/8 text-white/30"
                 }`}
               >
-                {complete ? "✓" : step.number - 1}
+                {complete ? "✓" : step.number}
               </span>
               <span className={`text-sm font-bold ${active ? "text-white" : complete ? "text-amber-400/80" : "text-white/30"}`}>
                 {step.label}
@@ -55,12 +44,12 @@ export function BookingProgress() {
           );
 
           return (
-            <li key={step.number}>
+            <li key={step.step}>
               {complete ? (
                 <button
                   type="button"
                   disabled={state.checkoutLocked}
-                  onClick={() => dispatch({ type: "SET_STEP", step: step.number })}
+                  onClick={() => dispatch({ type: "SET_STEP", step: step.step })}
                   className="flex min-h-11 w-full items-center gap-2 rounded-xl px-2 text-left transition hover:bg-amber-500/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 disabled:cursor-not-allowed disabled:opacity-40"
                 >
                   {content}

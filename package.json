@@ -14,7 +14,7 @@
     "db:seed": "npm run db:seed -w packages/db",
     "lint": "npm run lint --workspaces --if-present",
     "typecheck": "npm run typecheck --workspaces --if-present",
-    "test:regression": "node --test scripts/*-regression.cjs"
+    "test:regression": "node scripts/run-regression-tests.cjs"
   },
   "devDependencies": {
     "concurrently": "^8.2.2",

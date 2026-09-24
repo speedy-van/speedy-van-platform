@@ -1,35 +1,36 @@
 "use client";
 
 import { useBooking } from "@/lib/booking-store";
+import { LEGACY_PRIMARY_CTA_ID, STEP_PRIMARY_CTA_ID, stepInfo } from "@/lib/booking-steps";
 
 /**
  * Sticky bottom bar visible inside the multi-step booking flow on mobile.
  * Shows the current calculated total + the next step CTA. The "Continue"
- * action is wired by listening for a click on the visible primary button
- * inside each step (we just scroll it into view + click it via id).
- *
- * Each step's primary button is identified by id="step-primary-cta".
+ * action is wired by the current step's primary button. On the payment step
+ * it only moves focus to the real pay button, so it never submits payment.
  */
 export function LivePriceBar() {
   const { state } = useBooking();
 
-  if (state.step < 3) return null;
+  if (state.step < 2) return null;
 
   const total = state.clientTotal;
-  const stepLabel: Record<number, string> = {
-    1: "Pick a service",
-    2: "Add details",
-    3: "Choose a time",
-    4: "Pay & confirm",
-  };
+  const current = stepInfo(state.step);
 
   function continueClick() {
     if (typeof document === "undefined") return;
-    const btn = document.getElementById("step-primary-cta") as HTMLButtonElement | null;
+    const btn =
+      (document.getElementById(STEP_PRIMARY_CTA_ID) as HTMLButtonElement | null) ??
+      (document.getElementById(LEGACY_PRIMARY_CTA_ID) as HTMLButtonElement | null);
     if (btn) {
       btn.scrollIntoView({ behavior: "smooth", block: "center" });
-      // Slight delay so the smooth scroll lands before submit
-      window.setTimeout(() => btn.click(), 200);
+      window.setTimeout(() => {
+        if (current.isPay) {
+          btn.focus({ preventScroll: true });
+          return;
+        }
+        btn.click();
+      }, 200);
     }
   }
 
@@ -42,7 +43,7 @@ export function LivePriceBar() {
       <div className="flex items-center gap-3 px-4 py-2.5">
         <div className="flex-1 min-w-0">
           <p className="text-[10px] font-semibold uppercase tracking-wide text-slate-500 leading-tight">
-            Step {state.step} of 4 · {stepLabel[state.step] ?? ""}
+            Step {current.number} of {current.total} · {current.label}
           </p>
           <p className="text-base font-extrabold text-stone-950 leading-tight">
             {total > 0 ? (
@@ -60,7 +61,7 @@ export function LivePriceBar() {
           onClick={continueClick}
           className="shrink-0 rounded-lg bg-primary-400 px-4 py-2.5 text-sm font-extrabold text-white hover:bg-primary-500 active:scale-95 transition-all"
         >
-          {state.step === 4 ? "Pay" : "Continue"}
+          {current.isPay ? "Review & pay" : "Continue"}
           <span className="ml-1" aria-hidden="true">→</span>
         </button>
       </div>

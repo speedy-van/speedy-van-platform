@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useBooking } from "@/lib/booking-store";
+import { STEP_PRIMARY_CTA_ID } from "@/lib/booking-steps";
 import { getBookingServiceOptionForState } from "@/lib/booking-service-options";
 import { fetchDrivingRoute, type DrivingRouteResult } from "@/lib/geocode-client";
 import { AddressSearch } from "./AddressSearch";
@@ -256,7 +257,7 @@ export function JourneyFields({ onBack, onContinue }: JourneyFieldsProps) {
       )}
 
       <button
-        id="booking-primary-action"
+        id={STEP_PRIMARY_CTA_ID}
         type="button"
         onClick={handleContinue}
         disabled={loadingDistance || Boolean(routeError) || state.distanceMiles <= 0}

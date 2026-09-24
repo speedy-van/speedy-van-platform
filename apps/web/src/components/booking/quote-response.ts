@@ -9,6 +9,7 @@ export interface SlotData {
 export interface DayPrice {
   date: string;
   slots: SlotData[];
+  lineItems?: PriceLineItem[];
 }
 
 export interface PricingResult {
@@ -45,6 +46,14 @@ export function parsePricingResult(value: unknown): PricingResult | null {
           slots.has(slot.slot) || typeof slot.price !== "number" || !Number.isFinite(slot.price) || slot.price <= 0 ||
           !["green", "yellow", "red"].includes(String(slot.tier))) return null;
       slots.add(slot.slot);
+    }
+    if (day.lineItems !== undefined) {
+      if (!Array.isArray(day.lineItems)) return null;
+      for (const value of day.lineItems) {
+        const item = record(value);
+        if (!item || typeof item.label !== "string" || typeof item.type !== "string" ||
+            typeof item.amount !== "number" || !Number.isFinite(item.amount)) return null;
+      }
     }
   }
   for (const value of result.staticLineItems) {

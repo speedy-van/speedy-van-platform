@@ -11,6 +11,7 @@ import {
   useElements,
 } from "@stripe/react-stripe-js";
 import { serialiseBookingDraft, useBooking, type SelectedItem, type TimeSlot } from "@/lib/booking-store";
+import { STEP_PRIMARY_CTA_ID } from "@/lib/booking-steps";
 import { useRouter } from "next/navigation";
 import { trackPurchase } from "@/lib/analytics";
 import { PriceExplainerLink } from "./PriceExplainerLink";
@@ -536,10 +537,10 @@ function CheckoutForm({ onComplete, stripePromise }: CheckoutFormProps) {
 
       {/* ── Pay CTA ── */}
       <button
-        id="booking-primary-action"
+        id={STEP_PRIMARY_CTA_ID}
         type="submit"
         disabled={submitting || creationUncertain || paymentUnavailable || !stripe || !elements || state.quoteStatus !== "valid" || state.clientTotal <= 0}
-        className="hidden min-h-12 w-full items-center justify-center rounded-xl px-5 text-base font-black text-black shadow-lg transition hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:ring-offset-2 focus-visible:ring-offset-booking-background disabled:cursor-not-allowed disabled:opacity-40 lg:flex"
+        className="flex min-h-12 w-full items-center justify-center rounded-xl px-5 text-base font-black text-black shadow-lg transition hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:ring-offset-2 focus-visible:ring-offset-booking-background disabled:cursor-not-allowed disabled:opacity-40"
         style={{ background: "linear-gradient(135deg, #F59E0B 0%, #EA580C 100%)" }}
       >
         {submitting ? (

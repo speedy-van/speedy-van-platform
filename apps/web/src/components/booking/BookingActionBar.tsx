@@ -2,25 +2,27 @@
 
 import { useEffect, useState } from "react";
 import { useBooking } from "@/lib/booking-store";
+import { LEGACY_PRIMARY_CTA_ID, STEP_PRIMARY_CTA_ID, stepInfo } from "@/lib/booking-steps";
 
 const money = new Intl.NumberFormat("en-GB", {
   style: "currency",
   currency: "GBP",
 });
 
-const ACTION_LABEL: Record<number, string> = {
-  2: "Items",
-  3: "Date",
-  4: "Review",
-  5: "Pay",
-};
-
 export function BookingActionBar() {
   const { state } = useBooking();
   const [primaryState, setPrimaryState] = useState({ disabled: false, processing: false });
+  const current = stepInfo(state.step);
+
+  function primaryButton(): HTMLButtonElement | null {
+    return (
+      (document.getElementById(STEP_PRIMARY_CTA_ID) as HTMLButtonElement | null) ??
+      (document.getElementById(LEGACY_PRIMARY_CTA_ID) as HTMLButtonElement | null)
+    );
+  }
 
   useEffect(() => {
-    const button = document.getElementById("booking-primary-action") as HTMLButtonElement | null;
+    const button = primaryButton();
     if (!button) {
       setPrimaryState({ disabled: true, processing: false });
       return;
@@ -43,8 +45,13 @@ export function BookingActionBar() {
 
   function clickPrimaryAction() {
     if (disabled) return;
-    const button = document.getElementById("booking-primary-action") as HTMLButtonElement | null;
+    const button = primaryButton();
     if (!button || button.disabled) return;
+    if (current.isPay) {
+      button.scrollIntoView({ behavior: "smooth", block: "center" });
+      window.setTimeout(() => button.focus({ preventScroll: true }), 200);
+      return;
+    }
     button.click();
   }
 
@@ -53,7 +60,7 @@ export function BookingActionBar() {
       <div className="mx-auto grid max-w-[1160px] grid-cols-[minmax(0,1fr)_120px] items-center gap-3 pb-[env(safe-area-inset-bottom)]">
         <div className="min-w-0 flex-1">
           <p className="text-[11px] font-bold uppercase tracking-widest text-amber-400/60">
-            {state.step === 1 ? "Choose a service" : `Step ${state.step - 1} of 4`}
+            {state.step === 1 ? "Choose a service" : `Step ${current.number} of ${current.total} · ${current.label}`}
           </p>
           <p className="truncate text-base font-bold text-white">
             {state.clientTotal > 0 ? money.format(state.clientTotal) : "Quote pending"}
@@ -66,7 +73,7 @@ export function BookingActionBar() {
           className="min-h-12 w-full rounded-xl px-3 text-sm font-black text-black shadow-lg transition hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:ring-offset-2 focus-visible:ring-offset-booking-background disabled:cursor-not-allowed disabled:opacity-40"
           style={{ background: "linear-gradient(135deg, #F59E0B 0%, #EA580C 100%)" }}
         >
-          {primaryState.processing ? "Processing…" : ACTION_LABEL[state.step] ?? "Continue"}
+          {primaryState.processing ? "Processing…" : current.isPay ? "Review & pay" : "Continue"}
         </button>
       </div>
     </div>

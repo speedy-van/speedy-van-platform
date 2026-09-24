@@ -2,6 +2,7 @@
 
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useBooking, type PriceLineItem, type TimeSlot } from "@/lib/booking-store";
+import { STEP_PRIMARY_CTA_ID } from "@/lib/booking-steps";
 import { WeatherChip } from "./WeatherChip";
 import { parsePricingResult, type DayPrice, type PricingResult, type SlotData } from "./quote-response";
 
@@ -103,10 +104,11 @@ function getPriceBand(price: number, scale: number[]): PriceBand {
   return "red";
 }
 
-function buildBreakdown(pricing: PricingResult, slotPrice: number): PriceLineItem[] {
+function buildBreakdown(pricing: PricingResult, day: DayPrice, slotPrice: number): PriceLineItem[] {
   const adjustment = Math.round((slotPrice - pricing.staticSubtotal) * 100) / 100;
   return [
     ...pricing.staticLineItems,
+    ...(day.lineItems ?? []),
     ...(Math.abs(adjustment) >= 0.01
       ? [{
           label: adjustment > 0 ? "Date and time adjustment" : "Date and time saving",
@@ -298,7 +300,7 @@ export function SchedulePicker({ onBack, onContinue }: SchedulePickerProps) {
       return;
     }
 
-    if (!selectedSlotData) {
+    if (!selectedDayData || !selectedSlotData) {
       setValidationError("Your previous appointment is no longer available. Please choose another slot.");
       dispatch({ type: "SET_DATE", date: "" });
       dispatch({ type: "SET_PRICE", total: 0 });
@@ -312,16 +314,16 @@ export function SchedulePicker({ onBack, onContinue }: SchedulePickerProps) {
     }
 
     dispatch({ type: "SET_PRICE", total: selectedSlotData.price });
-    dispatch({ type: "SET_BREAKDOWN", items: buildBreakdown(pricing, selectedSlotData.price) });
+    dispatch({ type: "SET_BREAKDOWN", items: buildBreakdown(pricing, selectedDayData, selectedSlotData.price) });
     dispatch({ type: "SET_QUOTE_STATUS", status: "valid" });
-  }, [dispatch, loading, pricing, selectedSlotData, state.selectedDate, state.selectedTimeSlot]);
+  }, [dispatch, loading, pricing, selectedDayData, selectedSlotData, state.selectedDate, state.selectedTimeSlot]);
 
   function chooseSlot(day: DayPrice, slot: SlotData) {
     setValidationError("");
     dispatch({ type: "SET_DATE", date: day.date });
     dispatch({ type: "SET_SLOT", slot: slot.slot });
     dispatch({ type: "SET_PRICE", total: slot.price });
-    if (pricing) dispatch({ type: "SET_BREAKDOWN", items: buildBreakdown(pricing, slot.price) });
+    if (pricing) dispatch({ type: "SET_BREAKDOWN", items: buildBreakdown(pricing, day, slot.price) });
     dispatch({ type: "SET_QUOTE_STATUS", status: "valid" });
   }
 
@@ -525,7 +527,7 @@ export function SchedulePicker({ onBack, onContinue }: SchedulePickerProps) {
       )}
 
       <button
-        id="booking-primary-action"
+        id={STEP_PRIMARY_CTA_ID}
         type="button"
         onClick={handleContinue}
         disabled={loading || Boolean(error) || !pricing}

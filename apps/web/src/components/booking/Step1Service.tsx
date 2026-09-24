@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useBooking } from "@/lib/booking-store";
+import { STEP_PRIMARY_CTA_ID } from "@/lib/booking-steps";
 import {
   BOOKING_SERVICE_OPTIONS,
   getBookingServiceOptionForState,
@@ -117,7 +118,7 @@ export function Step1Service() {
       </div>
 
       <button
-        id="booking-primary-action"
+        id={STEP_PRIMARY_CTA_ID}
         type="button"
         onClick={continueToJourney}
         disabled={!state.serviceSlug}

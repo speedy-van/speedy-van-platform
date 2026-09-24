@@ -60,7 +60,7 @@ export const CreateBookingSchema = z.object({
   selectedDate: z.string(), // ISO
   selectedTimeSlot: z.enum(["morning", "afternoon", "evening"]),
 
-  helpersCount: z.number().int().min(0).default(0),
+  helpersCount: z.number().int().min(0).max(4).default(0),
   needsPacking: z.boolean().default(false),
   needsAssembly: z.boolean().default(false),
 
@@ -89,7 +89,7 @@ export const PricingCalculateSchema = z.object({
   pickupHasLift: z.boolean().default(false),
   dropoffFloor: z.number().int().min(0).default(0),
   dropoffHasLift: z.boolean().default(false),
-  helpersCount: z.number().int().min(0).default(0),
+  helpersCount: z.number().int().min(0).max(4).default(0),
   needsPacking: z.boolean().default(false),
   needsAssembly: z.boolean().default(false),
   pickupLat: z.number().optional(),

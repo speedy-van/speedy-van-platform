@@ -441,69 +441,23 @@ export function BookingProvider({ children }: { children: ReactNode }) {
     try {
       const raw = localStorage.getItem(BOOKING_DRAFT_STORAGE_KEY);
       if (!raw) return;
-      const parsed = parseBookingDraft(raw);
-      if (!parsed) {
+      const restored = restoreBookingDraft(raw);
+      if (!restored) {
         localStorage.removeItem(BOOKING_DRAFT_STORAGE_KEY);
       } else {
+        const serviceHint = new URLSearchParams(window.location.search).get("service");
+        const hintedService = resolveBookingService(serviceHint);
+        if (
+          serviceHint &&
+          hintedService &&
+          !restored.checkoutLocked &&
+          serviceEntryIdentity(restored) !== serviceEntryIdentity(hintedService)
+        ) {
+          dispatch({ type: "APPLY_SERVICE_ENTRY", slug: serviceHint });
+          return;
+        }
         restoringDraft.current = true;
-        const draft = {
-          ...parsed.state,
-          clientSecret: "",
-          bookingId: "",
-          bookingRef: "",
-        };
-        if (draft.serviceSlug) {
-          dispatch({
-            type: "SET_SERVICE",
-            slug: draft.serviceSlug,
-            name: draft.serviceName ?? draft.serviceSlug,
-            sourceSlug: draft.entryServiceSlug || draft.serviceSlug,
-          });
-        }
-        if (draft.serviceVariant) dispatch({ type: "SET_VARIANT", variant: draft.serviceVariant });
-        if (draft.inventoryMode) dispatch({ type: "SET_INVENTORY_MODE", mode: draft.inventoryMode });
-        if (draft.bedroomCount) {
-          dispatch({
-            type: "SET_BEDROOM_COUNT",
-            bedroomCount: draft.bedroomCount,
-            exactBedroomCount: draft.exactBedroomCount || 5,
-          });
-        }
-        if (draft.inventoryRooms?.length) {
-          dispatch({ type: "SET_INVENTORY_ROOMS", rooms: draft.inventoryRooms });
-        }
-        if (draft.pickup) dispatch({ type: "SET_PICKUP", value: draft.pickup });
-        if (draft.dropoff) dispatch({ type: "SET_DROPOFF", value: draft.dropoff });
-        if (draft.pickupPropertyType) dispatch({ type: "SET_PICKUP_PROPERTY_TYPE", value: draft.pickupPropertyType });
-        if (draft.pickupFloor) dispatch({ type: "SET_PICKUP_FLOOR", value: draft.pickupFloor });
-        if (draft.pickupHasLift) dispatch({ type: "SET_PICKUP_LIFT", value: true });
-        if (draft.dropoffPropertyType) dispatch({ type: "SET_DROPOFF_PROPERTY_TYPE", value: draft.dropoffPropertyType });
-        if (draft.dropoffFloor) dispatch({ type: "SET_DROPOFF_FLOOR", value: draft.dropoffFloor });
-        if (draft.dropoffHasLift) dispatch({ type: "SET_DROPOFF_LIFT", value: true });
-        if (draft.distanceMiles) dispatch({ type: "SET_DISTANCE", value: draft.distanceMiles });
-        if (draft.items?.length) dispatch({ type: "SET_ITEMS", items: draft.items });
-        if (draft.helpersCount) dispatch({ type: "SET_HELPERS", count: draft.helpersCount });
-        if (draft.needsPacking) dispatch({ type: "SET_PACKING", value: true });
-        if (draft.needsAssembly) dispatch({ type: "SET_ASSEMBLY", value: true });
-        if (draft.selectedDate) dispatch({ type: "SET_DATE", date: draft.selectedDate });
-        if (draft.selectedTimeSlot) dispatch({ type: "SET_SLOT", slot: draft.selectedTimeSlot });
-        if (draft.customerName || draft.customerEmail || draft.customerPhone) {
-          dispatch({
-            type: "SET_CUSTOMER",
-            name: draft.customerName ?? "",
-            email: draft.customerEmail ?? "",
-            phone: draft.customerPhone ?? "",
-          });
-        }
-        if (draft.clientTotal) dispatch({ type: "SET_PRICE", total: draft.clientTotal });
-        if (draft.quoteStatus) {
-          dispatch({
-            type: "SET_QUOTE_STATUS",
-            status: draft.quoteStatus === "valid" ? "stale" : draft.quoteStatus,
-            error: draft.quoteError,
-          });
-        }
-        dispatch({ type: "SET_STEP", step: draft.step });
+        dispatch({ type: "RESTORE", state: restored });
       }
     } catch {
       // Storage may be unavailable; the service selector remains usable.
