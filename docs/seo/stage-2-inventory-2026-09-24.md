@@ -1,6 +1,51 @@
 # Stage 2 URL Inventory — Path to 1,000 Pages
-**Date:** 2026-09-24 (revised from 2026-09-23 draft)
+**Date:** 2026-09-24
 **Branch:** `integration/seo-1000-2026-09-23`
+**HEAD:** `5e403779`
+
+---
+
+## Measured verification results (2026-09-24)
+
+### Production build
+- Command: `next build` from `apps/web/`
+- Result: ✓ 279 static pages generated (includes admin/driver/auth routes)
+- TypeScript: ✓ no errors
+- ESLint: ✓ no warnings or errors
+- Build warnings: non-fatal `lockfile missing swc dependencies` — does not affect output
+
+### Runtime URL checks (production build, `next start` port 3001)
+All 75 checks passed (0 failures):
+
+| Category | URLs tested | Expected | Result |
+|---|---|---|---|
+| Published samples | 7 | HTTP 200 | ✓ all 200 |
+| Staged routes (moving-routes-stage2.ts) | 20 | HTTP 404 | ✓ all 404 |
+| Staged town service pages (town-service-pages-1.ts) | 48 | HTTP 404 | ✓ all 404 |
+
+Published samples verified 200: `/`, `/about`, `/areas/glasgow`, `/areas/glasgow/house-removal`, `/moving-routes/glasgow-to-london`, `/services/man-and-van`, `/sitemap.xml`
+
+### Sitemap verification
+- Total `<loc>` entries: **251** (matches expected count)
+- Staged slugs present in sitemap: **0** (verified by pattern match against all 68 staged slugs)
+
+### Browser checks (Playwright headless Chromium)
+Tested 5 page types × 2 viewports (360px, 768px) = 10 checks:
+
+| Check | Result |
+|---|---|
+| Horizontal overflow | ✓ PASS — body width = viewport width on all 10 |
+| Visible focus ring (5 Tab stops) | ✓ PASS — all 50 focus targets had visible outline |
+| FAQ toggle (details/summary) | ✓ PASS — toggles correctly on all 10 |
+| Booking CTA present | ✓ PASS — `/book` link found on all 10 |
+
+Pages tested: homepage, /about, /areas/glasgow, /areas/glasgow/house-removal, /moving-routes/glasgow-to-london
+
+### Booking draft preservation
+- Draft key: `sv_booking_draft_v1` (24h TTL) — confirmed in `booking-store.tsx`
+- Logic confirmed by code review: draft written when `serviceSlug` set AND `step > 1`; restored on hydration
+- Runtime test: form advanced to cookie consent only — step 2+ requires API backend (not running locally)
+- Status: **logic confirmed correct; end-to-end runtime test requires API — pending**
 
 ---
 
