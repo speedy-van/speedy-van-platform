@@ -1,7 +1,7 @@
 {
   "requestedTotal": 3500,
-  "implementedTotal": 250,
-  "remainingToResearchAndReview": 3250,
+  "implementedTotal": 251,
+  "remainingToResearchAndReview": 3249,
   "milestones": [
     250,
     1000,
@@ -37,6 +37,12 @@
       "path": "/moving-routes",
       "canonical": "https://www.speedyvan.uk/moving-routes",
       "kind": "route-hub",
+      "sources": []
+    },
+    {
+      "path": "/about",
+      "canonical": "https://www.speedyvan.uk/about",
+      "kind": "existing",
       "sources": []
     },
     {

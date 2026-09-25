@@ -2,23 +2,14 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { buildLocalBusinessSchema } from "@/lib/seo/schemas";
-import { absoluteUrl, SITE_OG_IMAGE } from "@/lib/seo/constants";
+import { buildPageMetadata } from "@/lib/seo/metadata";
 
-const canonical = absoluteUrl("/about");
-
-export const metadata: Metadata = {
-  title: "About SpeedyVan – Man and Van & Removal Company Scotland",
+export const metadata: Metadata = buildPageMetadata({
+  title: "About Our Moving Service in Scotland",
   description:
-    "SpeedyVan is a professional man and van and removal company based in Hamilton, Scotland. We cover Glasgow, Edinburgh, Dundee, Aberdeen and over 30 areas across Scotland.",
-  alternates: { canonical },
-  openGraph: {
-    title: "About SpeedyVan | Man and Van Scotland",
-    description:
-      "Professional man and van and removal company based in Hamilton, Scotland. Covering Glasgow, Edinburgh, Dundee, Aberdeen and beyond.",
-    url: canonical,
-    images: [{ url: SITE_OG_IMAGE, width: 1200, height: 630, alt: "About SpeedyVan" }],
-  },
-};
+    "Learn about our man and van, furniture delivery and removal services in Scotland. Plan your items, route, access and moving date before booking.",
+  path: "/about",
+});
 
 export default function AboutPage() {
   return (

@@ -12,25 +12,31 @@ import { PriceDropToast } from "./PriceDropToast";
 import { Step1Service } from "./Step1Service";
 
 function FlowContent() {
-  const { state } = useBooking();
-  const canShowBookingShell = Boolean(state.serviceSlug) && state.step >= 2 && state.step <= 5;
+  const { state, ready } = useBooking();
+
+  if (!ready) {
+    return (
+      <main className="mx-auto max-w-6xl px-4 py-12 text-white">
+        <p role="status">Loading your quote…</p>
+      </main>
+    );
+  }
 
   return (
     <>
-      {/* Always mount so it can redirect to /#get-quote when no valid draft/service */}
+      {/* Consume recognised service hints after the provider has restored the draft. */}
       <Suspense fallback={null}>
         <SearchParamsInitializer />
       </Suspense>
 
-      {canShowBookingShell && (
-        <BookingShell>
-          {state.step === 2 && <JourneyFields />}
-          {state.step === 3 && <InventorySelector />}
-          {state.step === 4 && <SchedulePicker />}
-          {state.step === 5 && <Step4Payment />}
-          <PriceDropToast />
-        </BookingShell>
-      )}
+      <BookingShell>
+        {(state.step === 1 || !state.serviceSlug) && <Step1Service />}
+        {state.step === 2 && <JourneyFields />}
+        {state.step === 3 && <InventorySelector />}
+        {state.step === 4 && <SchedulePicker />}
+        {state.step === 5 && <Step4Payment />}
+        <PriceDropToast />
+      </BookingShell>
     </>
   );
 }

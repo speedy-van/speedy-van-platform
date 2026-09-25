@@ -9,7 +9,7 @@ import { buildPageMetadata } from "@/lib/seo/metadata";
 export const metadata: Metadata = buildPageMetadata({
   title: "Moving Prices in Scotland",
   description:
-    "Compare moving guide prices, hourly and fixed quotes in Scotland. Plan Aberdeen and Inverness moves around your items, access, route and agreed scope.",
+    "Compare moving guide prices, hourly and fixed quotes in Scotland. Plan Glasgow, Aberdeen and Inverness moves around your items, access, route and agreed scope.",
   path: "/pricing",
 });
 
@@ -291,14 +291,34 @@ export default function PricingPage() {
       <section className="bg-[#0A0A0A] py-16" aria-labelledby="city-quote-planning-heading">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
           <h2 id="city-quote-planning-heading" className="text-3xl font-black text-white">
-            Planning a quote in Aberdeen or Inverness
+            Planning a quote in Glasgow, Aberdeen or Inverness
           </h2>
           <p className="mt-3 max-w-3xl leading-relaxed text-white/60">
             These are planning examples, not records of completed jobs or priced
             offers. Use the details that apply to your addresses when requesting
             a quote.
           </p>
-          <div className="mt-8 grid gap-6 lg:grid-cols-2">
+          <div className="mt-8 grid gap-6 lg:grid-cols-3">
+            <article id="glasgow" className="min-w-0 scroll-mt-24 rounded-xl border border-amber-400/15 bg-white/[0.04] p-6">
+              <h3 className="text-2xl font-bold text-white">Glasgow: account for tenement access and loading</h3>
+              <p className="mt-4 leading-relaxed text-white/60">
+                For a tenement flat move, describe the stair flights, tightest
+                landing, largest furniture and walk from the close to a lawful
+                loading point. A short journey across Glasgow can still need
+                substantial loading and unloading time.
+              </p>
+              <p className="mt-4 leading-relaxed text-white/60">
+                Include any dismantling, additional lifting help, storage stop
+                or key handover window. Check the total for that scope and any
+                minimum charge. These details describe the work to be quoted;
+                they do not imply a standard Glasgow stair or parking fee.
+              </p>
+              <ul className="mt-5 space-y-3" role="list">
+                <li><Link href="/areas/glasgow" className={TEXT_LINK_CLASS_NAME}>Glasgow moving and access guide</Link></li>
+                <li><Link href="/areas/glasgow/flat-removals" className={TEXT_LINK_CLASS_NAME}>Glasgow flat and tenement removals</Link></li>
+                <li><Link href="/areas/glasgow/furniture-delivery" className={TEXT_LINK_CLASS_NAME}>Glasgow furniture collection and delivery</Link></li>
+              </ul>
+            </article>
             <article id="aberdeen" className="min-w-0 scroll-mt-24 rounded-xl border border-amber-400/15 bg-white/[0.04] p-6">
               <h3 className="text-2xl font-bold text-white">Aberdeen: allow for the route from flat to van</h3>
               <p className="mt-4 leading-relaxed text-white/60">

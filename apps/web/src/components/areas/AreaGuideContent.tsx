@@ -4,6 +4,7 @@ import type { AreaGuide } from "@/lib/area-guides";
 import { getServiceBySlug } from "@/lib/services";
 import { getNearbyAreaGroups } from "@/lib/nearby-area-guides";
 import { NearbyAreaContent } from "@/components/areas/NearbyAreaContent";
+import { localServiceHref } from "@/lib/seo/local-service-links";
 
 interface AreaGuideContentProps {
   area: Area;
@@ -57,7 +58,7 @@ export function AreaGuideContent({ area, guide }: AreaGuideContentProps) {
               return (
                 <li key={service.slug} className="min-w-0">
                   <Link
-                    href={`/services/${service.slug}`}
+                    href={localServiceHref(area.slug, service.slug) ?? `/services/${service.slug}`}
                     className="group block h-full rounded-xl border border-amber-900/20 bg-white/[0.04] p-5 hover:border-amber-400/40 hover:bg-amber-400/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:ring-offset-4 focus-visible:ring-offset-[#0A0A0A] motion-safe:transition-colors"
                   >
                     <span className="text-2xl" aria-hidden="true">{service.icon}</span>
@@ -131,11 +132,11 @@ export function AreaGuideContent({ area, guide }: AreaGuideContentProps) {
                 )}
                 {section.id === "urgent-moves" && (
                   <p className="mt-6 leading-relaxed">
-                    <a href="tel:07909032889" className={textLinkClassName}>
+                    <a href="tel:07909032889" data-track-event="call_click" data-track-location="city_urgent" data-track-area={area.slug} className={textLinkClassName}>
                       Call to check short-notice availability
                     </a>
                     {" or "}
-                    <Link href="/book" className={textLinkClassName}>
+                    <Link href="/book" data-track-event="quote_click" data-track-location="city_urgent" data-track-area={area.slug} className={textLinkClassName}>
                       request a moving quote online
                     </Link>
                     .
@@ -160,7 +161,7 @@ export function AreaGuideContent({ area, guide }: AreaGuideContentProps) {
               </li>
             ))}
           </ol>
-          <Link href="/book" className="btn-primary mt-8 text-center focus-visible:ring-offset-[#111] motion-reduce:transition-none">
+          <Link href="/book" data-track-event="quote_click" data-track-location="city_booking_steps" data-track-area={area.slug} className="btn-primary mt-8 text-center focus-visible:ring-offset-[#111] motion-reduce:transition-none">
             Request a quote for {area.name}
           </Link>
         </div>

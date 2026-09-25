@@ -28,7 +28,7 @@ export default async function LocalServicePage({ params }: Props) {
   const page = LOCAL_SERVICE_PAGES.find((entry) => entry.areaSlug === slug && entry.serviceSlug === service);
   if (!area || !serviceData || !page) notFound();
   const path = `/areas/${slug}/${service}`;
-  return <MovingContentPage {...page} path={path} origin={area} breadcrumbs={[
+  return <MovingContentPage {...page} path={path} origin={area} serviceSlug={service} breadcrumbs={[
     { name: "Home", url: "/" }, { name: "Areas", url: "/areas" },
     { name: area.name, url: `/areas/${slug}` }, { name: serviceData.name, url: path },
   ]} related={[
