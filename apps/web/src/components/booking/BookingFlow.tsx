@@ -9,6 +9,7 @@ import { InventorySelector } from "./InventorySelector";
 import { SchedulePicker } from "./SchedulePicker";
 import { Step4Payment } from "./Step4Payment";
 import { PriceDropToast } from "./PriceDropToast";
+import { BookingQuoteSync } from "./BookingQuoteSync";
 import { Step1Service } from "./Step1Service";
 
 function FlowContent() {
@@ -29,6 +30,7 @@ function FlowContent() {
         <SearchParamsInitializer />
       </Suspense>
 
+      <BookingQuoteSync />
       <BookingShell>
         {(state.step === 1 || !state.serviceSlug) && <Step1Service />}
         {state.step === 2 && <JourneyFields />}

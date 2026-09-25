@@ -1,19 +1,15 @@
 "use client";
 
-import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { useBooking, type PriceLineItem, type TimeSlot } from "@/lib/booking-store";
+import React, { useMemo, useRef, useState } from "react";
+import { useBooking, type TimeSlot } from "@/lib/booking-store";
+import { getBookingPricingKey } from "@/lib/booking-quote";
 import { WeatherChip } from "./WeatherChip";
-import { parsePricingResult, type DayPrice, type PricingResult, type SlotData } from "./quote-response";
+import { type DayPrice, type SlotData } from "./quote-response";
 
 export interface SchedulePickerProps {
   onBack?: () => void;
   onContinue?: () => void;
 }
-
-const API_BASE =
-  process.env.NODE_ENV === "development"
-    ? "http://localhost:4000"
-    : (process.env.NEXT_PUBLIC_API_URL ?? "https://api.speedyvan.uk");
 
 const money = new Intl.NumberFormat("en-GB", {
   style: "currency",
@@ -74,9 +70,6 @@ const PRICE_BAND_STYLES: Record<
   },
 };
 
-const PRICING_ERROR_MESSAGE =
-  "We couldn't load your quote right now. Please retry, or go back and check your journey details.";
-
 function formatDate(iso: string): string {
   return londonDate.format(new Date(`${iso}T12:00:00Z`));
 }
@@ -101,20 +94,6 @@ function getPriceBand(price: number, scale: number[]): PriceBand {
   if (ratio <= 1 / 3) return "green";
   if (ratio <= 2 / 3) return "amber";
   return "red";
-}
-
-function buildBreakdown(pricing: PricingResult, slotPrice: number): PriceLineItem[] {
-  const adjustment = Math.round((slotPrice - pricing.staticSubtotal) * 100) / 100;
-  return [
-    ...pricing.staticLineItems,
-    ...(Math.abs(adjustment) >= 0.01
-      ? [{
-          label: adjustment > 0 ? "Date and time adjustment" : "Date and time saving",
-          amount: adjustment,
-          type: adjustment > 0 ? "surcharge" : "discount",
-        }]
-      : []),
-  ];
 }
 
 function QuoteSkeleton() {
@@ -168,161 +147,19 @@ function QuoteSkeleton() {
 
 export function SchedulePicker({ onBack, onContinue }: SchedulePickerProps) {
   const { state, dispatch } = useBooking();
-  const [pricing, setPricing] = useState<PricingResult | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
   const [validationError, setValidationError] = useState("");
-  const requestSeq = useRef(0);
-  const pricingAbort = useRef<AbortController | null>(null);
   const datesRailRef = useRef<HTMLDivElement | null>(null);
-
-  const pricingRequest = useMemo(
-    () => ({
-      serviceType: state.entryServiceSlug || state.serviceSlug,
-      serviceVariant: state.serviceVariant || undefined,
-      distanceMiles: state.distanceMiles,
-      pickupFloor: state.pickupFloor,
-      pickupHasLift: state.pickupHasLift,
-      dropoffFloor: state.dropoffFloor,
-      dropoffHasLift: state.dropoffHasLift,
-      helpersCount: state.helpersCount,
-      needsPacking: state.needsPacking,
-      needsAssembly: state.needsAssembly,
-      pickupLat: state.pickup?.lat,
-      pickupLng: state.pickup?.lng,
-    }),
-    [
-      state.distanceMiles,
-      state.dropoffFloor,
-      state.dropoffHasLift,
-      state.helpersCount,
-      state.needsAssembly,
-      state.needsPacking,
-      state.pickup?.lat,
-      state.pickup?.lng,
-      state.pickupFloor,
-      state.pickupHasLift,
-      state.entryServiceSlug,
-      state.serviceSlug,
-      state.serviceVariant,
-    ],
-  );
-
-  const fetchPricing = useCallback(async () => {
-    const requestId = requestSeq.current + 1;
-    requestSeq.current = requestId;
-    pricingAbort.current?.abort();
-    const controller = new AbortController();
-    pricingAbort.current = controller;
-    setLoading(true);
-    setPricing(null);
-    setError("");
-    dispatch({ type: "SET_PRICE", total: 0 });
-    dispatch({ type: "SET_QUOTE_STATUS", status: "loading" });
-
-    try {
-      if (!state.serviceSlug || state.distanceMiles <= 0) {
-        const nextError = "Please return to the journey step so we can calculate a valid route first.";
-        setPricing(null);
-        setError(nextError);
-        dispatch({ type: "SET_QUOTE_STATUS", status: "failed", error: nextError });
-        return;
-      }
-
-      const res = await fetch(`${API_BASE}/pricing/calculate`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        signal: controller.signal,
-        body: JSON.stringify(pricingRequest),
-      });
-      const json = await res.json();
-      if (requestId !== requestSeq.current || controller.signal.aborted) return;
-      const nextPricing = parsePricingResult(json.data);
-      if (!res.ok || !json.success || !nextPricing) {
-        console.warn("Pricing quote request failed", {
-          status: res.status,
-          code: json?.code,
-          error: json?.error,
-        });
-        const nextError = PRICING_ERROR_MESSAGE;
-        setPricing(null);
-        setError(nextError);
-        dispatch({ type: "SET_QUOTE_STATUS", status: "failed", error: nextError });
-        return;
-      }
-
-      if (nextPricing.days.length === 0) {
-        const nextError = "No dates are available for this move right now. Please retry later or contact us to check availability.";
-        setError(nextError);
-        dispatch({ type: "SET_QUOTE_STATUS", status: "failed", error: nextError });
-        return;
-      }
-      setPricing(nextPricing);
-    } catch {
-      if (requestId !== requestSeq.current) return;
-      const nextError = "We couldn't reach pricing. Please check the connection and retry.";
-      setPricing(null);
-      setError(nextError);
-      dispatch({ type: "SET_QUOTE_STATUS", status: "failed", error: nextError });
-    } finally {
-      if (requestId === requestSeq.current) setLoading(false);
-    }
-  }, [dispatch, pricingRequest, state.distanceMiles, state.serviceSlug]);
-
-  useEffect(() => {
-    void fetchPricing();
-    return () => {
-      requestSeq.current += 1;
-      pricingAbort.current?.abort();
-    };
-  }, [fetchPricing]);
-
+  const pricing = state.quoteInputKey === getBookingPricingKey(state) ? state.quoteCalendar : null;
+  const error = state.quoteStatus === "failed" ? state.quoteError : "";
+  const loading = !pricing && state.quoteStatus !== "failed";
   const selectedDayData = pricing?.days.find((day) => day.date === state.selectedDate);
   const selectedSlotData = selectedDayData?.slots.find((slot) => slot.slot === state.selectedTimeSlot);
   const priceScale = useMemo(() => (pricing ? buildPriceScale(pricing.days) : []), [pricing]);
-
-  useEffect(() => {
-    if (!pricing || loading) return;
-
-    if (!state.selectedDate) {
-      dispatch({ type: "SET_PRICE", total: 0 });
-      dispatch({ type: "SET_BREAKDOWN", items: pricing.staticLineItems });
-      dispatch({ type: "SET_QUOTE_STATUS", status: "incomplete" });
-      return;
-    }
-
-    if (!state.selectedTimeSlot) {
-      dispatch({ type: "SET_PRICE", total: 0 });
-      dispatch({ type: "SET_BREAKDOWN", items: pricing.staticLineItems });
-      dispatch({ type: "SET_QUOTE_STATUS", status: "incomplete" });
-      return;
-    }
-
-    if (!selectedSlotData) {
-      setValidationError("Your previous appointment is no longer available. Please choose another slot.");
-      dispatch({ type: "SET_DATE", date: "" });
-      dispatch({ type: "SET_PRICE", total: 0 });
-      dispatch({ type: "SET_BREAKDOWN", items: pricing.staticLineItems });
-      dispatch({
-        type: "SET_QUOTE_STATUS",
-        status: "stale",
-        error: "Your previous appointment is no longer available. Please choose another slot.",
-      });
-      return;
-    }
-
-    dispatch({ type: "SET_PRICE", total: selectedSlotData.price });
-    dispatch({ type: "SET_BREAKDOWN", items: buildBreakdown(pricing, selectedSlotData.price) });
-    dispatch({ type: "SET_QUOTE_STATUS", status: "valid" });
-  }, [dispatch, loading, pricing, selectedSlotData, state.selectedDate, state.selectedTimeSlot]);
 
   function chooseSlot(day: DayPrice, slot: SlotData) {
     setValidationError("");
     dispatch({ type: "SET_DATE", date: day.date });
     dispatch({ type: "SET_SLOT", slot: slot.slot });
-    dispatch({ type: "SET_PRICE", total: slot.price });
-    if (pricing) dispatch({ type: "SET_BREAKDOWN", items: buildBreakdown(pricing, slot.price) });
-    dispatch({ type: "SET_QUOTE_STATUS", status: "valid" });
   }
 
   function handleContinue() {
@@ -331,7 +168,7 @@ export function SchedulePicker({ onBack, onContinue }: SchedulePickerProps) {
       setValidationError("Please load a valid quote before continuing.");
       return;
     }
-    if (!state.selectedDate || !selectedSlotData) {
+    if (state.quoteStatus !== "valid" || !state.selectedDate || !selectedSlotData) {
       setValidationError("Please choose a date and time.");
       return;
     }
@@ -377,7 +214,7 @@ export function SchedulePicker({ onBack, onContinue }: SchedulePickerProps) {
           <p className="mt-1 text-red-300/80">{error}</p>
           <button
             type="button"
-            onClick={fetchPricing}
+            onClick={() => dispatch({ type: "RETRY_QUOTE" })}
             className="mt-4 min-h-11 rounded-xl bg-red-500/20 px-4 text-sm font-bold text-red-300 ring-1 ring-red-500/30 transition hover:bg-red-500/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-400"
           >
             Retry quote
@@ -518,9 +355,9 @@ export function SchedulePicker({ onBack, onContinue }: SchedulePickerProps) {
         </>
       ) : null}
 
-      {validationError && (
+      {(validationError || state.quoteError) && (
         <p role="alert" className="rounded-xl px-4 py-3 text-sm font-medium text-red-300" style={{ background: "rgba(239,68,68,0.10)", boxShadow: "0 0 0 1px rgba(239,68,68,0.20)" }}>
-          {validationError}
+          {validationError || state.quoteError}
         </p>
       )}
 
@@ -528,7 +365,7 @@ export function SchedulePicker({ onBack, onContinue }: SchedulePickerProps) {
         id="booking-primary-action"
         type="button"
         onClick={handleContinue}
-        disabled={loading || Boolean(error) || !pricing}
+        disabled={loading || Boolean(error) || !pricing || state.quoteStatus !== "valid"}
         className="hidden min-h-12 w-full items-center justify-center rounded-xl px-5 text-base font-black text-black shadow-lg transition hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:ring-offset-2 focus-visible:ring-offset-booking-background disabled:cursor-not-allowed disabled:opacity-40 lg:flex"
         style={{ background: "linear-gradient(135deg, #F59E0B 0%, #EA580C 100%)" }}
       >

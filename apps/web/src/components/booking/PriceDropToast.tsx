@@ -17,7 +17,10 @@ export function PriceDropToast() {
 
   useEffect(() => {
     const current = state.clientTotal;
-    if (current <= 0) return;
+    if (state.quoteStatus !== "valid" || current <= 0) {
+      setChange(null);
+      return;
+    }
 
     const prev = previousRef.current;
     previousRef.current = current;
@@ -36,7 +39,7 @@ export function PriceDropToast() {
     return () => {
       if (timerRef.current) window.clearTimeout(timerRef.current);
     };
-  }, [state.clientTotal]);
+  }, [state.clientTotal, state.quoteStatus]);
 
   if (!change) return null;
 

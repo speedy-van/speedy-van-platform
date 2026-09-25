@@ -57,7 +57,7 @@ export function BookingSummary({ compact = false, collapsible = false }: Booking
         <div>
           <p className="text-xs font-bold uppercase tracking-widest text-amber-400/60">Booking summary</p>
           <p className="mt-1 text-2xl font-black text-white">
-            {state.clientTotal > 0 ? money.format(state.clientTotal) : "Quote pending"}
+            {state.quoteStatus === "valid" && state.clientTotal > 0 ? money.format(state.clientTotal) : state.quoteStatus === "loading" ? "Updating quote…" : "Quote pending"}
           </p>
         </div>
         {state.quoteStatus && (
@@ -67,6 +67,12 @@ export function BookingSummary({ compact = false, collapsible = false }: Booking
         )}
       </div>
 
+      {state.quoteStatus === "failed" && (
+        <div role="alert" className="text-sm text-red-300">
+          <p>{state.quoteError}</p>
+          <button type="button" onClick={() => dispatch({ type: "RETRY_QUOTE" })} className={editBtn}>Retry quote</button>
+        </div>
+      )}
       <div className="space-y-3 text-sm">
         <section className={sectionDivider}>
           <div className="flex items-center justify-between gap-3">
@@ -152,7 +158,7 @@ export function BookingSummary({ compact = false, collapsible = false }: Booking
       <details className="rounded-2xl" style={{ background: "rgba(255,255,255,0.04)", boxShadow: "0 0 0 1px rgba(245,158,11,0.15)" }}>
         <summary className="flex min-h-14 cursor-pointer list-none items-center justify-between px-4 text-sm font-bold text-white">
           <span>Booking summary</span>
-          <span className="text-amber-400">{state.clientTotal > 0 ? money.format(state.clientTotal) : "Open"}</span>
+          <span className="text-amber-400">{state.quoteStatus === "valid" && state.clientTotal > 0 ? money.format(state.clientTotal) : "Open"}</span>
         </summary>
         <div className="border-t border-amber-900/20 p-4">{content}</div>
       </details>
