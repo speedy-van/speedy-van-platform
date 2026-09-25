@@ -1,6 +1,5 @@
 import type { Metadata, Viewport } from "next";
 import { Manrope } from "next/font/google";
-import "mapbox-gl/dist/mapbox-gl.css";
 import "./globals.css";
 import "./typography.css";
 import { GlobalProviders } from "@/components/layout/GlobalProviders";
