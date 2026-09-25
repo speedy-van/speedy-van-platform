@@ -291,14 +291,35 @@ export default function PricingPage() {
       <section className="bg-[#0A0A0A] py-16" aria-labelledby="city-quote-planning-heading">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
           <h2 id="city-quote-planning-heading" className="text-3xl font-black text-white">
-            Planning a quote in Glasgow, Aberdeen or Inverness
+            Planning a quote in Edinburgh, Glasgow, Aberdeen or Inverness
           </h2>
           <p className="mt-3 max-w-3xl leading-relaxed text-white/60">
             These are planning examples, not records of completed jobs or priced
             offers. Use the details that apply to your addresses when requesting
             a quote.
           </p>
-          <div className="mt-8 grid gap-6 lg:grid-cols-3">
+          <div className="mt-8 grid gap-6 lg:grid-cols-2">
+            <article id="edinburgh" className="min-w-0 scroll-mt-24 rounded-xl border border-amber-400/15 bg-white/[0.04] p-6">
+              <h3 className="text-2xl font-bold text-white">Edinburgh: plan around room handover and stairs</h3>
+              <p className="mt-4 leading-relaxed text-white/60">
+                For a student or shared-flat move, list your own boxes, bags and
+                furniture, then give both floors, the stair or lift arrangement
+                and the walk from the loading point. Confirm when you must leave
+                the old room and when you can enter the new one.
+              </p>
+              <p className="mt-4 leading-relaxed text-white/60">
+                If the dates leave a gap, arrange storage separately and include
+                its address, access hours and any later collection in the
+                transport enquiry. Ask what lifting help, waiting, parking and
+                additional stops are included in the total. A short journey
+                between flats does not establish the handling time or price.
+              </p>
+              <ul className="mt-5 space-y-3" role="list">
+                <li><Link href="/areas/edinburgh" className={TEXT_LINK_CLASS_NAME}>Edinburgh moving and access guide</Link></li>
+                <li><Link href="/areas/edinburgh/student-move" className={TEXT_LINK_CLASS_NAME}>Edinburgh student removals and storage transfers</Link></li>
+                <li><Link href="/areas/edinburgh/flat-removals" className={TEXT_LINK_CLASS_NAME}>Edinburgh flat removal planning</Link></li>
+              </ul>
+            </article>
             <article id="glasgow" className="min-w-0 scroll-mt-24 rounded-xl border border-amber-400/15 bg-white/[0.04] p-6">
               <h3 className="text-2xl font-bold text-white">Glasgow: account for tenement access and loading</h3>
               <p className="mt-4 leading-relaxed text-white/60">
@@ -337,8 +358,8 @@ export default function PricingPage() {
               </p>
               <ul className="mt-5 space-y-3" role="list">
                 <li><Link href="/areas/aberdeen" className={TEXT_LINK_CLASS_NAME}>Aberdeen moving and access guide</Link></li>
-                <li><Link href="/services/flat-removals" className={TEXT_LINK_CLASS_NAME}>Flat and apartment removals</Link></li>
-                <li><Link href="/services/furniture-delivery" className={TEXT_LINK_CLASS_NAME}>Furniture collection and delivery</Link></li>
+                <li><Link href="/areas/aberdeen/flat-removals" className={TEXT_LINK_CLASS_NAME}>Aberdeen flat and apartment removals</Link></li>
+                <li><Link href="/areas/aberdeen/furniture-delivery" className={TEXT_LINK_CLASS_NAME}>Aberdeen furniture collection and delivery</Link></li>
               </ul>
             </article>
             <article id="inverness" className="min-w-0 scroll-mt-24 rounded-xl border border-amber-400/15 bg-white/[0.04] p-6">
@@ -359,6 +380,7 @@ export default function PricingPage() {
               </p>
               <ul className="mt-5 space-y-3" role="list">
                 <li><Link href="/areas/inverness" className={TEXT_LINK_CLASS_NAME}>Inverness moving and access guide</Link></li>
+                <li><Link href="/areas/inverness/house-removal" className={TEXT_LINK_CLASS_NAME}>Inverness house removal planning</Link></li>
                 <li><Link href="/services/long-distance-removals" className={TEXT_LINK_CLASS_NAME}>Long-distance removal planning</Link></li>
                 <li><Link href="/services/small-moves" className={TEXT_LINK_CLASS_NAME}>Small loads and partial moves</Link></li>
               </ul>

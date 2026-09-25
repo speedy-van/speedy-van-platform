@@ -62,7 +62,7 @@ test("local service links reach only reviewed pages in the sitemap", () => {
     assert.equal(href, `/areas/${page.areaSlug}/${page.serviceSlug}`);
     assert.ok(paths.has(href));
   }
-  for (const city of ["glasgow", "aberdeen", "inverness"]) {
+  for (const city of ["glasgow", "aberdeen", "inverness", "edinburgh"]) {
     assert.equal(localServiceHref(city, "man-and-van"), undefined, "Keep the city hub's existing search intent");
     assert.equal(localServiceHref(city, "unknown-service"), undefined);
   }
@@ -71,7 +71,7 @@ test("local service links reach only reviewed pages in the sitemap", () => {
 
 test("target city guides have valid service choices and unique section anchors", () => {
   const { getAreaGuide } = loadSource("apps/web/src/lib/area-guides.ts");
-  for (const city of ["glasgow", "aberdeen", "inverness"]) {
+  for (const city of ["glasgow", "aberdeen", "inverness", "edinburgh"]) {
     const guide = getAreaGuide(city);
     assert.ok(guide && guide.faqs.length >= 4);
     assert.equal(new Set(guide.sections.map(({ id }) => id)).size, guide.sections.length);
@@ -79,4 +79,21 @@ test("target city guides have valid service choices and unique section anchors",
       assert.ok(services.some((service) => service.slug === choice.slug && service.indexable !== false));
     }
   }
+});
+
+test("related local services stay in the same city and resolve to reviewed, distinct destinations", () => {
+  const { relatedLocalServiceLinks } = loadSource("apps/web/src/lib/seo/local-service-links.ts");
+  const paths = new Set(sitemap.map(({ url }) => new URL(url).pathname));
+  for (const page of localServices) {
+    const related = relatedLocalServiceLinks(page.areaSlug, page.serviceSlug);
+    assert.ok(related.length > 0);
+    assert.equal(new Set(related.map(({ href }) => href)).size, related.length);
+    for (const link of related) {
+      assert.ok(link.name.trim() && paths.has(link.href));
+      assert.ok(link.href.startsWith(`/areas/${page.areaSlug}/`));
+      assert.notEqual(link.href, `/areas/${page.areaSlug}/${page.serviceSlug}`);
+    }
+  }
+  assert.deepEqual(relatedLocalServiceLinks("unknown-city", "student-move"), []);
+  assert.deepEqual(relatedLocalServiceLinks("edinburgh", "unknown-service"), []);
 });
