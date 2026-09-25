@@ -598,8 +598,36 @@ details.faq-item > div {
   }
 }
 
-/* Mobile performance: lighten the road effect */
-@media (max-width: 640px) {
+/* Keep decorative effects static on phones. Loading indicators and focus
+   feedback retain their own styles; content never waits for a reveal. */
+@media (max-width: 767px) {
   .hero-road { opacity: 0.12; height: 80px; }
-  .hero-road-lines { animation-duration: 8s; }
+  .logo-neon-ring,
+  .logo-neon-ring__arc,
+  .hero-gradient-text,
+  .hero-gradient-text--shimmer,
+  .hero-road-lines,
+  .hero-fade-up,
+  .hero-service-card,
+  .cta-pulse,
+  .urgency-pulse,
+  .trust-badge,
+  .step-card,
+  .step-card .step-badge,
+  .popular-glow {
+    animation: none;
+    will-change: auto;
+  }
+  .hero-service-card {
+    box-shadow: 0 12px 32px -8px rgba(0, 0, 0, 0.55);
+  }
+  .hero-fade-up,
+  .reveal,
+  .reveal-stagger > *,
+  .reveal.reveal-pending,
+  .reveal-stagger > .reveal-pending {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
 }

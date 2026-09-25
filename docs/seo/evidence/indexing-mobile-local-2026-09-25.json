@@ -1,0 +1,17 @@
+{
+  "checked_at": "2026-09-25T12:29:09.493285+00:00",
+  "base_url": "http://127.0.0.1:3021",
+  "scope": "Local GET/HEAD and initial HTML only; no writes, browser interaction, field-performance or provider-payment claim",
+  "source_inventory": {
+    "expected_urls": 251,
+    "configured_areas": 160,
+    "configured_indexable_services": 12
+  },
+  "passed": 3144,
+  "failed": [],
+  "transport_errors": [],
+  "transport_policy": "At most four concurrent public-page requests; one retry for transport errors only. HTTP error responses are not retried.",
+  "page_count": 251,
+  "assertion_count": 3144,
+  "reproduce": "python3 scripts/seo-verify-build.py --port 3021 --output /tmp/indexing-mobile-full-report.json"
+}
