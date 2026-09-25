@@ -672,3 +672,192 @@ test("failed server confirmation rejects completion even when Stripe succeeded",
   const stripe = { retrievePaymentIntent: async () => ({ paymentIntent: { id: "pi_test", status: "succeeded" } }) };
   await assert.rejects(() => completeCardPayment(session, stripe, card, details, async () => { throw new Error("BOOKING_CANCELLED"); }), /BOOKING_CANCELLED/);
 });
+
+const { getBookingPricingKey } = sourceModule(path.join(root, "apps/web/src/lib/booking-quote.ts"));
+function quoteCalendar(price = 120, date = state.selectedDate) {
+  return { days: [{ date, slots: [{ slot: "morning", price, tier: "green" }] }],
+    staticLineItems: [{ label: "Base service", amount: price, type: "base" }],
+    staticSubtotal: price, currency: "GBP", symbol: "£" };
+}
+
+/** Run the actual persistent quote component with controlled network and timer completion. */
+function quoteSyncHarness(initial = state) {
+  let current = { ...initial, clientSecret: "", bookingId: "", bookingRef: "" };
+  let dirty = true;
+  let cursor = 0;
+  let effects = [];
+  let mounted = true;
+  let timerId = 0;
+  const hooks = [];
+  const timers = new Map();
+  const requests = [];
+  const dispatch = (action) => { current = bookingReducer(current, action); dirty = true; };
+  const hook = (init) => { const index = cursor++; return hooks[index] ??= init(); };
+  const react = {
+    useRef(value) { return hook(() => ({ current: value })); },
+    useEffect(effect, dependencies) {
+      const ref = hook(() => ({ dependencies: undefined, cleanup: undefined }));
+      if (!ref.dependencies || dependencies.some((value, i) => !Object.is(value, ref.dependencies[i]))) {
+        ref.dependencies = dependencies;
+        effects.push(() => { ref.cleanup?.(); ref.cleanup = effect(); });
+      }
+    },
+  };
+  const filename = path.join(root, "apps/web/src/components/booking/BookingQuoteSync.tsx");
+  const compiled = ts.transpileModule(fs.readFileSync(filename, "utf8"), {
+    compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.CommonJS, jsx: ts.JsxEmit.ReactJSX },
+  }).outputText;
+  const module = { exports: {} };
+  vm.runInNewContext(compiled, {
+    module, exports: module.exports, AbortController, Error, process: { env: { NODE_ENV: "test" } },
+    window: { setTimeout(fn) { timers.set(++timerId, fn); return timerId; }, clearTimeout(id) { timers.delete(id); } },
+    fetch(url, options) {
+      return new Promise((resolve, reject) => { requests.push({ url, options, resolve, reject }); });
+    },
+    require(specifier) {
+      if (specifier === "react") return react;
+      if (specifier === "@/lib/booking-store") return { useBooking: () => ({ state: current, dispatch }) };
+      if (specifier === "@/lib/booking-quote") return sourceModule(path.join(root, "apps/web/src/lib/booking-quote.ts"));
+      if (specifier === "./quote-response") return { parsePricingResult };
+      throw new Error(`Unexpected dependency: ${specifier}`);
+    },
+  }, { filename });
+  function flush() {
+    let renders = 0;
+    while (dirty && mounted) {
+      dirty = false; cursor = 0; effects = [];
+      module.exports.BookingQuoteSync();
+      for (const effect of effects) effect();
+      assert.ok(++renders < 15, "quote refresh must not loop");
+    }
+  }
+  flush();
+  return {
+    get state() { return current; }, requests,
+    dispatch(action) { dispatch(action); flush(); },
+    startRequest() { const batch = [...timers.values()]; timers.clear(); for (const timer of batch) void timer(); flush(); },
+    async respond(index, data = quoteCalendar(), ok = true) {
+      requests[index].resolve({ ok, json: async () => ({ success: ok, data }) });
+      await new Promise((resolve) => setImmediate(resolve)); flush();
+    },
+    unmount() { mounted = false; for (const ref of hooks) ref.cleanup?.(); },
+  };
+}
+
+test("a quote refresh stays active after Back, preserves the appointment and replaces the old total", async () => {
+  const flow = quoteSyncHarness();
+  flow.startRequest();
+  await flow.respond(0);
+  flow.dispatch({ type: "SET_STEP", step: 3 });
+  assert.equal(flow.requests.length, 1);
+  flow.dispatch({ type: "SET_HELPERS", count: 2 });
+  assert.equal(flow.state.clientTotal, 0);
+  assert.equal(flow.state.quoteStatus, "loading");
+  assert.equal(flow.state.selectedDate, state.selectedDate);
+  assert.equal(flow.state.selectedTimeSlot, state.selectedTimeSlot);
+  assert.equal(getReachableBookingStep(flow.state, 5), 4);
+  flow.startRequest();
+  assert.equal(JSON.parse(flow.requests[1].options.body).helpersCount, 2);
+  await flow.respond(1, quoteCalendar(156));
+  assert.equal(flow.state.clientTotal, 156);
+  assert.equal(flow.state.quoteStatus, "valid");
+  assert.equal(flow.state.step, 3);
+  flow.unmount();
+});
+
+test("quantity edits send the current inventory and late responses cannot overwrite a newer edit", async () => {
+  const flow = quoteSyncHarness();
+  flow.startRequest();
+  flow.dispatch({ type: "SET_ITEMS", items: [{ ...state.items[0], quantity: 3 }] });
+  assert.equal(flow.requests[0].options.signal.aborted, true);
+  flow.startRequest();
+  assert.equal(JSON.parse(flow.requests[1].options.body).selectedItems[0].quantity, 3);
+  await flow.respond(1, quoteCalendar(180));
+  await flow.respond(0, quoteCalendar(120));
+  assert.equal(flow.state.clientTotal, 180);
+  assert.equal(flow.state.items[0].quantity, 3);
+  flow.unmount();
+});
+
+test("request identity rejects stale same-input replies after retry or an A to B to A edit", () => {
+  const key = getBookingPricingKey(state);
+  let current = bookingReducer(state, { type: "QUOTE_REQUESTED", inputKey: key, requestId: "old" });
+  current = bookingReducer(current, { type: "SET_HELPERS", count: 1 });
+  current = bookingReducer(current, { type: "SET_HELPERS", count: 0 });
+  current = bookingReducer(current, { type: "QUOTE_REQUESTED", inputKey: key, requestId: "new" });
+  const stale = bookingReducer(current, { type: "QUOTE_RECEIVED", inputKey: key, requestId: "old", pricing: quoteCalendar(10) });
+  assert.strictEqual(stale, current);
+  const latest = bookingReducer(current, { type: "QUOTE_RECEIVED", inputKey: key, requestId: "new", pricing: quoteCalendar(120) });
+  assert.equal(latest.clientTotal, 120);
+});
+
+test("repeated same-value edits during a pending quote restart safely instead of stranding loading", async () => {
+  const flow = quoteSyncHarness();
+  flow.startRequest();
+  flow.dispatch({ type: "SET_PACKING", value: false });
+  flow.startRequest();
+  assert.equal(flow.requests.length, 2);
+  assert.equal(flow.requests[0].options.signal.aborted, true);
+  await flow.respond(1);
+  assert.equal(flow.state.quoteStatus, "valid");
+  flow.unmount();
+});
+
+test("date and time selection uses the matching fresh calendar without another request", async () => {
+  const flow = quoteSyncHarness();
+  flow.startRequest();
+  await flow.respond(0);
+  flow.dispatch({ type: "SET_DATE", date: state.selectedDate });
+  assert.equal(flow.state.clientTotal, 0);
+  flow.dispatch({ type: "SET_SLOT", slot: "morning" });
+  assert.equal(flow.state.clientTotal, 120);
+  assert.equal(flow.state.quoteStatus, "valid");
+  flow.startRequest();
+  assert.equal(flow.requests.length, 1);
+  flow.unmount();
+});
+
+test("failed and empty responses clear payable prices; retry obtains a new quote", async () => {
+  for (const response of [null, { ...quoteCalendar(), days: [] }]) {
+    const flow = quoteSyncHarness();
+    flow.startRequest();
+    await flow.respond(0, response);
+    assert.equal(flow.state.quoteStatus, "failed");
+    assert.equal(flow.state.clientTotal, 0);
+    assert.equal(flow.state.quoteCalendar, null);
+    flow.dispatch({ type: "RETRY_QUOTE" });
+    flow.startRequest();
+    await flow.respond(1);
+    assert.equal(flow.state.quoteStatus, "valid");
+    flow.unmount();
+  }
+});
+
+test("empty inventory, invalid routes and checkout locks stop quote requests and obsolete responses", async () => {
+  for (const action of [{ type: "SET_ITEMS", items: [] }, { type: "CLEAR_PICKUP" }, { type: "START_CHECKOUT" }]) {
+    const flow = quoteSyncHarness();
+    flow.startRequest();
+    flow.dispatch(action);
+    const beforeResponse = flow.state;
+    assert.equal(flow.requests[0].options.signal.aborted, true);
+    await flow.respond(0);
+    assert.strictEqual(flow.state, beforeResponse);
+    flow.startRequest();
+    assert.equal(flow.requests.length, 1);
+    flow.unmount();
+  }
+});
+
+test("unavailable old appointments cannot become payable and quote calendars never persist in drafts", async () => {
+  const flow = quoteSyncHarness();
+  flow.startRequest();
+  await flow.respond(0, quoteCalendar(120, "2026-10-01"));
+  assert.equal(flow.state.quoteStatus, "stale");
+  assert.equal(flow.state.clientTotal, 0);
+  assert.match(flow.state.quoteError, /no longer available/);
+  const saved = JSON.parse(serialiseBookingDraft(flow.state, now)).state;
+  assert.equal(saved.quoteCalendar, null);
+  assert.equal(saved.quoteInputKey, "");
+  assert.equal(saved.quoteRequestId, "");
+  flow.unmount();
+});

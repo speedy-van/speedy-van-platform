@@ -11,6 +11,8 @@ import {
 } from "react";
 import type { BedroomCount, InventoryMode, InventoryRoom } from "./room-inventory";
 import { resolveBookingService } from "./booking-service-options";
+import { getBookingPricingKey, getQuoteSelection } from "./booking-quote";
+import type { PricingResult } from "@/components/booking/quote-response";
 
 export const BOOKING_DRAFT_STORAGE_KEY = "sv_booking_draft_v1";
 export const BOOKING_DRAFT_TTL_MS = 24 * 60 * 60 * 1000; // 24h
@@ -87,6 +89,10 @@ export interface BookingState {
   priceBreakdown: PriceLineItem[];
   quoteStatus: QuoteStatus;
   quoteError: string;
+  quoteCalendar: PricingResult | null;
+  quoteInputKey: string;
+  quoteRequestId: string;
+  quoteRevision: number;
   checkoutLocked: boolean;
 
   // Navigation
@@ -169,6 +175,10 @@ export const INITIAL_BOOKING_STATE: BookingState = {
   priceBreakdown: [],
   quoteStatus: "incomplete",
   quoteError: "",
+  quoteCalendar: null,
+  quoteInputKey: "",
+  quoteRequestId: "",
+  quoteRevision: 0,
   checkoutLocked: false,
   step: 1,
 };
@@ -205,6 +215,10 @@ export type BookingAction =
   | { type: "SET_BREAKDOWN"; items: PriceLineItem[] }
   | { type: "SET_QUOTE_STATUS"; status: QuoteStatus; error?: string }
   | { type: "SET_BOOKING"; bookingId: string; bookingRef: string; clientSecret: string; total: number }
+  | { type: "QUOTE_REQUESTED"; inputKey: string; requestId: string }
+  | { type: "QUOTE_RECEIVED"; inputKey: string; requestId: string; pricing: PricingResult }
+  | { type: "QUOTE_FAILED"; inputKey: string; requestId: string; error: string }
+  | { type: "RETRY_QUOTE" }
   | { type: "START_CHECKOUT" }
   | { type: "CHECKOUT_REJECTED" }
   | { type: "CHECKOUT_COMPLETE" }
@@ -213,16 +227,18 @@ export type BookingAction =
   | { type: "RESTORE"; state: BookingState }
   | { type: "RESET" };
 
-function invalidateQuote(state: BookingState): BookingState {
+function invalidateQuote(state: BookingState, keepCalendar = false): BookingState {
   return {
     ...state,
-    selectedDate: "",
-    selectedTimeSlot: "",
     clientTotal: 0,
     clientSecret: "",
     bookingId: "",
     bookingRef: "",
     priceBreakdown: [],
+    quoteCalendar: keepCalendar ? state.quoteCalendar : null,
+    quoteInputKey: keepCalendar ? state.quoteInputKey : "",
+    quoteRequestId: keepCalendar ? state.quoteRequestId : "",
+    quoteRevision: keepCalendar ? state.quoteRevision : state.quoteRevision + 1,
     quoteStatus: state.clientTotal > 0 || state.selectedDate ? "stale" : "incomplete",
     quoteError: "",
   };
@@ -289,8 +305,30 @@ export function bookingReducer(state: BookingState, action: BookingAction): Book
         exactBedroomCount: action.exactBedroomCount,
       };
     case "SET_INVENTORY_ROOMS": return { ...state, inventoryRooms: action.rooms };
-    case "SET_DATE": return { ...invalidateQuote(state), selectedDate: action.date, selectedTimeSlot: "" };
-    case "SET_SLOT": return { ...invalidateQuote(state), selectedDate: state.selectedDate, selectedTimeSlot: action.slot };
+    case "SET_DATE": return { ...invalidateQuote(state, true), selectedDate: action.date, selectedTimeSlot: "" };
+    case "SET_SLOT": {
+      const next = { ...invalidateQuote(state, true), selectedTimeSlot: action.slot };
+      return next.quoteCalendar && next.quoteInputKey === getBookingPricingKey(next)
+        ? { ...next, ...getQuoteSelection(next.quoteCalendar, next.selectedDate, action.slot) }
+        : next;
+    }
+    case "QUOTE_REQUESTED":
+      return action.inputKey === getBookingPricingKey(state)
+        ? { ...invalidateQuote(state), quoteRevision: state.quoteRevision, quoteRequestId: action.requestId, quoteStatus: "loading" }
+        : state;
+    case "QUOTE_RECEIVED":
+      if (action.inputKey !== getBookingPricingKey(state) || action.requestId !== state.quoteRequestId) return state;
+      return {
+        ...state,
+        quoteCalendar: action.pricing,
+        quoteInputKey: action.inputKey,
+        ...getQuoteSelection(action.pricing, state.selectedDate, state.selectedTimeSlot),
+      };
+    case "QUOTE_FAILED":
+      return action.inputKey === getBookingPricingKey(state) && action.requestId === state.quoteRequestId
+        ? { ...invalidateQuote(state), quoteStatus: "failed", quoteError: action.error }
+        : state;
+    case "RETRY_QUOTE": return invalidateQuote(state);
     case "SET_HELPERS": return { ...invalidateQuote(state), helpersCount: action.count };
     case "SET_PACKING": return { ...invalidateQuote(state), needsPacking: action.value };
     case "SET_ASSEMBLY": return { ...invalidateQuote(state), needsAssembly: action.value };
@@ -298,12 +336,16 @@ export function bookingReducer(state: BookingState, action: BookingAction): Book
     case "SET_CUSTOMER": return { ...state, customerName: action.name, customerEmail: action.email, customerPhone: action.phone };
     case "SET_PRICE": return action.total === state.clientTotal ? state : { ...state, clientTotal: action.total, clientSecret: "", bookingId: "", bookingRef: "" };
     case "SET_BREAKDOWN": return { ...state, priceBreakdown: action.items };
-    case "SET_QUOTE_STATUS": return { ...state, quoteStatus: action.status, quoteError: action.error ?? "" };
+    case "SET_QUOTE_STATUS": return { ...(action.status === "stale" || action.status === "failed" ? invalidateQuote(state) : state), quoteStatus: action.status, quoteError: action.error ?? "" };
     case "SET_BOOKING": return { ...state, checkoutLocked: true, bookingId: action.bookingId, bookingRef: action.bookingRef, clientSecret: action.clientSecret, clientTotal: action.total };
     case "START_CHECKOUT": return { ...state, checkoutLocked: true };
     case "CHECKOUT_REJECTED": return state.bookingId || state.clientSecret ? state : { ...state, checkoutLocked: false };
     case "CHECKOUT_COMPLETE": return INITIAL_BOOKING_STATE;
-    case "SET_STEP": return { ...state, step: getReachableBookingStep(state, action.step) };
+    case "SET_STEP": {
+      const step = getReachableBookingStep(state, action.step);
+      const refresh = step === 4 && state.step !== 4 && state.quoteCalendar;
+      return { ...(refresh ? invalidateQuote(state) : state), step };
+    }
     case "RESTORE": return action.state;
     case "RESET": return INITIAL_BOOKING_STATE;
     default: return state;
@@ -412,6 +454,10 @@ export function restoreBookingDraft(raw: string | null, now = Date.now()): Booki
 export function serialiseBookingDraft(state: BookingState, savedAt = Date.now()): string {
   return JSON.stringify({ savedAt, state: {
     ...state,
+    quoteCalendar: null,
+    quoteInputKey: "",
+    quoteRequestId: "",
+    quoteRevision: 0,
     clientSecret: "",
     bookingId: state.checkoutLocked ? state.bookingId : "",
     bookingRef: state.checkoutLocked ? state.bookingRef : "",

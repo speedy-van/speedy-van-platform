@@ -56,7 +56,7 @@ export function BookingActionBar() {
             {state.step === 1 ? "Choose a service" : `Step ${state.step - 1} of 4`}
           </p>
           <p className="truncate text-base font-bold text-white">
-            {state.clientTotal > 0 ? money.format(state.clientTotal) : "Quote pending"}
+            {state.quoteStatus === "valid" && state.clientTotal > 0 ? money.format(state.clientTotal) : state.quoteStatus === "loading" ? "Updating quote…" : "Quote pending"}
           </p>
         </div>
         <button
