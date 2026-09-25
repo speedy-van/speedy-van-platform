@@ -100,6 +100,8 @@ function mountCtaTracker(f) {
         trackEvent: props["data-track-event"],
         trackLocation: props["data-track-location"],
         trackLabel: props["data-track-label"],
+        trackArea: props["data-track-area"],
+        trackService: props["data-track-service"],
       };
       this.textContent = "Contact";
     }
@@ -337,6 +339,33 @@ test("the app-level CTA listener preserves private-route exclusion for booking m
     tracker.click(props);
   }
   assert.equal(f.events.length, 1);
+  tracker.cleanup();
+});
+
+test("city quote clicks carry the area and service once without inventing a lead", () => {
+  const f = fixture({ consent: "accepted" });
+  const tracker = mountCtaTracker(f);
+  f.window.location.pathname = "/areas/glasgow/flat-removals";
+  const props = {
+    href: "/book",
+    "data-track-event": "quote_click",
+    "data-track-location": "moving_guide_hero",
+    "data-track-area": "glasgow",
+    "data-track-service": "flat-removals",
+  };
+  tracker.click(props);
+  assert.equal(f.events.length, 1);
+  assert.equal(f.events[0][1], "quote_click");
+  assert.equal(f.events[0][2].area_slug, "glasgow");
+  assert.equal(f.events[0][2].service_slug, "flat-removals");
+  assert.equal(f.events[0][2].destination, "/book");
+  assert.equal(f.events[0][2].page_location, "https://example.test/areas/glasgow/flat-removals");
+  assert.equal(f.meta[0][0], "trackCustom");
+  assert.equal(f.meta[0][1], "quote_click");
+  f.api.setCookieConsent("declined");
+  const count = f.events.length;
+  tracker.click(props);
+  assert.equal(f.events.length, count);
   tracker.cleanup();
 });
 

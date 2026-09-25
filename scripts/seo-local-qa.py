@@ -40,6 +40,7 @@ class Page(HTMLParser):
         self.links = set()
         self.main_links = set()
         self.ids = []
+        self.tracked_ctas = []
         self._main = False
         self.schemas = []
         self.schema_errors = []
@@ -69,6 +70,8 @@ class Page(HTMLParser):
             self.links.add(attrs["href"])
             if self._main:
                 self.main_links.add(attrs["href"])
+            if attrs.get("data-track-event"):
+                self.tracked_ctas.append(attrs)
         if tag == "script" and attrs.get("type") == "application/ld+json":
             self._json = True
             self._buffer = ""
@@ -212,7 +215,9 @@ def main():
     check("Sitemap contains the actual source URLs without duplicates", bool(urls) and len(urls) == len(set(urls)) and set(urls) == set(expected["urls"]))
     check("Source sitemap has no duplicate URL definitions", len(expected["urls"]) == len(set(expected["urls"])))
     check("Sitemap contains only canonical HTTPS URLs", all(url and url.startswith(PRIMARY + "/") or url == PRIMARY for url in urls))
-    check("Sitemap has no fabricated lastmod dates", not root.findall("{*}url/{*}lastmod"))
+    documented_updates = {PRIMARY + path: "2026-09-25" for path in ["/areas/glasgow", "/areas/aberdeen", "/areas/inverness", "/pricing"]}
+    actual_updates = {node.findtext("{*}loc"): node.findtext("{*}lastmod") for node in root.findall("{*}url") if node.find("{*}lastmod") is not None}
+    check("Sitemap dates match the four documented content updates, without build-time timestamps", actual_updates == documented_updates)
     check("Sitemap excludes private and unsupported routes", not any(any(part in urlparse(url).path.split("/") for part in ["book", "auth", "driver", "admin", "track", "jobs", "api", "rubbish-removal"]) for url in urls))
     paths = [urlparse(url).path or "/" for url in urls]
     with ThreadPoolExecutor(max_workers=4) as executor:
@@ -257,6 +262,16 @@ def main():
     choice = pages.get(choice_path, empty_page)
     guides = pages.get("/guides", empty_page)
     pricing = pages.get("/pricing", empty_page)
+    for city in ["glasgow", "aberdeen", "inverness"]:
+        city_page = pages.get(f"/areas/{city}", empty_page)
+        check(f"{city}: pricing fragment exists once", pricing.ids.count(city) == 1 and f"/pricing#{city}" in city_page.main_links)
+        for event in ["quote_click", "call_click"]:
+            check(f"{city}: {event} carries its city context", any(cta.get("data-track-event") == event and cta.get("data-track-area") == city for cta in city_page.tracked_ctas))
+        for entry in expected["local_services"]:
+            if entry["area"] != f"/areas/{city}":
+                continue
+            check(f"{entry['path']}: local guide is linked from its service page", entry["path"] in pages.get(entry["service"], empty_page).main_links)
+            check(f"{entry['path']}: quote CTA keeps the draft-safe URL", any(cta.get("href") == "/book" and cta.get("data-track-event") == "quote_click" and cta.get("data-track-area") == city for cta in pages.get(entry["path"], empty_page).tracked_ctas))
     check("Guide hub and comparison guide link to each other in main content", choice_path in guides.main_links and "/guides" in choice.main_links)
     check("Guide hub is discoverable from the homepage", "/guides" in home.links)
     for path in ["/pricing", "/areas/aberdeen", "/areas/inverness"] + [f"/services/{slug}" for slug in CORE]:

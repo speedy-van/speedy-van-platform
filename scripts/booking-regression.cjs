@@ -455,6 +455,10 @@ test("service query initialisation cannot replace an unresolved checkout after h
   assert.equal(flow.state.clientSecret, "");
   assert.equal(flow.state.step, 5);
   assert.deepEqual(flow.state.items, state.items);
+  const persisted = JSON.parse(flow.draft).state;
+  assert.equal(persisted.checkoutLocked, true);
+  assert.equal(persisted.bookingRef, "reference_test");
+  assert.equal(persisted.clientSecret, "");
 });
 
 test("corrupt, expired, future-dated and unknown-service drafts are rejected", () => {

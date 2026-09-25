@@ -1,3 +1,5 @@
+> Historical checkpoint: the deployment-pending statements below describe the earlier branch review. That branch was merged to `main` in `a40072989ce6964e3cbbd150e1d1ca5fda5ed527` on 24 September. A live Search Console inspection on 25 September showed a successful sitemap with 251 discovered URLs. Discovery is not proof that all URLs are indexed or ranked. See `city-search-release-2026-09-25.md` for the subsequent source changes and verification scope.
+
 # Stage 2 URL Inventory — Path to 1,000 Pages
 **Date:** 2026-09-24
 **Branch:** `integration/seo-1000-2026-09-23`

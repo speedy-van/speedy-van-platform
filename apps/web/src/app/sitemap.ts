@@ -28,9 +28,18 @@ const staticPages: SitemapPage[] = [
   { path: "/cookies", changeFrequency: "yearly", priority: 0.2 },
 ];
 
+// Actual content review dates, not the build time or a claim about Google indexing.
+const contentUpdatedAt: Record<string, string> = {
+  "/areas/glasgow": "2026-09-25",
+  "/areas/aberdeen": "2026-09-25",
+  "/areas/inverness": "2026-09-25",
+  "/pricing": "2026-09-25",
+};
+
 function sitemapEntry({ path, changeFrequency, priority }: SitemapPage): SitemapEntry {
   return {
     url: absoluteUrl(path),
+    ...(contentUpdatedAt[path] ? { lastModified: contentUpdatedAt[path] } : {}),
     changeFrequency,
     priority,
   };

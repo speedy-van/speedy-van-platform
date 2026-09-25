@@ -2,7 +2,7 @@ const assert = require("node:assert/strict");
 const test = require("node:test");
 const fs = require("node:fs");
 const path = require("node:path");
-const { readContent, inventory } = require("./seo-expansion-inventory.cjs");
+const { loadSource, readContent, inventory } = require("./seo-expansion-inventory.cjs");
 const { areas, services, localServices, routes, sitemap } = readContent();
 
 test("Expansion registries reference real places and services without duplicate routes", () => {
@@ -45,11 +45,38 @@ test("New guides contain authored planning sections, questions and explicit evid
   }
 });
 
-test("The review inventory reflects 250 implemented URLs and separates the 3500-page target", () => {
+test("The review inventory reflects 251 implemented URLs and separates the 3500-page target", () => {
   const current = inventory();
-  assert.equal(current.implementedTotal, 250);
+  assert.equal(current.implementedTotal, 251);
   assert.deepEqual(current.counts, { areas: 160, localServices: 48, routes: 19 });
-  assert.equal(current.remainingToResearchAndReview, 3250);
+  assert.equal(current.remainingToResearchAndReview, 3249);
   const recorded = JSON.parse(fs.readFileSync(path.join(__dirname, "../docs/seo/scotland-expansion-inventory-2026-09-23.json"), "utf8"));
   assert.deepEqual(recorded, current, "Regenerate the review inventory after changing registered content");
+});
+
+test("local service links reach only reviewed pages in the sitemap", () => {
+  const { localServiceHref } = loadSource("apps/web/src/lib/seo/local-service-links.ts");
+  const paths = new Set(sitemap.map(({ url }) => new URL(url).pathname));
+  for (const page of localServices) {
+    const href = localServiceHref(page.areaSlug, page.serviceSlug);
+    assert.equal(href, `/areas/${page.areaSlug}/${page.serviceSlug}`);
+    assert.ok(paths.has(href));
+  }
+  for (const city of ["glasgow", "aberdeen", "inverness"]) {
+    assert.equal(localServiceHref(city, "man-and-van"), undefined, "Keep the city hub's existing search intent");
+    assert.equal(localServiceHref(city, "unknown-service"), undefined);
+  }
+  assert.equal(localServiceHref("unknown-city", "house-removal"), undefined);
+});
+
+test("target city guides have valid service choices and unique section anchors", () => {
+  const { getAreaGuide } = loadSource("apps/web/src/lib/area-guides.ts");
+  for (const city of ["glasgow", "aberdeen", "inverness"]) {
+    const guide = getAreaGuide(city);
+    assert.ok(guide && guide.faqs.length >= 4);
+    assert.equal(new Set(guide.sections.map(({ id }) => id)).size, guide.sections.length);
+    for (const choice of guide.services) {
+      assert.ok(services.some((service) => service.slug === choice.slug && service.indexable !== false));
+    }
+  }
 });

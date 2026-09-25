@@ -23,6 +23,91 @@ export interface AreaGuide {
 }
 
 const AREA_GUIDES: Record<string, AreaGuide> = {
+  glasgow: {
+    metadataTitle: "Man and Van Glasgow | Furniture & Home Moves",
+    introduction:
+      "Choose a Glasgow man and van for a furniture collection or smaller load, or use a removal service for a complete home or office. The useful starting point is your inventory and access: a short trip across the city can still involve several flights of tenement stairs. Select a service below for local planning advice before requesting your quote.",
+    services: [
+      { slug: "man-and-van", description: "Boxes, storage collections and manageable loads. Explain whether you need lifting help and list every collection and delivery stop." },
+      { slug: "furniture-delivery", description: "Sofas, beds and other furniture collected from a seller or shop. Confirm dimensions, readiness and the route through both properties." },
+      { slug: "house-removal", description: "A complete home move, including rooms, loft storage and garden items. Plan the vehicle and crew around the full inventory and key handover." },
+      { slug: "flat-removals", description: "Tenement, apartment and studio moves. Share floor numbers, stair turns, lift limits and the carrying distance from a lawful loading point." },
+      { slug: "office-removal", description: "Desks, chairs, boxed files and office equipment. Agree building access, loading slots and any dismantling before moving day." },
+      { slug: "student-move", description: "Student rooms, shared flats and storage stops. Separate your belongings and check collection arrangements with halls or the property manager." },
+      { slug: "packing-service", description: "Ask for the packing help and materials your move needs. Identify fragile items and agree which rooms or furniture are included." },
+      { slug: "long-distance-removals", description: "Moves from Glasgow to destinations across Britain. Provide the onward address, receiving arrangements and complete load for a route-specific quote." },
+    ],
+    sections: [
+      {
+        id: "tenement-access",
+        title: "Moving furniture through a Glasgow tenement",
+        paragraphs: [
+          "For a West End or Southside flat, describe the whole carrying route: the room, flat door, stair landings, shared close and pavement. Measure the largest item against the tightest turn, including any half-landing. A sofa that fits through the front door may still need dismantling to clear the stairs.",
+          "Give the floor at collection and delivery, and explain whether a usable lift is available. Photos can help describe awkward access when discussing the quote. Keep communal routes clear and agree any dismantling and reassembly before the move; specialist lifting should be assessed separately.",
+        ],
+        checklist: [
+          "List bulky items with dimensions and any removable legs or sections.",
+          "Describe the stair flights, landing turns and distance to the van.",
+          "Tell us about entry arrangements and any building access window.",
+        ],
+      },
+      {
+        id: "parking",
+        title: "Plan the loading point before moving day",
+        paragraphs: [
+          "Identify where a van can lawfully load at each address. A nearby parking space and permission to use it are separate questions. Check street signs and building arrangements, and tell us if the carrying route crosses a busy pavement or requires a long walk from the entrance.",
+          "If you need a parking dispensation or a bay suspension, consult Glasgow City Council's current application guidance before choosing the collection time. Do not assume a resident permit reserves a bay for the removal vehicle. Include any agreed parking arrangements when confirming the job.",
+        ],
+        reference: { href: "https://www.glasgow.gov.uk/article/3801/Apply-for-Dispensation-or-a-Parking-Suspension", label: "Glasgow City Council parking dispensation and suspension guidance" },
+      },
+      {
+        id: "city-centre",
+        title: "City-centre access and the Low Emission Zone",
+        paragraphs: [
+          "Share the full collection and delivery addresses so vehicle access can be checked against the city-centre Low Emission Zone and any street restrictions. Check the council's current guidance for the zone and vehicle requirements; the route and assigned vehicle need to suit the actual move.",
+          "For an office or managed apartment building, ask the building manager about loading bays, goods lifts and booked access slots. Include security check-in arrangements and the time by which the loading area must be clear.",
+        ],
+        reference: { href: "https://www.glasgow.gov.uk/article/3982/Glasgow-s-LEZ-Key-Information", label: "Glasgow City Council Low Emission Zone guidance" },
+      },
+      {
+        id: "furniture-collection",
+        title: "Collecting a sofa or furniture from a Glasgow seller",
+        paragraphs: [
+          "Agree the seller's collection window and check that the furniture is ready to release. Include all pieces in the enquiry: sofa sections, dining chairs, bed parts and any loose glass. Confirm whether an item will already be dismantled or whether you need that work assessed.",
+          "Check access at the destination before committing to collection. Give the receiving floor and the item's dimensions, and arrange for someone to provide access. Any extra storage stop or change of address belongs in the quote.",
+        ],
+      },
+      {
+        id: "quote",
+        title: "How much does a man and van in Glasgow cost?",
+        paragraphs: [
+          "Request a price for the complete job: items, route in miles, crew, stairs, carrying distance and preferred date. A ground-floor furniture collection and an upper-floor flat move may need different handling even when the drive is the same length.",
+          "Check whether the quote is hourly or fixed, any minimum charge, and what loading, unloading and travel it includes. Ask separately about packing materials, dismantling, reassembly, waiting for keys and parking costs. Confirm the scope and total before booking.",
+        ],
+      },
+      {
+        id: "urgent-moves",
+        title: "Short-notice and onward moves from Glasgow",
+        paragraphs: [
+          "For an urgent collection, give both addresses, the full item list and the latest handover time together. Call to check the available options. Same-day or next-day work depends on a suitable vehicle, crew and time slot; an enquiry is not a confirmed booking.",
+          "For a Glasgow-to-Edinburgh journey or a longer move into England or Wales, include the destination access and receiving arrangements. Add storage stops and key collection windows so loading, travel and delivery can be planned together.",
+        ],
+      },
+    ],
+    bookingSteps: [
+      { title: "Describe the load and route", description: "Enter both addresses, your preferred date and the complete inventory, including awkward furniture and extra stops." },
+      { title: "Explain access at both ends", description: "Include floors, stair turns, lift dimensions and loading arrangements so the vehicle, crew and work can be assessed." },
+      { title: "Review and confirm", description: "Check the price, available slot and included tasks before arranging sellers, keys or building access around the move." },
+    ],
+    faqs: [
+      { question: "Can I book a man and van for one item in Glasgow?", answer: "Request a quote with the item dimensions, collection and delivery addresses, floors and available collection window. One large item can still need two people or dismantling, so include the access details as well as the furniture." },
+      { question: "Can you move furniture from a Glasgow tenement without a lift?", answer: "Describe both staircases, the floor numbers and the largest item. Tight turns and heavy pieces need assessment before the crew and handling are agreed. Do not assume an item will fit without checking the carrying route." },
+      { question: "Do I need to arrange parking for a removal van?", answer: "Check the actual loading location at both addresses. Tell us about restrictions and any building-managed loading bay. Where a dispensation or suspension is needed, check the council's current requirements and confirm the arrangements before moving day." },
+      { question: "Can a Glasgow student move include a storage stop?", answer: "Include the storage address, opening hours and access arrangements in the quote request. List what is collected at each stop and separate your belongings from those of housemates so the combined load is clear." },
+      { question: "Is a same-day man and van in Glasgow guaranteed?", answer: "No. Call with the addresses, inventory, access and required collection window to check short-notice availability. The vehicle, crew and time slot must be confirmed before you make dependent arrangements." },
+      { question: "Can I move from Glasgow to another UK city?", answer: "You can request a quote for a move originating in Glasgow to a destination across Britain. Provide the destination postcode, full inventory, date and access at both properties. Collection and delivery arrangements are confirmed for the particular route and load." },
+    ],
+  },
   aberdeen: {
     metadataTitle: "Man and Van Aberdeen | Get a Moving Quote",
     introduction:

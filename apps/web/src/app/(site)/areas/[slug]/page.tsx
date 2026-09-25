@@ -171,14 +171,14 @@ export default async function AreaPage({ params }: Props) {
             </div>
             <div className="mt-8 flex flex-col sm:flex-row gap-3">
               <Link
-                href="/book"
+                href="/book" data-track-event="quote_click" data-track-location="area_page" data-track-area={area.slug}
                 className="inline-flex items-center justify-center rounded-lg px-8 py-4 text-center text-base font-black text-black motion-safe:transition-transform motion-safe:hover:scale-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0A0A0A]"
                 style={{ background: "linear-gradient(135deg, #F59E0B 0%, #EA580C 100%)" }}
               >
                 {guide ? "Get a Moving Quote" : "Start an Online Quote"}
               </Link>
               <a
-                href="tel:07909032889"
+                href="tel:07909032889" data-track-event="call_click" data-track-location="area_page" data-track-area={area.slug}
                 aria-label="Call us on 07909 032889"
                 className="transition-transform motion-safe:hover:scale-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 rounded-full"
               >
@@ -420,14 +420,14 @@ export default async function AreaPage({ params }: Props) {
           </p>
           <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
             <Link
-              href="/book"
+              href="/book" data-track-event="quote_click" data-track-location="area_page" data-track-area={area.slug}
               className="inline-flex items-center justify-center gap-2 rounded-lg px-8 py-4 font-black text-black transition-transform motion-safe:hover:scale-105"
               style={{ background: "linear-gradient(135deg, #F59E0B 0%, #EA580C 100%)" }}
             >
               Start Online Quote
             </Link>
             <a
-              href="tel:07909032889"
+              href="tel:07909032889" data-track-event="call_click" data-track-location="area_page" data-track-area={area.slug}
               aria-label="Call us on 07909 032889"
               className="transition-transform motion-safe:hover:scale-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 rounded-full"
             >

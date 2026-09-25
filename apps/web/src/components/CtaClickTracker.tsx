@@ -16,6 +16,8 @@ export function CtaClickTracker() {
         event_category: "engagement",
         event_label: element.dataset.trackLabel || element.getAttribute("aria-label") || element.textContent?.trim().slice(0, 80) || "",
         cta_location: element.dataset.trackLocation || "",
+        area_slug: element.dataset.trackArea || "",
+        service_slug: element.dataset.trackService || "",
         destination: (element.getAttribute("href") || element.dataset.trackDestination || "").split(/[?#]/)[0],
       };
 

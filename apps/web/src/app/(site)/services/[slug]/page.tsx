@@ -10,6 +10,7 @@ import {
   type ServiceFaq,
 } from "@/lib/services";
 import { FEATURED_AREAS } from "@/lib/areas";
+import { localServiceHref } from "@/lib/seo/local-service-links";
 import { SERVICE_BOOKING_STEPS, SERVICE_PLANNING } from "@/lib/content/service-planning";
 import { SERVICE_SEARCH_CONTENT } from "@/lib/content/service-search-content";
 import { JsonLd } from "@/components/seo/JsonLd";
@@ -479,7 +480,7 @@ export default async function ServicePage({ params }: Props) {
             {featuredAreas.map((area) => (
               <li key={area.slug}>
                 <Link
-                  href={`/areas/${area.slug}`}
+                  href={localServiceHref(area.slug, service.slug) ?? `/areas/${area.slug}`}
                   className="inline-block px-4 py-2 rounded-lg border border-amber-900/20 text-sm font-medium transition-all hover:border-amber-400/40 hover:text-amber-400"
                   style={{ color: "rgba(255,255,255,0.70)" }}
                 >
