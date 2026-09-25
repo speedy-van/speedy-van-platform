@@ -210,6 +210,8 @@ export default async function ServicePage({ params }: Props) {
         </div>
       </section>
 
+      <ServiceExpansionLinks serviceSlug={slug} />
+
       {/* What's included */}
       <section
         className="py-16"
@@ -459,8 +461,6 @@ export default async function ServicePage({ params }: Props) {
           </div>
         </div>
       </section>
-
-      <ServiceExpansionLinks serviceSlug={slug} />
 
       {/* Available areas */}
       <section

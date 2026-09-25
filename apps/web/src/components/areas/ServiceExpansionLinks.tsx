@@ -8,7 +8,8 @@ export function ServiceExpansionLinks({ serviceSlug }: { serviceSlug: string }) 
   return (
     <section className="bg-stone-950 px-4 py-12 text-white sm:px-6" aria-labelledby="service-local-guides-heading">
       <div className="mx-auto max-w-7xl">
-        <h2 id="service-local-guides-heading" className="text-2xl font-bold">Local planning guides</h2>
+        <h2 id="service-local-guides-heading" className="text-2xl font-bold">Plan this service in your city</h2>
+        <p className="mt-3 max-w-3xl leading-relaxed text-stone-300">Choose your collection city for guidance on access, loading and the details to include in your quote.</p>
         <ul className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {pages.map((page) => <li key={page.areaSlug}><Link href={`/areas/${page.areaSlug}/${page.serviceSlug}`} className={movingTextLink}>{page.title}</Link></li>)}
           {serviceSlug === "long-distance-removals" && <li><Link href="/moving-routes" className={movingTextLink}>Moving routes from Scotland across Britain</Link></li>}

@@ -403,9 +403,9 @@ export const LOCAL_SERVICE_PAGES: LocalServicePage[] = [
   {
     "areaSlug": "edinburgh",
     "serviceSlug": "student-move",
-    "title": "Student moves in Edinburgh",
-    "description": "Arrange an Edinburgh student move with residence arrival slots, key collection, personal inventories and shared-flat access.",
-    "introduction": "Moving between Edinburgh halls and a private flat calls for more than a term date. Confirm when you can actually collect keys, where the room is, and which belongings are yours before arranging collection from your current Scottish address.",
+    "title": "Student removals in Edinburgh",
+    "description": "Plan Edinburgh student removals between halls, shared flats, home and separately arranged storage. Check access, key handover and your complete moving quote.",
+    "introduction": "Moving out of Edinburgh halls, into a shared flat or home at the end of term? List your boxes, suitcases and furniture, then match the collection to your room handover and the destination's access window. A storage transfer or a move shared with a housemate needs its own addresses and inventory included in the enquiry.",
     "sections": [
       {
         "title": "Check the room address and the key collection point",
@@ -424,8 +424,20 @@ export const LOCAL_SERVICE_PAGES: LocalServicePage[] = [
         }
       },
       {
-        "title": "Only move what belongs in the next room",
-        "body": "Separate your belongings from communal kitchen items and residence furniture. Count boxes, bags and bulky equipment, and photograph the access if the new Edinburgh flat has a shared stair. Tell us about a gap between tenancies; storage requires a separate arrangement rather than an assumption."
+        "title": "Moving out: prepare for collection and room handover",
+        "body": "Check your accommodation's departure instructions and key-return arrangements. Pack your own belongings separately from communal kitchen items and residence furniture. Allow time to clear and check the room after loading, keeping cleaning materials and the keys accessible until handover. For a private flat, confirm the process with the landlord or agent.",
+        "source": {
+          "label": "University of Edinburgh moving-out guidance",
+          "href": "https://www.accom.ed.ac.uk/living-with-us/moving-out"
+        }
+      },
+      {
+        "title": "Student storage transfers between tenancies",
+        "body": "If the next room is not ready, arrange the storage space separately and give its address, unit access and opening hours when requesting transport. Explain whether the load needs a later collection and list the belongings travelling on each date. A moving quote does not reserve a storage unit or include storage rent. Check what identification or access arrangements the facility requires for collection and delivery."
+      },
+      {
+        "title": "What to include in your Edinburgh student removal quote",
+        "body": "Count boxes and bags, measure bulky furniture and include both floors, stairs, lift access and the walk to the loading point. For a shared move, identify each person's load and every stop. Ask whether the price is fixed or hourly, what minimum applies and whether lifting help, travel, waiting and any packing materials are included. Confirm the total and available slot before arranging key collection around the move."
       }
     ],
     "faqs": [
@@ -436,6 +448,14 @@ export const LOCAL_SERVICE_PAGES: LocalServicePage[] = [
       {
         "question": "What if I am moving from Edinburgh to a family home in England?",
         "answer": "That is within the Scotland-origin service scope. Provide the family address, receiving contact and any access limits alongside the student-room inventory."
+      },
+      {
+        "question": "Do Edinburgh student removals include storage?",
+        "answer": "Transport to or from a storage facility can be included in the enquiry. Arrange and pay for the storage space separately, and provide the facility's address, opening hours and access instructions. Confirm each collection and delivery date with the moving quote."
+      },
+      {
+        "question": "Can housemates combine their student move?",
+        "answer": "Provide a combined inventory, all collection and delivery addresses and each person's access window. Shared transport depends on the route, capacity and timings being suitable. The quote must confirm the complete job before either person books around it."
       }
     ]
   },

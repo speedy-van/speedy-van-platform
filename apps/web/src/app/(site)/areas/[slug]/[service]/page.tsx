@@ -5,6 +5,8 @@ import { SERVICES } from "@/lib/services";
 import { LOCAL_SERVICE_PAGES } from "@/lib/content/city-service-pages";
 import { buildPageMetadata } from "@/lib/seo/metadata";
 import { MovingContentPage } from "@/components/areas/MovingContentPage";
+import { relatedLocalServiceLinks } from "@/lib/seo/local-service-links";
+import { getAreaGuide } from "@/lib/area-guides";
 
 interface Props { params: Promise<{ slug: string; service: string }> }
 export const dynamicParams = false;
@@ -34,6 +36,7 @@ export default async function LocalServicePage({ params }: Props) {
   ]} related={[
     { name: `${area.name} moving guide`, href: `/areas/${slug}` },
     { name: serviceData.name, href: `/services/${service}` },
-    { name: "Moving price guide", href: "/pricing" },
+    { name: "Moving price guide", href: getAreaGuide(slug) ? `/pricing#${slug}` : "/pricing" },
+    ...relatedLocalServiceLinks(slug, service),
   ]} />;
 }

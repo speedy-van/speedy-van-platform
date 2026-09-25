@@ -23,6 +23,91 @@ export interface AreaGuide {
 }
 
 const AREA_GUIDES: Record<string, AreaGuide> = {
+  edinburgh: {
+    metadataTitle: "Man and Van Edinburgh | Flat, Student & Home Moves",
+    introduction:
+      "Choose a man and van in Edinburgh for a smaller load or furniture collection, or plan a removal around the contents of your home. An Old Town stair, a New Town basement and a managed Leith apartment need different access details. Start with the service that fits your belongings, then include the floors, loading point and handover window in your quote.",
+    services: [
+      { slug: "man-and-van", description: "Boxes, single-room loads and collections. List every item and stop, and explain the lifting help and access needed at both addresses." },
+      { slug: "flat-removals", description: "Tenement, basement and apartment moves. Measure stair turns, shared entrances and lifts against the largest furniture before agreeing the handling." },
+      { slug: "student-move", description: "Halls, shared flats and end-of-tenancy moves. Plan around room access, key collection and any separately arranged storage transfer." },
+      { slug: "furniture-delivery", description: "Sofas, beds and other furniture from a shop or private seller. Confirm measurements, collection readiness and who can receive the delivery." },
+      { slug: "house-removal", description: "A complete home move, including loft, garage and garden belongings. Include key handover and any packing or dismantling in the enquiry." },
+      { slug: "office-removal", description: "Desks, chairs, files and office equipment. Check building access, booked loading slots and the order in which workspaces need to reopen." },
+      { slug: "packing-service", description: "Packing help and materials for the rooms or items you specify. Identify fragile belongings and agree what will be packed before the move." },
+      { slug: "long-distance-removals", description: "Moves starting in Edinburgh and continuing across Britain. Give the full destination, receiving arrangements and complete load for a route-specific quote." },
+    ],
+    sections: [
+      {
+        id: "flat-access",
+        title: "Edinburgh flat removals: check the whole carrying route",
+        paragraphs: [
+          "For an Old Town or New Town flat, measure the route from the room to the street, including internal steps, shared stair turns, basement entrances and the close door. Record the dimensions of a sofa, mattress or wardrobe before deciding whether it can travel assembled. The floor number alone does not describe the work.",
+          "At a Leith apartment or another managed building, check lift dimensions and any moving slot with the building manager. Give the distance from a lawful loading point to the entrance and arrange entry at both properties. Discuss awkward or heavy items before confirming the crew and handling method.",
+        ],
+        checklist: [
+          "Collection and delivery floors, including internal stairs or basement steps.",
+          "Largest item dimensions, tight turns and any agreed dismantling.",
+          "Building entry, lift booking and the walk between the van and the door.",
+        ],
+      },
+      {
+        id: "student-moves",
+        title: "Student removals between Edinburgh halls, flats and home",
+        paragraphs: [
+          "Use your actual residence instructions to confirm the room address, key collection and delivery window. When leaving University of Edinburgh accommodation, check the moving-out guidance and your property's arrangements for clearing the room and returning keys. Keep packing and the removal collection separate from the final room check.",
+          "Count your boxes, suitcases and furniture separately from your housemates' belongings. If several students want to move together, supply each collection and delivery address and a combined inventory. The route, available capacity and access need to be assessed before a shared move can be confirmed.",
+        ],
+        reference: { href: "https://www.accom.ed.ac.uk/living-with-us/moving-out", label: "University of Edinburgh moving-out guidance" },
+      },
+      {
+        id: "parking",
+        title: "Loading and parking for an Edinburgh removal van",
+        paragraphs: [
+          "Check the street restrictions at both addresses before choosing the collection window. Edinburgh Council treats a parking dispensation and a suspended parking bay as different arrangements. Use the council's current guidance to establish which application, notice period and charge apply to the actual loading location.",
+          "Agree who will arrange any required permission and include it in the move details. A resident permit or an empty space does not reserve a loading point for the van. Tell us if a street restriction or building loading bay means the crew must carry items farther than the front door.",
+        ],
+        reference: { href: "https://www.edinburgh.gov.uk/parking-spaces/dispensations-suspensions", label: "Edinburgh Council parking dispensations and suspensions" },
+      },
+      {
+        id: "storage-transfers",
+        title: "A tenancy gap or a collection from storage",
+        paragraphs: [
+          "A move into storage needs the facility address, access hours, unit location and loading arrangements as well as your home address. Arrange the storage space separately and check that it is ready to receive your belongings. A transport quote does not by itself reserve a storage unit.",
+          "If you need delivery to a new flat later, give both dates and explain which items travel on each trip. Keep documents, medicines and essentials with you, and label the stored boxes by room so the later collection can be planned from a clear inventory.",
+        ],
+      },
+      {
+        id: "quote",
+        title: "How much does a man and van in Edinburgh cost?",
+        paragraphs: [
+          "The quote needs your load, both addresses, date and access. Compare the work included rather than the driving distance alone: a small student load with a lift can involve different handling from a sofa carried down several flights of stairs. Include every stop and any waiting for keys.",
+          "Ask whether the price is fixed or hourly, whether a minimum applies and what loading, unloading and travel are included. Confirm packing materials, dismantling, reassembly and parking costs where relevant. Review the complete scope and available slot before booking.",
+        ],
+      },
+      {
+        id: "urgent-moves",
+        title: "Short-notice furniture collections and onward moves",
+        paragraphs: [
+          "For an urgent Edinburgh collection, give the seller's window, item dimensions, both addresses and access details together. Call to check options before promising a collection time to the seller. Same-day work depends on a suitable vehicle, crew and slot being confirmed.",
+          "For a move to Glasgow, Aberdeen, Inverness or a destination elsewhere in Britain, include receiving access and the delivery window. Explain any storage stop or key collection so the loading, journey and unloading can be considered together.",
+        ],
+      },
+    ],
+    bookingSteps: [
+      { title: "List the belongings and stops", description: "Count boxes, add bulky-item measurements and provide both addresses plus any seller or storage collection." },
+      { title: "Confirm access and timing", description: "Check floors, stair turns, lifts, parking and the room or key handover window at each property." },
+      { title: "Review the complete quote", description: "Confirm the included work, total, available slot and any separate storage or parking arrangements before booking." },
+    ],
+    faqs: [
+      { question: "Can I book a small student removal in Edinburgh?", answer: "Request a quote with your boxes, suitcases and furniture, both addresses, floors and preferred date. Include residence access and key collection times so loading and delivery can be assessed together." },
+      { question: "Can a student move include transport to storage?", answer: "Include the storage facility, access hours and inventory in the enquiry. Storage space must be arranged separately. If a later collection is needed, provide that date and destination too." },
+      { question: "Can you move furniture from an Edinburgh flat without a lift?", answer: "Give the number of flights, stair turns, entrance dimensions and size of the largest items. The handling and crew need to be assessed, including any dismantling, before the move is confirmed." },
+      { question: "Who arranges parking for the removal van?", answer: "Agree this when planning the job. Check Edinburgh Council's current guidance for any dispensation or bay suspension required at your address; permission and parking charges are not automatically included in a quote." },
+      { question: "Can I share a move with another student?", answer: "Provide everyone's belongings, stops and access windows in one enquiry. A shared move depends on compatible timings, the route and vehicle capacity; it is not automatically cheaper or available." },
+      { question: "Can I move from Edinburgh to another city?", answer: "Request a quote using the full destination address, inventory and date. Include the receiving floor, loading access and key arrangements, including any additional stop on the journey." },
+    ],
+  },
   glasgow: {
     metadataTitle: "Man and Van Glasgow | Furniture & Home Moves",
     introduction:

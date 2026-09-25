@@ -1560,7 +1560,8 @@
       "kind": "city-service",
       "sources": [
         "https://www.accom.ed.ac.uk/living-with-us/moving-in",
-        "https://transport.ed.ac.uk/travelling-here/pollock"
+        "https://transport.ed.ac.uk/travelling-here/pollock",
+        "https://www.accom.ed.ac.uk/living-with-us/moving-out"
       ]
     },
     {
