@@ -5,7 +5,7 @@
   "builds": [
     {
       "src": "api-entry.cjs",
-      "use": "@vercel/node@13.0.1",
+      "use": "@vercel/node@13.0.2",
       "config": {
         "includeFiles": [
           "dist/vercel/source-manifest.json",

@@ -20,6 +20,7 @@ Source baseline: `a40072989ce6964e3cbbd150e1d1ca5fda5ed527` on `main`.
 - Add a Glasgow guide covering tenement access, furniture collection, loading, city-centre access, quote scope and short-notice enquiries. Add a matching pricing section. No new prices, reviews, branches, capacity promises or availability guarantees.
 - Add fixed, truthful content update dates for the three changed city hubs and pricing. Other sitemap entries keep their dates omitted.
 - Use the existing metadata helper for the about page and reconcile the inventory count to 251.
+- Align both API deployment builder pins to `@vercel/node@13.0.2`. The first preview failed before building application code because `13.0.1` required `@vercel/build-utils@14.10.1` while Vercel supplied `14.10.2`; the patch release declares the matching `14.10.2` peer. No forced dependency resolution or API contract changes.
 
 ## Validation
 
@@ -28,6 +29,8 @@ Verified before upload: 126 regression tests passed; production build and lint p
 To reproduce, run `npm run test:regression`, `npm run lint --workspace apps/web`, and `npm run build --workspace apps/web`. Run `scripts/seo-local-qa.py` against the built server; it checks all sitemap URLs, metadata, canonical links, structured data, status codes, internal links, draft-safe quote URLs and the three cities' CTA context.
 
 The HTTP checks do not establish field Core Web Vitals, Google indexing, ranking, qualified calls or revenue. Production source and behaviour must be confirmed after merge, not inferred from a successful local build.
+
+The web preview also passed a real-browser check: a new visitor could see the service selector, decline optional cookies, select house removals and reach the journey form. The deployment builder patch is additionally checked by the API packaging and request-adapter regression suite and the cloud preview build.
 
 ## Evidence and operational limits
 
