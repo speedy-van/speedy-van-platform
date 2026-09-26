@@ -1,11 +1,13 @@
 "use client";
 
-import React, { useMemo, useRef, useState } from "react";
-import { useBooking, type TimeSlot } from "@/lib/booking-store";
+import React, { useEffect, useMemo, useState } from "react";
+import { computeTotalVolumeM3 } from "@speedy-van/shared";
+import { STEP_PRIMARY_CTA_ID } from "@/lib/booking-steps";
 import { getBookingPricingKey } from "@/lib/booking-quote";
-import { WeatherChip } from "./WeatherChip";
-import { type DayPrice, type SlotData } from "./quote-response";
+import { useBooking, type SelectedItem, type TimeSlot } from "@/lib/booking-store";
 import { PriceLockCard } from "./PriceLockCard";
+import { type DayPrice, type SlotData } from "./quote-response";
+import { WeatherChip } from "./WeatherChip";
 
 export interface SchedulePickerProps {
   onBack?: () => void;
@@ -97,50 +99,135 @@ function getPriceBand(price: number, scale: number[]): PriceBand {
   return "red";
 }
 
-function QuoteSkeleton() {
-  const skeletonCard: React.CSSProperties = { background: "rgba(255,255,255,0.04)", boxShadow: "0 0 0 1px rgba(245,158,11,0.12)" };
+function findCheapestSlot(days: DayPrice[]): { day: DayPrice; slot: SlotData } | null {
+  let cheapest: { day: DayPrice; slot: SlotData } | null = null;
+  for (const day of days) {
+    for (const slot of day.slots) {
+      if (!cheapest || slot.price < cheapest.slot.price) {
+        cheapest = { day, slot };
+      }
+    }
+  }
+  return cheapest;
+}
+
+function formatLoadVolume(items: SelectedItem[]): string {
+  const totalVolumeM3 = computeTotalVolumeM3(items);
+  return totalVolumeM3 >= 1 ? totalVolumeM3.toFixed(1) : totalVolumeM3.toFixed(2);
+}
+
+function PricingChecklist({ distanceMiles, items }: { distanceMiles: number; items: SelectedItem[] }) {
+  const [activeStep, setActiveStep] = useState(0);
+  const itemCount = items.reduce((total, item) => total + item.quantity, 0);
+  const loadVolume = formatLoadVolume(items);
+  const totalVolumeM3 = computeTotalVolumeM3(items);
+  const bulkyLoad = itemCount > 4 && totalVolumeM3 >= 1;
+
+  useEffect(() => {
+    const id = window.setInterval(() => {
+      setActiveStep((current) => (current + 1) % 4);
+    }, 900);
+    return () => window.clearInterval(id);
+  }, []);
+
+  const cardStyle: React.CSSProperties = {
+    background: "rgba(245,158,11,0.10)",
+    boxShadow: "0 0 0 1px rgba(245,158,11,0.28), 0 16px 44px rgba(0,0,0,0.35)",
+  };
+  const mutedCard: React.CSSProperties = {
+    background: "rgba(255,255,255,0.04)",
+    boxShadow: "0 0 0 1px rgba(255,255,255,0.08)",
+  };
+  const steps = [
+    { title: "Reading your route", detail: `${distanceMiles.toFixed(1)} miles confirmed` },
+    { title: "Checking item volume", detail: `${itemCount} item${itemCount === 1 ? "" : "s"} - ${loadVolume} m3` },
+    {
+      title: bulkyLoad ? "Matching bulky load pricing" : "Matching van space",
+      detail: bulkyLoad ? "Large inventory rules selected" : "Vehicle capacity being checked",
+    },
+    { title: "Securing live price", detail: "Dates and slots are being priced" },
+  ];
+
   return (
     <section
       className="space-y-4"
       role="status"
-      aria-label="Loading available dates and prices"
+      aria-label="Calculating your quote"
       aria-live="polite"
     >
-      {/* Date rail skeleton */}
-      <div className="rounded-2xl p-4" style={skeletonCard}>
-        <div className="flex items-center justify-between">
-          <div className="space-y-2">
-            <div className="h-5 w-32 animate-pulse rounded-lg bg-white/10" />
-            <div className="h-3 w-48 animate-pulse rounded-full bg-white/6" />
+      <div className="rounded-2xl p-5" style={cardStyle}>
+        <div className="flex flex-wrap items-start justify-between gap-4">
+          <div>
+            <p className="text-xs font-black uppercase tracking-widest text-amber-400/75">Calculating your price</p>
+            <h2 className="mt-2 text-2xl font-black text-white">Final checks in progress</h2>
           </div>
-          <div className="flex gap-2">
-            <div className="h-10 w-20 animate-pulse rounded-xl bg-white/8" />
-            <div className="h-10 w-14 animate-pulse rounded-xl bg-white/8" />
+          <span className="rounded-full bg-amber-500 px-3 py-1 text-xs font-black text-black">
+            Working
+          </span>
+        </div>
+
+        <div className="mt-5 grid gap-2">
+          {steps.map((step, index) => {
+            const done = index < activeStep;
+            const active = index === activeStep;
+            return (
+              <div
+                key={step.title}
+                className={`grid min-h-16 grid-cols-[32px_minmax(0,1fr)_auto] items-center gap-3 rounded-xl px-3 py-2 ${
+                  active ? "ring-1 ring-amber-500/50" : "ring-1 ring-white/8"
+                }`}
+                style={active ? { background: "rgba(245,158,11,0.12)" } : mutedCard}
+              >
+                <span
+                  className={`flex h-8 w-8 items-center justify-center rounded-full text-sm font-black ${
+                    done
+                      ? "bg-emerald-500 text-black"
+                      : active
+                        ? "bg-amber-500 text-black"
+                        : "bg-white/8 text-white/45"
+                  }`}
+                >
+                  {done ? "✓" : index + 1}
+                </span>
+                <span className="min-w-0">
+                  <span className="block truncate text-sm font-black text-white">{step.title}</span>
+                  <span className="block truncate text-xs font-semibold text-amber-100/55">{step.detail}</span>
+                </span>
+                <span className={`text-[11px] font-black uppercase tracking-widest ${active ? "text-amber-400" : done ? "text-emerald-400" : "text-white/35"}`}>
+                  {active ? "Checking" : done ? "Done" : "Queued"}
+                </span>
+              </div>
+            );
+          })}
+        </div>
+
+        {bulkyLoad && (
+          <div className="mt-3 rounded-xl bg-red-500/10 px-3 py-2 text-sm font-bold text-red-300 ring-1 ring-red-500/25">
+            Bulky load detected
           </div>
-        </div>
-        <div className="mt-4 flex gap-2 overflow-hidden">
-          {Array.from({ length: 6 }).map((_, i) => (
-            <div
-              key={i}
-              className="h-[76px] w-28 shrink-0 animate-pulse rounded-xl bg-white/8"
-              style={{ animationDelay: `${i * 60}ms` }}
-            />
-          ))}
-        </div>
+        )}
       </div>
 
-      {/* Slots skeleton */}
-      <div className="rounded-2xl p-4" style={skeletonCard}>
-        <div className="h-5 w-40 animate-pulse rounded-lg bg-white/10" />
-        <div className="mt-4 grid gap-3 sm:grid-cols-3">
-          {Array.from({ length: 3 }).map((_, i) => (
-            <div
-              key={i}
-              className="h-[132px] animate-pulse rounded-2xl bg-white/8"
-              style={{ animationDelay: `${i * 80}ms` }}
-            />
-          ))}
-        </div>
+      <div className="space-y-3">
+        {Array.from({ length: 4 }).map((_, index) => (
+          <div key={index} className="grid grid-cols-[28px_minmax(0,1fr)] gap-3">
+            <div className="relative flex justify-center">
+              <span className="mt-5 h-3 w-3 rounded-full bg-amber-500/30" />
+              {index < 3 && <span className="absolute top-10 h-[calc(100%+12px)] w-px bg-white/10" />}
+            </div>
+            <div className="rounded-2xl p-4" style={mutedCard}>
+              <div className="h-5 w-40 rounded-lg bg-white/10" />
+              <div className="mt-4 grid gap-2 sm:grid-cols-3">
+                {Array.from({ length: 3 }).map((_, slotIndex) => (
+                  <div
+                    key={slotIndex}
+                    className="h-[86px] rounded-xl bg-white/8"
+                  />
+                ))}
+              </div>
+            </div>
+          </div>
+        ))}
       </div>
     </section>
   );
@@ -149,13 +236,18 @@ function QuoteSkeleton() {
 export function SchedulePicker({ onBack, onContinue }: SchedulePickerProps) {
   const { state, dispatch } = useBooking();
   const [validationError, setValidationError] = useState("");
-  const datesRailRef = useRef<HTMLDivElement | null>(null);
   const pricing = state.quoteInputKey === getBookingPricingKey(state) ? state.quoteCalendar : null;
   const error = state.quoteStatus === "failed" ? state.quoteError : "";
   const loading = !pricing && state.quoteStatus !== "failed";
   const selectedDayData = pricing?.days.find((day) => day.date === state.selectedDate);
   const selectedSlotData = selectedDayData?.slots.find((slot) => slot.slot === state.selectedTimeSlot);
   const priceScale = useMemo(() => (pricing ? buildPriceScale(pricing.days) : []), [pricing]);
+  const cheapestSlot = useMemo(() => (pricing ? findCheapestSlot(pricing.days) : null), [pricing]);
+  const cheapestSlotKey = cheapestSlot ? `${cheapestSlot.day.date}:${cheapestSlot.slot.slot}` : "";
+  const cardStyle: React.CSSProperties = {
+    background: "rgba(255,255,255,0.04)",
+    boxShadow: "0 0 0 1px rgba(245,158,11,0.15), 0 8px 32px rgba(0,0,0,0.4)",
+  };
 
   function chooseSlot(day: DayPrice, slot: SlotData) {
     setValidationError("");
@@ -173,19 +265,14 @@ export function SchedulePicker({ onBack, onContinue }: SchedulePickerProps) {
       setValidationError("Please choose a date and time.");
       return;
     }
+    if (state.quoteExpiresAt > 0 && Date.now() >= state.quoteExpiresAt) {
+      setValidationError("Your quote has expired. Refresh the price before continuing.");
+      return;
+    }
     setValidationError("");
     dispatch({ type: "SET_STEP", step: 5 });
     onContinue?.();
   }
-
-  function scrollDates(direction: "previous" | "next") {
-    datesRailRef.current?.scrollBy({
-      left: direction === "next" ? 260 : -260,
-      behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
-    });
-  }
-
-  const cardStyle: React.CSSProperties = { background: "rgba(255,255,255,0.04)", boxShadow: "0 0 0 1px rgba(245,158,11,0.15), 0 8px 32px rgba(0,0,0,0.4)" };
 
   return (
     <section className="space-y-6">
@@ -193,14 +280,14 @@ export function SchedulePicker({ onBack, onContinue }: SchedulePickerProps) {
         <button
           type="button"
           onClick={onBack ?? (() => dispatch({ type: "SET_STEP", step: 3 }))}
-          className="mb-4 inline-flex min-h-10 items-center gap-1.5 rounded-lg px-3 text-sm font-semibold text-amber-400/70 transition hover:text-amber-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400"
+          className="hidden"
         >
           <span aria-hidden="true">←</span> Back
         </button>
         <p className="text-xs font-bold uppercase tracking-widest text-amber-400">Step 3 of 4 · Date &amp; Time</p>
         <h1 className="mt-2 text-3xl font-black tracking-tight text-white">Date and time</h1>
         <p className="mt-2 max-w-2xl text-base leading-7 text-amber-100/55">
-          Choose an available date — prices vary by slot. Your total updates instantly.
+          Choose an available date - prices vary by slot. Your total updates instantly.
         </p>
         <div className="mt-4">
           <WeatherChip lat={state.pickup?.lat} lng={state.pickup?.lng} />
@@ -208,7 +295,7 @@ export function SchedulePicker({ onBack, onContinue }: SchedulePickerProps) {
       </div>
 
       {loading ? (
-        <QuoteSkeleton />
+        <PricingChecklist distanceMiles={state.distanceMiles} items={state.items} />
       ) : error ? (
         <div className="rounded-2xl p-5 text-sm" style={{ background: "rgba(239,68,68,0.10)", boxShadow: "0 0 0 1px rgba(239,68,68,0.25)" }} role="alert">
           <p className="font-black text-red-400">Quote unavailable</p>
@@ -223,111 +310,127 @@ export function SchedulePicker({ onBack, onContinue }: SchedulePickerProps) {
         </div>
       ) : pricing ? (
         <>
-          {/* ── Date rail ── */}
-          <section className="rounded-2xl p-4" style={cardStyle}>
-            <div className="flex flex-wrap items-center justify-between gap-3">
-              <div>
-                <h2 className="text-base font-black text-white">Available dates</h2>
-                <p className="text-sm text-amber-100/55">{pricing.days.length}-day booking horizon from current pricing.</p>
-              </div>
-              <div className="flex gap-2">
+          {cheapestSlot && (
+            <section
+              className="rounded-2xl p-5"
+              style={{ background: "rgba(245,158,11,0.10)", boxShadow: "0 0 0 1px rgba(245,158,11,0.30), 0 16px 40px rgba(0,0,0,0.35)" }}
+              aria-label="Cheapest available price"
+            >
+              <div className="flex flex-wrap items-end justify-between gap-4">
+                <div>
+                  <p className="text-xs font-black uppercase tracking-widest text-amber-400/75">Starts from</p>
+                  <p className="mt-1 text-4xl font-black tracking-tight text-white sm:text-5xl">
+                    {money.format(cheapestSlot.slot.price)}
+                  </p>
+                  <p className="mt-2 text-sm font-semibold text-amber-100/60">
+                    Cheapest: {formatDate(cheapestSlot.day.date)}, {SLOT_LABELS[cheapestSlot.slot.slot]}
+                  </p>
+                </div>
                 <button
                   type="button"
-                  onClick={() => scrollDates("previous")}
-                  className="min-h-10 rounded-xl px-3 text-sm font-bold text-white/60 transition hover:text-white/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400"
-                  style={{ background: "rgba(255,255,255,0.07)", boxShadow: "0 0 0 1px rgba(255,255,255,0.10)" }}
-                  aria-label="Show previous dates"
+                  onClick={() => chooseSlot(cheapestSlot.day, cheapestSlot.slot)}
+                  className="min-h-11 rounded-xl bg-amber-500 px-4 text-sm font-black text-black transition hover:bg-amber-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-300"
                 >
-                  ← Prev
-                </button>
-                <button
-                  type="button"
-                  onClick={() => scrollDates("next")}
-                  className="min-h-10 rounded-xl px-3 text-sm font-bold text-white/60 transition hover:text-white/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400"
-                  style={{ background: "rgba(255,255,255,0.07)", boxShadow: "0 0 0 1px rgba(255,255,255,0.10)" }}
-                  aria-label="Show next dates"
-                >
-                  Next →
+                  Select cheapest
                 </button>
               </div>
+            </section>
+          )}
+
+          <section className="space-y-4" aria-label="Available date timeline">
+            <div>
+              <h2 className="text-base font-black text-white">Available dates</h2>
+              <p className="text-sm text-amber-100/55">{pricing.days.length}-day booking horizon from current pricing.</p>
             </div>
-            <div ref={datesRailRef} className="mt-4 overflow-x-auto pb-1">
-              <div className="flex min-w-max gap-2">
-                {pricing.days.map((day) => {
-                  const selected = day.date === state.selectedDate;
-                  const dayMinPrice = Math.min(...day.slots.map((slot) => slot.price));
-                  const priceBand = getPriceBand(dayMinPrice, priceScale);
-                  const bandStyles = PRICE_BAND_STYLES[priceBand];
-                  return (
-                    <button
-                      key={day.date}
-                      type="button"
-                      onClick={() => dispatch({ type: "SET_DATE", date: day.date })}
-                      className="min-h-[76px] w-28 rounded-xl px-3 py-2 text-left transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400"
-                      style={selected ? bandStyles.selectedCardStyle : bandStyles.cardStyle}
-                      aria-pressed={selected}
-                      aria-label={`${formatDate(day.date)}, from ${money.format(dayMinPrice)}, ${PRICE_BAND_LABELS[priceBand]}`}
+
+            <div className="space-y-3">
+              {pricing.days.map((day, index) => {
+                const selected = day.date === state.selectedDate;
+                const dayMinPrice = Math.min(...day.slots.map((slot) => slot.price));
+                const dayPriceBand = getPriceBand(dayMinPrice, priceScale);
+                const dayBandStyles = PRICE_BAND_STYLES[dayPriceBand];
+                const isCheapestDay = (pricing.cheapestDay || state.cheapestDay) === day.date;
+                return (
+                  <article key={day.date} className="grid grid-cols-[28px_minmax(0,1fr)] gap-3">
+                    <div className="relative flex justify-center">
+                      <span
+                        className={`mt-6 h-3.5 w-3.5 rounded-full ${selected ? "bg-amber-400" : isCheapestDay ? "bg-emerald-400" : "bg-white/20"}`}
+                        aria-hidden="true"
+                      />
+                      {index < pricing.days.length - 1 && (
+                        <span className="absolute top-11 h-[calc(100%+12px)] w-px bg-white/10" aria-hidden="true" />
+                      )}
+                    </div>
+
+                    <div
+                      className="rounded-2xl p-4"
+                      style={selected ? dayBandStyles.selectedCardStyle : cardStyle}
                     >
-                      <span className="block text-sm font-bold text-white">{formatDate(day.date)}</span>
-                      <span className={`mt-1 block text-xs font-bold ${bandStyles.price}`}>
-                        From {money.format(dayMinPrice)}
-                      </span>
-                      <span className={`mt-2 inline-flex rounded-full px-2 py-0.5 text-[11px] font-bold ${bandStyles.badge}`}>
-                        {PRICE_BAND_LABELS[priceBand]}
-                      </span>
-                    </button>
-                  );
-                })}
-              </div>
+                      <div className="flex flex-wrap items-start justify-between gap-3">
+                        <div>
+                          <h3 className="text-base font-black text-white">{formatDate(day.date)}</h3>
+                          <p className={`mt-1 text-sm font-black ${dayBandStyles.price}`}>
+                            From {money.format(dayMinPrice)}
+                          </p>
+                        </div>
+                        <div className="flex flex-wrap justify-end gap-2">
+                          {isCheapestDay && (
+                            <span className="rounded-full bg-emerald-500 px-2.5 py-1 text-[11px] font-black text-black">
+                              Cheapest day
+                            </span>
+                          )}
+                          <span className={`rounded-full px-2.5 py-1 text-[11px] font-bold ${dayBandStyles.badge}`}>
+                            {PRICE_BAND_LABELS[dayPriceBand]}
+                          </span>
+                        </div>
+                      </div>
+
+                      <div className="mt-4 grid gap-2 sm:grid-cols-3">
+                        {day.slots.map((slot) => {
+                          const slotSelected = state.selectedDate === day.date && selectedSlotData?.slot === slot.slot;
+                          const slotPriceBand = getPriceBand(slot.price, priceScale);
+                          const slotBandStyles = PRICE_BAND_STYLES[slotPriceBand];
+                          const isCheapestSlot = cheapestSlotKey === `${day.date}:${slot.slot}`;
+                          return (
+                            <button
+                              key={slot.slot}
+                              type="button"
+                              onClick={() => chooseSlot(day, slot)}
+                              aria-pressed={slotSelected}
+                              className="min-h-[92px] rounded-xl p-3 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400"
+                              style={slotSelected ? slotBandStyles.selectedCardStyle : slotBandStyles.cardStyle}
+                              aria-label={`${formatDate(day.date)}, ${SLOT_LABELS[slot.slot]}, ${money.format(slot.price)}, ${PRICE_BAND_LABELS[slotPriceBand]}${isCheapestSlot ? ", cheapest slot" : ""}`}
+                            >
+                              <span className="flex items-center justify-between gap-2">
+                                <span className="flex items-center gap-2 text-sm font-black text-white">
+                                  <span className={`h-2.5 w-2.5 rounded-full ${slotBandStyles.dot}`} aria-hidden="true" />
+                                  {SLOT_LABELS[slot.slot]}
+                                </span>
+                                {isCheapestSlot && (
+                                  <span className="rounded-full bg-emerald-500 px-2 py-0.5 text-[10px] font-black text-black">
+                                    Best
+                                  </span>
+                                )}
+                              </span>
+                              <span className={`mt-3 block text-xl font-black ${slotBandStyles.price}`}>
+                                {money.format(slot.price)}
+                              </span>
+                              <span className="mt-2 block text-xs font-bold text-white/45">
+                                {slotSelected ? "Selected" : PRICE_BAND_LABELS[slotPriceBand]}
+                              </span>
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  </article>
+                );
+              })}
             </div>
           </section>
 
-          {/* ── Time slots ── */}
-          <section className="rounded-2xl p-4" style={cardStyle}>
-            <h2 className="text-base font-black text-white">
-              {state.selectedDate ? `Slots for ${formatDate(state.selectedDate)}` : "Choose a date to see slots"}
-            </h2>
-            {selectedDayData ? (
-              <div className="mt-4 grid gap-3 sm:grid-cols-3">
-                {selectedDayData.slots.map((slot) => {
-                  const selected = selectedSlotData?.slot === slot.slot;
-                  const priceBand = getPriceBand(slot.price, priceScale);
-                  const bandStyles = PRICE_BAND_STYLES[priceBand];
-                  return (
-                    <button
-                      key={slot.slot}
-                      type="button"
-                      onClick={() => chooseSlot(selectedDayData, slot)}
-                      aria-pressed={selected}
-                      className="min-h-[132px] rounded-2xl p-4 text-left transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400"
-                      style={selected ? bandStyles.selectedCardStyle : bandStyles.cardStyle}
-                      aria-label={`${SLOT_LABELS[slot.slot]}, ${money.format(slot.price)}, ${PRICE_BAND_LABELS[priceBand]}`}
-                    >
-                      <span className="flex items-center gap-2 text-base font-black text-white">
-                        <span className={`h-2.5 w-2.5 rounded-full ${bandStyles.dot}`} aria-hidden="true" />
-                        {SLOT_LABELS[slot.slot]}
-                      </span>
-                      <span className={`mt-3 inline-flex rounded-full px-2.5 py-1 text-xs font-bold ${bandStyles.badge}`}>
-                        {PRICE_BAND_LABELS[priceBand]}
-                      </span>
-                      <span className={`mt-4 block text-2xl font-black ${bandStyles.price}`}>
-                        {money.format(slot.price)}
-                      </span>
-                      <span className="mt-2 inline-flex rounded-full px-2.5 py-1 text-xs font-bold text-white/50" style={{ background: "rgba(255,255,255,0.08)" }}>
-                        {selected ? "✓ Selected" : "Available"}
-                      </span>
-                    </button>
-                  );
-                })}
-              </div>
-            ) : (
-              <div className="mt-4 rounded-xl p-4 text-sm" style={{ background: "rgba(255,255,255,0.03)", boxShadow: "0 0 0 1px rgba(255,255,255,0.08) " }}>
-                <p className="text-white/40">No date selected yet — choose a date above.</p>
-              </div>
-            )}
-          </section>
+          {selectedSlotData && <PriceLockCard onRefresh={() => dispatch({ type: "RETRY_QUOTE" })} refreshing={loading} />}
 
-          {/* ── Selected slot summary ── */}
           {selectedSlotData && (
             <section
               className="rounded-2xl p-4"
@@ -343,7 +446,7 @@ export function SchedulePicker({ onBack, onContinue }: SchedulePickerProps) {
                     Base subtotal {money.format(pricing.staticSubtotal)}
                     {Math.abs(selectedSlotData.price - pricing.staticSubtotal) >= 0.01
                       ? `, time adjustment ${money.format(selectedSlotData.price - pricing.staticSubtotal)}`
-                      : " · no time adjustment"}
+                      : " - no time adjustment"}
                   </p>
                 </div>
                 <div className="text-right">
@@ -352,10 +455,6 @@ export function SchedulePicker({ onBack, onContinue }: SchedulePickerProps) {
                 </div>
               </div>
             </section>
-          )}
-
-          {selectedSlotData && (
-            <PriceLockCard onRefresh={() => dispatch({ type: "RETRY_QUOTE" })} />
           )}
         </>
       ) : null}
@@ -367,7 +466,7 @@ export function SchedulePicker({ onBack, onContinue }: SchedulePickerProps) {
       )}
 
       <button
-        id="booking-primary-action"
+        id={STEP_PRIMARY_CTA_ID}
         type="button"
         onClick={handleContinue}
         disabled={loading || Boolean(error) || !pricing || state.quoteStatus !== "valid"}
