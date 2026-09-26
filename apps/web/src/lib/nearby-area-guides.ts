@@ -12,6 +12,200 @@ export interface NearbyAreaGroup {
   places: NearbyAreaPlace[];
 }
 
+const GLASGOW_NEARBY_AREA_GROUPS: readonly NearbyAreaGroup[] = [
+  {
+    id: "central-and-west-glasgow",
+    title: "Central and west Glasgow",
+    introduction:
+      "Central and west-side Glasgow enquiries often involve flats, managed buildings, tenements, student rooms and furniture collections. Give the exact entrance, floor, loading point and destination access rather than only the neighbourhood name, because two short Glasgow journeys can need very different lifting and parking plans.",
+    places: [
+      {
+        slug: "city-centre",
+        name: "Glasgow City Centre",
+        description:
+          "For city-centre moves, identify the service entrance or close used for large items and mention any building-managed loading bay. The Low Emission Zone, one-way streets and timed access can affect the vehicle route, so provide both full postcodes and access notes before confirming a collection window.",
+      },
+      {
+        slug: "merchant-city",
+        name: "Merchant City",
+        description:
+          "A Merchant City furniture collection or apartment move may use a different loading entrance from the public doorway. Confirm lift dimensions, concierge rules and seller handover before booking, and list every loose item so the van plan matches the real load.",
+      },
+      {
+        slug: "finnieston",
+        name: "Finnieston",
+        description:
+          "For Finnieston flats and riverside apartments, describe the route from the van to the lift or stair and any booked loading area. If the delivery is to the West End, Southside or another Scottish city, include receiving access as carefully as the collection address.",
+      },
+      {
+        slug: "partick",
+        name: "Partick",
+        description:
+          "Partick enquiries often involve student rooms, shared flats and furniture collections. Separate your own belongings from housemates' items, measure awkward furniture against stair turns, and give any storage or second collection stop when requesting a quote.",
+      },
+      {
+        slug: "glasgow-west-end",
+        name: "Glasgow West End",
+        areaSlug: "glasgow-west-end",
+        description:
+          "West End tenement and student moves need floor numbers, close details and item measurements before the crew and time can be assessed. Use the local page for more detail on Byres Road, Hillhead, Hyndland, Partick and nearby streets.",
+      },
+    ],
+  },
+  {
+    id: "south-and-east-glasgow",
+    title: "South and east Glasgow",
+    introduction:
+      "Southside and east-side moves often combine flat access, garden paths, storage collections and short cross-city routes. Include the carrying distance from the loading point, any shared entrance and the full delivery address so the quote covers the actual job rather than just the drive.",
+    places: [
+      {
+        slug: "glasgow-southside",
+        name: "Glasgow Southside",
+        areaSlug: "glasgow-southside",
+        description:
+          "Southside moves around Shawlands, Pollokshields, Mount Florida and nearby streets should include stairs, garden paths, long carries and any additional stop. Use the Southside guide for more specific planning notes.",
+      },
+      {
+        slug: "shawlands",
+        name: "Shawlands",
+        description:
+          "For a Shawlands flat, furniture collection or small house move, state whether the entrance is from the main road, a side street or a shared close. Give the number of boxes and the largest furniture dimensions so capacity and lifting help can be checked.",
+      },
+      {
+        slug: "pollokshields",
+        name: "Pollokshields",
+        description:
+          "Pollokshields enquiries can involve larger homes, tenement flats or collections from a second address. List outdoor, garage and storage items separately and flag any long path or restricted stopping point near the property.",
+      },
+      {
+        slug: "dennistoun",
+        name: "Dennistoun",
+        description:
+          "For Dennistoun tenements and apartment blocks, describe shared stairs, entry systems and where the van can legally load. A sofa, mattress or wardrobe should be measured against the stair route before collection is agreed.",
+      },
+      {
+        slug: "parkhead",
+        name: "Parkhead",
+        description:
+          "Parkhead furniture and household moves should include full item details, any seller handover and the delivery floor. If the route continues to Rutherglen, Cambuslang or another town, include every stop in one enquiry.",
+      },
+    ],
+  },
+  {
+    id: "greater-glasgow-towns",
+    title: "Greater Glasgow towns",
+    introduction:
+      "The towns around Glasgow can be served for local moves, furniture deliveries and routes into or out of the city. Where a dedicated town page exists, use it for local access notes; otherwise include the full postcode, property entrance and route details in the booking enquiry.",
+    places: [
+      {
+        slug: "paisley",
+        name: "Paisley",
+        areaSlug: "paisley",
+        description:
+          "Paisley moves often connect with Glasgow, Renfrew and storage stops. Include the complete route, item list and access at both ends so the vehicle, collection order and delivery window can be planned together.",
+      },
+      {
+        slug: "renfrew",
+        name: "Renfrew",
+        areaSlug: "renfrew",
+        description:
+          "For Renfrew and Braehead-area collections, confirm the actual goods entrance, seller or shop handover and the receiving access. A short route into west Glasgow still needs floor and lifting details.",
+      },
+      {
+        slug: "clydebank",
+        name: "Clydebank",
+        areaSlug: "clydebank",
+        description:
+          "Clydebank enquiries can include local flat moves, furniture delivery and onward moves into Glasgow or West Dunbartonshire. Give full postcodes, stairs, lift details and any additional collection before requesting a price.",
+      },
+      {
+        slug: "bearsden",
+        name: "Bearsden",
+        areaSlug: "bearsden",
+        description:
+          "Bearsden moves should describe driveway access, room inventory and any furniture requiring dismantling. If the route includes Milngavie, Anniesland or Glasgow West End, list the stops and key timings from the start.",
+      },
+      {
+        slug: "milngavie",
+        name: "Milngavie",
+        areaSlug: "milngavie",
+        description:
+          "For Milngavie furniture collections and house moves, include the full route and any driveway, gate or narrow access details. Tell us whether the load travels locally, into Glasgow or to another destination in Britain.",
+      },
+      {
+        slug: "bishopbriggs",
+        name: "Bishopbriggs",
+        areaSlug: "bishopbriggs",
+        description:
+          "Bishopbriggs moves can cover smaller loads, full home removals and north Glasgow links. Provide both addresses, the inventory and any loading restrictions before arranging the vehicle and crew.",
+      },
+      {
+        slug: "rutherglen",
+        name: "Rutherglen",
+        areaSlug: "rutherglen",
+        description:
+          "Rutherglen enquiries often connect with Glasgow Southside, Cambuslang and Hamilton. Add destination access, key handover and any extra stop so the quote covers the complete route.",
+      },
+      {
+        slug: "cambuslang",
+        name: "Cambuslang",
+        description:
+          "For Cambuslang collections or moves into Glasgow, list the exact items and access at each property. If belongings are split between storage and a home, label the groups before the van is planned.",
+      },
+    ],
+  },
+  {
+    id: "outer-places-close-to-glasgow",
+    title: "Outer places close to Glasgow",
+    introduction:
+      "Outer villages and smaller communities need more precise address details than a city-centre move. Give the property name or number, full postcode, driveway or gate details, and any turning limitations so access can be checked before booking.",
+    places: [
+      {
+        slug: "kirkintilloch",
+        name: "Kirkintilloch",
+        areaSlug: "kirkintilloch",
+        description:
+          "Kirkintilloch moves may involve a local collection, a route into north Glasgow or a longer delivery. Include the full route and whether any access is from a lane, driveway or shared entrance.",
+      },
+      {
+        slug: "giffnock",
+        name: "Giffnock",
+        areaSlug: "giffnock",
+        description:
+          "For Giffnock household moves and furniture delivery, describe driveway space, internal stairs and the receiving room. If the move links to Newton Mearns or Glasgow Southside, provide each stop in the enquiry.",
+      },
+      {
+        slug: "newton-mearns",
+        name: "Newton Mearns",
+        areaSlug: "newton-mearns",
+        description:
+          "Newton Mearns moves should include room-by-room contents, driveway access and any heavy garden or garage items. Mention whether the delivery stays local or goes to Glasgow, Renfrewshire or another UK city.",
+      },
+      {
+        slug: "barrhead",
+        name: "Barrhead",
+        areaSlug: "barrhead",
+        description:
+          "For Barrhead collections and removals, list the load and any shared or narrow access. A move into Glasgow or East Renfrewshire should include key timings and unloading details at the destination.",
+      },
+      {
+        slug: "erskine",
+        name: "Erskine",
+        areaSlug: "erskine",
+        description:
+          "Erskine moves can connect with Renfrew, Paisley, Glasgow Airport and west Glasgow. Provide every stop and the property access so the route and lifting work can be assessed together.",
+      },
+      {
+        slug: "johnstone",
+        name: "Johnstone",
+        areaSlug: "johnstone",
+        description:
+          "For Johnstone moves, include house, flat, seller or storage details in one item list. If the delivery goes to Glasgow or another town, provide the complete destination rather than a broad area name.",
+      },
+    ],
+  },
+];
+
 const INVERNESS_NEARBY_AREA_GROUPS: readonly NearbyAreaGroup[] = [
   {
     id: "east-inverness-and-nairn",
@@ -211,6 +405,7 @@ const ABERDEEN_NEARBY_AREA_GROUPS: readonly NearbyAreaGroup[] = [
 ];
 
 export function getNearbyAreaGroups(slug: string): readonly NearbyAreaGroup[] {
+  if (slug === "glasgow") return GLASGOW_NEARBY_AREA_GROUPS;
   if (slug === "inverness") return INVERNESS_NEARBY_AREA_GROUPS;
   if (slug === "aberdeen") return ABERDEEN_NEARBY_AREA_GROUPS;
   return [];
