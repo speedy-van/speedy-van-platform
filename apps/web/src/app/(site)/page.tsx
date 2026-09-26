@@ -17,7 +17,7 @@ import {
   buildFaqSchema,
   buildServiceCatalogSchema,
 } from "@/lib/seo/schemas";
-import { SITE_OG_IMAGE, SITE_URL } from "@/lib/seo/constants";
+import { SITE_OG_IMAGE, SITE_OG_IMAGE_HEIGHT, SITE_OG_IMAGE_WIDTH, SITE_URL } from "@/lib/seo/constants";
 import {
   BOOKING_SERVICE_OPTIONS,
 } from "@/lib/booking-service-options";
@@ -38,8 +38,8 @@ export const metadata: Metadata = {
     images: [
       {
         url: SITE_OG_IMAGE,
-        width: 1200,
-        height: 630,
+        width: SITE_OG_IMAGE_WIDTH,
+        height: SITE_OG_IMAGE_HEIGHT,
         alt: "SpeedyVan – Man and Van & Removals Across Scotland",
       },
     ],

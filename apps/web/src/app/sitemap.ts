@@ -30,7 +30,7 @@ const staticPages: SitemapPage[] = [
 
 // Actual content review dates, not the build time or a claim about Google indexing.
 const contentUpdatedAt: Record<string, string> = {
-  "/areas/glasgow": "2026-09-25",
+  "/areas/glasgow": "2026-09-26",
   "/areas/aberdeen": "2026-09-25",
   "/areas/inverness": "2026-09-25",
   "/areas/edinburgh": "2026-09-25",

@@ -20,7 +20,7 @@ const GLASGOW_NEARBY_AREA_GROUPS: readonly NearbyAreaGroup[] = [
       "Central and west-side Glasgow enquiries often involve flats, managed buildings, tenements, student rooms and furniture collections. Give the exact entrance, floor, loading point and destination access rather than only the neighbourhood name, because two short Glasgow journeys can need very different lifting and parking plans.",
     places: [
       {
-        slug: "city-centre",
+        slug: "city-centre-moves",
         name: "Glasgow City Centre",
         description:
           "For city-centre moves, identify the service entrance or close used for large items and mention any building-managed loading bay. The Low Emission Zone, one-way streets and timed access can affect the vehicle route, so provide both full postcodes and access notes before confirming a collection window.",

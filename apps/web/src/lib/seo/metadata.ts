@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { SITE_NAME, SITE_OG_IMAGE, absoluteUrl } from "./constants";
+import { SITE_NAME, SITE_OG_IMAGE, SITE_OG_IMAGE_HEIGHT, SITE_OG_IMAGE_WIDTH, absoluteUrl } from "./constants";
 
 interface PageMetadataInput {
   title: string;
@@ -24,7 +24,7 @@ export function buildPageMetadata({ title, description, path }: PageMetadataInpu
       title: socialTitle,
       description,
       url: canonical,
-      images: [{ url: SITE_OG_IMAGE, width: 1200, height: 630, alt: socialTitle }],
+      images: [{ url: SITE_OG_IMAGE, width: SITE_OG_IMAGE_WIDTH, height: SITE_OG_IMAGE_HEIGHT, alt: socialTitle }],
     },
     twitter: {
       card: "summary_large_image",

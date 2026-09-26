@@ -215,7 +215,8 @@ def main():
     check("Sitemap contains the actual source URLs without duplicates", bool(urls) and len(urls) == len(set(urls)) and set(urls) == set(expected["urls"]))
     check("Source sitemap has no duplicate URL definitions", len(expected["urls"]) == len(set(expected["urls"])))
     check("Sitemap contains only canonical HTTPS URLs", all(url and url.startswith(PRIMARY + "/") or url == PRIMARY for url in urls))
-    documented_updates = {PRIMARY + path: "2026-09-25" for path in ["/areas/glasgow", "/areas/aberdeen", "/areas/inverness", "/areas/edinburgh", "/areas/edinburgh/student-move", "/pricing"]}
+    documented_updates = {PRIMARY + path: "2026-09-25" for path in ["/areas/aberdeen", "/areas/inverness", "/areas/edinburgh", "/areas/edinburgh/student-move", "/pricing"]}
+    documented_updates[PRIMARY + "/areas/glasgow"] = "2026-09-26"
     actual_updates = {node.findtext("{*}loc"): node.findtext("{*}lastmod") for node in root.findall("{*}url") if node.find("{*}lastmod") is not None}
     check("Sitemap dates match documented content updates, without build-time timestamps", actual_updates == documented_updates)
     check("Sitemap excludes private and unsupported routes", not any(any(part in urlparse(url).path.split("/") for part in ["book", "auth", "driver", "admin", "track", "jobs", "api", "rubbish-removal"]) for url in urls))

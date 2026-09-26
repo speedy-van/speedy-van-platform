@@ -10,7 +10,7 @@ import { SERVICES, getServicePriceLabel } from "@/lib/services";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { buildBreadcrumbSchema } from "@/lib/seo/schemas";
 import { buildPageMetadata } from "@/lib/seo/metadata";
-import { SITE_LEGAL_NAME, SITE_OG_IMAGE, SITE_URL, absoluteUrl } from "@/lib/seo/constants";
+import { SITE_LEGAL_NAME, SITE_OG_IMAGE, SITE_OG_IMAGE_HEIGHT, SITE_OG_IMAGE_WIDTH, SITE_URL, absoluteUrl } from "@/lib/seo/constants";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -53,8 +53,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       images: [
         {
           url: SITE_OG_IMAGE,
-          width: 1200,
-          height: 630,
+          width: SITE_OG_IMAGE_WIDTH,
+          height: SITE_OG_IMAGE_HEIGHT,
           alt: `${area.headline} – SpeedyVan`,
         },
       ],
