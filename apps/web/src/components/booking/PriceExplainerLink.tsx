@@ -42,7 +42,7 @@ export function PriceExplainerLink() {
           onClick={() => setOpen(false)}
         >
           <div
-            className="w-full sm:max-w-md rounded-t-3xl sm:rounded-3xl p-6 max-h-[85vh] overflow-y-auto animate-in slide-in-from-bottom duration-300"
+            className="w-full sm:max-w-md rounded-t-3xl sm:rounded-3xl p-6 max-h-[85vh] overflow-y-auto"
             style={{ background: "#1A1200", boxShadow: "0 0 0 1px rgba(245,158,11,0.25), 0 24px 64px rgba(0,0,0,0.7)" }}
             onClick={(e) => e.stopPropagation()}
           >

@@ -161,7 +161,16 @@ app.post(
 
 app.post("/:id/recalculate", async (c) => {
   const id = c.req.param("id");
-  const booking = await db.booking.findUnique({ where: { id } });
+  const booking = await db.booking.findUnique({
+    where: { id },
+    include: {
+      items: {
+        include: {
+          item: { select: { slug: true } },
+        },
+      },
+    },
+  });
   if (!booking) return c.json(fail("Not found", "NOT_FOUND"), 404);
   const newPrice = await calculatePriceForSlot(
     {
@@ -170,11 +179,20 @@ app.post("/:id/recalculate", async (c) => {
       distanceMiles: booking.distanceMiles,
       pickupFloor: booking.pickupFloor,
       pickupHasLift: booking.pickupHasLift,
+      pickupCarryMetres: 0,
       dropoffFloor: booking.dropoffFloor,
       dropoffHasLift: booking.dropoffHasLift,
+      dropoffCarryMetres: 0,
+      hasNarrowAccess: false,
+      hasPermitZone: false,
       helpersCount: booking.helpersCount,
       needsPacking: booking.needsPacking,
       needsAssembly: booking.needsAssembly,
+      selectedItems: booking.items.map((item) => ({
+        itemId: item.item?.slug ?? item.itemId ?? undefined,
+        name: item.name,
+        quantity: item.quantity,
+      })),
       pickupLat: booking.pickupLat,
       pickupLng: booking.pickupLng,
     },

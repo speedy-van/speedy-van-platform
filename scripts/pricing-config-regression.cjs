@@ -42,11 +42,12 @@ const input = {
   dropoffFloor: 0, dropoffHasLift: false, helpersCount: 0, needsPacking: false, needsAssembly: false,
 };
 
-function harness(initialRead = async () => []) {
+function harness(initialRead = async () => [], initialWeather = async () => new Map()) {
   let time = fixedTime;
   let reads = 0;
   let weatherCalls = 0;
   let read = initialRead;
+  let weather = initialWeather;
   class Clock extends Date {
     constructor(...args) { super(...(args.length ? args : [time])); }
     static now() { return time; }
@@ -55,18 +56,35 @@ function harness(initialRead = async () => []) {
     "@speedy-van/db": { db: { pricingConfig: { async findMany() { reads += 1; return read(); } } } },
     "@speedy-van/config": config,
     "@speedy-van/shared": shared,
-    "./weather.service": { async getWeatherSurcharge() { weatherCalls += 1; return 0; } },
+    "./weather.service": { async getWeatherSurchargesByDate(...args) { weatherCalls += 1; return weather(...args); } },
   }, { Date: Clock });
   return {
     service,
     get reads() { return reads; },
     get weatherCalls() { return weatherCalls; },
     setRead(next) { read = next; },
+    setWeather(next) { weather = next; },
     advance(ms) { time += ms; },
   };
 }
 const baseRow = (value) => [{ category: "base", key: "otherBasePrice", value }];
 const dateAt = (days) => new Date(fixedTime + days * 86400000);
+
+test("helper count is capped at four in booking and pricing schemas", () => {
+  assert.equal(shared.PricingCalculateSchema.safeParse({ ...input, helpersCount: 4 }).success, true);
+  assert.equal(shared.PricingCalculateSchema.safeParse({ ...input, helpersCount: 5 }).success, false);
+  const booking = {
+    customerName: "Test Customer", customerEmail: "test@example.invalid", customerPhone: "07700900000",
+    serviceSlug: "man-and-van", serviceName: "Man and van",
+    pickupAddress: "1 Test Street", pickupPostcode: "G1 1AA", pickupLat: 55.86, pickupLng: -4.25,
+    dropoffAddress: "2 Test Street", dropoffPostcode: "EH1 1AA", dropoffLat: 55.95, dropoffLng: -3.18,
+    distanceMiles: 46.2, selectedDate: "2026-09-24", selectedTimeSlot: "afternoon",
+    helpersCount: 4, needsPacking: false, needsAssembly: false,
+    selectedItems: [{ name: "Box", quantity: 1 }], clientTotal: 120,
+  };
+  assert.equal(shared.CreateBookingSchema.safeParse(booking).success, true);
+  assert.equal(shared.CreateBookingSchema.safeParse({ ...booking, helpersCount: 5 }).success, false);
+});
 
 test("failed configuration read rejects calendar and slot pricing before producing any amount", async () => {
   const cause = new Error("Simulated database outage");
@@ -123,6 +141,65 @@ test("documented missing-key defaults remain valid only after a successful confi
   const miles = config.DEFAULT_PRICING_CONFIG.distance.freeMiles + 2;
   assert.equal((await partial.service.calculatePrice({ ...input, distanceMiles: miles })).staticSubtotal,
     config.DEFAULT_PRICING_CONFIG.base.otherBasePrice + 6);
+});
+
+test("weather surcharges apply per forecast date and never enter the static subtotal", async () => {
+  const fixture = harness(async () => baseRow(100), async () => new Map([["2026-09-24", 12]]));
+  const calendar = await fixture.service.calculatePrice({ ...input, pickupLat: 55.86, pickupLng: -4.25 });
+  assert.equal(fixture.weatherCalls, 1);
+  assert.equal(calendar.staticSubtotal, 100);
+  assert.equal(calendar.staticLineItems.some((item) => item.label === "Weather surcharge"), false);
+  assert.equal(calendar.days[0].date, "2026-09-21");
+  assert.equal(calendar.days[0].lineItems, undefined);
+  const affected = calendar.days.find((day) => day.date === "2026-09-24");
+  assert.ok(affected);
+  assert.equal(affected.lineItems.length, 1);
+  assert.equal(affected.lineItems[0].label, "Weather surcharge");
+  assert.equal(affected.lineItems[0].amount, 12);
+  assert.equal(affected.lineItems[0].type, "surcharge");
+  assert.equal(affected.slots.find((slot) => slot.slot === "afternoon").price, 112);
+  assert.equal(calendar.days.find((day) => day.date === "2026-09-29").lineItems, undefined);
+  assert.equal(await fixture.service.calculatePriceForSlot({ ...input, pickupLat: 55.86, pickupLng: -4.25 }, new Date("2026-09-24"), "afternoon"), 112);
+});
+
+test("weather service uses the 5-day forecast endpoint and caches by rounded coordinates", async () => {
+  const calls = [];
+  const weather = loadTs("apps/api/src/services/weather.service.ts", {}, {
+    AbortController,
+    clearTimeout,
+    setTimeout,
+    process: { env: { NODE_ENV: "production", OPENWEATHER_API_KEY: "test-key" } },
+    fetch: async (url) => {
+      calls.push(String(url));
+      return {
+        ok: true,
+        status: 200,
+        async json() {
+          return {
+            list: [
+              { dt: Date.parse("2026-09-24T09:00:00Z") / 1000, weather: [{ id: 500, description: "light rain", icon: "10d" }] },
+              { dt: Date.parse("2026-09-24T12:00:00Z") / 1000, weather: [{ id: 502, description: "heavy intensity rain", icon: "10d" }] },
+              { dt: Date.parse("2026-09-25T12:00:00Z") / 1000, weather: [{ id: 800, description: "clear sky", icon: "01d" }] },
+            ],
+          };
+        },
+      };
+    },
+  });
+  const values = { weather: { clear: 0, rain: 5, heavy_rain: 10, snow: 20, storm: 25 } };
+  const first = await weather.getWeatherSurchargesByDate(55.864, -4.251, values);
+  assert.equal(first.get("2026-09-24"), 10);
+  assert.equal(first.has("2026-09-25"), false);
+  assert.equal(calls.length, 1);
+  assert.match(calls[0], /\/data\/2\.5\/forecast\?/);
+  assert.equal(calls[0].includes("/data/2.5/weather?"), false);
+  const second = await weather.getWeatherSurchargesByDate(55.861, -4.249, values);
+  assert.equal(second.get("2026-09-24"), 10);
+  assert.equal(calls.length, 1);
+  const forecast = await weather.getWeatherForecast(55.862, -4.248);
+  assert.equal(forecast.condition, "heavy_rain");
+  assert.equal(forecast.description, "heavy intensity rain");
+  assert.equal(calls.length, 1);
 });
 
 test("explicit cache invalidation performs another real read", async () => {
@@ -240,6 +317,30 @@ test("autumn DST repeated hour and return to GMT preserve a single London civil 
 });
 
 const { errorHandler } = loadTs("apps/api/src/middleware/error.ts", { "@speedy-van/shared": shared });
+
+test("pricing calculation is rate limited to 60 requests per minute per forwarded IP", async () => {
+  const fixture = harness(async () => baseRow(80));
+  const routes = loadTs("apps/api/src/routes/pricing.ts", {
+    "@speedy-van/shared": shared, "../services/pricing.service": fixture.service,
+  }).default;
+  const app = new Hono();
+  app.route("/pricing", routes);
+  const request = (ip) => app.request("/pricing/calculate", {
+    method: "POST",
+    headers: { "Content-Type": "application/json", "x-forwarded-for": ip },
+    body: JSON.stringify(input),
+  });
+  for (let i = 0; i < 60; i += 1) {
+    assert.equal((await request("203.0.113.10")).status, 200);
+  }
+  const limited = await request("203.0.113.10");
+  assert.equal(limited.status, 429);
+  assert.equal(limited.headers.get("retry-after"), "60");
+  const body = await limited.json();
+  assert.equal(body.success, false);
+  assert.equal(body.code, "RATE_LIMITED");
+  assert.equal((await request("203.0.113.11")).status, 200);
+});
 
 test("real pricing route and middleware return 503 fail envelope when configuration is unavailable", async () => {
   const fixture = harness(async () => { throw new Error("Private database connection detail"); });

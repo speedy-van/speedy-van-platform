@@ -69,7 +69,7 @@ export function BookingShell({ children }: BookingShellProps) {
         </div>
       </header>
 
-      <main className="mx-auto grid max-w-[1160px] gap-6 px-4 py-6 pb-32 sm:px-6 lg:grid-cols-[minmax(0,1fr)_340px] lg:items-start lg:pb-12">
+      <main className="mx-auto grid max-w-[1160px] gap-6 px-4 py-6 pb-36 sm:px-6 lg:grid-cols-[minmax(0,1fr)_340px] lg:items-start lg:pb-32">
         <div className="lg:hidden">
           <BookingSummary collapsible />
         </div>

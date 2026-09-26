@@ -544,3 +544,18 @@ model EuropeanEnquiry {
   @@index([status])
   @@index([createdAt])
 }
+
+// ─── Booking V2 — persistent drafts (T13) ────────────────────────────────────
+
+model BookingDraft {
+  id          String   @id @default(cuid())
+  sessionKey  String   @unique  // anonymous session token set as cookie
+  email       String?           // if known, enables recovery email
+  payload     String            // JSON — BookingState subset, no secrets
+  savedAt     DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  expiresAt   DateTime          // 24h from last update; cleaned up by cron
+
+  @@index([email])
+  @@index([expiresAt])
+}

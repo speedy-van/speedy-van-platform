@@ -9,6 +9,7 @@ export interface SlotData {
 export interface DayPrice {
   date: string;
   slots: SlotData[];
+  lineItems?: PriceLineItem[];
 }
 
 export interface PricingResult {
@@ -17,6 +18,9 @@ export interface PricingResult {
   staticSubtotal: number;
   currency: string;
   symbol: string;
+  cheapestDay?: string;
+  quoteToken?: string;
+  quoteExpiresAt?: number;
 }
 
 function record(value: unknown): Record<string, unknown> | null {
@@ -46,6 +50,14 @@ export function parsePricingResult(value: unknown): PricingResult | null {
           !["green", "yellow", "red"].includes(String(slot.tier))) return null;
       slots.add(slot.slot);
     }
+    if (day.lineItems !== undefined) {
+      if (!Array.isArray(day.lineItems)) return null;
+      for (const value of day.lineItems) {
+        const item = record(value);
+        if (!item || typeof item.label !== "string" || typeof item.type !== "string" ||
+            typeof item.amount !== "number" || !Number.isFinite(item.amount)) return null;
+      }
+    }
   }
   for (const value of result.staticLineItems) {
     const item = record(value);
@@ -53,5 +65,9 @@ export function parsePricingResult(value: unknown): PricingResult | null {
         typeof item.amount !== "number" || !Number.isFinite(item.amount)) return null;
   }
   const pricing = result as unknown as PricingResult;
-  return { ...pricing, days: pricing.days.filter((day) => day.slots.length > 0) };
+  const parsed: PricingResult = { ...pricing, days: pricing.days.filter((day) => day.slots.length > 0) };
+  if (typeof result.cheapestDay === "string") parsed.cheapestDay = result.cheapestDay;
+  if (typeof result.quoteToken === "string") parsed.quoteToken = result.quoteToken;
+  if (typeof result.quoteExpiresAt === "number") parsed.quoteExpiresAt = result.quoteExpiresAt;
+  return parsed;
 }

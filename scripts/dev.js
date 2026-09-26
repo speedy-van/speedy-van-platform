@@ -34,8 +34,6 @@ function loadEnvFile(filePath) {
 }
 
 const root = path.join(__dirname, "..");
-// Use the full path to cmd.exe via COMSPEC (avoids PATH lookup issues)
-const shell = process.env.COMSPEC || "C:\\Windows\\System32\\cmd.exe";
 
 const CYAN   = "\x1b[36m";
 const INDIGO = "\x1b[35m";
@@ -48,17 +46,23 @@ function prefixLines(name, color, data) {
   });
 }
 
-function startProcess(name, color, cmd, cwd, extraEnv = {}) {
-  const proc = spawn(shell, ["/d", "/s", "/c", cmd], {
+function startProcess(name, color, command, args, cwd, extraEnv = {}) {
+  const pathKey = Object.keys(process.env).find((key) => key.toLowerCase() === "path") || "Path";
+  const childPath = [
+    path.join(cwd, "node_modules", ".bin"),
+    path.join(root, "node_modules", ".bin"),
+    process.env[pathKey] || "",
+  ].join(path.delimiter);
+  const proc = spawn(command, args, {
     cwd,
-    env: { ...process.env, ...extraEnv },
+    env: { ...process.env, [pathKey]: childPath, ...extraEnv },
     windowsHide: true,
   });
   proc.stdout.on("data", (d) => prefixLines(name, color, d));
   proc.stderr.on("data", (d) => prefixLines(name, color, d));
   proc.on("exit", (code) => {
     console.log(`${color}[${name}]${RESET} exited with code ${code}`);
-    if (name === "web") process.exit(code ?? 1);
+    if (name === "web" && code && code !== 0) process.exit(code);
   });
   return proc;
 }
@@ -71,17 +75,21 @@ console.log(`  ${INDIGO}api${RESET}  → http://localhost:4000\n`);
 // child process environment — no dependency on dotenv-cli being in PATH.
 const webEnv = loadEnvFile(path.join(root, "apps", "web", ".env.local"));
 const apiEnv = loadEnvFile(path.join(root, "apps", "api", ".env.local"));
+const webCli = path.join(root, "apps", "web", "node_modules", "next", "dist", "bin", "next");
+const apiCli = path.join(root, "apps", "api", "node_modules", "tsx", "dist", "cli.mjs");
 
 const webProc = startProcess(
   "web", CYAN,
-  "next dev -p 3002",
+  process.execPath,
+  [webCli, "dev", "-p", "3002"],
   path.join(root, "apps", "web"),
   webEnv
 );
 
 const apiProc = startProcess(
   "api", INDIGO,
-  "tsx watch src/index.ts",
+  process.execPath,
+  [apiCli, "watch", "src/index.ts"],
   path.join(root, "apps", "api"),
   apiEnv
 );

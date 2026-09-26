@@ -49,6 +49,34 @@ export const DEFAULT_PRICING_CONFIG = {
     businessMediumMultiplier: 1.4,
     businessLargeMultiplier: 1.8,
   },
+  access: {
+    carryPerMetreRate: 0.5,   // £ per metre beyond 10m free carry
+    narrowAccessFlat: 25,      // £ flat fee for narrow access
+    permitZoneFlat: 20,        // £ flat fee for permit zone parking
+  },
+  inventory: {
+    includedItems: 0,
+    includedVolumeM3: 0,
+    perItemRate: 2,
+    perCubicMetreRate: 6,
+  },
+  largeInventory: {
+    itemThreshold: 4,
+    volumeM3Threshold: 1,
+    perItemRate: 4,
+    perCubicMetreRate: 12,
+    minimumLoadCharge: 75,
+  },
+  inventoryDistance: {
+    largeItemThreshold: 4,
+    largeVolumeM3Threshold: 1,
+    baseItemCount: 5,
+    extraItemMultiplierStep: 0.05,
+    extraItemMultiplierCap: 2,
+    tenMilePrice: 44,
+    twentyMilePrice: 55,
+    thirtyMilePrice: 77,
+  },
   base: {
     houseRemovalsBasePrice: 120,
     furnitureBasePrice: 60,

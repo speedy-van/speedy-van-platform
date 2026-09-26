@@ -36,6 +36,7 @@ function sourceModule(filename) {
 
 const { bookingReducer, getReachableBookingStep, INITIAL_BOOKING_STATE, restoreBookingDraft, serialiseBookingDraft } = sourceModule(path.join(root, "apps/web/src/lib/booking-store.tsx"));
 const { resolveBookingService } = sourceModule(path.join(root, "apps/web/src/lib/booking-service-options.ts"));
+const { stepInfo } = sourceModule(path.join(root, "apps/web/src/lib/booking-steps.ts"));
 const { parsePricingResult } = sourceModule(path.join(root, "apps/web/src/components/booking/quote-response.ts"));
 const { completeCardPayment, parseBookingPaymentSession, isVerifiedCheckoutRecovery } = sourceModule(path.join(root, "apps/web/src/components/booking/checkout-session.ts"));
 const now = Date.parse("2026-09-21T12:00:00Z");
@@ -238,6 +239,7 @@ function paymentModuleHarness(publishableKey = "pk_test_offline") {
         useBooking: () => ({ state: { ...state, checkoutLocked: false }, dispatch() {} }),
         serialiseBookingDraft,
       };
+      if (specifier === "@/lib/booking-steps") return { STEP_PRIMARY_CTA_ID: "step-primary-cta" };
       if (specifier === "next/navigation") return { useRouter: () => ({ push() {} }) };
       if (specifier === "next/image") return "image";
       if (specifier === "./checkout-session") return { completeCardPayment, parseBookingPaymentSession };
@@ -291,7 +293,7 @@ function paymentModuleHarness(publishableKey = "pk_test_offline") {
       for (let i = 0; i < 6; i += 1) await Promise.resolve();
       flush();
     },
-    get payDisabled() { return find(form, (node) => node.props?.id === "booking-primary-action").props.disabled; },
+    get payDisabled() { return find(form, (node) => node.props?.id === "step-primary-cta").props.disabled; },
     get hasCard() { return Boolean(find(form, (node) => node.type === "card-element")); },
     get hasLoadingStatus() { return Boolean(find(form, (node) => node.props?.role === "status")); },
     get unavailable() { return JSON.stringify(form).includes("Online payment unavailable"); },
@@ -576,6 +578,14 @@ const pricing = {
   days: [{ date: "2026-09-23", slots: [{ slot: "morning", price: 120, tier: "yellow" }] }],
   staticLineItems: [{ label: "Base move", amount: 100, type: "base" }], staticSubtotal: 100, currency: "GBP", symbol: "£",
 };
+
+test("stepInfo maps booking state steps to the four visible progress steps", () => {
+  assert.deepEqual(stepInfo(1), { number: 0, total: 4, label: "Service", isPay: false });
+  assert.deepEqual(stepInfo(2), { number: 1, total: 4, label: "Journey", isPay: false });
+  assert.deepEqual(stepInfo(3), { number: 2, total: 4, label: "Items", isPay: false });
+  assert.deepEqual(stepInfo(4), { number: 3, total: 4, label: "Date", isPay: false });
+  assert.deepEqual(stepInfo(5), { number: 4, total: 4, label: "Pay", isPay: true });
+});
 
 test("pricing accepts only real finite GBP slots and valid dates", () => {
   assert.deepEqual(parsePricingResult(pricing), pricing);

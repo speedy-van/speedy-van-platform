@@ -11,6 +11,7 @@ import {
   useElements,
 } from "@stripe/react-stripe-js";
 import { serialiseBookingDraft, useBooking, type SelectedItem, type TimeSlot } from "@/lib/booking-store";
+import { STEP_PRIMARY_CTA_ID } from "@/lib/booking-steps";
 import { useRouter } from "next/navigation";
 import { trackPurchase } from "@/lib/analytics";
 import { PriceExplainerLink } from "./PriceExplainerLink";
@@ -102,6 +103,7 @@ function ReviewSection({
   children: ReactNode;
 }) {
   const { state, dispatch } = useBooking();
+  const router = useRouter();
 
   return (
     <section
@@ -113,7 +115,13 @@ function ReviewSection({
         <button
           type="button"
           disabled={state.checkoutLocked}
-          onClick={() => dispatch({ type: "SET_STEP", step: editStep })}
+          onClick={() => {
+            if (editStep === 1) {
+              router.push("/#get-quote");
+              return;
+            }
+            dispatch({ type: "SET_STEP", step: editStep });
+          }}
           className="min-h-10 rounded-lg px-3 text-sm font-bold text-amber-400 transition hover:text-amber-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 disabled:cursor-not-allowed disabled:opacity-40"
         >
           Edit
@@ -312,12 +320,16 @@ function CheckoutForm({ onComplete, stripePromise }: CheckoutFormProps) {
             pickupLng: state.pickup!.lng,
             pickupFloor: state.pickupFloor,
             pickupHasLift: state.pickupHasLift,
+            pickupCarryMetres: state.pickupCarryMetres,
             dropoffAddress: state.dropoff!.address,
             dropoffPostcode: state.dropoff!.postcode,
             dropoffLat: state.dropoff!.lat,
             dropoffLng: state.dropoff!.lng,
             dropoffFloor: state.dropoffFloor,
             dropoffHasLift: state.dropoffHasLift,
+            dropoffCarryMetres: state.dropoffCarryMetres,
+            hasNarrowAccess: state.hasNarrowAccess,
+            hasPermitZone: state.hasPermitZone,
             distanceMiles: state.distanceMiles,
             selectedDate: state.selectedDate,
             selectedTimeSlot: state.selectedTimeSlot,
@@ -326,6 +338,7 @@ function CheckoutForm({ onComplete, stripePromise }: CheckoutFormProps) {
             needsAssembly: state.needsAssembly,
             selectedItems: state.items,
             clientTotal: state.clientTotal,
+            quoteToken: state.quoteToken || undefined,
           }),
         });
         const createJson = await createRes.json();
@@ -338,6 +351,10 @@ function CheckoutForm({ onComplete, stripePromise }: CheckoutFormProps) {
           if (createJson?.code === "PRICE_CHANGED") {
             dispatch({ type: "SET_QUOTE_STATUS", status: "stale", error: "Your quote has changed. Please choose your date and time again." });
             throw new Error("Your quote has changed. Please return to Date and time for a fresh price.");
+          }
+          if (createJson?.code === "QUOTE_EXPIRED") {
+            dispatch({ type: "SET_QUOTE_STATUS", status: "stale", error: "Your quote expired. Please pick your date and time again to get a fresh price." });
+            throw new Error("Your quote expired. Please go back and choose your date again.");
           }
           throw new Error(BOOKING_ERROR_MESSAGE);
         }
@@ -536,10 +553,10 @@ function CheckoutForm({ onComplete, stripePromise }: CheckoutFormProps) {
 
       {/* ── Pay CTA ── */}
       <button
-        id="booking-primary-action"
+        id={STEP_PRIMARY_CTA_ID}
         type="submit"
         disabled={submitting || creationUncertain || paymentUnavailable || !stripe || !elements || state.quoteStatus !== "valid" || state.clientTotal <= 0}
-        className="hidden min-h-12 w-full items-center justify-center rounded-xl px-5 text-base font-black text-black shadow-lg transition hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:ring-offset-2 focus-visible:ring-offset-booking-background disabled:cursor-not-allowed disabled:opacity-40 lg:flex"
+        className="flex min-h-12 w-full items-center justify-center rounded-xl px-5 text-base font-black text-black shadow-lg transition hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:ring-offset-2 focus-visible:ring-offset-booking-background disabled:cursor-not-allowed disabled:opacity-40"
         style={{ background: "linear-gradient(135deg, #F59E0B 0%, #EA580C 100%)" }}
       >
         {submitting ? (
@@ -577,7 +594,7 @@ export function Step4Payment() {
           type="button"
           disabled={state.checkoutLocked}
           onClick={() => dispatch({ type: "SET_STEP", step: 4 })}
-          className="mb-4 inline-flex min-h-10 items-center gap-1.5 rounded-lg px-3 text-sm font-semibold text-amber-400/70 transition hover:text-amber-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 disabled:cursor-not-allowed disabled:opacity-40"
+          className="hidden"
         >
           <span aria-hidden="true">←</span> Back
         </button>

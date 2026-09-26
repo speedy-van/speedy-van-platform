@@ -7,6 +7,7 @@ export type DayPrice = {
     price: number;
     tier: PriceTier;
   }[];
+  lineItems?: PriceLineItem[];
 };
 
 export type PriceLineItem = {
@@ -15,12 +16,17 @@ export type PriceLineItem = {
   type: "base" | "surcharge" | "addon" | "discount" | "tax";
 };
 
+export type ServiceTier = "flexible" | "two-hour" | "fixed";
+
 export type PricingResult = {
   days: DayPrice[];
   staticLineItems: PriceLineItem[];
   staticSubtotal: number;
   currency: string;
   symbol: string;
+  cheapestDay?: string;      // ISO date of cheapest slot across the calendar
+  quoteToken?: string;       // HMAC-signed token; present only in API responses
+  quoteExpiresAt?: number;   // Unix ms; mirrors token expiry for UI countdown
 };
 
 export type GeocodeResult = {

@@ -58,10 +58,14 @@ export interface BookingState {
   pickupPropertyType: PropertyType;
   pickupFloor: number;
   pickupHasLift: boolean;
+  pickupCarryMetres: number;
   dropoff: AddressResult | null;
   dropoffPropertyType: PropertyType;
   dropoffFloor: number;
   dropoffHasLift: boolean;
+  dropoffCarryMetres: number;
+  hasNarrowAccess: boolean;
+  hasPermitZone: boolean;
   distanceMiles: number;
   items: SelectedItem[];
   inventoryMode: InventoryMode;
@@ -93,6 +97,9 @@ export interface BookingState {
   quoteInputKey: string;
   quoteRequestId: string;
   quoteRevision: number;
+  quoteToken: string;
+  quoteExpiresAt: number;
+  cheapestDay: string;
   checkoutLocked: boolean;
 
   // Navigation
@@ -150,10 +157,14 @@ export const INITIAL_BOOKING_STATE: BookingState = {
   pickupPropertyType: "",
   pickupFloor: 0,
   pickupHasLift: false,
+  pickupCarryMetres: 0,
   dropoff: null,
   dropoffPropertyType: "",
   dropoffFloor: 0,
   dropoffHasLift: false,
+  dropoffCarryMetres: 0,
+  hasNarrowAccess: false,
+  hasPermitZone: false,
   distanceMiles: 0,
   items: [],
   inventoryMode: "items",
@@ -179,6 +190,9 @@ export const INITIAL_BOOKING_STATE: BookingState = {
   quoteInputKey: "",
   quoteRequestId: "",
   quoteRevision: 0,
+  quoteToken: "",
+  quoteExpiresAt: 0,
+  cheapestDay: "",
   checkoutLocked: false,
   step: 1,
 };
@@ -239,6 +253,9 @@ function invalidateQuote(state: BookingState, keepCalendar = false): BookingStat
     quoteInputKey: keepCalendar ? state.quoteInputKey : "",
     quoteRequestId: keepCalendar ? state.quoteRequestId : "",
     quoteRevision: keepCalendar ? state.quoteRevision : state.quoteRevision + 1,
+    quoteToken: "",
+    quoteExpiresAt: 0,
+    cheapestDay: "",
     quoteStatus: state.clientTotal > 0 || state.selectedDate ? "stale" : "incomplete",
     quoteError: "",
   };
@@ -322,6 +339,9 @@ export function bookingReducer(state: BookingState, action: BookingAction): Book
         ...state,
         quoteCalendar: action.pricing,
         quoteInputKey: action.inputKey,
+        quoteToken: action.pricing.quoteToken ?? "",
+        quoteExpiresAt: action.pricing.quoteExpiresAt ?? 0,
+        cheapestDay: action.pricing.cheapestDay ?? "",
         ...getQuoteSelection(action.pricing, state.selectedDate, state.selectedTimeSlot),
       };
     case "QUOTE_FAILED":
@@ -424,6 +444,10 @@ export function restoreBookingDraft(raw: string | null, now = Date.now()): Booki
       dropoffFloor: integer("dropoffFloor"),
       pickupHasLift: draft.pickupHasLift === true,
       dropoffHasLift: draft.dropoffHasLift === true,
+      pickupCarryMetres: Math.min(300, integer("pickupCarryMetres")),
+      dropoffCarryMetres: Math.min(300, integer("dropoffCarryMetres")),
+      hasNarrowAccess: draft.hasNarrowAccess === true,
+      hasPermitZone: draft.hasPermitZone === true,
       distanceMiles: typeof draft.distanceMiles === "number" && Number.isFinite(draft.distanceMiles) && draft.distanceMiles > 0 ? draft.distanceMiles : 0,
       items,
       inventoryMode: draft.inventoryMode === "rooms" ? "rooms" : "items",
@@ -458,6 +482,9 @@ export function serialiseBookingDraft(state: BookingState, savedAt = Date.now())
     quoteInputKey: "",
     quoteRequestId: "",
     quoteRevision: 0,
+    quoteToken: "",
+    quoteExpiresAt: 0,
+    cheapestDay: "",
     clientSecret: "",
     bookingId: state.checkoutLocked ? state.bookingId : "",
     bookingRef: state.checkoutLocked ? state.bookingRef : "",

@@ -21,6 +21,8 @@ import weatherRoutes from "./routes/weather";
 import serviceFlagsRoutes from "./routes/service-flags";
 import waitlistRoutes from "./routes/waitlist";
 import enquiryRoutes from "./routes/enquiry";
+import amendmentRoutes from "./routes/amendment";
+import draftRoutes from "./routes/draft";
 
 import adminBookingsRoutes from "./routes/admin/bookings";
 import adminDriversRoutes from "./routes/admin/drivers";
@@ -84,6 +86,8 @@ app.route("/weather", weatherRoutes);
 app.route("/service-flags", serviceFlagsRoutes);
 app.route("/waitlist", waitlistRoutes);
 app.route("/enquiry", enquiryRoutes);
+app.route("/amendment", amendmentRoutes);
+app.route("/draft", draftRoutes);
 
 app.route("/admin/bookings", adminBookingsRoutes);
 app.route("/admin/drivers", adminDriversRoutes);

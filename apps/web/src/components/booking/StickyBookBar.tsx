@@ -27,7 +27,7 @@ export function StickyBookBar() {
       <div className="flex items-center gap-3 px-4 py-3">
         <div className="flex-1 min-w-0">
           <p className="text-[11px] font-semibold uppercase tracking-wide text-emerald-400 leading-tight">
-            <span className="inline-block w-1.5 h-1.5 rounded-full bg-emerald-500 mr-1 align-middle animate-pulse" />
+            <span className="inline-block w-1.5 h-1.5 rounded-full bg-emerald-500 mr-1 align-middle" />
             Online quote
           </p>
           <p className="text-sm font-bold text-white truncate">

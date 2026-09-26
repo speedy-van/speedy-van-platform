@@ -18,8 +18,12 @@ import {
   CURRENCY,
   type PricingCalculateInput,
   PRICE_TIER,
+  computeTotalVolumeM3,
 } from "@speedy-van/shared";
-import { getWeatherSurcharge } from "./weather.service";
+import { getWeatherSurchargesByDate } from "./weather.service";
+import { issueQuoteToken } from "../lib/quote-token";
+
+const CALENDAR_DAYS = 14;
 
 type ConfigCache = { values: Record<string, Record<string, number>>; loadedAt: number };
 const CACHE_TTL_MS = 5 * 60 * 1000;
@@ -44,6 +48,7 @@ async function loadConfig(): Promise<Record<string, Record<string, number>>> {
   const rows = await db.pricingConfig.findMany().catch((cause: unknown) => {
     throw new Error("PRICING_CONFIG_UNAVAILABLE", { cause });
   });
+
   const values: Record<string, Record<string, number>> = {};
   for (const row of rows) {
     if (!values[row.category]) values[row.category] = {};
@@ -142,7 +147,15 @@ function variantMultiplier(values: Record<string, Record<string, number>>, varia
   return key ? readConfig(values, "variant", key) : 1.0;
 }
 
-function computeDistanceCost(values: Record<string, Record<string, number>>, miles: number): number {
+function selectedItemMetrics(selectedItems: PricingCalculateInput["selectedItems"]): { totalQuantity: number; totalVolumeM3: number } {
+  const items = (selectedItems ?? []).filter((item) => Number.isInteger(item.quantity) && item.quantity > 0);
+  return {
+    totalQuantity: items.reduce((sum, item) => sum + item.quantity, 0),
+    totalVolumeM3: computeTotalVolumeM3(items),
+  };
+}
+
+function computeStandardDistanceCost(values: Record<string, Record<string, number>>, miles: number): number {
   const free = readConfig(values, "distance", "freeMiles");
   const rate = readConfig(values, "distance", "perMileRate");
   const discountStart = readConfig(values, "distance", "longDistanceDiscountStart");
@@ -150,6 +163,56 @@ function computeDistanceCost(values: Record<string, Record<string, number>>, mil
   const billable = Math.max(0, miles - free);
   if (billable <= discountStart) return billable * rate;
   return discountStart * rate + (billable - discountStart) * rate * discountFactor;
+}
+
+function computeLargeInventoryDistanceCost(
+  values: Record<string, Record<string, number>>,
+  miles: number,
+  totalQuantity: number,
+): number {
+  const tenMilePrice = readConfig(values, "inventoryDistance", "tenMilePrice");
+  const twentyMilePrice = readConfig(values, "inventoryDistance", "twentyMilePrice");
+  const thirtyMilePrice = readConfig(values, "inventoryDistance", "thirtyMilePrice");
+
+  let base = 0;
+  if (miles <= 0) {
+    base = 0;
+  } else if (miles <= 10) {
+    base = tenMilePrice;
+  } else if (miles <= 20) {
+    base = tenMilePrice + ((miles - 10) / 10) * (twentyMilePrice - tenMilePrice);
+  } else if (miles <= 30) {
+    base = twentyMilePrice + ((miles - 20) / 10) * (thirtyMilePrice - twentyMilePrice);
+  } else {
+    const postThirtyRate = (thirtyMilePrice - twentyMilePrice) / 10;
+    base = thirtyMilePrice + (miles - 30) * postThirtyRate;
+  }
+
+  const baseItemCount = readConfig(values, "inventoryDistance", "baseItemCount");
+  const extraItemStep = readConfig(values, "inventoryDistance", "extraItemMultiplierStep");
+  const extraItemCap = readConfig(values, "inventoryDistance", "extraItemMultiplierCap");
+  const extraItemUplift = Math.min(Math.max(0, totalQuantity - baseItemCount) * extraItemStep, extraItemCap);
+  return base * (1 + extraItemUplift);
+}
+
+function computeDistanceCost(
+  values: Record<string, Record<string, number>>,
+  miles: number,
+  selectedItems: PricingCalculateInput["selectedItems"],
+): number {
+  const standardCost = computeStandardDistanceCost(values, miles);
+  const { totalQuantity, totalVolumeM3 } = selectedItemMetrics(selectedItems);
+  const itemThreshold = readConfig(values, "inventoryDistance", "largeItemThreshold");
+  const volumeThreshold = readConfig(values, "inventoryDistance", "largeVolumeM3Threshold");
+
+  if (totalQuantity <= itemThreshold || totalVolumeM3 < volumeThreshold) {
+    return standardCost;
+  }
+
+  return Math.max(
+    standardCost,
+    computeLargeInventoryDistanceCost(values, miles, totalQuantity),
+  );
 }
 
 function computeFloorCost(
@@ -162,6 +225,91 @@ function computeFloorCost(
   const noLift = readConfig(values, "floor", "noLiftPenaltyMultiplier");
   const base = floor * per;
   return hasLift ? base : base * (noLift || 1);
+}
+
+const FREE_CARRY_METRES = 10;
+
+function computeAccessCost(
+  values: Record<string, Record<string, number>>,
+  pickupCarryMetres: number,
+  dropoffCarryMetres: number,
+  hasNarrowAccess: boolean,
+  hasPermitZone: boolean,
+): { lineItems: PriceLineItem[]; total: number } {
+  const lineItems: PriceLineItem[] = [];
+  let total = 0;
+
+  const perMetre = readConfig(values, "access", "carryPerMetreRate") || 0.5;
+  const narrowFlat = readConfig(values, "access", "narrowAccessFlat") || 25;
+  const permitFlat = readConfig(values, "access", "permitZoneFlat") || 20;
+
+  const pickupBillableMetres = Math.max(0, pickupCarryMetres - FREE_CARRY_METRES);
+  if (pickupBillableMetres > 0) {
+    const cost = Math.round(pickupBillableMetres * perMetre * 100) / 100;
+    lineItems.push({ label: `Pickup carry (${pickupCarryMetres}m from parking)`, amount: cost, type: "surcharge" });
+    total += cost;
+  }
+
+  const dropoffBillableMetres = Math.max(0, dropoffCarryMetres - FREE_CARRY_METRES);
+  if (dropoffBillableMetres > 0) {
+    const cost = Math.round(dropoffBillableMetres * perMetre * 100) / 100;
+    lineItems.push({ label: `Dropoff carry (${dropoffCarryMetres}m from parking)`, amount: cost, type: "surcharge" });
+    total += cost;
+  }
+
+  if (hasNarrowAccess) {
+    lineItems.push({ label: "Narrow access", amount: narrowFlat, type: "surcharge" });
+    total += narrowFlat;
+  }
+
+  if (hasPermitZone) {
+    lineItems.push({ label: "Permit zone parking", amount: permitFlat, type: "surcharge" });
+    total += permitFlat;
+  }
+
+  return { lineItems, total };
+}
+
+function computeInventoryCost(
+  values: Record<string, Record<string, number>>,
+  selectedItems: PricingCalculateInput["selectedItems"],
+): { lineItems: PriceLineItem[]; total: number } {
+  const items = (selectedItems ?? []).filter((item) => Number.isInteger(item.quantity) && item.quantity > 0);
+  const totalQuantity = items.reduce((sum, item) => sum + item.quantity, 0);
+  if (totalQuantity <= 0) return { lineItems: [], total: 0 };
+
+  const totalVolumeM3 = computeTotalVolumeM3(items);
+  const includedItems = readConfig(values, "inventory", "includedItems");
+  const includedVolumeM3 = readConfig(values, "inventory", "includedVolumeM3");
+  const perItemRate = readConfig(values, "inventory", "perItemRate");
+  const perCubicMetreRate = readConfig(values, "inventory", "perCubicMetreRate");
+  const billableItems = Math.max(0, totalQuantity - includedItems);
+  const billableVolumeM3 = Math.max(0, totalVolumeM3 - includedVolumeM3);
+  const standardTotal = billableItems * perItemRate + billableVolumeM3 * perCubicMetreRate;
+
+  const largeItemThreshold = readConfig(values, "largeInventory", "itemThreshold");
+  const largeVolumeThreshold = readConfig(values, "largeInventory", "volumeM3Threshold");
+  const isLargeInventory = totalQuantity > largeItemThreshold && totalVolumeM3 >= largeVolumeThreshold;
+  const largeTotal = isLargeInventory
+    ? Math.max(
+        readConfig(values, "largeInventory", "minimumLoadCharge"),
+        totalQuantity * readConfig(values, "largeInventory", "perItemRate") +
+          totalVolumeM3 * readConfig(values, "largeInventory", "perCubicMetreRate"),
+      )
+    : 0;
+  const total = Math.round(Math.max(standardTotal, largeTotal) * 100) / 100;
+
+  if (total <= 0) return { lineItems: [], total: 0 };
+
+  const volumeLabel = totalVolumeM3 >= 1 ? totalVolumeM3.toFixed(1) : totalVolumeM3.toFixed(2);
+  return {
+    lineItems: [{
+      label: `Inventory (${totalQuantity} item${totalQuantity === 1 ? "" : "s"}, ${volumeLabel} m3)`,
+      amount: total,
+      type: "surcharge",
+    }],
+    total,
+  };
 }
 
 function computeAddons(
@@ -209,7 +357,7 @@ export async function calculatePrice(input: PricingCalculateInput): Promise<Pric
   const variantMul = variantMultiplier(values, input.serviceVariant);
   const baseAdjusted = Math.round(base * variantMul * 100) / 100;
 
-  const distanceCost = Math.round(computeDistanceCost(values, input.distanceMiles) * 100) / 100;
+  const distanceCost = Math.round(computeDistanceCost(values, input.distanceMiles, input.selectedItems) * 100) / 100;
   const pickupFloorCost = Math.round(
     computeFloorCost(values, input.pickupFloor, input.pickupHasLift) * 100,
   ) / 100;
@@ -224,42 +372,38 @@ export async function calculatePrice(input: PricingCalculateInput): Promise<Pric
     input.needsAssembly,
   );
 
-  // Weather surcharge (best-effort)
-  const weatherSurcharge =
+  const access = computeAccessCost(
+    values,
+    input.pickupCarryMetres ?? 0,
+    input.dropoffCarryMetres ?? 0,
+    input.hasNarrowAccess ?? false,
+    input.hasPermitZone ?? false,
+  );
+  const inventory = computeInventoryCost(values, input.selectedItems);
+
+  // Weather surcharge (best-effort, per forecast date)
+  const weatherSurcharges =
     input.pickupLat !== undefined && input.pickupLng !== undefined
-      ? await getWeatherSurcharge(input.pickupLat, input.pickupLng, values)
-      : 0;
+      ? await getWeatherSurchargesByDate(input.pickupLat, input.pickupLng, values)
+      : new Map<string, number>();
 
   const staticLineItems: PriceLineItem[] = [
     { label: "Base service", amount: baseAdjusted, type: "base" },
     { label: `Distance (${input.distanceMiles.toFixed(1)} mi)`, amount: distanceCost, type: "surcharge" },
     ...(pickupFloorCost > 0
-      ? [
-          {
-            label: `Pickup floor ${input.pickupFloor}${input.pickupHasLift ? " (lift)" : " (no lift)"}`,
-            amount: pickupFloorCost,
-            type: "surcharge" as const,
-          },
-        ]
+      ? [{ label: `Pickup floor ${input.pickupFloor}${input.pickupHasLift ? " (lift)" : " (no lift)"}`, amount: pickupFloorCost, type: "surcharge" as const }]
       : []),
     ...(dropoffFloorCost > 0
-      ? [
-          {
-            label: `Dropoff floor ${input.dropoffFloor}${input.dropoffHasLift ? " (lift)" : " (no lift)"}`,
-            amount: dropoffFloorCost,
-            type: "surcharge" as const,
-          },
-        ]
+      ? [{ label: `Dropoff floor ${input.dropoffFloor}${input.dropoffHasLift ? " (lift)" : " (no lift)"}`, amount: dropoffFloorCost, type: "surcharge" as const }]
       : []),
+    ...inventory.lineItems,
+    ...access.lineItems,
     ...addons.lineItems,
-    ...(weatherSurcharge > 0
-      ? [{ label: "Weather surcharge", amount: weatherSurcharge, type: "surcharge" as const }]
-      : []),
   ];
 
   const staticSubtotal =
     Math.round(
-      (baseAdjusted + distanceCost + pickupFloorCost + dropoffFloorCost + addons.total + weatherSurcharge) * 100,
+      (baseAdjusted + distanceCost + pickupFloorCost + dropoffFloorCost + inventory.total + access.total + addons.total) * 100,
     ) / 100;
 
   // 14-day x 3-slot price calendar
@@ -267,8 +411,11 @@ export async function calculatePrice(input: PricingCalculateInput): Promise<Pric
   const days: DayPrice[] = [];
   const allPrices: number[] = [];
 
-  for (let i = 0; i < 14; i++) {
+  for (let i = 0; i < CALENDAR_DAYS; i++) {
     const d = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate() + i));
+    const date = d.toISOString().slice(0, 10);
+    const weatherSurcharge = weatherSurcharges.get(date) ?? 0;
+    const daySubtotal = Math.round((staticSubtotal + weatherSurcharge) * 100) / 100;
     const urgency = urgencyMultiplier(values, daysFromToday(d, today));
     const weekend = isWeekend(d) ? readConfig(values, "weekend", "multiplier") : 1.0;
     const peak = isPeakMonth(d) ? readConfig(values, "season", "peakMonthMultiplier") : 1.0;
@@ -276,15 +423,21 @@ export async function calculatePrice(input: PricingCalculateInput): Promise<Pric
 
     const slots = TIME_SLOTS.map((slot) => {
       const slotMul = slotMultiplier(values, slot);
-      const total = Math.round(staticSubtotal * urgency * weekend * peak * eom * slotMul * 100) / 100;
+      const total = Math.round(daySubtotal * urgency * weekend * peak * eom * slotMul * 100) / 100;
       allPrices.push(total);
       return { slot, price: total, tier: PRICE_TIER.STANDARD as PriceTier };
     });
 
-    days.push({ date: d.toISOString().slice(0, 10), slots });
+    days.push({
+      date,
+      slots,
+      ...(weatherSurcharge > 0
+        ? { lineItems: [{ label: "Weather surcharge", amount: weatherSurcharge, type: "surcharge" as const }] }
+        : {}),
+    });
   }
 
-  // Apply tier coloring across all 42 prices
+  // Apply tier coloring across all prices
   const sorted = [...allPrices].sort((a, b) => a - b);
   for (const day of days) {
     for (const slot of day.slots) {
@@ -292,17 +445,43 @@ export async function calculatePrice(input: PricingCalculateInput): Promise<Pric
     }
   }
 
+  // Find cheapest day (T4)
+  let cheapestDay: string | undefined;
+  let cheapestPrice = Infinity;
+  for (const day of days) {
+    for (const slot of day.slots) {
+      if (slot.price < cheapestPrice) {
+        cheapestPrice = slot.price;
+        cheapestDay = day.date;
+      }
+    }
+  }
+
+  // Issue signed quote token (T2)
+  const quoteToken = issueQuoteToken({
+    price: staticSubtotal,
+    staticSubtotal,
+    serviceType: input.serviceType,
+    distanceMiles: input.distanceMiles,
+    expiresAt: 0, // set inside issueQuoteToken
+  });
+  const quoteExpiresAt = Date.now() + 30 * 60 * 1000;
+
   return {
     days,
     staticLineItems,
     staticSubtotal,
     currency: CURRENCY.code,
     symbol: CURRENCY.symbol,
+    cheapestDay,
+    quoteToken,
+    quoteExpiresAt,
   };
 }
 
 // Used by booking creation to verify the client-supplied total against a server
-// recomputation for a specific date+slot.
+// recomputation for a specific date+slot. Access fields default to 0/false
+// if omitted so existing callers keep working.
 export async function calculatePriceForSlot(
   input: PricingCalculateInput,
   date: Date,

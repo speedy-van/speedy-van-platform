@@ -8,13 +8,15 @@ type PaymentErrorCode =
   | "PAYMENT_UNAVAILABLE"
   | "BOOKING_STATE_CHANGED"
   | "BOOKING_CANCELLATION_NOT_ALLOWED"
-  | "REFUND_NOT_COMPLETED";
+  | "REFUND_NOT_COMPLETED"
+  | "QUOTE_INVALID"
+  | "QUOTE_EXPIRED";
 
 export class PaymentValidationError extends Error {
   constructor(
     public readonly code: PaymentErrorCode,
     message: string,
-    public readonly status: 400 | 409 | 503 = 400,
+    public readonly status: 400 | 409 | 422 | 503 = 400,
   ) {
     super(message);
     this.name = "PaymentValidationError";

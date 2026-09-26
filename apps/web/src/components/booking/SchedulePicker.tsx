@@ -5,6 +5,7 @@ import { useBooking, type TimeSlot } from "@/lib/booking-store";
 import { getBookingPricingKey } from "@/lib/booking-quote";
 import { WeatherChip } from "./WeatherChip";
 import { type DayPrice, type SlotData } from "./quote-response";
+import { PriceLockCard } from "./PriceLockCard";
 
 export interface SchedulePickerProps {
   onBack?: () => void;
@@ -351,6 +352,10 @@ export function SchedulePicker({ onBack, onContinue }: SchedulePickerProps) {
                 </div>
               </div>
             </section>
+          )}
+
+          {selectedSlotData && (
+            <PriceLockCard onRefresh={() => dispatch({ type: "RETRY_QUOTE" })} />
           )}
         </>
       ) : null}

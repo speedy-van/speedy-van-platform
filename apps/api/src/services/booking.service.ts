@@ -11,8 +11,48 @@ import { assertBookingPayment, PaymentValidationError } from "../lib/payment-val
 import { triggerEvent } from "../lib/pusher";
 import { calculatePriceForSlot } from "./pricing.service";
 import { sendBookingConfirmation, sendBookingCancelled } from "./email.service";
+import { verifyQuoteToken } from "../lib/quote-token";
 
 const PRICE_TOLERANCE_GBP = 1.0;
+type PriceChangedCause = "weather" | "config" | "day_rollover" | "other";
+const londonBookingDate = new Intl.DateTimeFormat("en-GB", {
+  timeZone: "Europe/London",
+  year: "numeric",
+  month: "2-digit",
+  day: "2-digit",
+});
+
+function currentLondonBookingDate(now: Date): Date {
+  const parts = Object.fromEntries(londonBookingDate.formatToParts(now).map((part) => [part.type, part.value]));
+  return new Date(Date.UTC(Number(parts.year), Number(parts.month) - 1, Number(parts.day)));
+}
+
+function daysFromLondonToday(date: Date, now = new Date()): number {
+  const today = currentLondonBookingDate(now);
+  const a = Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate());
+  const b = Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate());
+  return Math.round((a - b) / 86_400_000);
+}
+
+function guessPriceChangedCause(input: CreateBookingInput, scheduledDate: Date): PriceChangedCause {
+  const days = daysFromLondonToday(scheduledDate);
+  if (!Number.isFinite(days)) return "other";
+  if (days >= 0 && days <= 2) return "day_rollover";
+  if (input.pickupLat !== undefined && input.pickupLng !== undefined && days >= 0 && days <= 5) return "weather";
+  if (days >= 0) return "config";
+  return "other";
+}
+
+function logPriceChanged(input: CreateBookingInput, scheduledDate: Date, serverPrice: number): void {
+  console.warn("[booking] PRICE_CHANGED", {
+    event: "PRICE_CHANGED",
+    serverTotal: Number(serverPrice.toFixed(2)),
+    clientTotal: Number(input.clientTotal.toFixed(2)),
+    date: Number.isFinite(scheduledDate.getTime()) ? scheduledDate.toISOString().slice(0, 10) : input.selectedDate,
+    slot: input.selectedTimeSlot,
+    cause: guessPriceChangedCause(input, scheduledDate),
+  });
+}
 
 async function findOrCreateCustomer(email: string, name: string, phone: string) {
   const existing = await db.user.findUnique({ where: { email } });
@@ -31,6 +71,18 @@ export async function createBooking(input: CreateBookingInput): Promise<{
 }> {
   // Payment configuration is required before creating a customer or booking.
   const paymentClient = requireStripe();
+
+  // 0. Verify signed quote token (T2) — warn if missing/expired, hard-fail if tampered
+  if (input.quoteToken) {
+    const tokenResult = verifyQuoteToken(input.quoteToken);
+    if (!tokenResult.ok && tokenResult.reason === "invalid") {
+      throw new PaymentValidationError("QUOTE_INVALID", "Quote token is invalid. Please refresh your quote.", 422);
+    }
+    if (!tokenResult.ok && tokenResult.reason === "expired") {
+      throw new PaymentValidationError("QUOTE_EXPIRED", "Your quote has expired. Please refresh to get the current price.", 422);
+    }
+  }
+
   // 1. Verify price server-side
   const scheduledDate = new Date(input.selectedDate);
   const serverPrice = await calculatePriceForSlot(
@@ -42,9 +94,14 @@ export async function createBooking(input: CreateBookingInput): Promise<{
       pickupHasLift: input.pickupHasLift,
       dropoffFloor: input.dropoffFloor,
       dropoffHasLift: input.dropoffHasLift,
+      pickupCarryMetres: input.pickupCarryMetres ?? 0,
+      dropoffCarryMetres: input.dropoffCarryMetres ?? 0,
+      hasNarrowAccess: input.hasNarrowAccess ?? false,
+      hasPermitZone: input.hasPermitZone ?? false,
       helpersCount: input.helpersCount,
       needsPacking: input.needsPacking,
       needsAssembly: input.needsAssembly,
+      selectedItems: input.selectedItems,
       pickupLat: input.pickupLat,
       pickupLng: input.pickupLng,
     },
@@ -53,6 +110,7 @@ export async function createBooking(input: CreateBookingInput): Promise<{
   );
 
   if (Math.abs(serverPrice - input.clientTotal) > PRICE_TOLERANCE_GBP) {
+    logPriceChanged(input, scheduledDate, serverPrice);
     const err = new Error(
       `Price changed: server=${serverPrice.toFixed(2)} client=${input.clientTotal.toFixed(2)}`,
     );
