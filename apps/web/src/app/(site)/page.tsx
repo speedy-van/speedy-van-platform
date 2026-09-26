@@ -17,7 +17,6 @@ import {
   buildFaqSchema,
   buildServiceCatalogSchema,
 } from "@/lib/seo/schemas";
-import TypingHeroHeading from "@/components/TypingHeroHeading";
 import { SITE_OG_IMAGE, SITE_URL } from "@/lib/seo/constants";
 import {
   BOOKING_SERVICE_OPTIONS,
@@ -266,69 +265,71 @@ export default function HomePage() {
 
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 pb-14 sm:py-20 lg:py-32">
           <div className="max-w-5xl">
-            <div className="hero-fade-up hero-fade-up-1 inline-flex items-center gap-2 rounded-full px-3 py-1 sm:px-4 sm:py-1.5 text-amber-300 text-[11px] sm:text-xs font-semibold tracking-widest mb-4 sm:mb-6" style={{ backgroundColor: "rgba(245,158,11,0.12)", border: "1px solid rgba(245,158,11,0.20)" }}>
-              <span className="inline-block w-1.5 h-1.5 rounded-full bg-amber-400" aria-hidden="true" />
-              <span>GLASGOW · EDINBURGH · DUNDEE · ABERDEEN · ACROSS SCOTLAND</span>
-            </div>
-
-            <TypingHeroHeading
-              id="hero-heading"
-              prefix="Man and Van Services "
-              highlight="Across Scotland"
-              className="hero-fade-up hero-fade-up-2 text-3xl sm:text-5xl lg:text-6xl font-black leading-tight tracking-tight"
-            />
-
-            <p className="hero-fade-up hero-fade-up-3 mt-4 sm:mt-6 text-base sm:text-xl text-slate-300 leading-relaxed max-w-2xl">
-              House moves, office removals, single items, furniture delivery and
-              same-day transport — from {money.format(45)}/hr. Fixed prices
-              available. Goods-in-transit cover included as standard.
-            </p>
-
             <section
               id="get-quote"
-              className="hero-fade-up hero-fade-up-4 mt-7 sm:mt-10"
+              className="hero-fade-up hero-fade-up-1"
               aria-labelledby="hero-service-heading"
             >
-              <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
-                <div>
-                  <p className="text-xs font-bold uppercase tracking-[0.08em] text-amber-400">
-                    Step 1 of 5 · Service
-                  </p>
-                  <h2
-                    id="hero-service-heading"
-                    className="mt-1 text-2xl font-extrabold leading-tight text-white sm:text-3xl"
-                  >
-                    What do you need moved?
-                  </h2>
-                </div>
-              </div>
+              <h1
+                id="hero-heading"
+                className="text-3xl sm:text-4xl font-black leading-tight tracking-tight text-white"
+              >
+                Book your van in <span className="text-amber-400">3 steps</span>
+              </h1>
 
-              <ul className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-5" role="list">
+              <ol className="mt-4 flex flex-col sm:flex-row gap-2 sm:gap-6" aria-label="How to book">
+                {[
+                  { n: "1", text: "Pick a service below" },
+                  { n: "2", text: "Add addresses & date" },
+                  { n: "3", text: "Review & pay online" },
+                ].map((step) => (
+                  <li key={step.n} className="flex items-center gap-2.5 text-sm text-white/70">
+                    <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-[11px] font-black text-black" style={{ background: "linear-gradient(135deg,#F59E0B,#EA580C)" }}>
+                      {step.n}
+                    </span>
+                    {step.text}
+                  </li>
+                ))}
+              </ol>
+
+              <h2
+                id="hero-service-heading"
+                className="mt-7 text-xl font-extrabold leading-tight text-white sm:text-2xl"
+              >
+                What do you need moved?
+              </h2>
+
+              {/* Mobile: 2×2 grid, last card full-width — Desktop: 5-col grid */}
+              <ul
+                className="mt-4 grid grid-cols-2 gap-3 lg:grid-cols-5"
+                role="list"
+              >
                 {BOOKING_SERVICE_OPTIONS.map((choice, idx) => {
-                  const pricedService = SERVICES.find((service) => service.slug === choice.serviceSlug);
+                  const pricedService = SERVICES.find((s) => s.slug === choice.serviceSlug);
                   const imageSrc = getServiceImage(choice.imageSlug);
+                  const isLast = idx === BOOKING_SERVICE_OPTIONS.length - 1;
 
                   return (
-                    <li key={choice.id} className="min-w-0">
+                    <li key={choice.id} className={isLast ? "col-span-2 lg:col-span-1" : ""}>
                       <Link
                         href={`/book?service=${choice.id}`}
                         data-track-event="quote_click"
                         data-track-location={`hero_service_${choice.id}`}
-                        className="hero-service-card group relative flex h-full min-h-[240px] flex-col overflow-hidden rounded-2xl text-left text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:ring-offset-2 focus-visible:ring-offset-stone-950 sm:min-h-[220px]"
+                        className="group relative flex h-full min-h-[220px] flex-col overflow-hidden rounded-2xl text-left text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:ring-offset-2 focus-visible:ring-offset-stone-950 lg:min-h-[240px]"
                         style={{ animationDelay: `${idx * 0.55}s` }}
                       >
+                        {/* Service image — full card */}
                         <Image
                           src={imageSrc}
                           alt=""
                           fill
-                          sizes="(max-width: 639px) 100vw, (max-width: 1023px) 50vw, 20vw"
+                          sizes="(max-width: 1023px) 50vw, 20vw"
                           priority={idx === 0}
                           fetchPriority={idx === 0 ? "high" : undefined}
                           className="object-cover object-center transition-transform duration-500 group-hover:scale-105"
                         />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/94 via-black/20 to-black/10" aria-hidden="true" />
 
-                        {/* Arrow icon — top right, subtle amber on hover */}
+                        {/* Arrow — top right */}
                         <span
                           className="absolute right-3 top-3 z-10 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-black/40 text-xs font-bold text-white/70 backdrop-blur-sm transition-all duration-300 group-hover:bg-amber-400 group-hover:text-stone-950 group-hover:scale-110"
                           aria-hidden="true"
@@ -336,21 +337,27 @@ export default function HomePage() {
                           →
                         </span>
 
-                        {/* Content — pinned to bottom */}
-                        <div className="relative z-10 mt-auto p-4">
-                          <span className="block text-sm font-bold leading-snug text-white">
+                        {/* Glass panel — pinned to bottom */}
+                        <div
+                          className="relative z-10 mt-auto px-3 py-2.5 lg:p-4 backdrop-blur-md"
+                          style={{
+                            background: "rgba(8,4,0,0.72)",
+                            borderTop: "1px solid rgba(245,158,11,0.20)",
+                          }}
+                        >
+                          <span className="block text-sm font-extrabold leading-snug text-amber-300">
                             {choice.label}
                           </span>
-                          <span className="mt-0.5 block text-[11px] leading-4 text-white/65">
+                          <span className="mt-0.5 block text-[11px] leading-4 text-white/80">
                             {choice.description}
                           </span>
-                          <div className="mt-3 flex flex-wrap items-center gap-1.5">
+                          <div className="mt-2 flex flex-wrap items-center gap-1.5">
                             {pricedService && (
                               <span className="rounded-full bg-amber-400 px-2.5 py-0.5 text-[11px] font-bold text-stone-950">
                                 From {getServicePriceLabel(pricedService)}
                               </span>
                             )}
-                            <span className="rounded-full bg-white/10 px-2 py-0.5 text-[10px] font-medium text-white/70 backdrop-blur-sm">
+                            <span className="hidden lg:inline-flex rounded-full bg-amber-400/10 px-2 py-0.5 text-[10px] font-medium text-amber-300/80 border border-amber-400/20">
                               {choice.pathBadge}
                             </span>
                           </div>

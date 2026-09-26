@@ -56,10 +56,14 @@ export interface BookingState {
   pickupPropertyType: PropertyType;
   pickupFloor: number;
   pickupHasLift: boolean;
+  pickupCarryMetres: number;
   dropoff: AddressResult | null;
   dropoffPropertyType: PropertyType;
   dropoffFloor: number;
   dropoffHasLift: boolean;
+  dropoffCarryMetres: number;
+  hasNarrowAccess: boolean;
+  hasPermitZone: boolean;
   distanceMiles: number;
   items: SelectedItem[];
   inventoryMode: InventoryMode;
@@ -87,6 +91,9 @@ export interface BookingState {
   priceBreakdown: PriceLineItem[];
   quoteStatus: QuoteStatus;
   quoteError: string;
+  quoteToken: string;        // HMAC-signed (T2)
+  quoteExpiresAt: number;    // Unix ms (T2)
+  cheapestDay: string;       // ISO date (T4)
   checkoutLocked: boolean;
 
   // Navigation
@@ -144,10 +151,14 @@ export const INITIAL_BOOKING_STATE: BookingState = {
   pickupPropertyType: "",
   pickupFloor: 0,
   pickupHasLift: false,
+  pickupCarryMetres: 0,
   dropoff: null,
   dropoffPropertyType: "",
   dropoffFloor: 0,
   dropoffHasLift: false,
+  dropoffCarryMetres: 0,
+  hasNarrowAccess: false,
+  hasPermitZone: false,
   distanceMiles: 0,
   items: [],
   inventoryMode: "items",
@@ -169,6 +180,9 @@ export const INITIAL_BOOKING_STATE: BookingState = {
   priceBreakdown: [],
   quoteStatus: "incomplete",
   quoteError: "",
+  quoteToken: "",
+  quoteExpiresAt: 0,
+  cheapestDay: "",
   checkoutLocked: false,
   step: 1,
 };
@@ -187,9 +201,13 @@ export type BookingAction =
   | { type: "SET_PICKUP_PROPERTY_TYPE"; value: PropertyType }
   | { type: "SET_PICKUP_FLOOR"; value: number }
   | { type: "SET_PICKUP_LIFT"; value: boolean }
+  | { type: "SET_PICKUP_CARRY_METRES"; value: number }
   | { type: "SET_DROPOFF_PROPERTY_TYPE"; value: PropertyType }
   | { type: "SET_DROPOFF_FLOOR"; value: number }
   | { type: "SET_DROPOFF_LIFT"; value: boolean }
+  | { type: "SET_DROPOFF_CARRY_METRES"; value: number }
+  | { type: "SET_NARROW_ACCESS"; value: boolean }
+  | { type: "SET_PERMIT_ZONE"; value: boolean }
   | { type: "SET_DISTANCE"; value: number }
   | { type: "SET_ITEMS"; items: SelectedItem[] }
   | { type: "SET_INVENTORY_MODE"; mode: InventoryMode }
@@ -204,6 +222,7 @@ export type BookingAction =
   | { type: "SET_PRICE"; total: number }
   | { type: "SET_BREAKDOWN"; items: PriceLineItem[] }
   | { type: "SET_QUOTE_STATUS"; status: QuoteStatus; error?: string }
+  | { type: "SET_QUOTE_META"; quoteToken: string; quoteExpiresAt: number; cheapestDay: string }
   | { type: "SET_BOOKING"; bookingId: string; bookingRef: string; clientSecret: string; total: number }
   | { type: "START_CHECKOUT" }
   | { type: "CHECKOUT_REJECTED" }
@@ -225,6 +244,8 @@ function invalidateQuote(state: BookingState): BookingState {
     priceBreakdown: [],
     quoteStatus: state.clientTotal > 0 || state.selectedDate ? "stale" : "incomplete",
     quoteError: "",
+    quoteToken: "",
+    quoteExpiresAt: 0,
   };
 }
 
@@ -271,6 +292,7 @@ export function bookingReducer(state: BookingState, action: BookingAction): Book
     };
     case "SET_PICKUP_FLOOR": return { ...invalidateQuote(state), pickupFloor: action.value };
     case "SET_PICKUP_LIFT": return { ...invalidateQuote(state), pickupHasLift: action.value };
+    case "SET_PICKUP_CARRY_METRES": return { ...invalidateQuote(state), pickupCarryMetres: action.value };
     case "SET_DROPOFF_PROPERTY_TYPE": return {
       ...invalidateQuote(state),
       dropoffPropertyType: action.value,
@@ -279,6 +301,9 @@ export function bookingReducer(state: BookingState, action: BookingAction): Book
     };
     case "SET_DROPOFF_FLOOR": return { ...invalidateQuote(state), dropoffFloor: action.value };
     case "SET_DROPOFF_LIFT": return { ...invalidateQuote(state), dropoffHasLift: action.value };
+    case "SET_DROPOFF_CARRY_METRES": return { ...invalidateQuote(state), dropoffCarryMetres: action.value };
+    case "SET_NARROW_ACCESS": return { ...invalidateQuote(state), hasNarrowAccess: action.value };
+    case "SET_PERMIT_ZONE": return { ...invalidateQuote(state), hasPermitZone: action.value };
     case "SET_DISTANCE": return action.value === state.distanceMiles ? state : { ...invalidateQuote(state), distanceMiles: action.value };
     case "SET_ITEMS": return { ...invalidateQuote(state), items: action.items };
     case "SET_INVENTORY_MODE": return { ...state, inventoryMode: action.mode };
@@ -299,6 +324,7 @@ export function bookingReducer(state: BookingState, action: BookingAction): Book
     case "SET_PRICE": return action.total === state.clientTotal ? state : { ...state, clientTotal: action.total, clientSecret: "", bookingId: "", bookingRef: "" };
     case "SET_BREAKDOWN": return { ...state, priceBreakdown: action.items };
     case "SET_QUOTE_STATUS": return { ...state, quoteStatus: action.status, quoteError: action.error ?? "" };
+    case "SET_QUOTE_META": return { ...state, quoteToken: action.quoteToken, quoteExpiresAt: action.quoteExpiresAt, cheapestDay: action.cheapestDay };
     case "SET_BOOKING": return { ...state, checkoutLocked: true, bookingId: action.bookingId, bookingRef: action.bookingRef, clientSecret: action.clientSecret, clientTotal: action.total };
     case "START_CHECKOUT": return { ...state, checkoutLocked: true };
     case "CHECKOUT_REJECTED": return state.bookingId || state.clientSecret ? state : { ...state, checkoutLocked: false };

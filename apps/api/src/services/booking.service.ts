@@ -11,6 +11,7 @@ import { assertBookingPayment, PaymentValidationError } from "../lib/payment-val
 import { triggerEvent } from "../lib/pusher";
 import { calculatePriceForSlot } from "./pricing.service";
 import { sendBookingConfirmation, sendBookingCancelled } from "./email.service";
+import { verifyQuoteToken } from "../lib/quote-token";
 
 const PRICE_TOLERANCE_GBP = 1.0;
 type PriceChangedCause = "weather" | "config" | "day_rollover" | "other";
@@ -70,6 +71,18 @@ export async function createBooking(input: CreateBookingInput): Promise<{
 }> {
   // Payment configuration is required before creating a customer or booking.
   const paymentClient = requireStripe();
+
+  // 0. Verify signed quote token (T2) — warn if missing/expired, hard-fail if tampered
+  if (input.quoteToken) {
+    const tokenResult = verifyQuoteToken(input.quoteToken);
+    if (!tokenResult.ok && tokenResult.reason === "invalid") {
+      throw new PaymentValidationError("QUOTE_INVALID", "Quote token is invalid. Please refresh your quote.", 422);
+    }
+    if (!tokenResult.ok && tokenResult.reason === "expired") {
+      throw new PaymentValidationError("QUOTE_EXPIRED", "Your quote has expired. Please refresh to get the current price.", 422);
+    }
+  }
+
   // 1. Verify price server-side
   const scheduledDate = new Date(input.selectedDate);
   const serverPrice = await calculatePriceForSlot(
@@ -81,9 +94,14 @@ export async function createBooking(input: CreateBookingInput): Promise<{
       pickupHasLift: input.pickupHasLift,
       dropoffFloor: input.dropoffFloor,
       dropoffHasLift: input.dropoffHasLift,
+      pickupCarryMetres: input.pickupCarryMetres ?? 0,
+      dropoffCarryMetres: input.dropoffCarryMetres ?? 0,
+      hasNarrowAccess: input.hasNarrowAccess ?? false,
+      hasPermitZone: input.hasPermitZone ?? false,
       helpersCount: input.helpersCount,
       needsPacking: input.needsPacking,
       needsAssembly: input.needsAssembly,
+      selectedItems: input.selectedItems,
       pickupLat: input.pickupLat,
       pickupLng: input.pickupLng,
     },

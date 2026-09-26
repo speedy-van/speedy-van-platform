@@ -5,6 +5,7 @@ import { useBooking, type SelectedItem } from "@/lib/booking-store";
 import { getBookingServiceOptionForState } from "@/lib/booking-service-options";
 import { STEP_PRIMARY_CTA_ID } from "@/lib/booking-steps";
 import { ItemPicker } from "./ItemPicker";
+import { VanFillMeter } from "./VanFillMeter";
 import {
   bedroomCountToPricingVariant,
   type BedroomCount,
@@ -46,7 +47,7 @@ export function InventorySelector({ onBack, onContinue }: InventorySelectorProps
         <button
           type="button"
           onClick={onBack ?? (() => dispatch({ type: "SET_STEP", step: 2 }))}
-          className="mb-4 inline-flex min-h-10 items-center gap-1.5 rounded-lg px-3 text-sm font-semibold text-amber-400/70 transition hover:text-amber-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400"
+          className="hidden"
         >
           <span aria-hidden="true">←</span> Back
         </button>
@@ -97,6 +98,9 @@ export function InventorySelector({ onBack, onContinue }: InventorySelectorProps
           onRoomsChange={(rooms: InventoryRoom[]) => dispatch({ type: "SET_INVENTORY_ROOMS", rooms })}
         />
       </section>
+
+      {/* ── Van-fill meter (T7) ── */}
+      <VanFillMeter items={state.items} serviceSlug={state.serviceSlug} />
 
       {/* ── Move help ── */}
       <section className="rounded-2xl p-5" style={cardStyle}>
@@ -199,7 +203,7 @@ export function InventorySelector({ onBack, onContinue }: InventorySelectorProps
         id={STEP_PRIMARY_CTA_ID}
         type="button"
         onClick={handleContinue}
-        className="hidden min-h-12 w-full items-center justify-center rounded-xl px-5 text-base font-black text-black shadow-lg transition hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:ring-offset-2 focus-visible:ring-offset-booking-background lg:flex"
+        className="hidden"
         style={{ background: "linear-gradient(135deg, #F59E0B 0%, #EA580C 100%)" }}
       >
         Continue to {serviceOption?.inventoryCta ?? "date and time"} →

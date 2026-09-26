@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useBooking } from "@/lib/booking-store";
 import { getBookingServiceOptionForState } from "@/lib/booking-service-options";
 import { PriceExplainerLink } from "./PriceExplainerLink";
@@ -37,6 +38,7 @@ function floorLabel(floor: number, hasLift: boolean): string {
 }
 
 export function BookingSummary({ compact = false, collapsible = false }: BookingSummaryProps) {
+  const router = useRouter();
   const { state, dispatch } = useBooking();
   const serviceOption = getBookingServiceOptionForState(state.entryServiceSlug, state.serviceSlug);
   const totalItems = state.items.reduce((total, item) => total + item.quantity, 0);
@@ -72,7 +74,7 @@ export function BookingSummary({ compact = false, collapsible = false }: Booking
           <div className="flex items-center justify-between gap-3">
             <h3 className="font-bold text-white/80">Service</h3>
             {state.serviceSlug && (
-              <button type="button" disabled={state.checkoutLocked} onClick={() => dispatch({ type: "SET_STEP", step: 1 })} className={editBtn}>Edit</button>
+              <button type="button" disabled={state.checkoutLocked} onClick={() => router.push("/#get-quote")} className={editBtn}>Edit</button>
             )}
           </div>
           <p className="mt-1 text-booking-body">{state.serviceName || "Not selected"}</p>

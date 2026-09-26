@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import Image from "next/image";
 import type { IconType } from "react-icons";
 import { FaBoxOpen, FaChair, FaCouch, FaPlusCircle, FaTable, FaTv, FaDoorOpen } from "react-icons/fa";
 import { FiChevronDown } from "react-icons/fi";
@@ -14,7 +13,6 @@ import {
   presentRecord,
   searchCatalogRecords,
   type CatalogRecord,
-  type ItemFamily,
   type SearchResult,
 } from "@/lib/item-presentation";
 import {
@@ -224,72 +222,6 @@ function mergeDuplicateItems(items: SelectedItem[]): SelectedItem[] {
   }
 
   return Array.from(merged.values());
-}
-
-function ImageWithFallback({
-  record,
-  family,
-  label,
-  className = "h-24",
-}: {
-  record?: CatalogRecord;
-  family?: ItemFamily;
-  label: string;
-  className?: string;
-}) {
-  const fallbackFamily = family ?? (record ? presentRecord(record).family : undefined);
-  const familyRecord = fallbackFamily ? CATALOG_RECORD_BY_ID.get(fallbackFamily.imageItemId) : undefined;
-  const candidates = useMemo(
-    () =>
-      Array.from(
-        new Set(
-          [record?.imagePath, familyRecord?.imagePath].filter(
-            (path): path is string => Boolean(path),
-          ),
-        ),
-      ),
-    [familyRecord?.imagePath, record?.imagePath],
-  );
-  const candidateKey = candidates.join("|");
-  const [index, setIndex] = useState(0);
-  const [failed, setFailed] = useState(false);
-
-  useEffect(() => {
-    setIndex(0);
-    setFailed(false);
-  }, [candidateKey]);
-
-  const src = failed ? undefined : candidates[index];
-  const iconLabel = fallbackFamily?.iconLabel ?? label.replace(/[^A-Za-z0-9]/g, "").slice(0, 2).toUpperCase() ?? "IT";
-
-  return (
-    <div className={`relative overflow-hidden rounded-lg ${className}`} style={{ background: "rgba(255,255,255,0.06)" }}>
-      {src ? (
-        <Image
-          src={src}
-          alt={label}
-          fill
-          className="object-contain p-2"
-          sizes="(max-width: 640px) 50vw, 220px"
-          unoptimized
-          onError={() => {
-            setIndex((current) => {
-              if (current < candidates.length - 1) return current + 1;
-              setFailed(true);
-              return current;
-            });
-          }}
-        />
-      ) : (
-        <div
-          className="flex h-full w-full items-center justify-center bg-white/8 text-sm font-extrabold text-white/45"
-          aria-label={`${label} image unavailable`}
-        >
-          {iconLabel || "IT"}
-        </div>
-      )}
-    </div>
-  );
 }
 
 function QuantityControls({
@@ -943,8 +875,6 @@ export function ItemPicker({
     return (
       <div className="space-y-2">
         {roomItems.map((item, index) => {
-          const record = item.itemId ? CATALOG_RECORD_BY_ID.get(item.itemId) : undefined;
-          const presented = record ? presentRecord(record) : undefined;
           const sourceIndex = items.findIndex((candidate, candidateIndex) =>
             selectedItemKey(candidate, candidateIndex) === selectedItemKey(item, index),
           );
@@ -952,9 +882,8 @@ export function ItemPicker({
           return (
             <div
               key={selectedItemKey(item, index)}
-              className="grid grid-cols-[64px_minmax(0,1fr)] gap-3 rounded-xl p-2" style={{ background: "rgba(255,255,255,0.05)", boxShadow: "0 0 0 1px rgba(255,255,255,0.08)" }}
+              className="rounded-xl p-3" style={{ background: "rgba(255,255,255,0.05)", boxShadow: "0 0 0 1px rgba(255,255,255,0.08)" }}
             >
-              <ImageWithFallback record={record} family={presented?.family} label={item.name} className="h-16 rounded-lg" />
               <div className="min-w-0 space-y-2">
                 <div className="flex items-start justify-between gap-2">
                   <div className="min-w-0">
@@ -1293,24 +1222,15 @@ export function ItemPicker({
                           <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
                             {visibleSuggestions.map((suggestion) => {
                               const firstChoice = suggestion.choices.find((choice) => CATALOG_RECORD_BY_ID.has(choice.itemId));
-                              const record = firstChoice ? CATALOG_RECORD_BY_ID.get(firstChoice.itemId) : undefined;
                               return (
                                 <div
                                   key={suggestion.id}
-                                  className="min-w-0 overflow-hidden rounded-xl border border-white/10 bg-white/4"
+                                  className="min-w-0 rounded-xl border border-white/10 bg-white/4 p-3"
                                 >
-                                  <ImageWithFallback
-                                    record={record}
-                                    family={record ? presentRecord(record).family : undefined}
-                                    label={suggestion.label}
-                                    className="h-20"
-                                  />
-                                  <div className="p-3">
-                                    <p className="break-words text-sm font-bold text-white">{suggestion.label}</p>
-                                    <p className="mt-1 text-xs text-white/45">
-                                      {suggestion.choices.length > 1 ? `${suggestion.choices.length} variants` : labelForChoice(firstChoice ?? suggestion.choices[0]!)}
-                                    </p>
-                                  </div>
+                                  <p className="break-words text-sm font-bold text-white">{suggestion.label}</p>
+                                  <p className="mt-1 text-xs text-white/45">
+                                    {suggestion.choices.length > 1 ? `${suggestion.choices.length} variants` : labelForChoice(firstChoice ?? suggestion.choices[0]!)}
+                                  </p>
                                 </div>
                               );
                             })}

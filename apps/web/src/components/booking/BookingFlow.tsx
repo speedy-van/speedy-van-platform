@@ -8,7 +8,6 @@ import { JourneyFields } from "./JourneyFields";
 import { InventorySelector } from "./InventorySelector";
 import { SchedulePicker } from "./SchedulePicker";
 import { Step4Payment } from "./Step4Payment";
-import { PriceDropToast } from "./PriceDropToast";
 
 function FlowContent() {
   const { state } = useBooking();
@@ -27,7 +26,6 @@ function FlowContent() {
           {state.step === 3 && <InventorySelector />}
           {state.step === 4 && <SchedulePicker />}
           {state.step === 5 && <Step4Payment />}
-          <PriceDropToast />
         </BookingShell>
       )}
     </>

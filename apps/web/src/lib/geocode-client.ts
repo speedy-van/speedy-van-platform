@@ -1,5 +1,3 @@
-import { DEFAULT_API_BASE, getApiBaseUrl } from "./api-base";
-
 export interface GeocodeResult {
   address: string;
   postcode: string;
@@ -27,62 +25,21 @@ type ApiEnvelope<T> = {
 
 const GEOCODE_ERROR_MESSAGE = "Address lookup is unavailable. Please type your address.";
 
-function isLocalHostname(hostname: string): boolean {
-  if (hostname === "localhost" || hostname === "127.0.0.1" || hostname === "::1" || hostname === "[::1]") {
-    return true;
-  }
-
-  const parts = hostname.split(".").map((part) => Number(part));
-  if (parts.length === 4 && parts.every((part) => Number.isInteger(part) && part >= 0 && part <= 255)) {
-    const [a, b] = parts;
-    return a === 10 || (a === 172 && b >= 16 && b <= 31) || (a === 192 && b === 168);
-  }
-
-  return hostname.endsWith(".local");
-}
-
-function shouldUseDefaultFallback(primary: string): boolean {
-  if (primary === DEFAULT_API_BASE) return false;
-
-  try {
-    if (isLocalHostname(new URL(primary).hostname)) return false;
-  } catch {
-    return false;
-  }
-
-  if (typeof window !== "undefined" && isLocalHostname(window.location.hostname)) {
-    return false;
-  }
-
-  return true;
-}
-
-function geocodeBases(): string[] {
-  const primary = getApiBaseUrl();
-  return shouldUseDefaultFallback(primary) ? [primary, DEFAULT_API_BASE] : [primary];
-}
-
 async function fetchGeocode<T>(path: string, options?: RequestInit): Promise<T> {
-  let lastError = GEOCODE_ERROR_MESSAGE;
-
-  for (const base of geocodeBases()) {
-    try {
-      const res = await fetch(`${base}${path}`, { cache: "no-store", ...options });
-      const json = (await res.json()) as ApiEnvelope<T>;
-      if (res.ok && json.success && json.data !== undefined) return json.data;
-      console.warn("Geocode request failed", {
-        status: res.status,
-        code: json?.code,
-        error: json?.error,
-      });
-      lastError = GEOCODE_ERROR_MESSAGE;
-    } catch (err) {
-      console.warn("Geocode request failed", err);
-      lastError = GEOCODE_ERROR_MESSAGE;
-    }
+  try {
+    const res = await fetch(`/api${path}`, { cache: "no-store", ...options });
+    const json = (await res.json()) as ApiEnvelope<T>;
+    if (res.ok && json.success && json.data !== undefined) return json.data;
+    console.warn("Geocode request failed", {
+      status: res.status,
+      code: json?.code,
+      error: json?.error,
+    });
+  } catch (err) {
+    console.warn("Geocode request failed", err);
   }
 
-  throw new Error(lastError);
+  throw new Error(GEOCODE_ERROR_MESSAGE);
 }
 
 export function reverseGeocode(lat: number, lng: number): Promise<GeocodeResult> {

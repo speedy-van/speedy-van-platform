@@ -9,7 +9,6 @@ import { fetchDrivingRoute, type DrivingRouteResult } from "@/lib/geocode-client
 import { AddressSearch } from "./AddressSearch";
 import { FloorPicker } from "./FloorPicker";
 import { PropertyTypePicker, isMultiFloorProperty } from "./PropertyTypePicker";
-import { RouteMap } from "./RouteMap";
 import type { AddressResult } from "@/lib/booking-store";
 
 export interface JourneyFieldsProps {
@@ -103,7 +102,7 @@ export function JourneyFields({ onBack, onContinue }: JourneyFieldsProps) {
         <button
           type="button"
           onClick={onBack ?? (() => router.push("/#get-quote"))}
-          className="mb-4 inline-flex min-h-10 items-center gap-1.5 rounded-lg px-3 text-sm font-semibold text-amber-400/70 transition hover:text-amber-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400"
+          className="hidden"
         >
           <span aria-hidden="true">←</span> Back
         </button>
@@ -184,16 +183,7 @@ export function JourneyFields({ onBack, onContinue }: JourneyFieldsProps) {
         </section>
       </div>
 
-      {/* ── Route status ── */}
-      {!hasRouteInputs ? (
-        <div
-          className="rounded-2xl px-5 py-4 text-sm"
-          style={{ background: "rgba(255,255,255,0.03)", boxShadow: "0 0 0 1px rgba(245,158,11,0.10)" }}
-        >
-          <p className="font-bold text-white/60">Route pending</p>
-          <p className="mt-1 text-white/40">Choose confirmed pickup and drop-off addresses to see mileage and route details.</p>
-        </div>
-      ) : routeError ? (
+      {routeError && (
         <div
           className="rounded-2xl px-5 py-4 text-sm"
           style={{ background: "rgba(239,68,68,0.08)", boxShadow: "0 0 0 1px rgba(239,68,68,0.25)" }}
@@ -209,45 +199,6 @@ export function JourneyFields({ onBack, onContinue }: JourneyFieldsProps) {
             Retry route
           </button>
         </div>
-      ) : (
-        <section
-          className="rounded-2xl p-5"
-          style={{ background: "rgba(245,158,11,0.06)", boxShadow: "0 0 0 1px rgba(245,158,11,0.20), 0 8px 32px rgba(0,0,0,0.35)" }}
-        >
-          <div className="flex flex-wrap items-center justify-between gap-3">
-            <div>
-              <h2 className="text-base font-black text-white">{route ? "Route confirmed" : "Calculating route"}</h2>
-              <p className="mt-0.5 text-sm text-amber-300/80">
-                {loadingDistance
-                  ? "Calculating distance..."
-                  : route
-                    ? `${route.distanceMiles.toFixed(1)} miles${route?.durationMinutes ? ` · ~${Math.round(route.durationMinutes)} min drive` : ""}`
-                    : "Waiting for route"}
-              </p>
-            </div>
-            {route && (
-              <span className="rounded-full bg-amber-500/15 px-3 py-1 text-xs font-bold text-amber-400 ring-1 ring-amber-500/25">
-                {route.distanceMiles.toFixed(1)} mi
-              </span>
-            )}
-          </div>
-          <details className="group mt-4">
-            <summary className="flex min-h-10 cursor-pointer list-none items-center justify-between rounded-xl bg-white/5 px-4 text-sm font-bold text-white/70 ring-1 ring-white/10 transition hover:bg-white/8 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400">
-              <span>View route map</span>
-              <span className="transition group-open:rotate-180" aria-hidden="true">⌄</span>
-            </summary>
-            <div className="mt-3 overflow-hidden rounded-xl">
-              <RouteMap
-                pickup={state.pickup}
-                dropoff={state.dropoff}
-                routeGeometry={route?.routeGeometry}
-                distanceMiles={route?.distanceMiles ?? state.distanceMiles}
-                durationMinutes={route?.durationMinutes}
-                loading={loadingDistance}
-              />
-            </div>
-          </details>
-        </section>
       )}
 
       {error && (
@@ -261,7 +212,7 @@ export function JourneyFields({ onBack, onContinue }: JourneyFieldsProps) {
         type="button"
         onClick={handleContinue}
         disabled={loadingDistance || Boolean(routeError) || state.distanceMiles <= 0}
-        className="hidden min-h-12 w-full items-center justify-center rounded-xl px-5 text-base font-black text-black shadow-lg transition hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:ring-offset-2 focus-visible:ring-offset-booking-background disabled:cursor-not-allowed disabled:opacity-40 lg:flex"
+        className="hidden"
         style={{ background: "linear-gradient(135deg, #F59E0B 0%, #EA580C 100%)" }}
       >
         Continue to {serviceOption?.inventoryTitle.toLowerCase() ?? "items"} →

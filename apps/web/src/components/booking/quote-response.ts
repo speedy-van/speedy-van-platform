@@ -18,6 +18,9 @@ export interface PricingResult {
   staticSubtotal: number;
   currency: string;
   symbol: string;
+  cheapestDay?: string;
+  quoteToken?: string;
+  quoteExpiresAt?: number;
 }
 
 function record(value: unknown): Record<string, unknown> | null {
@@ -62,5 +65,8 @@ export function parsePricingResult(value: unknown): PricingResult | null {
         typeof item.amount !== "number" || !Number.isFinite(item.amount)) return null;
   }
   const pricing = result as unknown as PricingResult;
-  return { ...pricing, days: pricing.days.filter((day) => day.slots.length > 0) };
+  const cheapestDay = typeof result.cheapestDay === "string" ? result.cheapestDay : undefined;
+  const quoteToken = typeof result.quoteToken === "string" ? result.quoteToken : undefined;
+  const quoteExpiresAt = typeof result.quoteExpiresAt === "number" ? result.quoteExpiresAt : undefined;
+  return { ...pricing, days: pricing.days.filter((day) => day.slots.length > 0), cheapestDay, quoteToken, quoteExpiresAt };
 }

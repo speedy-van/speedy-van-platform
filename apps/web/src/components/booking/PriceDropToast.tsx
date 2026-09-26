@@ -47,7 +47,7 @@ export function PriceDropToast() {
     <div
       role="status"
       aria-live="polite"
-      className="fixed top-20 sm:top-24 right-4 sm:right-6 z-50 w-72 animate-fade-in"
+      className="fixed top-20 sm:top-24 right-4 sm:right-6 z-50 w-72"
     >
       <div className={`relative rounded-2xl shadow-xl border overflow-hidden ${
         isDrop
