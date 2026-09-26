@@ -33,7 +33,7 @@ const contentUpdatedAt: Record<string, string> = {
   "/areas/glasgow": "2026-09-26",
   "/areas/aberdeen": "2026-09-25",
   "/areas/inverness": "2026-09-25",
-  "/areas/edinburgh": "2026-09-25",
+  "/areas/edinburgh": "2026-09-26",
   "/areas/edinburgh/student-move": "2026-09-25",
   "/pricing": "2026-09-25",
 };

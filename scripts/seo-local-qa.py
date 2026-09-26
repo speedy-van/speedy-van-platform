@@ -155,7 +155,7 @@ process.stdout.write(JSON.stringify({
   service_paths: SERVICES.filter((service) => service.indexable !== false).map((service) => `/services/${service.slug}`),
   local_services: LOCAL_SERVICE_PAGES.map((page) => ({ path: `/areas/${page.areaSlug}/${page.serviceSlug}`, area: `/areas/${page.areaSlug}`, service: `/services/${page.serviceSlug}` })),
   routes: MOVING_ROUTE_PAGES.map((page) => ({ path: `/moving-routes/${page.slug}`, origin: `/areas/${page.originSlug}` })),
-  nearby_places: Object.fromEntries(["inverness", "aberdeen"].map((slug) => [slug, getNearbyAreaGroups(slug).flatMap((group) => group.places)])),
+  nearby_places: Object.fromEntries(["edinburgh", "inverness", "aberdeen"].map((slug) => [slug, getNearbyAreaGroups(slug).flatMap((group) => group.places)])),
   place_areas: AREAS.filter((area) => area.schemaType === "Place").map((area) => ({ slug: area.slug, name: area.name })),
 }));
 """
@@ -215,8 +215,9 @@ def main():
     check("Sitemap contains the actual source URLs without duplicates", bool(urls) and len(urls) == len(set(urls)) and set(urls) == set(expected["urls"]))
     check("Source sitemap has no duplicate URL definitions", len(expected["urls"]) == len(set(expected["urls"])))
     check("Sitemap contains only canonical HTTPS URLs", all(url and url.startswith(PRIMARY + "/") or url == PRIMARY for url in urls))
-    documented_updates = {PRIMARY + path: "2026-09-25" for path in ["/areas/aberdeen", "/areas/inverness", "/areas/edinburgh", "/areas/edinburgh/student-move", "/pricing"]}
+    documented_updates = {PRIMARY + path: "2026-09-25" for path in ["/areas/aberdeen", "/areas/inverness", "/areas/edinburgh/student-move", "/pricing"]}
     documented_updates[PRIMARY + "/areas/glasgow"] = "2026-09-26"
+    documented_updates[PRIMARY + "/areas/edinburgh"] = "2026-09-26"
     actual_updates = {node.findtext("{*}loc"): node.findtext("{*}lastmod") for node in root.findall("{*}url") if node.find("{*}lastmod") is not None}
     check("Sitemap dates match documented content updates, without build-time timestamps", actual_updates == documented_updates)
     check("Sitemap excludes private and unsupported routes", not any(any(part in urlparse(url).path.split("/") for part in ["book", "auth", "driver", "admin", "track", "jobs", "api", "rubbish-removal"]) for url in urls))
@@ -299,6 +300,8 @@ def main():
         section_links = [link[1:] for link in city_page.main_links if link.startswith("#")]
         check(f"{city}: guide navigation reaches unique section headings", bool(section_links) and all(city_page.ids.count(target_id) == 1 for target_id in section_links))
         check(f"{city}: commercial quote actions preserve draft entry", "/book" in city_page.main_links and not any(link.startswith("/book?") for link in city_page.main_links))
+    for city in ["aberdeen", "inverness", "edinburgh"]:
+        city_page = pages.get(f"/areas/{city}", empty_page)
         places = expected["nearby_places"][city]
         check(f"{city}: surrounding settlements are present in initial HTML", bool(places) and all(city_page.ids.count(f"{city}-{place['slug']}") == 1 for place in places))
         check(f"{city}: surrounding settlement links resolve to canonical area pages", all(f"/areas/{place['areaSlug']}" in city_page.main_links and f"/areas/{place['areaSlug']}" in pages for place in places if place.get("areaSlug")))

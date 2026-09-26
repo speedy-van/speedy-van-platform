@@ -206,6 +206,181 @@ const GLASGOW_NEARBY_AREA_GROUPS: readonly NearbyAreaGroup[] = [
   },
 ];
 
+const EDINBURGH_NEARBY_AREA_GROUPS: readonly NearbyAreaGroup[] = [
+  {
+    id: "edinburgh-neighbourhoods",
+    title: "Edinburgh neighbourhood moves",
+    introduction:
+      "Edinburgh moves often depend on the exact close, stair, lift and loading arrangement rather than the neighbourhood name alone. Use the linked local guides where they exist, and include both access plans when a move crosses between the city centre, Leith, South Edinburgh and nearby towns.",
+    places: [
+      {
+        slug: "edinburgh-leith",
+        name: "Edinburgh Leith",
+        areaSlug: "edinburgh-leith",
+        description:
+          "Leith flat moves and furniture collections need the collection entrance, floor, lift or stair details and any managed-building instructions. Use the Leith guide when the move starts or finishes around The Shore, Easter Road, Bonnington or nearby streets.",
+      },
+      {
+        slug: "edinburgh-south",
+        name: "Edinburgh South",
+        areaSlug: "edinburgh-south",
+        description:
+          "South Edinburgh moves can involve shared flats, student rooms and larger homes around Morningside, Marchmont and Bruntsfield. Give the close entry, floor, parking plan and any additional stop before requesting a quote.",
+      },
+    ],
+  },
+  {
+    id: "east-lothian-towns",
+    title: "East Lothian towns linked to Edinburgh",
+    introduction:
+      "East Lothian enquiries often combine a local collection with a delivery into Edinburgh, or an Edinburgh seller collection with delivery along the coast. Confirm the Edinburgh dispensation or loading arrangement where it applies, then give the town address, doorway and item list for the local end.",
+    places: [
+      {
+        slug: "musselburgh",
+        name: "Musselburgh",
+        areaSlug: "musselburgh",
+        description:
+          "Musselburgh moves near Fisherrow, the High Street and town-centre flats need the actual loading entrance and carrying distance. Use the Musselburgh guide for local access notes before linking the route into Edinburgh or another destination.",
+      },
+      {
+        slug: "prestonpans",
+        name: "Prestonpans",
+        areaSlug: "prestonpans",
+        description:
+          "For Prestonpans furniture collections and home moves, describe the street access, largest items and delivery floor. If the journey continues into Edinburgh, include the city-side loading permission or building instructions in the same enquiry.",
+      },
+      {
+        slug: "tranent",
+        name: "Tranent",
+        areaSlug: "tranent",
+        description:
+          "Tranent moves should separate household contents, seller collections and storage stops before the van is planned. Include both postcodes and the access at each end, especially when the route runs between Tranent and Edinburgh.",
+      },
+      {
+        slug: "haddington",
+        name: "Haddington",
+        areaSlug: "haddington",
+        description:
+          "A Haddington house move can involve garage, garden and outbuilding contents as well as the main rooms. Give the complete inventory and key handover times so a route into Edinburgh or further afield is planned as one job.",
+      },
+      {
+        slug: "north-berwick",
+        name: "North Berwick",
+        areaSlug: "north-berwick",
+        description:
+          "North Berwick enquiries need the property entrance and lawful loading point identified before collection. Coastal town access, parking pressure and Edinburgh destination rules should be described together when requesting a quote.",
+      },
+      {
+        slug: "dunbar",
+        name: "Dunbar",
+        areaSlug: "dunbar",
+        description:
+          "For Dunbar removals or furniture delivery, list the full route rather than only the town names. Add stair, driveway, seller handover and any Edinburgh receiving access so the vehicle and timing can be assessed.",
+      },
+    ],
+  },
+  {
+    id: "midlothian-and-south-edinburgh",
+    title: "Midlothian and south Edinburgh links",
+    introduction:
+      "Midlothian moves into or out of Edinburgh can look short on a map but still depend on stairs, loading points and handover times. Provide the route in order and identify anything that must unload first when the job includes more than one town or storage stop.",
+    places: [
+      {
+        slug: "dalkeith",
+        name: "Dalkeith",
+        areaSlug: "dalkeith",
+        description:
+          "Dalkeith moves should include the property entrance, any shared access and the delivery floor. If the route connects with South Edinburgh or Leith, give those access details with the Dalkeith inventory.",
+      },
+      {
+        slug: "bonnyrigg",
+        name: "Bonnyrigg",
+        areaSlug: "bonnyrigg",
+        description:
+          "For Bonnyrigg home moves and furniture runs, note driveway access, garden items and any narrow internal route. Add the Edinburgh receiving arrangements early if the delivery is inside controlled streets.",
+      },
+      {
+        slug: "penicuik",
+        name: "Penicuik",
+        areaSlug: "penicuik",
+        description:
+          "Penicuik enquiries can combine local household contents with a city flat delivery. Share the largest item dimensions, stairs and complete destination address before a collection time is agreed.",
+      },
+      {
+        slug: "loanhead",
+        name: "Loanhead",
+        areaSlug: "loanhead",
+        description:
+          "Loanhead furniture collections and moves often connect with South Edinburgh, Dalkeith and storage stops. List each stop separately with release contacts, access windows and lifting details.",
+      },
+      {
+        slug: "gorebridge",
+        name: "Gorebridge",
+        areaSlug: "gorebridge",
+        description:
+          "A Gorebridge move should describe the approach, parking or driveway and any items stored outside the main rooms. If delivery is into Edinburgh, include the city-side floor, close entry and loading permission notes.",
+      },
+    ],
+  },
+  {
+    id: "west-lothian-routes",
+    title: "West Lothian routes to Edinburgh",
+    introduction:
+      "West Lothian moves often run along the M8 into Edinburgh, Glasgow or another Scottish town. The road distance is only part of the job; the quote also needs the exact Bathgate, Livingston or village access and the delivery-side restrictions.",
+    places: [
+      {
+        slug: "livingston",
+        name: "Livingston",
+        areaSlug: "livingston",
+        description:
+          "Livingston moves can combine house contents, business collections and storage stops before travelling into Edinburgh. Use the Livingston guide for local access planning, then add the receiving address and key timing.",
+      },
+      {
+        slug: "bathgate",
+        name: "Bathgate",
+        areaSlug: "bathgate",
+        description:
+          "Bathgate enquiries should check the collection street, roadworks and M8 route as well as the inventory. The Bathgate guide covers local access details before linking the journey to Edinburgh, Glasgow or another destination.",
+      },
+      {
+        slug: "linlithgow",
+        name: "Linlithgow",
+        areaSlug: "linlithgow",
+        description:
+          "Linlithgow moves may involve closes, courtyards and older property access. Give the carrying route and any dismantling request alongside Edinburgh delivery permissions or unloading details.",
+      },
+      {
+        slug: "broxburn",
+        name: "Broxburn",
+        areaSlug: "broxburn",
+        description:
+          "Broxburn furniture and home moves should include driveway or shared access, the complete inventory and any additional Uphall or Livingston stop. Add destination access before the vehicle is planned.",
+      },
+      {
+        slug: "armadale",
+        name: "Armadale",
+        areaSlug: "armadale",
+        description:
+          "For Armadale moves, list household contents and any second West Lothian collection separately. If delivery continues to Edinburgh, the city loading and key handover details need to be included in the same request.",
+      },
+      {
+        slug: "whitburn",
+        name: "Whitburn",
+        areaSlug: "whitburn",
+        description:
+          "Whitburn enquiries can include local flat moves, seller collections and onward transport. Provide full postcodes, access notes and the largest item dimensions rather than relying on the town name.",
+      },
+      {
+        slug: "uphall",
+        name: "Uphall",
+        areaSlug: "uphall",
+        description:
+          "Uphall moves should identify the actual entrance, parking or driveway and the order of any linked West Lothian stops. Add Edinburgh receiving restrictions if the delivery enters the city.",
+      },
+    ],
+  },
+];
+
 const INVERNESS_NEARBY_AREA_GROUPS: readonly NearbyAreaGroup[] = [
   {
     id: "east-inverness-and-nairn",
@@ -406,6 +581,7 @@ const ABERDEEN_NEARBY_AREA_GROUPS: readonly NearbyAreaGroup[] = [
 
 export function getNearbyAreaGroups(slug: string): readonly NearbyAreaGroup[] {
   if (slug === "glasgow") return GLASGOW_NEARBY_AREA_GROUPS;
+  if (slug === "edinburgh") return EDINBURGH_NEARBY_AREA_GROUPS;
   if (slug === "inverness") return INVERNESS_NEARBY_AREA_GROUPS;
   if (slug === "aberdeen") return ABERDEEN_NEARBY_AREA_GROUPS;
   return [];
