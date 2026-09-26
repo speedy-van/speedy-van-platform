@@ -1,0 +1,285 @@
+{
+  "verified_at": "2026-09-26T12:11:57.708Z",
+  "commit": "0518228d65e89eab00a25185d4368dd8a6c35662",
+  "base_url": "https://www.speedyvan.uk",
+  "method": "Production HTTP GET checks against the live canonical host and sitemap. No code, component, import, type, prop, booking, pricing, payment, loading, error, empty-state, page-activation or deployment change was made for this evidence file.",
+  "indexing_scope": {
+    "verified": "HTML robots directives and X-Robots-Tag headers only.",
+    "not_verified": "Google indexing state, Search Console coverage, browser rendering, field performance and runtime behavior."
+  },
+  "edinburgh_page": {
+    "path": "/areas/edinburgh",
+    "url": "https://www.speedyvan.uk/areas/edinburgh",
+    "http_status": 200,
+    "canonical": "https://www.speedyvan.uk/areas/edinburgh",
+    "meta_robots": "index, follow",
+    "x_robots_tag": null,
+    "sitemap_lastmod": "2026-09-26",
+    "unique_id_count": 40,
+    "duplicate_ids": [],
+    "anchor_targets": [
+      { "target": "#main-content", "present_id_count": 1 },
+      { "target": "#edinburgh-nearby-places", "present_id_count": 1 },
+      { "target": "#edinburgh-edinburgh-neighbourhoods", "present_id_count": 1 },
+      { "target": "#edinburgh-east-lothian-towns", "present_id_count": 1 },
+      { "target": "#edinburgh-midlothian-and-south-edinburgh", "present_id_count": 1 },
+      { "target": "#edinburgh-west-lothian-routes", "present_id_count": 1 },
+      { "target": "#edinburgh-flat-access", "present_id_count": 1 },
+      { "target": "#edinburgh-student-moves", "present_id_count": 1 },
+      { "target": "#edinburgh-parking", "present_id_count": 1 },
+      { "target": "#edinburgh-storage-transfers", "present_id_count": 1 },
+      { "target": "#edinburgh-quote", "present_id_count": 1 },
+      { "target": "#edinburgh-urgent-moves", "present_id_count": 1 }
+    ],
+    "all_anchor_targets_unique_and_present": true
+  },
+  "sitemap": {
+    "url": "https://www.speedyvan.uk/sitemap.xml",
+    "http_status": 200,
+    "url_count": 251,
+    "unique_url_count": 251,
+    "contains_edinburgh": true,
+    "contains_musselburgh_area_hub": true,
+    "contains_bathgate_area_hub": true
+  },
+  "edinburgh_linked_area_urls": [
+    {
+      "path": "/areas/edinburgh-leith",
+      "url": "https://www.speedyvan.uk/areas/edinburgh-leith",
+      "http_status": 200,
+      "canonical": "https://www.speedyvan.uk/areas/edinburgh-leith",
+      "meta_robots": null,
+      "x_robots_tag": null,
+      "linked_from_edinburgh_html": true,
+      "in_sitemap": true
+    },
+    {
+      "path": "/areas/edinburgh-south",
+      "url": "https://www.speedyvan.uk/areas/edinburgh-south",
+      "http_status": 200,
+      "canonical": "https://www.speedyvan.uk/areas/edinburgh-south",
+      "meta_robots": null,
+      "x_robots_tag": null,
+      "linked_from_edinburgh_html": true,
+      "in_sitemap": true
+    },
+    {
+      "path": "/areas/musselburgh",
+      "url": "https://www.speedyvan.uk/areas/musselburgh",
+      "http_status": 200,
+      "canonical": "https://www.speedyvan.uk/areas/musselburgh",
+      "meta_robots": null,
+      "x_robots_tag": null,
+      "linked_from_edinburgh_html": true,
+      "in_sitemap": true
+    },
+    {
+      "path": "/areas/prestonpans",
+      "url": "https://www.speedyvan.uk/areas/prestonpans",
+      "http_status": 200,
+      "canonical": "https://www.speedyvan.uk/areas/prestonpans",
+      "meta_robots": null,
+      "x_robots_tag": null,
+      "linked_from_edinburgh_html": true,
+      "in_sitemap": true
+    },
+    {
+      "path": "/areas/tranent",
+      "url": "https://www.speedyvan.uk/areas/tranent",
+      "http_status": 200,
+      "canonical": "https://www.speedyvan.uk/areas/tranent",
+      "meta_robots": null,
+      "x_robots_tag": null,
+      "linked_from_edinburgh_html": true,
+      "in_sitemap": true
+    },
+    {
+      "path": "/areas/haddington",
+      "url": "https://www.speedyvan.uk/areas/haddington",
+      "http_status": 200,
+      "canonical": "https://www.speedyvan.uk/areas/haddington",
+      "meta_robots": null,
+      "x_robots_tag": null,
+      "linked_from_edinburgh_html": true,
+      "in_sitemap": true
+    },
+    {
+      "path": "/areas/north-berwick",
+      "url": "https://www.speedyvan.uk/areas/north-berwick",
+      "http_status": 200,
+      "canonical": "https://www.speedyvan.uk/areas/north-berwick",
+      "meta_robots": null,
+      "x_robots_tag": null,
+      "linked_from_edinburgh_html": true,
+      "in_sitemap": true
+    },
+    {
+      "path": "/areas/dunbar",
+      "url": "https://www.speedyvan.uk/areas/dunbar",
+      "http_status": 200,
+      "canonical": "https://www.speedyvan.uk/areas/dunbar",
+      "meta_robots": null,
+      "x_robots_tag": null,
+      "linked_from_edinburgh_html": true,
+      "in_sitemap": true
+    },
+    {
+      "path": "/areas/dalkeith",
+      "url": "https://www.speedyvan.uk/areas/dalkeith",
+      "http_status": 200,
+      "canonical": "https://www.speedyvan.uk/areas/dalkeith",
+      "meta_robots": null,
+      "x_robots_tag": null,
+      "linked_from_edinburgh_html": true,
+      "in_sitemap": true
+    },
+    {
+      "path": "/areas/bonnyrigg",
+      "url": "https://www.speedyvan.uk/areas/bonnyrigg",
+      "http_status": 200,
+      "canonical": "https://www.speedyvan.uk/areas/bonnyrigg",
+      "meta_robots": null,
+      "x_robots_tag": null,
+      "linked_from_edinburgh_html": true,
+      "in_sitemap": true
+    },
+    {
+      "path": "/areas/penicuik",
+      "url": "https://www.speedyvan.uk/areas/penicuik",
+      "http_status": 200,
+      "canonical": "https://www.speedyvan.uk/areas/penicuik",
+      "meta_robots": null,
+      "x_robots_tag": null,
+      "linked_from_edinburgh_html": true,
+      "in_sitemap": true
+    },
+    {
+      "path": "/areas/loanhead",
+      "url": "https://www.speedyvan.uk/areas/loanhead",
+      "http_status": 200,
+      "canonical": "https://www.speedyvan.uk/areas/loanhead",
+      "meta_robots": null,
+      "x_robots_tag": null,
+      "linked_from_edinburgh_html": true,
+      "in_sitemap": true
+    },
+    {
+      "path": "/areas/gorebridge",
+      "url": "https://www.speedyvan.uk/areas/gorebridge",
+      "http_status": 200,
+      "canonical": "https://www.speedyvan.uk/areas/gorebridge",
+      "meta_robots": null,
+      "x_robots_tag": null,
+      "linked_from_edinburgh_html": true,
+      "in_sitemap": true
+    },
+    {
+      "path": "/areas/livingston",
+      "url": "https://www.speedyvan.uk/areas/livingston",
+      "http_status": 200,
+      "canonical": "https://www.speedyvan.uk/areas/livingston",
+      "meta_robots": null,
+      "x_robots_tag": null,
+      "linked_from_edinburgh_html": true,
+      "in_sitemap": true
+    },
+    {
+      "path": "/areas/bathgate",
+      "url": "https://www.speedyvan.uk/areas/bathgate",
+      "http_status": 200,
+      "canonical": "https://www.speedyvan.uk/areas/bathgate",
+      "meta_robots": null,
+      "x_robots_tag": null,
+      "linked_from_edinburgh_html": true,
+      "in_sitemap": true
+    },
+    {
+      "path": "/areas/linlithgow",
+      "url": "https://www.speedyvan.uk/areas/linlithgow",
+      "http_status": 200,
+      "canonical": "https://www.speedyvan.uk/areas/linlithgow",
+      "meta_robots": null,
+      "x_robots_tag": null,
+      "linked_from_edinburgh_html": true,
+      "in_sitemap": true
+    },
+    {
+      "path": "/areas/broxburn",
+      "url": "https://www.speedyvan.uk/areas/broxburn",
+      "http_status": 200,
+      "canonical": "https://www.speedyvan.uk/areas/broxburn",
+      "meta_robots": null,
+      "x_robots_tag": null,
+      "linked_from_edinburgh_html": true,
+      "in_sitemap": true
+    },
+    {
+      "path": "/areas/armadale",
+      "url": "https://www.speedyvan.uk/areas/armadale",
+      "http_status": 200,
+      "canonical": "https://www.speedyvan.uk/areas/armadale",
+      "meta_robots": null,
+      "x_robots_tag": null,
+      "linked_from_edinburgh_html": true,
+      "in_sitemap": true
+    },
+    {
+      "path": "/areas/whitburn",
+      "url": "https://www.speedyvan.uk/areas/whitburn",
+      "http_status": 200,
+      "canonical": "https://www.speedyvan.uk/areas/whitburn",
+      "meta_robots": null,
+      "x_robots_tag": null,
+      "linked_from_edinburgh_html": true,
+      "in_sitemap": true
+    },
+    {
+      "path": "/areas/uphall",
+      "url": "https://www.speedyvan.uk/areas/uphall",
+      "http_status": 200,
+      "canonical": "https://www.speedyvan.uk/areas/uphall",
+      "meta_robots": null,
+      "x_robots_tag": null,
+      "linked_from_edinburgh_html": true,
+      "in_sitemap": true
+    }
+  ],
+  "musselburgh_and_bathgate_status": {
+    "live_area_hubs": [
+      {
+        "source": "apps/web/src/lib/content/scotland-towns-3.ts",
+        "path": "/areas/musselburgh",
+        "http_status": 200,
+        "canonical": "https://www.speedyvan.uk/areas/musselburgh",
+        "in_sitemap": true,
+        "linked_from_edinburgh_html": true
+      },
+      {
+        "source": "apps/web/src/lib/content/scotland-towns-3.ts",
+        "path": "/areas/bathgate",
+        "http_status": 200,
+        "canonical": "https://www.speedyvan.uk/areas/bathgate",
+        "in_sitemap": true,
+        "linked_from_edinburgh_html": true
+      }
+    ],
+    "staged_service_pages_from_source_file": {
+      "source": "apps/web/src/lib/content/town-service-pages-1.ts",
+      "source_gate_note": "The file exports TOWN_SERVICE_PAGES_1 and states: Import into LOCAL_SERVICE_PAGES and sitemap.ts only after Stage 1 review gate is cleared.",
+      "verified_routes": [
+        { "path": "/areas/musselburgh/house-removal", "http_status": 404, "in_sitemap": false },
+        { "path": "/areas/musselburgh/flat-removals", "http_status": 404, "in_sitemap": false },
+        { "path": "/areas/musselburgh/furniture-delivery", "http_status": 404, "in_sitemap": false },
+        { "path": "/areas/musselburgh/office-removal", "http_status": 404, "in_sitemap": false },
+        { "path": "/areas/musselburgh/student-move", "http_status": 404, "in_sitemap": false },
+        { "path": "/areas/musselburgh/packing-service", "http_status": 404, "in_sitemap": false },
+        { "path": "/areas/bathgate/house-removal", "http_status": 404, "in_sitemap": false },
+        { "path": "/areas/bathgate/flat-removals", "http_status": 404, "in_sitemap": false },
+        { "path": "/areas/bathgate/furniture-delivery", "http_status": 404, "in_sitemap": false },
+        { "path": "/areas/bathgate/office-removal", "http_status": 404, "in_sitemap": false },
+        { "path": "/areas/bathgate/student-move", "http_status": 404, "in_sitemap": false },
+        { "path": "/areas/bathgate/packing-service", "http_status": 404, "in_sitemap": false }
+      ]
+    }
+  }
+}

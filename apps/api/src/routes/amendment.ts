@@ -19,6 +19,8 @@ const AmendmentSchema = z.object({
     helpersCount: z.number().int().min(0).max(4).optional(),
     needsPacking: z.boolean().optional(),
     needsAssembly: z.boolean().optional(),
+    assemblyType: z.enum(["dismantle", "assemble", "both"]).optional(),
+    assemblyQty: z.number().int().min(1).max(50).optional(),
     note: z.string().max(500).optional(),
   }),
   newClientTotal: z.number().nonnegative(),

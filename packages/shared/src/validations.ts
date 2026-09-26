@@ -63,6 +63,8 @@ export const CreateBookingSchema = z.object({
   helpersCount: z.number().int().min(0).max(4).default(0),
   needsPacking: z.boolean().default(false),
   needsAssembly: z.boolean().default(false),
+  assemblyType: z.enum(["dismantle", "assemble", "both"]).optional(),
+  assemblyQty: z.number().int().min(1).max(50).optional(),
 
   selectedItems: z.array(SelectedItemSchema).default([]),
 

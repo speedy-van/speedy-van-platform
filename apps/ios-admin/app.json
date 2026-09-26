@@ -39,13 +39,11 @@
         }
       ],
       [
-        "expo-notifications",
+        "./plugins/with-local-notification-sounds",
         {
           "sounds": [
             "./assets/sounds/new-booking.mp3"
-          ],
-          "mode": "production",
-          "enableBackgroundRemoteNotifications": false
+          ]
         }
       ]
     ],

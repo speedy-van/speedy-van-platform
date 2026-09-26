@@ -336,6 +336,7 @@ function CheckoutForm({ onComplete, stripePromise }: CheckoutFormProps) {
             helpersCount: state.helpersCount,
             needsPacking: state.needsPacking,
             needsAssembly: state.needsAssembly,
+            ...(state.assemblyType ? { assemblyType: state.assemblyType, assemblyQty: state.assemblyQty } : {}),
             selectedItems: state.items,
             clientTotal: state.clientTotal,
             quoteToken: state.quoteToken || undefined,

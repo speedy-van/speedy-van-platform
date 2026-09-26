@@ -59,7 +59,15 @@ export type StatusHistory = {
   createdAt: string;
 };
 
-export type BookingDetail = BookingListItem & {
+export type BookingExtras = {
+  helpersCount?: number;
+  needsPacking?: boolean;
+  needsAssembly?: boolean;
+  assemblyType?: string | null;
+  assemblyQty?: number | null;
+};
+
+export type BookingDetail = BookingListItem & BookingExtras & {
   notes?: string | null;
   items: BookingItem[];
   trackingEvents: TrackingEvent[];

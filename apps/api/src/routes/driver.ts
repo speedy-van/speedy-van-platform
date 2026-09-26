@@ -133,6 +133,8 @@ app.get(
         helpersCount: j.booking.helpersCount,
         needsPacking: j.booking.needsPacking,
         needsAssembly: j.booking.needsAssembly,
+        assemblyType: j.booking.assemblyType,
+        assemblyQty: j.booking.assemblyQty,
       },
     }));
 

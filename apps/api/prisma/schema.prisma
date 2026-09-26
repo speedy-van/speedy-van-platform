@@ -254,6 +254,8 @@ model Booking {
   helpersCount   Int     @default(0)
   needsPacking   Boolean @default(false)
   needsAssembly  Boolean @default(false)
+  assemblyType   String? // "dismantle" | "assemble" | "both"
+  assemblyQty    Int     @default(1)
 
   // pricing & payment
   price              Float

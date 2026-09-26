@@ -106,6 +106,25 @@ export function BookingDetailScreen({ id }: { id: string }) {
             <ActionButton label="Assign Driver" icon="person-add" onPress={() => setShowDrivers(true)} />
           </SectionCard>
 
+          <SectionCard title="Extras" subtitle="Optional add-ons selected by the customer." icon="add-circle-outline">
+            {!booking.helpersCount && !booking.needsPacking && !booking.needsAssembly ? (
+              <Text className="text-sm font-bold text-slate-500">No extras added</Text>
+            ) : (
+              <View className="gap-2">
+                {(booking.helpersCount ?? 0) > 0 && (
+                  <InfoRow label="Extra helper" value={`×${booking.helpersCount}`} />
+                )}
+                {booking.needsPacking && <InfoRow label="Packing service" value="Yes" />}
+                {booking.needsAssembly && (
+                  <InfoRow
+                    label="Assembly"
+                    value={`${booking.assemblyType === "dismantle" ? "Dismantling only" : booking.assemblyType === "assemble" ? "Assembly only" : booking.assemblyType === "both" ? "Dismantle + reassemble" : "Yes"}${booking.assemblyQty && booking.assemblyQty > 1 ? ` ×${booking.assemblyQty} items` : ""}`}
+                  />
+                )}
+              </View>
+            )}
+          </SectionCard>
+
           <SectionCard title="Items" subtitle="Customer inventory for the move." icon="cube-outline">
             {booking.items.length === 0 ? (
               <Text className="text-sm font-bold text-slate-500">No items listed</Text>

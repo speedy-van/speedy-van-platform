@@ -193,6 +193,8 @@ export async function createBooking(input: CreateBookingInput): Promise<{
       helpersCount: input.helpersCount,
       needsPacking: input.needsPacking,
       needsAssembly: input.needsAssembly,
+      assemblyType: input.assemblyType ?? null,
+      assemblyQty: input.assemblyQty ?? 1,
       price: serverPrice,
       totalPrice: serverPrice,
       status: "PENDING",
@@ -348,6 +350,11 @@ export async function confirmBooking(
       serviceName: result.booking.serviceName,
       scheduledAt: result.booking.scheduledAt,
       totalPrice: result.booking.totalPrice,
+      helpersCount: result.booking.helpersCount,
+      needsPacking: result.booking.needsPacking,
+      needsAssembly: result.booking.needsAssembly,
+      assemblyType: result.booking.assemblyType ?? undefined,
+      assemblyQty: result.booking.assemblyQty ?? 1,
     }).catch((err) => console.error("[booking] confirmation email failed:", err));
   }
   return result.booking;

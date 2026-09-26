@@ -39,6 +39,12 @@ const baseTemplate = (heading: string, body: string): string => `
   </div>
 </body></html>`;
 
+const ASSEMBLY_LABELS: Record<string, string> = {
+  dismantle: "Dismantling only",
+  assemble: "Assembly only",
+  both: "Dismantle + reassemble",
+};
+
 export async function sendBookingConfirmation(booking: {
   customerEmail: string;
   customerName: string;
@@ -46,7 +52,23 @@ export async function sendBookingConfirmation(booking: {
   serviceName: string;
   scheduledAt: Date;
   totalPrice: number;
+  helpersCount?: number;
+  needsPacking?: boolean;
+  needsAssembly?: boolean;
+  assemblyType?: string;
+  assemblyQty?: number;
 }): Promise<void> {
+  const extras: string[] = [];
+  if ((booking.helpersCount ?? 0) > 0) extras.push(`Extra helper ×${booking.helpersCount}`);
+  if (booking.needsPacking) extras.push("Packing service");
+  if (booking.needsAssembly && booking.assemblyType) {
+    const label = ASSEMBLY_LABELS[booking.assemblyType] ?? booking.assemblyType;
+    extras.push(`${label} ×${booking.assemblyQty ?? 1} item${(booking.assemblyQty ?? 1) !== 1 ? "s" : ""}`);
+  }
+  const extrasHtml = extras.length > 0
+    ? `<p><strong>Add-ons:</strong><br>${extras.map((e) => `• ${e}`).join("<br>")}</p>`
+    : "";
+
   await send(
     booking.customerEmail,
     `Booking confirmed — ${booking.reference}`,
@@ -55,6 +77,7 @@ export async function sendBookingConfirmation(booking: {
       `<p>Hi ${booking.customerName},</p>
        <p>Your booking <strong>${booking.reference}</strong> for ${booking.serviceName}
        on ${booking.scheduledAt.toUTCString()} is confirmed.</p>
+       ${extrasHtml}
        <p>Total paid: £${booking.totalPrice.toFixed(2)}</p>`,
     ),
   );

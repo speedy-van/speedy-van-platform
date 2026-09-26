@@ -79,6 +79,8 @@ export interface BookingState {
   helpersCount: number;
   needsPacking: boolean;
   needsAssembly: boolean;
+  assemblyType: "dismantle" | "assemble" | "both" | "";
+  assemblyQty: number;
 
   // Step 4 – Customer
   customerName: string;
@@ -176,6 +178,8 @@ export const INITIAL_BOOKING_STATE: BookingState = {
   helpersCount: 0,
   needsPacking: false,
   needsAssembly: false,
+  assemblyType: "",
+  assemblyQty: 1,
   customerName: "",
   customerEmail: "",
   customerPhone: "",
@@ -223,7 +227,7 @@ export type BookingAction =
   | { type: "SET_SLOT"; slot: TimeSlot }
   | { type: "SET_HELPERS"; count: number }
   | { type: "SET_PACKING"; value: boolean }
-  | { type: "SET_ASSEMBLY"; value: boolean }
+  | { type: "SET_ASSEMBLY"; value: boolean; assemblyType?: "dismantle" | "assemble" | "both"; assemblyQty?: number }
   | { type: "SET_CUSTOMER"; name: string; email: string; phone: string }
   | { type: "SET_PRICE"; total: number }
   | { type: "SET_BREAKDOWN"; items: PriceLineItem[] }
@@ -351,8 +355,8 @@ export function bookingReducer(state: BookingState, action: BookingAction): Book
     case "RETRY_QUOTE": return invalidateQuote(state);
     case "SET_HELPERS": return { ...invalidateQuote(state), helpersCount: action.count };
     case "SET_PACKING": return { ...invalidateQuote(state), needsPacking: action.value };
-    case "SET_ASSEMBLY": return { ...invalidateQuote(state), needsAssembly: action.value };
-    case "RESET_UPSELLS": return { ...invalidateQuote(state), needsPacking: false, needsAssembly: false, helpersCount: 0 };
+    case "SET_ASSEMBLY": return { ...invalidateQuote(state), needsAssembly: action.value, assemblyType: action.assemblyType ?? (action.value ? state.assemblyType : ""), assemblyQty: action.assemblyQty ?? (action.value ? state.assemblyQty : 1) };
+    case "RESET_UPSELLS": return { ...invalidateQuote(state), needsPacking: false, needsAssembly: false, helpersCount: 0, assemblyType: "", assemblyQty: 1 };
     case "SET_CUSTOMER": return { ...state, customerName: action.name, customerEmail: action.email, customerPhone: action.phone };
     case "SET_PRICE": return action.total === state.clientTotal ? state : { ...state, clientTotal: action.total, clientSecret: "", bookingId: "", bookingRef: "" };
     case "SET_BREAKDOWN": return { ...state, priceBreakdown: action.items };
@@ -457,6 +461,8 @@ export function restoreBookingDraft(raw: string | null, now = Date.now()): Booki
       helpersCount: Math.min(4, integer("helpersCount")),
       needsPacking: draft.needsPacking === true,
       needsAssembly: draft.needsAssembly === true,
+      assemblyType: (["dismantle", "assemble", "both"] as const).includes(text("assemblyType") as "dismantle" | "assemble" | "both") ? text("assemblyType") as "dismantle" | "assemble" | "both" : "",
+      assemblyQty: Math.min(50, Math.max(1, integer("assemblyQty", 1))),
       selectedDate: validDate ? date : "",
       selectedTimeSlot: validDate && ["morning", "afternoon", "evening"].includes(text("selectedTimeSlot")) ? text("selectedTimeSlot") as TimeSlot : "",
       customerName: text("customerName"),

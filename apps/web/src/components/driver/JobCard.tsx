@@ -21,6 +21,8 @@ export interface DriverJobCard {
     helpersCount: number;
     needsPacking: boolean;
     needsAssembly: boolean;
+    assemblyType?: string | null;
+    assemblyQty?: number | null;
     customerName?: string;
     customerPhone?: string;
   };
@@ -118,7 +120,9 @@ export function JobCard({ job, compact = false }: { job: DriverJobCard; compact?
         <div className="flex flex-wrap gap-2 text-white/40">
           {job.booking.helpersCount > 0 && <span>👥 {job.booking.helpersCount} helper{job.booking.helpersCount > 1 ? "s" : ""}</span>}
           {job.booking.needsPacking && <span>📦 Packing</span>}
-          {job.booking.needsAssembly && <span>🔧 Assembly</span>}
+          {job.booking.needsAssembly && (
+            <span>🔧 {job.booking.assemblyType === "dismantle" ? "Dismantling" : job.booking.assemblyType === "assemble" ? "Assembly" : job.booking.assemblyType === "both" ? "Dismantle+Assemble" : "Assembly"}{job.booking.assemblyQty && job.booking.assemblyQty > 1 ? ` ×${job.booking.assemblyQty}` : ""}</span>
+          )}
         </div>
 
         {/* Customer phone if available */}
