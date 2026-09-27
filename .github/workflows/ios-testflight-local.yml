@@ -1,0 +1,71 @@
+name: iOS TestFlight Local Build
+
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: ios-testflight-local-build
+  cancel-in-progress: false
+
+jobs:
+  build-and-submit:
+    name: Build and submit iOS app
+    runs-on: macos-15
+    timeout-minutes: 90
+    defaults:
+      run:
+        working-directory: apps/ios-admin
+
+    env:
+      EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+      EAS_NO_VCS: "1"
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Check required secrets
+        shell: bash
+        run: |
+          if [ -z "$EXPO_TOKEN" ]; then
+            echo "EXPO_TOKEN repository secret is required."
+            exit 1
+          fi
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: package-lock.json
+
+      - name: Install JavaScript dependencies
+        working-directory: .
+        run: npm ci
+
+      - name: Install iOS build tools
+        run: |
+          sudo gem install fastlane -NV
+          sudo gem install cocoapods -NV
+
+      - name: Verify Expo account
+        run: npx eas whoami --non-interactive
+
+      - name: Typecheck
+        working-directory: .
+        run: npm run typecheck
+
+      - name: Build IPA locally
+        run: |
+          mkdir -p ../../build
+          npx eas build --platform ios --profile production --local --output ../../build/SpeedyVanAdmin.ipa --non-interactive
+
+      - name: Upload IPA artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: SpeedyVanAdmin.ipa
+          path: build/SpeedyVanAdmin.ipa
+          if-no-files-found: error
+
+      - name: Submit to TestFlight
+        run: npx eas submit --platform ios --profile production --path ../../build/SpeedyVanAdmin.ipa --non-interactive --wait
