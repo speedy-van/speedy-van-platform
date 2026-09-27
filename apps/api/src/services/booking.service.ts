@@ -218,7 +218,7 @@ export async function createBooking(input: CreateBookingInput): Promise<{
       amount: poundsToPence(serverPrice),
       currency: "gbp",
       metadata: { bookingId: booking.id, reference: booking.reference },
-      automatic_payment_methods: { enabled: true },
+      payment_method_types: ["card"],
     },
     { idempotencyKey: `booking-payment-${booking.id}` },
   );

@@ -6,6 +6,8 @@ node_modules/
 .expo/
 **/.expo/
 **/.next/
+**/dist-check/
+**/dist-crash-check/
 *.log
 .env
 .env.*

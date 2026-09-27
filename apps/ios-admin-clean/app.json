@@ -1,0 +1,53 @@
+{
+  "expo": {
+    "name": "SpeedyVan Admin",
+    "slug": "speedyvan-admin",
+    "scheme": "speedyvan-admin",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "backgroundColor": "#0F172A",
+    "newArchEnabled": false,
+    "ios": {
+      "bundleIdentifier": "co.uk.speedy-van.admin",
+      "buildNumber": "42",
+      "supportsTablet": false,
+      "jsEngine": "jsc",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false,
+        "UIBackgroundModes": [
+          "audio"
+        ]
+      },
+      "config": {
+        "usesNonExemptEncryption": false
+      }
+    },
+    "android": {
+      "package": "co.uk.speedyvan.admin",
+      "adaptiveIcon": {
+        "backgroundColor": "#0F172A",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      },
+      "predictiveBackGestureEnabled": false
+    },
+    "splash": {
+      "image": "./assets/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#0F172A",
+      "imageBackgroundColor": "#0F172A"
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "37fb9ca1-cad4-4b02-b3d9-b79f67372bf0"
+      }
+    },
+    "owner": "wakaaahmad607"
+  }
+}

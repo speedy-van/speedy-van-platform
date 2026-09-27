@@ -6,7 +6,8 @@ import { api } from "@/lib/api";
 interface Notification {
   id: string;
   title: string;
-  message: string;
+  body?: string;
+  message?: string;
   isRead: boolean;
   createdAt: string;
   icon?: string;
@@ -154,7 +155,7 @@ export default function NotificationBell() {
                       <p className={`text-sm font-medium truncate ${n.isRead ? "text-white/55" : "text-white"}`}>
                         {n.title}
                       </p>
-                      <p className="text-xs text-white/40 mt-0.5 line-clamp-2">{n.message}</p>
+                      <p className="text-xs text-white/40 mt-0.5 line-clamp-2">{n.body ?? n.message ?? ""}</p>
                       <p className="text-[11px] text-white/40 mt-1">{timeAgo(n.createdAt)}</p>
                     </div>
                     {!n.isRead && <span className="h-2 w-2 rounded-full bg-amber-400 mt-1.5 flex-shrink-0" />}
