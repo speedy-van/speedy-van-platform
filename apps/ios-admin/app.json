@@ -13,6 +13,7 @@
     ],
     "ios": {
       "bundleIdentifier": "co.uk.speedy-van.admin",
+      "buildNumber": "33",
       "supportsTablet": false,
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false
@@ -63,9 +64,9 @@
         "origin": false
       },
       "eas": {
-        "projectId": "24bad6a1-a00e-425a-88fa-c4c9e38208e1"
+        "projectId": "37fb9ca1-cad4-4b02-b3d9-b79f67372bf0"
       }
     },
-    "owner": "ahmadawadalwakai"
+    "owner": "wakaaahmad607"
   }
 }
