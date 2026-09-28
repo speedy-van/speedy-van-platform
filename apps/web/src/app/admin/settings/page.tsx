@@ -51,7 +51,7 @@ function Section({ title, children }: { title: string; children: React.ReactNode
 function Row({ label, defaultValue, type = "text" }: { label: string; defaultValue: string; type?: string }) {
   return (
     <div className="flex items-center gap-4">
-      <label className="text-sm text-white/55 w-56 flex-shrink-0">{label}</label>
+      <label className="text-sm text-white w-56 flex-shrink-0">{label}</label>
       <input
         type={type}
         defaultValue={defaultValue}
@@ -68,7 +68,7 @@ function Toggle({ label, defaultChecked }: { label: string; defaultChecked?: boo
       <div className="relative w-9 h-5 rounded-full bg-white/20 peer-checked:bg-amber-500 transition-colors">
         <div className="absolute top-0.5 left-0.5 h-4 w-4 rounded-full bg-white shadow transition-transform peer-checked:translate-x-4" />
       </div>
-      <span className="text-sm text-white/55">{label}</span>
+      <span className="text-sm text-white">{label}</span>
     </label>
   );
 }

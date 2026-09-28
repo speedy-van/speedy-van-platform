@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useMemo, useState, useRef } from "react";
 import Image from "next/image";
 import type { FormEvent, ReactNode } from "react";
 import { loadStripe } from "@stripe/stripe-js/pure";
@@ -10,6 +10,7 @@ import {
   useStripe,
   useElements,
 } from "@stripe/react-stripe-js";
+import { FaWhatsapp } from "react-icons/fa";
 import { serialiseBookingDraft, useBooking, type SelectedItem, type TimeSlot } from "@/lib/booking-store";
 import { STEP_PRIMARY_CTA_ID } from "@/lib/booking-steps";
 import { useRouter } from "next/navigation";
@@ -35,6 +36,7 @@ const API_BASE =
   process.env.NODE_ENV === "development"
     ? "http://localhost:4000"
     : (process.env.NEXT_PUBLIC_API_URL ?? "https://api.speedyvan.uk");
+const CONFIRMATION_STORAGE_KEY = "sv_booking_confirmation_v1";
 
 const money = new Intl.NumberFormat("en-GB", {
   style: "currency",
@@ -43,6 +45,12 @@ const money = new Intl.NumberFormat("en-GB", {
 
 const BOOKING_ERROR_MESSAGE =
   "We couldn't create your booking right now. Please retry, or contact us if it keeps happening.";
+
+interface ApiFailure {
+  success?: boolean;
+  error?: unknown;
+  code?: unknown;
+}
 
 const CARD_STYLE = {
   hidePostalCode: true,
@@ -62,6 +70,52 @@ const SLOT_LABELS: Record<TimeSlot, string> = {
   morning: "Morning",
   afternoon: "Afternoon",
   evening: "Evening",
+};
+
+const EMAIL_DOMAINS = [
+  "gmail.com",
+  "outlook.com",
+  "hotmail.com",
+  "icloud.com",
+  "yahoo.com",
+  "yahoo.co.uk",
+  "live.co.uk",
+  "hotmail.co.uk",
+  "outlook.co.uk",
+  "btinternet.com",
+  "virginmedia.com",
+  "ntlworld.com",
+  "blueyonder.co.uk",
+  "talktalk.net",
+  "sky.com",
+  "aol.com",
+  "msn.com",
+  "proton.me",
+] as const;
+
+interface EmailDomainSuggestion {
+  value: string;
+  domain: string;
+  localPart: string;
+  isCorrection: boolean;
+}
+
+const EMAIL_DOMAIN_CORRECTIONS: Record<string, (typeof EMAIL_DOMAINS)[number]> = {
+  "gamil": "gmail.com",
+  "gamil.com": "gmail.com",
+  "gmial": "gmail.com",
+  "gmial.com": "gmail.com",
+  "gmai": "gmail.com",
+  "gmail.co": "gmail.com",
+  "hotmai": "hotmail.com",
+  "hotmial": "hotmail.com",
+  "hotmial.com": "hotmail.com",
+  "outlok": "outlook.com",
+  "outlok.com": "outlook.com",
+  "outloo": "outlook.com",
+  "icloud.co": "icloud.com",
+  "yaho": "yahoo.com",
+  "yaho.com": "yahoo.com",
 };
 
 const reviewDate = new Intl.DateTimeFormat("en-GB", {
@@ -93,6 +147,90 @@ function itemKey(item: SelectedItem, index: number): string {
   return item.lineId ?? `${item.name}-${item.roomId ?? "default"}-${index}`;
 }
 
+function bookingCreateErrorMessage(response: ApiFailure | null | undefined): string {
+  const code = typeof response?.code === "string" ? response.code : "";
+  const apiError = typeof response?.error === "string" ? response.error : "";
+
+  if (code === "PRICE_CHANGED") {
+    return "Your quote has changed. Please return to Date and time for a fresh price.";
+  }
+  if (code === "QUOTE_EXPIRED") {
+    return "Your quote expired. Please go back and choose your date again.";
+  }
+  if (code === "QUOTE_INVALID") {
+    return "Your quote could not be verified. Please refresh the price and try again.";
+  }
+  if (code === "PRICING_CONFIG_UNAVAILABLE") {
+    return "Prices could not be loaded right now. Please try again shortly.";
+  }
+  if (code === "SELECTED_SLOT_UNAVAILABLE") {
+    return "That date or time is no longer available. Please choose another slot.";
+  }
+  if (code === "STRIPE_NOT_CONFIGURED" || code === "PAYMENT_UNAVAILABLE") {
+    return "Online payment could not be started right now. Please contact us to arrange the booking.";
+  }
+  if (code === "VALIDATION_ERROR") {
+    return "Some booking details are missing or invalid. Please review the previous steps.";
+  }
+
+  if (apiError && (process.env.NODE_ENV === "development" || code !== "INTERNAL_ERROR")) {
+    return apiError;
+  }
+
+  return BOOKING_ERROR_MESSAGE;
+}
+
+function rememberBookingConfirmation(session: BookingPaymentSession, email: string) {
+  try {
+    sessionStorage.setItem(
+      CONFIRMATION_STORAGE_KEY,
+      JSON.stringify({
+        bookingId: session.bookingId,
+        bookingRef: session.bookingRef,
+        customerEmail: email,
+        totalPrice: session.totalPrice,
+        savedAt: new Date().toISOString(),
+      }),
+    );
+  } catch {
+    /* Confirmation page can still ask for the booking email. */
+  }
+}
+
+function buildEmailDomainSuggestions(value: string): EmailDomainSuggestion[] {
+  const trimmed = value.trim();
+  const atIndex = trimmed.indexOf("@");
+  if (atIndex <= 0 || atIndex !== trimmed.lastIndexOf("@")) return [];
+
+  const localPart = trimmed.slice(0, atIndex);
+  const domainPart = trimmed.slice(atIndex + 1).toLowerCase().replace(/\s+/g, "");
+  if (!localPart || localPart.includes(" ") || domainPart.includes(" ")) return [];
+
+  const correctedDomain = EMAIL_DOMAIN_CORRECTIONS[domainPart];
+  const matches = [...EMAIL_DOMAINS]
+    .filter((domain) => {
+      if (!domainPart) return true;
+      return domain === correctedDomain || domain.startsWith(domainPart) || domain.includes(domainPart);
+    })
+    .sort((a, b) => {
+      const aCorrection = a === correctedDomain ? 0 : 1;
+      const bCorrection = b === correctedDomain ? 0 : 1;
+      const aStarts = !domainPart || a.startsWith(domainPart) ? 0 : 1;
+      const bStarts = !domainPart || b.startsWith(domainPart) ? 0 : 1;
+      return aCorrection - bCorrection || aStarts - bStarts || a.localeCompare(b);
+    });
+
+  return matches
+    .map((domain) => ({
+      domain,
+      localPart,
+      value: `${localPart}@${domain}`,
+      isCorrection: Boolean(domainPart && correctedDomain === domain && domainPart !== domain),
+    }))
+    .filter((suggestion) => suggestion.value.toLowerCase() !== trimmed.toLowerCase())
+    .slice(0, 5);
+}
+
 function ReviewSection({
   title,
   editStep,
@@ -107,8 +245,8 @@ function ReviewSection({
 
   return (
     <section
-      className="rounded-2xl p-5"
-      style={{ background: "rgba(255,255,255,0.04)", boxShadow: "0 0 0 1px rgba(245,158,11,0.15), 0 8px 32px rgba(0,0,0,0.4)" }}
+      className="rounded-2xl p-4"
+      style={{ background: "rgba(255,255,255,0.07)", boxShadow: "0 0 0 1px rgba(245,158,11,0.24), 0 8px 32px rgba(0,0,0,0.42)" }}
     >
       <div className="flex items-center justify-between gap-3">
         <h2 className="text-base font-black text-white">{title}</h2>
@@ -122,12 +260,12 @@ function ReviewSection({
             }
             dispatch({ type: "SET_STEP", step: editStep });
           }}
-          className="min-h-10 rounded-lg px-3 text-sm font-bold text-amber-400 transition hover:text-amber-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 disabled:cursor-not-allowed disabled:opacity-40"
+          className="min-h-9 rounded-lg bg-amber-500 px-3 text-xs font-black text-black transition hover:bg-amber-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-300 disabled:cursor-not-allowed disabled:opacity-40"
         >
           Edit
         </button>
       </div>
-      <div className="mt-4 text-sm leading-6 text-white/60">{children}</div>
+      <div className="mt-3 text-sm leading-6 text-white">{children}</div>
     </section>
   );
 }
@@ -135,83 +273,87 @@ function ReviewSection({
 function BookingReview() {
   const { state } = useBooking();
   const extras = [
-    state.needsPacking ? "Packing service" : "",
-    state.needsAssembly ? "Assembly or disassembly" : "",
+    state.packingItemCount > 0 ? `Packing ×${state.packingItemCount}` : "",
+    state.assemblyItemCount > 0 ? `Assembly ×${state.assemblyItemCount}` : "",
+    state.dismantlingItemCount > 0 ? `Dismantling ×${state.dismantlingItemCount}` : "",
     state.helpersCount > 0 ? `${state.helpersCount} extra helper${state.helpersCount > 1 ? "s" : ""}` : "",
   ].filter(Boolean);
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-3">
       <ReviewSection title="Service" editStep={1}>
         <p className="font-bold text-white">{state.serviceName || "Not selected"}</p>
       </ReviewSection>
 
       <ReviewSection title="Journey and access" editStep={2}>
         <div className="grid gap-3 md:grid-cols-2">
-          <div className="rounded-xl p-4" style={{ background: "rgba(245,158,11,0.07)", boxShadow: "0 0 0 1px rgba(245,158,11,0.15)" }}>
-            <p className="text-xs font-bold uppercase tracking-widest text-amber-400/70">Pickup</p>
+          <div className="rounded-xl p-4" style={{ background: "rgba(245,158,11,0.12)", boxShadow: "0 0 0 1px rgba(245,158,11,0.28)" }}>
+            <p className="text-xs font-black uppercase tracking-widest text-amber-300">Pickup</p>
             <p className="mt-1 font-bold text-white">
               {state.pickup ? shortAddress(state.pickup.address) : "Not confirmed"}
             </p>
-            <p className="mt-1 text-white/50">{floorLabel(state.pickupFloor, state.pickupHasLift)}</p>
+            <p className="mt-1 font-semibold text-white">{floorLabel(state.pickupFloor, state.pickupHasLift)}</p>
           </div>
-          <div className="rounded-xl p-4" style={{ background: "rgba(234,88,12,0.07)", boxShadow: "0 0 0 1px rgba(234,88,12,0.15)" }}>
-            <p className="text-xs font-bold uppercase tracking-widest text-orange-400/70">Drop-off</p>
+          <div className="rounded-xl p-4" style={{ background: "rgba(234,88,12,0.12)", boxShadow: "0 0 0 1px rgba(234,88,12,0.30)" }}>
+            <p className="text-xs font-black uppercase tracking-widest text-orange-300">Drop-off</p>
             <p className="mt-1 font-bold text-white">
               {state.dropoff ? shortAddress(state.dropoff.address) : "Not confirmed"}
             </p>
-            <p className="mt-1 text-white/50">{floorLabel(state.dropoffFloor, state.dropoffHasLift)}</p>
+            <p className="mt-1 font-semibold text-white">{floorLabel(state.dropoffFloor, state.dropoffHasLift)}</p>
           </div>
         </div>
         {state.distanceMiles > 0 && (
-          <p className="mt-3 font-bold text-amber-400">{state.distanceMiles.toFixed(1)} miles · calculated route</p>
+          <p className="mt-3 font-bold text-amber-300">{state.distanceMiles.toFixed(1)} miles</p>
         )}
       </ReviewSection>
 
-      <ReviewSection title="Items and help" editStep={3}>
+      <ReviewSection title="Items" editStep={3}>
         {state.items.length > 0 ? (
           <ul className="divide-y divide-white/8 rounded-xl" style={{ boxShadow: "0 0 0 1px rgba(255,255,255,0.08)" }}>
             {state.items.map((item, index) => (
               <li key={itemKey(item, index)} className="flex items-start justify-between gap-3 px-4 py-3">
                 <span>
                   <span className="block font-bold text-white">{item.name}</span>
-                  {item.roomName && <span className="block text-xs text-white/40">{item.roomName}</span>}
+                  {item.roomName && <span className="block text-xs font-semibold text-white">{item.roomName}</span>}
                 </span>
                 <span className="shrink-0 font-black text-amber-400">×{item.quantity}</span>
               </li>
             ))}
           </ul>
         ) : (
-          <p className="text-white/40">No items added.</p>
+          <p className="font-semibold text-white">No items added.</p>
         )}
-        <div className="mt-3 rounded-xl p-4" style={{ background: "rgba(255,255,255,0.04)", boxShadow: "0 0 0 1px rgba(255,255,255,0.08)" }}>
-          <p className="font-bold text-white">Extras</p>
-          {extras.length > 0 ? (
+        {extras.length > 0 && (
+          <div className="mt-3 rounded-xl p-4" style={{ background: "rgba(255,255,255,0.06)", boxShadow: "0 0 0 1px rgba(255,255,255,0.12)" }}>
+            <p className="font-bold text-white">Extras</p>
             <ul className="mt-2 space-y-1">
               {extras.map((extra) => (
-                <li key={extra} className="text-white/60">{extra}</li>
+                <li key={extra} className="font-semibold text-white">{extra}</li>
               ))}
             </ul>
-          ) : (
-            <p className="mt-1 text-white/40">No extra help selected.</p>
-          )}
-        </div>
+          </div>
+        )}
       </ReviewSection>
 
-      <ReviewSection title="Appointment and price" editStep={4}>
+      <ReviewSection title="Date and price" editStep={4}>
         <div
-          className="flex flex-wrap items-start justify-between gap-3 rounded-xl p-4"
-          style={{ background: "rgba(245,158,11,0.10)", boxShadow: "0 0 0 1px rgba(245,158,11,0.30)" }}
+          className="rounded-xl p-4"
+          style={{ background: "rgba(245,158,11,0.16)", boxShadow: "0 0 0 1px rgba(245,158,11,0.42), 0 12px 30px rgba(0,0,0,0.30)" }}
         >
-          <div>
-            <p className="font-black text-white">
+          <div className="flex flex-wrap items-start justify-between gap-3">
+            <div>
+              <p className="text-xs font-black uppercase tracking-widest text-amber-300">Total to pay</p>
+              <p className="mt-1 text-3xl font-black text-white">
+                {state.checkoutLocked && !state.clientSecret ? "Check status" : money.format(state.clientTotal)}
+              </p>
+            </div>
+            <span className="rounded-full bg-emerald-500 px-3 py-1 text-xs font-black text-black">Locked</span>
+          </div>
+          <p className="mt-3 font-bold text-white">
               {state.selectedDate && state.selectedTimeSlot
                 ? `${formatDate(state.selectedDate)}, ${SLOT_LABELS[state.selectedTimeSlot]}`
                 : "Not selected"}
-            </p>
-            <p className="mt-1 text-amber-100/55">Final amount is checked again before your booking is created.</p>
-          </div>
-          <p className="text-2xl font-black text-white">{state.checkoutLocked && !state.clientSecret ? "Check booking status" : money.format(state.clientTotal)}</p>
+          </p>
         </div>
         {state.priceBreakdown.length > 0 && (
           <div className="mt-3">
@@ -227,6 +369,7 @@ function CheckoutForm({ onComplete, stripePromise }: CheckoutFormProps) {
   const { state, dispatch } = useBooking();
   const stripe = useStripe();
   const elements = useElements();
+  const hasQuoteLock = state.quoteStatus === "valid" && Boolean(state.quoteToken) && state.quoteExpiresAt > 0;
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const submittingRef = useRef(false);
@@ -256,8 +399,26 @@ function CheckoutForm({ onComplete, stripePromise }: CheckoutFormProps) {
   const [name, setName] = useState(state.customerName);
   const [email, setEmail] = useState(state.customerEmail);
   const [phone, setPhone] = useState(state.customerPhone);
+  const emailDomainSuggestions = useMemo(() => buildEmailDomainSuggestions(email), [email]);
+  const [emailSuggestionIndex, setEmailSuggestionIndex] = useState(0);
+  const [emailSuggestionsOpen, setEmailSuggestionsOpen] = useState(false);
 
   const purchaseTrackedRef = useRef(false);
+
+  useEffect(() => {
+    setEmailSuggestionIndex(0);
+  }, [emailDomainSuggestions]);
+
+  function acceptEmailSuggestion(index = emailSuggestionIndex) {
+    const suggestion = emailDomainSuggestions[index] ?? emailDomainSuggestions[0];
+    if (!suggestion) return;
+    setEmail(suggestion.value);
+    setEmailSuggestionIndex(0);
+    setEmailSuggestionsOpen(false);
+  }
+
+  const canShowEmailSuggestions =
+    emailSuggestionsOpen && emailDomainSuggestions.length > 0 && !state.checkoutLocked && !submitting;
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
@@ -272,7 +433,7 @@ function CheckoutForm({ onComplete, stripePromise }: CheckoutFormProps) {
     if (!state.pickup || !state.dropoff || !state.serviceSlug || state.items.length === 0 || state.distanceMiles <= 0) {
       return setError("Please check your journey and items before payment.");
     }
-    if (state.quoteStatus !== "valid" || !state.selectedDate || !state.selectedTimeSlot || state.clientTotal <= 0) {
+    if (!hasQuoteLock || !state.selectedDate || !state.selectedTimeSlot || state.clientTotal <= 0) {
       return setError("Please choose a valid date and time before payment.");
     }
     if (!name.trim() || !email.trim() || !phone.trim()) {
@@ -336,6 +497,9 @@ function CheckoutForm({ onComplete, stripePromise }: CheckoutFormProps) {
             helpersCount: state.helpersCount,
             needsPacking: state.needsPacking,
             needsAssembly: state.needsAssembly,
+            packingItemCount: state.packingItemCount,
+            assemblyItemCount: state.assemblyItemCount,
+            dismantlingItemCount: state.dismantlingItemCount,
             selectedItems: state.items,
             clientTotal: state.clientTotal,
             quoteToken: state.quoteToken || undefined,
@@ -350,13 +514,11 @@ function CheckoutForm({ onComplete, stripePromise }: CheckoutFormProps) {
           dispatch({ type: "CHECKOUT_REJECTED" });
           if (createJson?.code === "PRICE_CHANGED") {
             dispatch({ type: "SET_QUOTE_STATUS", status: "stale", error: "Your quote has changed. Please choose your date and time again." });
-            throw new Error("Your quote has changed. Please return to Date and time for a fresh price.");
           }
           if (createJson?.code === "QUOTE_EXPIRED") {
             dispatch({ type: "SET_QUOTE_STATUS", status: "stale", error: "Your quote expired. Please pick your date and time again to get a fresh price." });
-            throw new Error("Your quote expired. Please go back and choose your date again.");
           }
-          throw new Error(BOOKING_ERROR_MESSAGE);
+          throw new Error(bookingCreateErrorMessage(createJson));
         }
         session = parseBookingPaymentSession(createJson.data);
         if (!session) {
@@ -404,9 +566,10 @@ function CheckoutForm({ onComplete, stripePromise }: CheckoutFormProps) {
         }
       }
 
+      rememberBookingConfirmation(session, email.trim());
+      try { localStorage.setItem("sv-customer-email", email.trim()); } catch { /* ignore */ }
       try { localStorage.removeItem("sv_booking_draft_v1"); } catch { /* Storage may be unavailable. */ }
       if (mounted.current) onComplete(bookingRef);
-      try { localStorage.setItem("sv-customer-email", email.trim()); } catch { /* ignore */ }
     } catch (err) {
       if (!mounted.current) return;
       if (waitingForCreateResponse) {
@@ -421,8 +584,8 @@ function CheckoutForm({ onComplete, stripePromise }: CheckoutFormProps) {
     }
   }
 
-  const inputStyle = { background: "rgba(255,255,255,0.05)", boxShadow: "0 0 0 1px rgba(255,255,255,0.10)" };
-  const cardStyle = { background: "rgba(255,255,255,0.04)", boxShadow: "0 0 0 1px rgba(245,158,11,0.15), 0 8px 32px rgba(0,0,0,0.4)" };
+  const inputStyle = { background: "rgba(255,255,255,0.08)", boxShadow: "0 0 0 1px rgba(245,158,11,0.24)" };
+  const cardStyle = { background: "rgba(255,255,255,0.07)", boxShadow: "0 0 0 1px rgba(245,158,11,0.24), 0 8px 32px rgba(0,0,0,0.42)" };
 
   return (
     <form
@@ -432,9 +595,9 @@ function CheckoutForm({ onComplete, stripePromise }: CheckoutFormProps) {
     >
       {/* ── Your details ── */}
       <div className="rounded-2xl p-5 space-y-4" style={cardStyle}>
-        <h2 className="text-base font-black text-white">Your details</h2>
+        <h2 className="text-base font-black text-white">Contact details</h2>
         <div>
-          <label htmlFor="booking-customer-name" className="block text-sm font-medium text-white/60 mb-1.5">Full name</label>
+          <label htmlFor="booking-customer-name" className="mb-1.5 block text-sm font-black text-white">Full name</label>
           <input
             id="booking-customer-name"
             type="text"
@@ -443,29 +606,104 @@ function CheckoutForm({ onComplete, stripePromise }: CheckoutFormProps) {
             required
             disabled={submitting || state.checkoutLocked}
             autoComplete="name"
-            className="min-h-12 w-full rounded-xl px-4 py-3 text-base text-white placeholder-white/30 focus:outline-none focus:ring-2 focus:ring-amber-400"
+            className="min-h-12 w-full rounded-xl px-4 py-3 text-base font-semibold text-white placeholder-white/45 focus:outline-none focus:ring-2 focus:ring-amber-400"
             style={inputStyle}
             placeholder="Jane Smith"
           />
         </div>
         <div>
-          <label htmlFor="booking-customer-email" className="block text-sm font-medium text-white/60 mb-1.5">Email address</label>
-          <input
-            id="booking-customer-email"
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-            disabled={submitting || state.checkoutLocked}
-            autoComplete="email"
-            inputMode="email"
-            className="min-h-12 w-full rounded-xl px-4 py-3 text-base text-white placeholder-white/30 focus:outline-none focus:ring-2 focus:ring-amber-400"
-            style={inputStyle}
-            placeholder="jane@example.com"
-          />
-        </div>
+          <label htmlFor="booking-customer-email" className="mb-1.5 block text-sm font-black text-white">Email</label>
+          <div className="relative">
+            <input
+              id="booking-customer-email"
+              type="email"
+              value={email}
+              onChange={(e) => {
+                setEmail(e.target.value);
+                setEmailSuggestionsOpen(true);
+              }}
+              onFocus={() => {
+                if (emailDomainSuggestions.length > 0) setEmailSuggestionsOpen(true);
+              }}
+              onKeyDown={(e) => {
+                if (emailDomainSuggestions.length === 0) return;
+                if (e.key === "Escape") {
+                  setEmailSuggestionsOpen(false);
+                  return;
+                }
+                if (e.key === "ArrowDown") {
+                  e.preventDefault();
+                  setEmailSuggestionsOpen(true);
+                  setEmailSuggestionIndex((index) => (index + 1) % emailDomainSuggestions.length);
+                  return;
+                }
+                if (e.key === "ArrowUp") {
+                  e.preventDefault();
+                  setEmailSuggestionsOpen(true);
+                  setEmailSuggestionIndex((index) => (index - 1 + emailDomainSuggestions.length) % emailDomainSuggestions.length);
+                  return;
+                }
+                if ((e.key === "ArrowRight" || e.key === "Enter") && emailSuggestionsOpen) {
+                  e.preventDefault();
+                  acceptEmailSuggestion();
+                }
+              }}
+              required
+              disabled={submitting || state.checkoutLocked}
+              autoComplete="email"
+              inputMode="email"
+              role="combobox"
+              aria-autocomplete="list"
+              aria-expanded={canShowEmailSuggestions}
+              aria-controls="booking-email-domain-suggestions"
+              className="min-h-12 w-full rounded-xl px-4 py-3 text-base font-semibold text-white placeholder-white/45 focus:outline-none focus:ring-2 focus:ring-amber-400"
+              style={inputStyle}
+              placeholder="jane@example.com"
+            />
+            {canShowEmailSuggestions && (
+              <div
+                id="booking-email-domain-suggestions"
+                role="listbox"
+                className="absolute left-0 right-0 top-full z-30 mt-2 overflow-hidden rounded-xl border border-amber-400/35 bg-[#171207] shadow-2xl shadow-black/55"
+                aria-label="Email suggestions"
+              >
+                {emailDomainSuggestions.map((suggestion, index) => (
+                  <button
+                    key={suggestion.value}
+                    type="button"
+                    role="option"
+                    aria-selected={index === emailSuggestionIndex}
+                    onMouseDown={(event) => {
+                      event.preventDefault();
+                      acceptEmailSuggestion(index);
+                    }}
+                    className={`flex min-h-11 w-full items-center justify-between gap-3 px-4 text-left text-sm font-black transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 ${
+                      index === emailSuggestionIndex
+                        ? "bg-amber-500 text-black"
+                        : "bg-transparent text-white hover:bg-white/10"
+                    }`}
+                  >
+                    <span className="min-w-0 truncate">
+                      <span className={index === emailSuggestionIndex ? "text-black/65" : "text-white/50"}>
+                        {suggestion.localPart}@
+                      </span>
+                      {suggestion.domain}
+                    </span>
+                    {suggestion.isCorrection && (
+                      <span className={`shrink-0 rounded-full px-2 py-1 text-[10px] uppercase tracking-wide ${
+                        index === emailSuggestionIndex ? "bg-black/15 text-black" : "bg-amber-400/15 text-amber-200"
+                      }`}>
+                        fix
+                      </span>
+                    )}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+          </div>
         <div>
-          <label htmlFor="booking-customer-phone" className="block text-sm font-medium text-white/60 mb-1.5">Phone number</label>
+          <label htmlFor="booking-customer-phone" className="mb-1.5 block text-sm font-black text-white">Phone</label>
           <input
             id="booking-customer-phone"
             type="tel"
@@ -475,7 +713,7 @@ function CheckoutForm({ onComplete, stripePromise }: CheckoutFormProps) {
             disabled={submitting || state.checkoutLocked}
             autoComplete="tel-national"
             inputMode="tel"
-            className="min-h-12 w-full rounded-xl px-4 py-3 text-base text-white placeholder-white/30 focus:outline-none focus:ring-2 focus:ring-amber-400"
+            className="min-h-12 w-full rounded-xl px-4 py-3 text-base font-semibold text-white placeholder-white/45 focus:outline-none focus:ring-2 focus:ring-amber-400"
             style={inputStyle}
             placeholder="+44 7700 900000"
           />
@@ -484,27 +722,27 @@ function CheckoutForm({ onComplete, stripePromise }: CheckoutFormProps) {
 
       {/* ── Payment details ── */}
       {!paymentUnavailable && (!stripePromise || !stripe || !elements) ? (
-        <div role="status" className="rounded-2xl p-5 text-sm text-amber-100" style={cardStyle}>
+        <div role="status" className="rounded-2xl p-5 text-sm font-bold text-white" style={cardStyle}>
           Loading secure payment form…
         </div>
       ) : stripePromise && !paymentUnavailable ? (
         <div className="rounded-2xl p-5" style={cardStyle}>
-          <h2 className="text-base font-black text-white mb-3">Payment details</h2>
+          <h2 className="mb-3 text-base font-black text-white">Card payment</h2>
           <div
             className="rounded-xl px-4 py-3.5"
-            style={{ background: "rgba(255,255,255,0.06)", boxShadow: "0 0 0 1px rgba(245,158,11,0.20)" }}
+            style={{ background: "rgba(255,255,255,0.09)", boxShadow: "0 0 0 1px rgba(245,158,11,0.32)" }}
           >
             <CardElement options={CARD_STYLE} />
           </div>
-          <p className="text-xs text-white/35 mt-2">Secured by Stripe. We never store your card details.</p>
+          <p className="mt-2 text-xs font-semibold text-white">Secure Stripe payment.</p>
         </div>
       ) : (
         <div
           className="rounded-2xl p-4 text-sm"
           style={{ background: "rgba(245,158,11,0.08)", boxShadow: "0 0 0 1px rgba(245,158,11,0.20)" }}
         >
-          <p className="font-bold text-amber-400">Online payment unavailable</p>
-          <p className="mt-1 text-amber-100/60">Please contact us to arrange your booking. No online payment has been confirmed.</p>
+          <p className="font-black text-amber-300">Online payment unavailable</p>
+          <p className="mt-1 font-semibold text-white">Contact us to arrange the booking.</p>
         </div>
       )}
 
@@ -514,59 +752,40 @@ function CheckoutForm({ onComplete, stripePromise }: CheckoutFormProps) {
         </p>
       )}
 
-      {/* ── Trust signals ── */}
-      <ul
-        className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1.5 text-[11px] sm:text-xs text-white/35"
-        aria-label="Trust signals"
-      >
-        <li className="flex items-center gap-1"><span className="text-amber-500/70">✓</span> Secure Stripe payment</li>
-        <li className="flex items-center gap-1"><span className="text-amber-500/70">✓</span> Final amount checked before booking</li>
-        <li className="flex items-center gap-1"><span className="text-amber-500/70">✓</span> Free cancellation up to 48 hours</li>
-        <li className="flex items-center gap-1"><span className="text-amber-500/70">✓</span> Partial refunds may apply</li>
-      </ul>
-
       {/* ── Need help ── */}
       <div className="rounded-2xl p-5" style={cardStyle}>
         <h2 className="text-base font-black text-white">Need help?</h2>
-        <p className="mt-1 text-sm leading-6 text-amber-100/55">
-          Speak to the team before paying if anything in the booking needs checking.
-        </p>
-        <div className="mt-4 grid gap-2 sm:grid-cols-2">
+        <div className="mt-3 grid gap-2 sm:grid-cols-2">
           <a
             href="tel:07909032889"
             aria-label="Call us on 07909 032889"
-            className="flex justify-center transition-transform hover:scale-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 rounded-full"
+            className="inline-flex min-h-11 items-center justify-center rounded-xl bg-white/8 px-4 text-sm font-black text-white ring-1 ring-white/15 transition hover:bg-white/12 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400"
           >
-            <Image src="/call-icon.png" alt="Call us" width={52} height={52} />
+            <Image src="/call-icon.png" alt="" width={28} height={28} className="mr-2" />
+            Call
           </a>
           <a
             href="https://wa.me/447909032889"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex min-h-11 items-center justify-center rounded-xl text-sm font-bold text-white/70 ring-1 ring-white/15 transition hover:bg-white/8 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400"
-            style={{ background: "rgba(255,255,255,0.06)" }}
+            aria-label="Chat with us on WhatsApp"
+            className="inline-flex h-12 w-12 items-center justify-center justify-self-center rounded-full bg-[#25D366] text-2xl text-white shadow-lg shadow-black/30 ring-1 ring-white/15 transition hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400"
           >
-            WhatsApp
+            <FaWhatsapp aria-hidden="true" />
           </a>
         </div>
       </div>
 
-      {/* ── Pay CTA ── */}
+      {/* The fixed action bar owns the visible payment CTA. */}
       <button
         id={STEP_PRIMARY_CTA_ID}
         type="submit"
-        disabled={submitting || creationUncertain || paymentUnavailable || !stripe || !elements || state.quoteStatus !== "valid" || state.clientTotal <= 0}
-        className="flex min-h-12 w-full items-center justify-center rounded-xl px-5 text-base font-black text-black shadow-lg transition hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:ring-offset-2 focus-visible:ring-offset-booking-background disabled:cursor-not-allowed disabled:opacity-40"
-        style={{ background: "linear-gradient(135deg, #F59E0B 0%, #EA580C 100%)" }}
+        disabled={submitting || creationUncertain || paymentUnavailable || !stripe || !elements || !hasQuoteLock || state.clientTotal <= 0}
+        className="sr-only"
+        aria-hidden="true"
+        tabIndex={-1}
       >
-        {submitting ? (
-          <span className="flex items-center justify-center gap-2">
-            <span className="h-4 w-4 animate-spin rounded-full border-2 border-black border-t-transparent" />
-            Processing...
-          </span>
-        ) : (
-          creationUncertain ? "Check booking status" : `Pay ${money.format(state.clientTotal)} and confirm →`
-        )}
+        {submitting ? "Processing..." : "Pay"}
       </button>
     </form>
   );
@@ -598,20 +817,17 @@ export function Step4Payment() {
         >
           <span aria-hidden="true">←</span> Back
         </button>
-        <p className="text-xs font-bold uppercase tracking-widest text-amber-400">Step 4 of 4 · Review &amp; Pay</p>
-        <h1 className="mt-2 text-3xl font-black tracking-tight text-white">Review and pay</h1>
-        <p className="mt-2 max-w-2xl text-base leading-7 text-amber-100/55">
-          Check the summary, enter your details, then pay the exact amount shown.
-        </p>
+        <p className="text-xs font-bold uppercase tracking-widest text-amber-400">Step 4 of 4 · Pay</p>
+        <h1 className="mt-2 text-3xl font-black tracking-tight text-white">Pay</h1>
       </div>
 
       {state.checkoutLocked && (
-        <div role="status" className="rounded-2xl border border-amber-500/30 bg-amber-500/10 p-4 text-sm leading-6 text-amber-100">
+        <div role="status" className="rounded-2xl border border-amber-500/30 bg-amber-500/10 p-4 text-sm font-semibold leading-6 text-white">
           <p className="font-bold text-white">Check this booking before starting another payment</p>
           <p className="mt-1">
             {state.clientSecret
-              ? "Your booking details are saved for this payment. If a payment attempt fails, use the same payment form to retry. If payment has already succeeded, the retry only checks its confirmation."
-              : "This checkout needs confirmation before starting another booking or payment. Wait for the current attempt, or contact us if it cannot finish."}
+              ? "Use this payment form to finish or retry the same booking."
+              : "Wait for the current attempt, or contact us to check it."}
           </p>
           {state.bookingRef && <p className="mt-2">Booking reference: <strong>{state.bookingRef}</strong></p>}
           <p className="mt-2"><a href="tel:07909032889" className="font-bold underline">Call us to check your booking</a></p>

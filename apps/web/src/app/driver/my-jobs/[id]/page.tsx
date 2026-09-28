@@ -229,7 +229,7 @@ export default function MyJobDetailPage() {
             <p className="font-black text-white text-lg">{job.booking.serviceName}</p>
             <p className="text-xs font-mono text-white/40">{job.booking.reference}</p>
           </div>
-          <div className="text-sm text-white/55 space-y-1.5">
+          <div className="text-sm text-white space-y-1.5">
             <p>📅 {new Date(job.booking.scheduledAt).toLocaleDateString("en-GB", { weekday: "long", day: "numeric", month: "long", year: "numeric" })}
               {job.booking.selectedTimeSlot && ` · ${TIME_LABELS[job.booking.selectedTimeSlot] ?? job.booking.selectedTimeSlot}`}
             </p>
@@ -270,7 +270,7 @@ export default function MyJobDetailPage() {
         {job.booking.notes && (
           <div className="rounded-2xl p-4" style={{ background: "rgba(245,158,11,0.08)", border: "1px solid rgba(245,158,11,0.2)" }}>
             <p className="text-xs font-bold text-amber-400 mb-1">📝 Notes from customer</p>
-            <p className="text-sm text-white/55">{job.booking.notes}</p>
+            <p className="text-sm text-white">{job.booking.notes}</p>
           </div>
         )}
 
@@ -324,7 +324,7 @@ export default function MyJobDetailPage() {
             <label className="flex flex-col items-center justify-center gap-2 w-full rounded-xl py-6 cursor-pointer transition-colors" style={{ background: "rgba(245,158,11,0.08)", border: "2px dashed rgba(245,158,11,0.3)" }}>
               <span className="text-3xl" aria-hidden="true">📷</span>
               <span className="text-sm font-bold text-amber-400">Take a photo</span>
-              <span className="text-xs text-white/55">or pick one from your gallery</span>
+              <span className="text-xs text-white">or pick one from your gallery</span>
               <input
                 type="file"
                 accept="image/*"

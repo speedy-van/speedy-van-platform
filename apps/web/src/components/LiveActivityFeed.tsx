@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 
 /**
  * Small bottom-left moving tip.
@@ -15,6 +16,7 @@ const MESSAGES: { text: string; icon: string }[] = [
 ];
 
 export function LiveActivityFeed() {
+  const pathname = usePathname();
   const [index, setIndex] = useState(0);
   const [visible, setVisible] = useState(false);
   const [dismissed, setDismissed] = useState(false);
@@ -35,7 +37,7 @@ export function LiveActivityFeed() {
     };
   }, []);
 
-  if (dismissed) return null;
+  if (pathname === "/" || dismissed) return null;
 
   const msg = MESSAGES[index];
 

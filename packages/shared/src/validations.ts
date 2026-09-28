@@ -63,6 +63,9 @@ export const CreateBookingSchema = z.object({
   helpersCount: z.number().int().min(0).max(4).default(0),
   needsPacking: z.boolean().default(false),
   needsAssembly: z.boolean().default(false),
+  packingItemCount: z.number().int().min(0).max(99).default(0),
+  assemblyItemCount: z.number().int().min(0).max(99).default(0),
+  dismantlingItemCount: z.number().int().min(0).max(99).default(0),
 
   selectedItems: z.array(SelectedItemSchema).default([]),
 
@@ -104,6 +107,9 @@ export const PricingCalculateSchema = z.object({
   helpersCount: z.number().int().min(0).max(4).default(0),
   needsPacking: z.boolean().default(false),
   needsAssembly: z.boolean().default(false),
+  packingItemCount: z.number().int().min(0).max(99).default(0),
+  assemblyItemCount: z.number().int().min(0).max(99).default(0),
+  dismantlingItemCount: z.number().int().min(0).max(99).default(0),
   selectedItems: z.array(SelectedItemSchema).default([]),
   pickupLat: z.number().optional(),
   pickupLng: z.number().optional(),

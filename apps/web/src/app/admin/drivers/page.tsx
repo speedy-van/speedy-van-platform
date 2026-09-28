@@ -174,7 +174,7 @@ export default function DriversPage() {
       </div>
 
       <div className="flex items-center justify-between">
-        <p className="text-sm text-white/55">{drivers.length} drivers total</p>
+        <p className="text-sm text-white">{drivers.length} drivers total</p>
         <button onClick={() => { setModal("add"); setError(""); setSuccess(""); setTempPassword(""); }}
           className="text-black font-black text-sm px-5 py-2.5 rounded-lg transition-colors"
           style={{ background: "linear-gradient(135deg, #F59E0B 0%, #EA580C 100%)" }}>
@@ -210,10 +210,10 @@ export default function DriversPage() {
                   return (
                   <tr key={d.id} className="hover:bg-amber-500/6 transition-colors" style={{ background: idx % 2 === 1 ? "rgba(255,255,255,0.02)" : "transparent" }}>
                     <td className="px-4 py-3 text-sm font-semibold text-white">{d.user.name}</td>
-                    <td className="px-4 py-3 text-sm text-white/55">{d.user.email}</td>
-                    <td className="px-4 py-3 text-sm text-white/55">{d.phone ?? "—"}</td>
-                    <td className="px-4 py-3 text-sm text-white/55">{d.vanSize}</td>
-                    <td className="px-4 py-3 text-right text-sm font-mono text-white/55">{e ? `£${e.total.toFixed(2)}` : "—"}</td>
+                    <td className="px-4 py-3 text-sm text-white">{d.user.email}</td>
+                    <td className="px-4 py-3 text-sm text-white">{d.phone ?? "—"}</td>
+                    <td className="px-4 py-3 text-sm text-white">{d.vanSize}</td>
+                    <td className="px-4 py-3 text-right text-sm font-mono text-white">{e ? `£${e.total.toFixed(2)}` : "—"}</td>
                     <td className="px-4 py-3 text-right">
                       <div className="flex items-center justify-end gap-1.5">
                         <span className={`text-sm font-mono font-semibold ${e && e.unpaid > 0 ? "text-rose-400" : "text-white/40"}`}>
@@ -292,7 +292,7 @@ export default function DriversPage() {
             </div>
           ) : (
             <>
-              <p className="text-sm text-white/55">Generate a new temporary password for <span className="font-semibold text-white">{modal.driver.user.name}</span>?</p>
+              <p className="text-sm text-white">Generate a new temporary password for <span className="font-semibold text-white">{modal.driver.user.name}</span>?</p>
               <button onClick={() => resetPassword(modal.driver)} disabled={saving} className="w-full bg-rose-500/15 text-rose-400 border border-rose-500/20 font-semibold py-2 rounded-lg hover:bg-rose-500/25 disabled:opacity-50">
                 {saving ? "Resetting…" : "Reset Password"}
               </button>

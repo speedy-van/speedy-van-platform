@@ -111,7 +111,7 @@ export default function MyJobsPage() {
             <button
               key={t.id}
               onClick={() => setTab(t.id)}
-              className={`flex-1 py-2 text-xs font-bold rounded-lg transition-colors ${tab === t.id ? "text-black" : "text-white/55"}`}
+              className={`flex-1 py-2 text-xs font-bold rounded-lg transition-colors ${tab === t.id ? "text-black" : "text-white"}`}
               style={tab === t.id ? { background: "linear-gradient(135deg, #F59E0B 0%, #EA580C 100%)" } : undefined}
             >
               {t.label}

@@ -1,7 +1,7 @@
 import { createHmac, timingSafeEqual } from "crypto";
 
 const SECRET = process.env.QUOTE_SIGNING_SECRET ?? "";
-const EXPIRY_MS = 30 * 60 * 1000; // 30 minutes
+export const QUOTE_HOLD_MS = 10 * 60 * 1000; // 10 minutes
 
 export interface QuoteTokenPayload {
   price: number;
@@ -15,8 +15,13 @@ function sign(payload: string): string {
   return createHmac("sha256", SECRET).update(payload).digest("hex");
 }
 
+export function createQuoteExpiresAt(now = Date.now()): number {
+  return now + QUOTE_HOLD_MS;
+}
+
 export function issueQuoteToken(payload: QuoteTokenPayload): string {
-  const data = JSON.stringify({ ...payload, expiresAt: Date.now() + EXPIRY_MS });
+  const expiresAt = payload.expiresAt > 0 ? payload.expiresAt : createQuoteExpiresAt();
+  const data = JSON.stringify({ ...payload, expiresAt });
   const encoded = Buffer.from(data).toString("base64url");
   const sig = sign(encoded);
   return `${encoded}.${sig}`;

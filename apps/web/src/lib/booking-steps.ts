@@ -18,7 +18,7 @@ export const STEP_PRIMARY_CTA_ID = "step-primary-cta";
 export const LEGACY_PRIMARY_CTA_ID = "booking-primary-action";
 
 export const BOOKING_STEPS: readonly BookingProgressStep[] = [
-  { step: 2, number: 1, label: "Journey", isPay: false },
+  { step: 2, number: 1, label: "Addresses", isPay: false },
   { step: 3, number: 2, label: "Items", isPay: false },
   { step: 4, number: 3, label: "Date", isPay: false },
   { step: 5, number: 4, label: "Pay", isPay: true },

@@ -6,10 +6,10 @@ import { ServiceImageCard } from "@/components/shared/ServiceImageCard";
 import { getServiceImage } from "@/lib/service-images";
 import { AREAS } from "@/lib/areas";
 import { InstantQuoteCalculator } from "@/components/InstantQuoteCalculator";
-import { PostcodeCheck } from "@/components/PostcodeCheck";
 import { LiveAvailability } from "@/components/LiveAvailability";
 import { ServiceComparison } from "@/components/ServiceComparison";
 import { FaqSearch } from "@/components/FaqSearch";
+import { AnimatedTrustNumber } from "@/components/AnimatedTrustNumber";
 import { JsonLd } from "@/components/seo/JsonLd";
 import {
   buildLocalBusinessSchema,
@@ -49,9 +49,9 @@ export const metadata: Metadata = {
 // ─── Static data ──────────────────────────────────────────────────────────────
 
 const TRUST_STATS = [
-  { value: "30+", label: "Areas across Scotland" },
-  { value: "£10k", label: "Goods-in-transit cover" },
-  { value: "7 days", label: "Available every day" },
+  { value: "30+", target: 30, suffix: "+", label: "Areas across Scotland" },
+  { value: "£10k", target: 10, prefix: "£", suffix: "k", label: "Goods-in-transit cover" },
+  { value: "7 days", target: 7, suffix: " days", label: "Available every day" },
   { value: "Fixed", label: "Price shown before you book" },
 ];
 
@@ -263,7 +263,7 @@ export default function HomePage() {
           <div className="hero-road-lines" />
         </div>
 
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 pb-14 sm:py-20 lg:py-32">
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-10 sm:py-16 lg:py-24">
           <div className="max-w-5xl">
             <section
               id="get-quote"
@@ -277,13 +277,13 @@ export default function HomePage() {
                 Book your van in <span className="text-amber-400">3 steps</span>
               </h1>
 
-              <ol className="mt-4 flex flex-col sm:flex-row gap-2 sm:gap-6" aria-label="How to book">
+              <ol className="mt-3 flex flex-wrap gap-2 sm:gap-4" aria-label="How to book">
                 {[
-                  { n: "1", text: "Pick a service below" },
-                  { n: "2", text: "Add addresses & date" },
-                  { n: "3", text: "Review & pay online" },
+                  { n: "1", text: "Service" },
+                  { n: "2", text: "Addresses & date" },
+                  { n: "3", text: "Review & pay" },
                 ].map((step) => (
-                  <li key={step.n} className="flex items-center gap-2.5 text-sm text-white/70">
+                  <li key={step.n} className="flex items-center gap-2 text-sm text-white">
                     <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-[11px] font-black text-black" style={{ background: "linear-gradient(135deg,#F59E0B,#EA580C)" }}>
                       {step.n}
                     </span>
@@ -294,14 +294,14 @@ export default function HomePage() {
 
               <h2
                 id="hero-service-heading"
-                className="mt-7 text-xl font-extrabold leading-tight text-white sm:text-2xl"
+                className="mt-5 text-xl font-extrabold leading-tight text-white sm:text-2xl"
               >
                 What do you need moved?
               </h2>
 
               {/* Mobile: 2×2 grid, last card full-width — Desktop: 5-col grid */}
               <ul
-                className="mt-4 grid grid-cols-2 gap-3 lg:grid-cols-5"
+                className="mt-4 grid grid-cols-2 gap-3 md:grid-cols-3 xl:grid-cols-5"
                 role="list"
               >
                 {BOOKING_SERVICE_OPTIONS.map((choice, idx) => {
@@ -310,50 +310,49 @@ export default function HomePage() {
                   const isLast = idx === BOOKING_SERVICE_OPTIONS.length - 1;
 
                   return (
-                    <li key={choice.id} className={isLast ? "col-span-2 lg:col-span-1" : ""}>
+                    <li key={choice.id} className={isLast ? "col-span-2 md:col-span-1" : ""}>
                       <Link
                         href={`/book?service=${choice.id}`}
                         data-track-event="quote_click"
                         data-track-location={`hero_service_${choice.id}`}
-                        className="group relative flex h-full min-h-[220px] flex-col overflow-hidden rounded-2xl text-left text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:ring-offset-2 focus-visible:ring-offset-stone-950 lg:min-h-[240px]"
+                        className="group relative flex h-full min-h-[215px] flex-col overflow-hidden rounded-2xl border-2 border-amber-300 bg-stone-950 text-left text-white shadow-[0_0_0_1px_rgba(255,255,255,0.12),0_0_24px_-8px_rgba(245,158,11,0.55),0_18px_44px_-18px_rgba(245,158,11,0.80),0_18px_30px_-18px_rgba(0,0,0,1)] ring-1 ring-amber-500/20 transition duration-300 hover:-translate-y-1 hover:border-white hover:ring-amber-300/60 hover:shadow-[0_0_0_1px_rgba(255,255,255,0.24),0_0_34px_-6px_rgba(245,158,11,0.80),0_22px_56px_-20px_rgba(245,158,11,0.90)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:ring-offset-2 focus-visible:ring-offset-stone-950 sm:min-h-[245px] xl:min-h-[270px]"
                         style={{ animationDelay: `${idx * 0.55}s` }}
                       >
-                        {/* Service image — full card */}
-                        <Image
-                          src={imageSrc}
-                          alt=""
-                          fill
-                          sizes="(max-width: 1023px) 50vw, 20vw"
-                          priority={idx === 0}
-                          fetchPriority={idx === 0 ? "high" : undefined}
-                          className="object-cover object-center transition-transform duration-500 group-hover:scale-105"
-                        />
+                        <div className="relative h-32 shrink-0 overflow-hidden border-b-2 border-amber-300/80 sm:h-36 xl:h-40">
+                          <Image
+                            src={imageSrc}
+                            alt=""
+                            fill
+                            sizes="(max-width: 1023px) 50vw, 20vw"
+                            priority={idx === 0}
+                            fetchPriority={idx === 0 ? "high" : undefined}
+                            className="object-cover object-center brightness-110 saturate-110 contrast-105 transition-transform duration-500 group-hover:scale-105"
+                          />
+                          <span
+                            className="absolute right-2.5 top-2.5 z-10 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-amber-300 text-sm font-black text-stone-950 shadow-lg shadow-black/45 ring-2 ring-white/50 transition-all duration-300 group-hover:scale-110"
+                            aria-hidden="true"
+                          >
+                            →
+                          </span>
+                        </div>
 
-                        {/* Arrow — top right */}
-                        <span
-                          className="absolute right-3 top-3 z-10 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-black/40 text-xs font-bold text-white/70 backdrop-blur-sm transition-all duration-300 group-hover:bg-amber-400 group-hover:text-stone-950 group-hover:scale-110"
-                          aria-hidden="true"
-                        >
-                          →
-                        </span>
-
-                        {/* Glass panel — pinned to bottom */}
                         <div
-                          className="relative z-10 mt-auto px-3 py-2.5 lg:p-4 backdrop-blur-md"
+                          className="relative z-10 flex flex-1 flex-col justify-between px-3.5 py-3 lg:p-4"
                           style={{
-                            background: "rgba(8,4,0,0.72)",
-                            borderTop: "1px solid rgba(245,158,11,0.20)",
+                            background: "linear-gradient(180deg, rgba(8,4,0,0.98), #050200)",
                           }}
                         >
-                          <span className="block text-sm font-extrabold leading-snug text-amber-300">
-                            {choice.label}
-                          </span>
-                          <span className="mt-0.5 block text-[11px] leading-4 text-white/80">
-                            {choice.description}
-                          </span>
+                          <div>
+                            <span className="block text-base font-black leading-snug text-amber-300 sm:text-lg">
+                              {choice.label}
+                            </span>
+                            <span className="mt-0.5 hidden text-[11px] leading-4 text-white sm:block">
+                              {choice.description}
+                            </span>
+                          </div>
                           <div className="mt-2 flex flex-wrap items-center gap-1.5">
                             {pricedService && (
-                              <span className="rounded-full bg-amber-400 px-2.5 py-0.5 text-[11px] font-bold text-stone-950">
+                              <span className="rounded-full bg-amber-300 px-3.5 py-1.5 text-xs font-black text-stone-950 shadow-md shadow-black/50 ring-1 ring-white/40">
                                 From {getServicePriceLabel(pricedService)}
                               </span>
                             )}
@@ -368,43 +367,10 @@ export default function HomePage() {
                 })}
               </ul>
 
-              <p className="mt-3 text-sm font-medium text-slate-300">
-                Choose a service to continue with addresses, inventory, schedule, and payment.
-              </p>
             </section>
-
-            {/* Urgency badge */}
-            <div className="hero-fade-up hero-fade-up-4 mt-5 inline-flex items-center gap-2 rounded-full bg-amber-500/12 border border-amber-400/30 px-3 py-1.5 text-[11px] sm:text-xs font-bold uppercase tracking-wide text-amber-300 urgency-pulse">
-              <span className="inline-block w-2 h-2 rounded-full bg-amber-400 animate-pulse" aria-hidden="true" />
-              Same-day enquiries · Capacity checked before confirmation
-            </div>
 
             {/* Live availability microcopy */}
             <LiveAvailability />
-
-            {/* Postcode availability checker */}
-            <PostcodeCheck />
-
-            <ul
-              className="hero-fade-up hero-fade-up-5 mt-6 sm:mt-8 flex flex-wrap gap-2 sm:gap-2.5"
-              role="list"
-              aria-label="Trust signals"
-            >
-              {[
-                "Online Quotes",
-                "Scottish Coverage",
-                "Goods-in-Transit Cover",
-                "Homes, Flats & Offices",
-              ].map((badge, i) => (
-                <li
-                  key={badge}
-                  className={`trust-badge trust-badge-${i + 1} inline-flex items-center gap-1.5 rounded-full bg-white/[0.07] px-3 py-1.5 text-[11px] sm:text-xs font-medium text-slate-300`}
-                >
-                  <span className="inline-block w-1 h-1 rounded-full bg-amber-400 shrink-0" aria-hidden="true" />
-                  {badge}
-                </li>
-              ))}
-            </ul>
           </div>
         </div>
 
@@ -438,7 +404,13 @@ export default function HomePage() {
                 }`}
               >
                 <span className="flex items-baseline justify-center gap-1 bg-gradient-to-r from-amber-300 via-amber-400 to-orange-400 bg-clip-text text-3xl md:text-4xl font-black text-transparent leading-none tracking-tight">
-                  {stat.value}
+                  <AnimatedTrustNumber
+                    finalText={stat.value}
+                    target={stat.target}
+                    prefix={stat.prefix}
+                    suffix={stat.suffix}
+                    delayMs={i * 160}
+                  />
                 </span>
                 <span className="mt-1.5 text-[11px] sm:text-xs font-semibold uppercase tracking-wider text-amber-400/60">
                   {stat.label}
@@ -480,7 +452,7 @@ export default function HomePage() {
                   <span className="mt-2 text-lg font-black text-white">
                     {path.title}
                   </span>
-                  <span className="mt-2 text-sm leading-6 text-white/55">
+                  <span className="mt-2 text-sm leading-6 text-white">
                     {path.body}
                   </span>
                   <span className="mt-5 inline-flex min-h-10 items-center justify-center rounded-xl px-4 text-sm font-black text-black transition group-hover:brightness-110" style={{ background: "linear-gradient(135deg, #F59E0B 0%, #EA580C 100%)" }}>
@@ -631,7 +603,7 @@ export default function HomePage() {
                 <h3 className="text-xl font-black text-white mb-3">
                   {step.title}
                 </h3>
-                <p className="text-white/55 leading-relaxed">
+                <p className="text-white leading-relaxed">
                   {step.description}
                 </p>
               </li>
@@ -794,7 +766,7 @@ export default function HomePage() {
             {MOVE_DECISION_POINTS.map((point) => (
               <li key={point.title} className="rounded-2xl p-5" style={{ background: "rgba(255,255,255,0.04)", boxShadow: "0 0 0 1px rgba(245,158,11,0.15), 0 8px 32px rgba(0,0,0,0.4)" }}>
                 <h3 className="font-black text-white">{point.title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-white/55">{point.body}</p>
+                <p className="mt-2 text-sm leading-relaxed text-white">{point.body}</p>
               </li>
             ))}
           </ul>

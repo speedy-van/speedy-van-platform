@@ -86,7 +86,7 @@ export function FaqSearch({ faqs }: { faqs: Faq[] }) {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                 </svg>
               </summary>
-              <div className="px-6 pb-5 text-white/55 leading-relaxed border-t border-white/8">{faq.answer}</div>
+              <div className="px-6 pb-5 text-white leading-relaxed border-t border-white/8">{faq.answer}</div>
             </details>
           ))}
         </div>

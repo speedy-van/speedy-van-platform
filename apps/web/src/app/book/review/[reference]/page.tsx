@@ -82,7 +82,7 @@ function ReviewContent() {
             <span className="text-3xl">⭐</span>
           </div>
           <h1 className="text-2xl font-black text-white mb-2">Thank you!</h1>
-          <p className="text-white/55 mb-8">
+          <p className="text-white mb-8">
             Your review for booking <span className="font-mono font-black text-white">{reference}</span> has been submitted.
             We really appreciate your feedback.
           </p>
@@ -125,7 +125,7 @@ function ReviewContent() {
           {/* Email */}
           {!emailFromQuery && (
             <div>
-              <label className="block text-sm font-medium text-white/55 mb-1.5">
+              <label className="block text-sm font-medium text-white mb-1.5">
                 Email address
               </label>
               <input
@@ -141,7 +141,7 @@ function ReviewContent() {
 
           {/* Stars */}
           <div>
-            <label className="block text-sm font-medium text-white/55 mb-2">
+            <label className="block text-sm font-medium text-white mb-2">
               How would you rate your experience?
             </label>
             <div className="flex gap-2" role="group" aria-label="Star rating">
@@ -170,7 +170,7 @@ function ReviewContent() {
 
           {/* Comment */}
           <div>
-            <label className="block text-sm font-medium text-white/55 mb-1.5">
+            <label className="block text-sm font-medium text-white mb-1.5">
               Your review
             </label>
             <textarea

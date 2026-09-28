@@ -59,7 +59,7 @@ function StatCard({
       </span>
       <span
         className={`text-xs font-semibold ${
-          accent ? "text-black/70" : "text-white/55"
+          accent ? "text-black/70" : "text-white"
         }`}
       >
         {label}
@@ -112,7 +112,7 @@ export default function EarningsPage() {
       {/* Header */}
       <div className="px-4 pt-6 pb-4" style={{ borderBottom: "1px solid rgba(245,158,11,0.15)" }}>
         <h1 className="text-2xl font-black text-white">Earnings</h1>
-        <p className="text-white/55 text-sm mt-0.5">
+        <p className="text-white text-sm mt-0.5">
           All time: £{data.allTime.amount.toFixed(2)} across {data.allTime.jobs} jobs
         </p>
       </div>
@@ -129,7 +129,7 @@ export default function EarningsPage() {
         <div className="rounded-xl p-4" style={{ background: "rgba(255,255,255,0.04)", boxShadow: "0 0 0 1px rgba(245,158,11,0.15), 0 4px 16px rgba(0,0,0,0.4)" }}>
           <div className="flex justify-between items-center mb-2">
             <span className="text-sm font-semibold text-white">Daily cap</span>
-            <span className="text-sm text-white/55">
+            <span className="text-sm text-white">
               £{data.today.amount.toFixed(0)} / £{data.dailyCap}
             </span>
           </div>
@@ -188,7 +188,7 @@ export default function EarningsPage() {
         {data.recentPayments.length === 0 && data.allTime.jobs === 0 && (
           <div className="text-center py-12 text-white/40">
             <p className="text-4xl mb-3">💷</p>
-            <p className="font-semibold text-white/55">No earnings yet</p>
+            <p className="font-semibold text-white">No earnings yet</p>
             <p className="text-sm mt-1 text-white/40">Complete jobs to see your earnings here</p>
           </div>
         )}

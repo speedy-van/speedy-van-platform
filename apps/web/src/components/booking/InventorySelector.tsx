@@ -1,11 +1,17 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useBooking, type SelectedItem } from "@/lib/booking-store";
 import { getBookingServiceOptionForState } from "@/lib/booking-service-options";
 import { STEP_PRIMARY_CTA_ID } from "@/lib/booking-steps";
 import { ItemPicker } from "./ItemPicker";
 import { VanFillMeter } from "./VanFillMeter";
+import {
+  defaultVanTierForService,
+  selectVanTierForLoad,
+  vanTierForBedroomCount,
+  type VolumeItem,
+} from "@speedy-van/shared";
 import {
   bedroomCountToPricingVariant,
   type BedroomCount,
@@ -27,6 +33,23 @@ export function InventorySelector({ onBack, onContinue }: InventorySelectorProps
   const serviceOption = getBookingServiceOptionForState(state.entryServiceSlug, state.serviceSlug);
   const [error, setError] = useState("");
   const totalItems = selectedItemCount(state.items);
+  const volumeItems = useMemo<VolumeItem[]>(
+    () => state.items.map((item) => ({
+      itemId: item.itemId,
+      name: item.name,
+      quantity: item.quantity,
+    })),
+    [state.items],
+  );
+  const baseVanTier = useMemo(
+    () => vanTierForBedroomCount(state.bedroomCount, state.exactBedroomCount) ??
+      defaultVanTierForService(state.entryServiceSlug || state.serviceSlug),
+    [state.bedroomCount, state.entryServiceSlug, state.exactBedroomCount, state.serviceSlug],
+  );
+  const selectedVanTier = useMemo(
+    () => selectVanTierForLoad(volumeItems, baseVanTier),
+    [baseVanTier, volumeItems],
+  );
 
   function handleContinue() {
     if (totalItems <= 0) {
@@ -38,7 +61,7 @@ export function InventorySelector({ onBack, onContinue }: InventorySelectorProps
     onContinue?.();
   }
 
-  const cardStyle = { background: "rgba(255,255,255,0.04)", boxShadow: "0 0 0 1px rgba(245,158,11,0.15), 0 8px 32px rgba(0,0,0,0.4)" };
+  const cardStyle = { background: "rgba(255,255,255,0.055)", boxShadow: "0 0 0 1px rgba(245,158,11,0.22), 0 8px 32px rgba(0,0,0,0.42)" };
 
   return (
     <section className="space-y-5">
@@ -53,12 +76,16 @@ export function InventorySelector({ onBack, onContinue }: InventorySelectorProps
         </button>
         <p className="text-xs font-bold uppercase tracking-widest text-amber-400">Step 2 of 4 · Items</p>
         <h1 className="mt-2 text-3xl font-black tracking-tight text-white">
-          {serviceOption?.inventoryTitle ?? "Items and help"}
+          Add items
         </h1>
-        <p className="mt-2 max-w-2xl text-base leading-7 text-amber-100/55">
-          {serviceOption?.inventoryDescription ??
-            "Add what is moving, then choose optional help. Paid extras start off until you select them."}
-        </p>
+        <VanFillMeter
+          items={state.items}
+          serviceSlug={state.serviceSlug}
+          baseVanTier={baseVanTier}
+          vanTier={selectedVanTier}
+          showWhenEmpty
+          compact
+        />
       </div>
 
       {/* ── Service context badge ── */}
@@ -70,7 +97,6 @@ export function InventorySelector({ onBack, onContinue }: InventorySelectorProps
           <span className="rounded-full bg-amber-500/20 px-2.5 py-1 text-xs font-bold text-amber-400 ring-1 ring-amber-500/25">
             {serviceOption.scopeBadge}
           </span>
-          <p className="w-full text-sm font-medium leading-6 text-amber-100/60">{serviceOption.summaryNote}</p>
         </div>
       )}
 
@@ -99,16 +125,13 @@ export function InventorySelector({ onBack, onContinue }: InventorySelectorProps
         />
       </section>
 
-      {/* ── Van-fill meter (T7) ── */}
-      <VanFillMeter items={state.items} serviceSlug={state.serviceSlug} />
-
       {/* ── Move help ── */}
       <section className="rounded-2xl p-5" style={cardStyle}>
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div>
             <h2 className="text-lg font-black text-white">Move help</h2>
-            <p className="mt-1 text-sm leading-6 text-amber-100/55">
-              Your booking includes a professional driver with loading and unloading assistance. Add extra help only when the job needs more hands.
+            <p className="mt-1 text-sm font-semibold leading-6 text-white">
+              Driver loading help is included. Add extras only if needed.
             </p>
           </div>
           <span className="rounded-full bg-amber-500/15 px-3 py-1 text-xs font-bold text-amber-400 ring-1 ring-amber-500/25">
@@ -130,8 +153,8 @@ export function InventorySelector({ onBack, onContinue }: InventorySelectorProps
               className="mt-1 h-5 w-5 rounded border-white/20 bg-white/10 text-amber-500 focus:ring-amber-400"
             />
             <span>
-              <span className="block text-sm font-bold text-white">Packing service</span>
-              <span className="mt-1 block text-sm leading-5 text-white/55">We pack and wrap your items before loading.</span>
+              <span className="block text-sm font-bold text-white">Packing</span>
+              <span className="mt-1 block text-sm leading-5 text-white">Pack and wrap before loading.</span>
             </span>
           </label>
 
@@ -148,8 +171,8 @@ export function InventorySelector({ onBack, onContinue }: InventorySelectorProps
               className="mt-1 h-5 w-5 rounded border-white/20 bg-white/10 text-amber-500 focus:ring-amber-400"
             />
             <span>
-              <span className="block text-sm font-bold text-white">Assembly or disassembly</span>
-              <span className="mt-1 block text-sm leading-5 text-white/55">Flat-pack furniture, beds and similar items.</span>
+              <span className="block text-sm font-bold text-white">Disassembly</span>
+              <span className="mt-1 block text-sm leading-5 text-white">Beds, wardrobes and flat-pack items.</span>
             </span>
           </label>
         </div>
@@ -158,7 +181,7 @@ export function InventorySelector({ onBack, onContinue }: InventorySelectorProps
           <div className="flex flex-wrap items-center justify-between gap-4">
             <div>
               <h3 className="text-sm font-bold text-white">Extra helpers</h3>
-              <p className="mt-1 text-sm text-white/55">
+              <p className="mt-1 text-sm text-white">
                 {state.helpersCount === 0
                   ? "No extra helpers selected."
                   : `${state.helpersCount} extra helper${state.helpersCount > 1 ? "s" : ""} selected.`}

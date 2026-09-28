@@ -232,7 +232,7 @@ function TrackContent() {
           }}
         >
           <div>
-            <label className="block text-sm font-medium text-white/55 mb-1.5">
+            <label className="block text-sm font-medium text-white mb-1.5">
               Booking reference
             </label>
             <input
@@ -245,7 +245,7 @@ function TrackContent() {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-white/55 mb-1.5">
+            <label className="block text-sm font-medium text-white mb-1.5">
               Email address
             </label>
             <input
@@ -409,7 +409,7 @@ function TrackContent() {
                 <p className="text-xs text-white/40 mb-3">
                   A few quick things to make the move smooth.
                 </p>
-                <ul className="space-y-2 text-sm text-white/55">
+                <ul className="space-y-2 text-sm text-white">
                   <li className="flex items-start gap-2">
                     <span aria-hidden="true">📦</span>
                     <span>Box up smaller items and label fragile boxes clearly.</span>
@@ -524,11 +524,11 @@ function TrackContent() {
             }}
           >
             <h2 className="text-lg font-black text-white">Cancel booking?</h2>
-            <p className="text-sm text-white/55">
+            <p className="text-sm text-white">
               Please tell us why you are cancelling. A refund will be calculated based on our cancellation policy.
             </p>
             <div>
-              <label className="block text-sm font-medium text-white/55 mb-1.5">Reason</label>
+              <label className="block text-sm font-medium text-white mb-1.5">Reason</label>
               <textarea
                 value={cancelReason}
                 onChange={(e) => setCancelReason(e.target.value)}
@@ -544,7 +544,7 @@ function TrackContent() {
               <button
                 type="button"
                 onClick={() => { setCancelModal(false); setCancelReason(""); setCancelError(""); }}
-                className="flex-1 border border-amber-900/20 text-white/55 py-2.5 rounded-xl text-sm font-medium hover:border-amber-500/30 hover:text-white/80 transition"
+                className="flex-1 border border-amber-900/20 text-white py-2.5 rounded-xl text-sm font-medium hover:border-amber-500/30 hover:text-white/80 transition"
                 style={{ background: "rgba(255,255,255,0.03)" }}
               >
                 Keep booking

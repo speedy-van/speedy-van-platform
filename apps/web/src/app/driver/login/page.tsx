@@ -66,7 +66,7 @@ function DriverLoginForm() {
         <div className="text-center mb-8">
           <div className="text-5xl mb-3">🚛</div>
           <h1 className="text-2xl font-extrabold text-white tracking-tight">Speedy Van</h1>
-          <p className="text-white/55 text-sm mt-1">Driver Portal</p>
+          <p className="text-white text-sm mt-1">Driver Portal</p>
         </div>
 
         <form onSubmit={handleSubmit} aria-busy={loading} className="rounded-2xl p-6 space-y-4" style={{ background: "rgba(255,255,255,0.04)", boxShadow: "0 0 0 1px rgba(245,158,11,0.15), 0 8px 32px rgba(0,0,0,0.4)" }}>
@@ -76,7 +76,7 @@ function DriverLoginForm() {
             </div>
           )}
           <div>
-            <label htmlFor="driver-login-email" className="block text-sm font-medium text-white/55 mb-1.5">Email</label>
+            <label htmlFor="driver-login-email" className="block text-sm font-medium text-white mb-1.5">Email</label>
             <input
               id="driver-login-email"
               type="email"
@@ -91,7 +91,7 @@ function DriverLoginForm() {
             />
           </div>
           <div>
-            <label htmlFor="driver-login-password" className="block text-sm font-medium text-white/55 mb-1.5">Password</label>
+            <label htmlFor="driver-login-password" className="block text-sm font-medium text-white mb-1.5">Password</label>
             <input
               id="driver-login-password"
               type="password"

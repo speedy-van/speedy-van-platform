@@ -55,7 +55,7 @@ export function LocationToggle() {
       className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition-colors ${
         active
           ? "text-emerald-400"
-          : "text-white/55"
+          : "text-white"
       }`}
       style={active
         ? { background: "rgba(16,185,129,0.15)", border: "1px solid rgba(16,185,129,0.3)" }

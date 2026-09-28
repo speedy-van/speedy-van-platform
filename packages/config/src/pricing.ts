@@ -35,7 +35,7 @@ export const DEFAULT_PRICING_CONFIG = {
     storm: 25,
   },
   addon: {
-    helperPerHourPerHelper: 18,
+    helperPerHourPerHelper: 55,
     packingFlat: 35,
     assemblyFlat: 25,
   },

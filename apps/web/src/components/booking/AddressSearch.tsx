@@ -149,7 +149,7 @@ export function AddressSearch({ label, value, onSelect, onClear, placeholder }: 
 
   return (
     <div ref={containerRef} className="relative">
-      <label htmlFor={inputId} className="block text-sm font-medium text-white/60 mb-1.5">{label}</label>
+      <label htmlFor={inputId} className="mb-2 block text-sm font-black text-white">{label}</label>
       <div className="relative">
         <input
           id={inputId}
@@ -157,8 +157,8 @@ export function AddressSearch({ label, value, onSelect, onClear, placeholder }: 
           value={query}
           onChange={(e) => handleChange(e.target.value)}
           placeholder={placeholder || "Start typing an address…"}
-          className="min-h-12 w-full rounded-xl px-4 py-3 text-base text-white placeholder-white/30 focus:outline-none focus:ring-2 focus:ring-amber-400"
-          style={{ background: "rgba(255,255,255,0.07)", boxShadow: "0 0 0 1px rgba(255,255,255,0.10)" }}
+          className="min-h-14 w-full rounded-xl px-4 py-3 text-base font-semibold text-white placeholder-white/55 focus:outline-none focus:ring-2 focus:ring-amber-400"
+          style={{ background: "rgba(255,255,255,0.10)", boxShadow: "0 0 0 1px rgba(245,158,11,0.35)" }}
           autoComplete="off"
           role="combobox"
           aria-autocomplete="list"
@@ -172,18 +172,18 @@ export function AddressSearch({ label, value, onSelect, onClear, placeholder }: 
           </div>
         )}
       </div>
-      <p id={`${inputId}-state`} className="mt-1.5 text-xs text-amber-400/60" aria-live="polite">
+      <p id={`${inputId}-state`} className="mt-2 text-xs font-semibold text-amber-300" aria-live="polite">
         {value && query === value.address
-          ? `Confirmed address${value.postcode ? `: ${value.postcode}` : ""}`
+          ? `Confirmed${value.postcode ? `: ${value.postcode}` : ""}`
           : query.trim().length > 0
-            ? "Choose a suggestion to confirm this address."
-            : "Start typing, then choose a matching address."}
+            ? "Select a suggestion."
+            : "Type an address."}
       </p>
       <button
         type="button"
         onClick={handleUseMyLocation}
         disabled={locating}
-        className="mt-2 flex min-h-9 items-center gap-1.5 text-xs font-semibold text-amber-400/70 transition-colors hover:text-amber-300 disabled:opacity-50"
+        className="mt-3 flex min-h-9 items-center gap-1.5 text-xs font-black text-amber-300 transition-colors hover:text-amber-200 disabled:opacity-50"
       >
         {locating ? (
           <>

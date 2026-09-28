@@ -14,7 +14,8 @@ const STEP_LABELS: Record<number, string> = {
 export function StickyPriceBar() {
   const { state } = useBooking();
 
-  const showPrice = state.clientTotal > 0 && state.quoteStatus === "valid";
+  const hasQuoteLock = state.quoteStatus === "valid" && Boolean(state.quoteToken) && state.quoteExpiresAt > 0;
+  const showPrice = state.clientTotal > 0 && hasQuoteLock;
   const showStale = state.quoteStatus === "stale" && state.step < 5;
 
   if (state.step < 2 || state.step > 5) return null;

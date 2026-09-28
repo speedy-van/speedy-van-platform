@@ -126,16 +126,71 @@ export function computeFillRatio(items: VolumeItem[], tier: VanTier): number {
 
 export const UPGRADE_THRESHOLD = 0.85;
 
-export function suggestVanUpgrade(items: VolumeItem[], currentTier: VanTier): VanTier | null {
-  const fill = computeFillRatio(items, currentTier);
-  if (fill <= UPGRADE_THRESHOLD) return null;
+export function nextVanTier(currentTier: VanTier): VanTier | null {
   const idx = TIER_ORDER.indexOf(currentTier);
   if (idx === -1 || idx >= TIER_ORDER.length - 1) return null;
   return TIER_ORDER[idx + 1]!;
 }
 
+export function suggestVanUpgrade(items: VolumeItem[], currentTier: VanTier): VanTier | null {
+  const fill = computeFillRatio(items, currentTier);
+  if (fill <= UPGRADE_THRESHOLD) return null;
+  return nextVanTier(currentTier);
+}
+
+export function selectVanTierForLoad(items: VolumeItem[], baseTier: VanTier): VanTier {
+  let tier = baseTier;
+  let next = nextVanTier(tier);
+
+  while (next && computeFillRatio(items, tier) >= 1) {
+    tier = next;
+    next = nextVanTier(tier);
+  }
+
+  return tier;
+}
+
+export function vanTierForBedroomCount(
+  bedroomCount?: string | null,
+  exactBedroomCount = 5,
+): VanTier | null {
+  const value = bedroomCount?.trim().toLowerCase();
+  if (!value) return null;
+
+  if (value === "studio" || value === "1" || value === "1-bedroom") return "small";
+  if (value === "2" || value === "2-bedroom") return "medium";
+  if (value === "3" || value === "3-bedroom") return "medium";
+  if (value === "4" || value === "4-bedroom") return "large";
+  if (value === "5+" || value === "5-bedroom" || value === "5+-bedroom") return "large";
+
+  const parsed = Number(value.replace(/[^0-9]/g, ""));
+  if (!Number.isFinite(parsed) || parsed <= 0) return null;
+  if (parsed >= 4 || exactBedroomCount >= 4) return "large";
+  if (parsed >= 2) return "medium";
+  return "small";
+}
+
 export function defaultVanTierForService(serviceSlug: string): VanTier {
-  if (["house-removals", "long-distance-removals", "office-removal"].includes(serviceSlug)) return "large";
-  if (["furniture", "furniture-delivery", "ikea-delivery", "piano-moving"].includes(serviceSlug)) return "medium";
+  const slug = serviceSlug.trim().toLowerCase();
+  if ([
+    "house",
+    "house-removals",
+    "house-removal",
+    "long-distance-removals",
+    "office",
+    "office-removal",
+    "office-removals",
+    "business",
+    "business-removals",
+  ].includes(slug)) return "large";
+  if ([
+    "flat-removals",
+    "furniture",
+    "furniture-delivery",
+    "ikea-delivery",
+    "piano-moving",
+    "storage",
+    "storage-transport",
+  ].includes(slug)) return "medium";
   return "small";
 }

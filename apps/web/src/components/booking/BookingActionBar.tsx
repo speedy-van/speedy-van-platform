@@ -36,36 +36,71 @@ export function BookingActionBar() {
     return () => observer.disconnect();
   }, [state.step]);
   const totalItems = state.items.reduce((total, item) => total + item.quantity, 0);
+  const hasQuoteLock = state.quoteStatus === "valid" && Boolean(state.quoteToken) && state.quoteExpiresAt > 0;
   const disabled =
     primaryState.disabled ||
     (state.step === 1 && !state.serviceSlug) ||
     (state.step === 2 && (!state.pickup || !state.dropoff || state.distanceMiles <= 0)) ||
     (state.step === 3 && totalItems <= 0) ||
     (state.step === 4 &&
-      (state.quoteStatus !== "valid" || !state.selectedDate || !state.selectedTimeSlot || state.clientTotal <= 0)) ||
-    (state.step === 5 && (state.quoteStatus !== "valid" || state.clientTotal <= 0));
+      (!hasQuoteLock || !state.selectedDate || !state.selectedTimeSlot || state.clientTotal <= 0)) ||
+    (state.step === 5 && (!hasQuoteLock || state.clientTotal <= 0));
   const backDisabled = state.checkoutLocked || state.step < 2;
-  const showPrice = state.clientTotal > 0 && state.quoteStatus === "valid";
+  const showPrice = state.clientTotal > 0 && hasQuoteLock;
+  const requiredActionLabel =
+    state.step === 2
+      ? !state.pickup
+        ? "Add pickup"
+        : !state.dropoff
+          ? "Add drop-off"
+          : state.distanceMiles <= 0
+            ? "Confirm route"
+            : "Continue"
+      : state.step === 3
+        ? totalItems <= 0
+          ? "Add items"
+          : "Continue"
+        : state.step === 4
+          ? state.quoteStatus === "loading"
+            ? "Calculating..."
+            : state.quoteStatus === "stale"
+              ? "Refresh quote"
+              : !state.selectedDate || !state.selectedTimeSlot
+                ? "Choose date"
+                : "Continue"
+          : "Continue";
   const totalLabel = showPrice
     ? money.format(state.clientTotal)
+    : state.step < 4
+      ? requiredActionLabel
     : state.quoteStatus === "loading"
       ? "Calculating..."
       : state.quoteStatus === "stale"
         ? "Refresh needed"
-        : "Complete steps";
+        : requiredActionLabel;
   const stepLabel = state.step === 1
     ? "Choose a service"
-    : `Step ${current.number} of ${current.total} - ${current.label}`;
+    : `Step ${current.number}/${current.total} - ${current.label}`;
+  const showCalculationGear = !showPrice && state.step >= 2 && state.step < 5;
+
+  function renderStatusLabel() {
+    return (
+      <>
+        <span className="truncate">{totalLabel}</span>
+        {showCalculationGear && (
+          <span aria-hidden="true" className="inline-flex shrink-0 items-center rounded-md border border-amber-400/35 bg-black/35 px-1.5 py-1 text-base leading-none shadow-inner shadow-black/40">
+            <span className="inline-block animate-[spin_2.8s_linear_infinite]">⚙️</span>
+            <span className="-ml-2 inline-block animate-[spin_2.8s_linear_infinite_reverse]">⚙️</span>
+          </span>
+        )}
+      </>
+    );
+  }
 
   function clickPrimaryAction() {
     if (disabled) return;
     const button = primaryButton();
     if (!button || button.disabled) return;
-    if (current.isPay) {
-      button.scrollIntoView({ behavior: "smooth", block: "center" });
-      window.setTimeout(() => button.focus({ preventScroll: true }), 200);
-      return;
-    }
     button.click();
   }
 
@@ -85,10 +120,12 @@ export function BookingActionBar() {
     <div className="fixed inset-x-0 bottom-0 z-50 overflow-hidden border-t border-amber-900/35 bg-booking-background/95 px-3 py-3 shadow-[0_-10px_36px_rgba(0,0,0,0.55)] backdrop-blur">
       <div className="mx-auto grid max-w-[1160px] gap-3 pb-[env(safe-area-inset-bottom)]">
         <div className="flex items-center justify-between gap-3 sm:hidden">
-          <p className="min-w-0 truncate text-[11px] font-black uppercase tracking-widest text-amber-400/65">
+          <p className="min-w-0 truncate text-[11px] font-black uppercase tracking-widest text-amber-300">
             {stepLabel}
           </p>
-          <p className="shrink-0 text-right text-base font-black text-white">{totalLabel}</p>
+          <p className="flex shrink-0 items-center justify-end gap-2 text-right text-base font-black text-white">
+            {renderStatusLabel()}
+          </p>
         </div>
 
         <div className="grid grid-cols-[104px_minmax(0,1fr)] items-center gap-3 sm:grid-cols-[132px_minmax(0,1fr)_190px]">
@@ -102,20 +139,32 @@ export function BookingActionBar() {
           </button>
 
           <div className="hidden min-w-0 rounded-xl bg-white/4 px-4 py-2 ring-1 ring-white/8 sm:block">
-            <p className="truncate text-[11px] font-black uppercase tracking-widest text-amber-400/65">
+            <p className="truncate text-[11px] font-black uppercase tracking-widest text-amber-300">
               {stepLabel}
             </p>
-            <p className="truncate text-lg font-black text-white">{totalLabel}</p>
+            <p className="flex min-w-0 items-center gap-2 text-lg font-black text-white">
+              {renderStatusLabel()}
+            </p>
           </div>
 
         <button
           type="button"
           onClick={clickPrimaryAction}
           disabled={disabled}
-          className="min-h-12 w-full rounded-xl px-3 text-sm font-black text-black shadow-lg transition hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:ring-offset-2 focus-visible:ring-offset-booking-background disabled:cursor-not-allowed disabled:opacity-40"
+          className="min-h-12 w-full rounded-xl px-3 text-sm font-black text-black shadow-lg transition hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:ring-offset-2 focus-visible:ring-offset-booking-background disabled:cursor-not-allowed disabled:opacity-70"
           style={{ background: "linear-gradient(135deg, #F59E0B 0%, #EA580C 100%)" }}
         >
-          {primaryState.processing ? "Processing…" : current.isPay ? "Review & pay" : "Continue"}
+          {primaryState.processing
+            ? "Processing…"
+            : current.isPay
+              ? disabled
+                ? "Complete payment"
+                : showPrice
+                  ? `Pay ${money.format(state.clientTotal)}`
+                  : "Pay"
+              : disabled
+                ? requiredActionLabel
+                : "Continue"}
         </button>
         </div>
       </div>

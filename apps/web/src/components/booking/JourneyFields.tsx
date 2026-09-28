@@ -26,7 +26,7 @@ export function JourneyFields({ onBack, onContinue }: JourneyFieldsProps) {
   const serviceOption = getBookingServiceOptionForState(state.entryServiceSlug, state.serviceSlug);
   const [error, setError] = useState("");
   const [loadingDistance, setLoadingDistance] = useState(false);
-  const [route, setRoute] = useState<DrivingRouteResult | null>(null);
+  const [, setRoute] = useState<DrivingRouteResult | null>(null);
   const [routeError, setRouteError] = useState("");
   const [routeRetryToken, setRouteRetryToken] = useState(0);
   const hasRouteInputs = hasUsableCoordinates(state.pickup) && hasUsableCoordinates(state.dropoff);
@@ -106,25 +106,23 @@ export function JourneyFields({ onBack, onContinue }: JourneyFieldsProps) {
         >
           <span aria-hidden="true">←</span> Back
         </button>
-        <p className="text-xs font-bold uppercase tracking-widest text-amber-400">Step 1 of 4 · Journey</p>
+        <p className="text-xs font-black uppercase tracking-widest text-amber-300">Step 1 of 4 · Addresses</p>
         <h1 className="mt-2 text-3xl font-black tracking-tight text-white">
-          {serviceOption?.journeyTitle ?? "Plan the journey"}
+          Pickup and drop-off
         </h1>
-        <p className="mt-2 max-w-2xl text-base leading-7 text-amber-100/55">
-          {serviceOption?.journeyDescription ??
-            "Confirm both addresses so we can calculate mileage and keep the quote tied to the exact route."}
+        <p className="mt-2 max-w-2xl text-base font-semibold leading-6 text-white">
+          Add both addresses. We calculate the route before the next step.
         </p>
       </div>
 
       {/* ── Address cards ── */}
       <div className="grid gap-4 lg:grid-cols-2">
         <section
-          className="rounded-2xl p-5"
-          style={{ background: "rgba(255,255,255,0.04)", boxShadow: "0 0 0 1px rgba(245,158,11,0.15), 0 8px 32px rgba(0,0,0,0.4)" }}
+          className="rounded-2xl border border-amber-400/35 border-l-4 border-l-amber-400 bg-white/[0.065] p-5 shadow-[0_14px_38px_rgba(0,0,0,0.42)]"
         >
           <div className="mb-4 flex items-center gap-2">
-            <span className="flex h-7 w-7 items-center justify-center rounded-full bg-amber-500/20 text-xs font-black text-amber-400">A</span>
-            <h2 className="text-base font-black text-white">{serviceOption?.pickupTitle ?? "Pickup"}</h2>
+            <span className="flex h-8 w-8 items-center justify-center rounded-full bg-amber-400 text-sm font-black text-black">A</span>
+            <h2 className="text-lg font-black text-white">Pickup</h2>
           </div>
           <div className="space-y-5">
             <AddressSearch
@@ -151,12 +149,11 @@ export function JourneyFields({ onBack, onContinue }: JourneyFieldsProps) {
         </section>
 
         <section
-          className="rounded-2xl p-5"
-          style={{ background: "rgba(255,255,255,0.04)", boxShadow: "0 0 0 1px rgba(245,158,11,0.15), 0 8px 32px rgba(0,0,0,0.4)" }}
+          className="rounded-2xl border border-sky-300/35 border-l-4 border-l-sky-300 bg-white/[0.065] p-5 shadow-[0_14px_38px_rgba(0,0,0,0.42)]"
         >
           <div className="mb-4 flex items-center gap-2">
-            <span className="flex h-7 w-7 items-center justify-center rounded-full bg-orange-500/20 text-xs font-black text-orange-400">B</span>
-            <h2 className="text-base font-black text-white">{serviceOption?.dropoffTitle ?? "Delivery"}</h2>
+            <span className="flex h-8 w-8 items-center justify-center rounded-full bg-sky-300 text-sm font-black text-black">B</span>
+            <h2 className="text-lg font-black text-white">Drop-off</h2>
           </div>
           <div className="space-y-5">
             <AddressSearch

@@ -19,7 +19,7 @@ const FLOORS = [
 export function FloorPicker({ label, floor, hasLift, onFloor, onLift }: FloorPickerProps) {
   return (
     <div>
-      <label className="block text-sm font-medium text-white/60 mb-2">{label}</label>
+      <label className="mb-2 block text-sm font-black text-white">{label}</label>
       <div className="flex gap-2 flex-wrap">
         {FLOORS.map((f) => (
           <button
@@ -28,8 +28,8 @@ export function FloorPicker({ label, floor, hasLift, onFloor, onLift }: FloorPic
             onClick={() => onFloor(f.value)}
             className={`min-h-10 rounded-xl px-3 text-sm font-bold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 ${
               floor === f.value
-                ? "bg-amber-500/25 text-amber-400 ring-1 ring-amber-500/40"
-                : "bg-white/5 text-white/50 ring-1 ring-white/10 hover:bg-white/10 hover:text-white/80"
+                ? "bg-amber-400 text-black ring-1 ring-amber-300"
+                : "bg-white/10 text-white ring-1 ring-white/20 hover:bg-white/15 hover:text-white"
             }`}
           >
             {f.label}
@@ -44,7 +44,7 @@ export function FloorPicker({ label, floor, hasLift, onFloor, onLift }: FloorPic
             onChange={(e) => onLift(e.target.checked)}
             className="rounded border-white/20 bg-white/10 text-amber-500 focus:ring-amber-400"
           />
-          <span className="text-sm text-white/60">Lift available</span>
+          <span className="text-sm font-semibold text-white">Lift available</span>
         </label>
       )}
     </div>

@@ -67,7 +67,7 @@ export default function AdminEnquiriesPage() {
     <div className="space-y-4">
       <div>
         <h1 className="text-2xl font-black text-white">European Enquiries</h1>
-        <p className="text-sm text-white/55 mt-1">
+        <p className="text-sm text-white mt-1">
           European removals quote requests. Reply with a fixed price within 24 hours.
         </p>
       </div>
@@ -127,7 +127,7 @@ export default function AdminEnquiriesPage() {
               <tbody className="divide-y divide-white/8 text-sm">
                 {enquiries.map((e, idx) => (
                   <tr key={e.id} className="hover:bg-amber-500/6 transition-colors" style={{ background: idx % 2 === 1 ? "rgba(255,255,255,0.02)" : "transparent" }}>
-                    <td className="px-4 py-3 whitespace-nowrap text-white/55">
+                    <td className="px-4 py-3 whitespace-nowrap text-white">
                       {new Date(e.createdAt).toLocaleDateString("en-GB", {
                         day: "2-digit",
                         month: "short",
@@ -138,7 +138,7 @@ export default function AdminEnquiriesPage() {
                       <div className="font-semibold text-white">{e.customerName}</div>
                       <div className="text-xs text-white/40">{e.customerEmail}</div>
                     </td>
-                    <td className="px-4 py-3 text-white/55">
+                    <td className="px-4 py-3 text-white">
                       Scotland → <strong className="text-white/70">{e.toCity}, {e.toCountry}</strong>
                     </td>
                     <td className="px-4 py-3">
@@ -169,17 +169,17 @@ export default function AdminEnquiriesPage() {
           <button
             onClick={() => setPage((p) => Math.max(1, p - 1))}
             disabled={page === 1}
-            className="px-3 py-1.5 text-sm border border-amber-900/20 rounded text-white/55 hover:text-white hover:bg-white/5 disabled:opacity-50"
+            className="px-3 py-1.5 text-sm border border-amber-900/20 rounded text-white hover:text-white hover:bg-white/5 disabled:opacity-50"
           >
             ← Prev
           </button>
-          <span className="px-3 py-1.5 text-sm text-white/55">
+          <span className="px-3 py-1.5 text-sm text-white">
             Page {page} of {pages}
           </span>
           <button
             onClick={() => setPage((p) => Math.min(pages, p + 1))}
             disabled={page === pages}
-            className="px-3 py-1.5 text-sm border border-amber-900/20 rounded text-white/55 hover:text-white hover:bg-white/5 disabled:opacity-50"
+            className="px-3 py-1.5 text-sm border border-amber-900/20 rounded text-white hover:text-white hover:bg-white/5 disabled:opacity-50"
           >
             Next →
           </button>
@@ -358,7 +358,7 @@ function EnquiryModal({ enquiry, onClose, onSaved }: ModalProps) {
               {enquiry.notes && (
                 <>
                   <dt className="text-white/40">Notes</dt>
-                  <dd className="col-span-2 text-white/55 whitespace-pre-wrap">{enquiry.notes}</dd>
+                  <dd className="col-span-2 text-white whitespace-pre-wrap">{enquiry.notes}</dd>
                 </>
               )}
             </dl>
@@ -420,7 +420,7 @@ function EnquiryModal({ enquiry, onClose, onSaved }: ModalProps) {
               </p>
             )}
             {msg && (
-              <p className="text-sm text-white/55 border border-amber-900/20 bg-white/3 rounded p-2">
+              <p className="text-sm text-white border border-amber-900/20 bg-white/3 rounded p-2">
                 {msg}
               </p>
             )}
@@ -428,7 +428,7 @@ function EnquiryModal({ enquiry, onClose, onSaved }: ModalProps) {
               <button
                 onClick={save}
                 disabled={saving}
-                className="px-4 py-2 text-sm font-semibold border border-amber-900/20 rounded-lg text-white/55 hover:text-white hover:bg-white/5 disabled:opacity-50"
+                className="px-4 py-2 text-sm font-semibold border border-amber-900/20 rounded-lg text-white hover:text-white hover:bg-white/5 disabled:opacity-50"
               >
                 {saving ? "Saving…" : "Save"}
               </button>

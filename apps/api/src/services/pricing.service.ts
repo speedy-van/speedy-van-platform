@@ -21,7 +21,7 @@ import {
   computeTotalVolumeM3,
 } from "@speedy-van/shared";
 import { getWeatherSurchargesByDate } from "./weather.service";
-import { issueQuoteToken } from "../lib/quote-token";
+import { createQuoteExpiresAt, issueQuoteToken } from "../lib/quote-token";
 
 const CALENDAR_DAYS = 28; // T4: extended from 14 → 28
 
@@ -231,6 +231,8 @@ function computeFloorCost(
 }
 
 const FREE_CARRY_METRES = 10;
+const MIN_HELPER_ADDON = 55;
+const EXTRA_SERVICE_ITEM_PRICE = 10;
 
 function computeAccessCost(
   values: Record<string, Record<string, number>>,
@@ -320,23 +322,36 @@ function computeAddons(
   helpersCount: number,
   needsPacking: boolean,
   needsAssembly: boolean,
+  packingItemCount = 0,
+  assemblyItemCount = 0,
+  dismantlingItemCount = 0,
 ): { lineItems: PriceLineItem[]; total: number } {
   const lineItems: PriceLineItem[] = [];
   let total = 0;
   if (helpersCount > 0) {
-    const perHelper = readConfig(values, "addon", "helperPerHourPerHelper");
+    const perHelper = Math.max(readConfig(values, "addon", "helperPerHourPerHelper"), MIN_HELPER_ADDON);
     const cost = helpersCount * perHelper;
-    lineItems.push({ label: `${helpersCount} extra helper(s)`, amount: cost, type: "addon" });
+    const label = helpersCount === 1 ? "1 extra helper" : `${helpersCount} extra helpers`;
+    lineItems.push({ label, amount: cost, type: "addon" });
     total += cost;
   }
-  if (needsPacking) {
-    const cost = readConfig(values, "addon", "packingFlat");
-    lineItems.push({ label: "Packing service", amount: cost, type: "addon" });
+
+  const packingCount = Math.max(0, Math.trunc(packingItemCount || (needsPacking ? 1 : 0)));
+  const assemblyCount = Math.max(0, Math.trunc(assemblyItemCount || (needsAssembly ? 1 : 0)));
+  const dismantlingCount = Math.max(0, Math.trunc(dismantlingItemCount));
+  if (packingCount > 0) {
+    const cost = packingCount * EXTRA_SERVICE_ITEM_PRICE;
+    lineItems.push({ label: `Packing (${packingCount} item${packingCount === 1 ? "" : "s"})`, amount: cost, type: "addon" });
     total += cost;
   }
-  if (needsAssembly) {
-    const cost = readConfig(values, "addon", "assemblyFlat");
-    lineItems.push({ label: "Assembly service", amount: cost, type: "addon" });
+  if (assemblyCount > 0) {
+    const cost = assemblyCount * EXTRA_SERVICE_ITEM_PRICE;
+    lineItems.push({ label: `Assembly (${assemblyCount} item${assemblyCount === 1 ? "" : "s"})`, amount: cost, type: "addon" });
+    total += cost;
+  }
+  if (dismantlingCount > 0) {
+    const cost = dismantlingCount * EXTRA_SERVICE_ITEM_PRICE;
+    lineItems.push({ label: `Dismantling (${dismantlingCount} item${dismantlingCount === 1 ? "" : "s"})`, amount: cost, type: "addon" });
     total += cost;
   }
   return { lineItems, total };
@@ -373,6 +388,9 @@ export async function calculatePrice(input: PricingCalculateInput): Promise<Pric
     input.helpersCount,
     input.needsPacking,
     input.needsAssembly,
+    input.packingItemCount,
+    input.assemblyItemCount,
+    input.dismantlingItemCount,
   );
 
   const access = computeAccessCost(
@@ -461,14 +479,14 @@ export async function calculatePrice(input: PricingCalculateInput): Promise<Pric
   }
 
   // Issue signed quote token (T2)
+  const quoteExpiresAt = createQuoteExpiresAt();
   const quoteToken = issueQuoteToken({
     price: staticSubtotal,
     staticSubtotal,
     serviceType: input.serviceType,
     distanceMiles: input.distanceMiles,
-    expiresAt: 0, // set inside issueQuoteToken
+    expiresAt: quoteExpiresAt,
   });
-  const quoteExpiresAt = Date.now() + 30 * 60 * 1000;
 
   return {
     days,

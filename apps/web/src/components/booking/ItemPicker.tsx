@@ -241,7 +241,7 @@ function QuantityControls({
         type="button"
         onClick={() => onSetQuantity(quantity - 1)}
         disabled={disabled || quantity <= 0}
-        className="flex h-11 w-11 items-center justify-center rounded-lg bg-white/8 text-lg font-bold text-white/75 transition hover:bg-white/12 focus:outline-none focus:ring-2 focus:ring-amber-400 disabled:cursor-not-allowed disabled:opacity-35"
+        className="flex h-11 w-11 items-center justify-center rounded-lg bg-white/10 text-lg font-bold text-white transition hover:bg-white/15 focus:outline-none focus:ring-2 focus:ring-amber-400 disabled:cursor-not-allowed disabled:opacity-35"
         aria-label={`Remove one ${itemName}`}
       >
         -
@@ -277,7 +277,7 @@ function InlineQuantityControls({
         type="button"
         onClick={() => onSetQuantity(quantity - 1)}
         disabled={quantity <= 0}
-        className="flex h-11 w-11 items-center justify-center text-sm font-bold text-white/75 transition hover:bg-white/8 focus:outline-none focus:ring-2 focus:ring-amber-400 disabled:cursor-not-allowed disabled:opacity-35"
+        className="flex h-11 w-11 items-center justify-center text-sm font-bold text-white transition hover:bg-white/8 focus:outline-none focus:ring-2 focus:ring-amber-400 disabled:cursor-not-allowed disabled:opacity-35"
         aria-label={`Remove one ${itemName}`}
       >
         −
@@ -319,15 +319,15 @@ function QuickAddRow({
       style={quantity > 0 ? { background: "rgba(245,158,11,0.08)" } : undefined}
     >
       <div className="min-w-0">
-        <p className="break-words text-[13px] font-medium leading-snug text-white/85">{label}</p>
+        <p className="break-words text-[13px] font-bold leading-snug text-white">{label}</p>
         {contextLabel && !unavailable && (
-          <p className="mt-0.5 break-words text-[11px] font-semibold text-amber-400/70">
+          <p className="mt-0.5 break-words text-[11px] font-bold text-amber-300">
             Adds to {contextLabel}
           </p>
         )}
       </div>
       {unavailable ? (
-        <span className="rounded-md px-3 py-2 text-xs font-semibold text-white/25" style={{ background: "rgba(255,255,255,0.04)" }}>
+        <span className="rounded-md px-3 py-2 text-xs font-semibold text-white" style={{ background: "rgba(255,255,255,0.04)" }}>
           {unavailableLabel}
         </span>
       ) : quantity > 0 ? (
@@ -373,6 +373,7 @@ export function ItemPicker({
   const [suggestionDraft, setSuggestionDraft] = useState<SuggestionDraftItem[] | null>(null);
   const latestItems = useRef(items);
   const panelRef = useRef<HTMLDivElement | null>(null);
+  const suggestionPreviewRef = useRef<HTMLDivElement | null>(null);
 
   const entrySlug = entryServiceSlug || serviceSlug;
   const roomPlannerAvailable =
@@ -603,6 +604,19 @@ export function ItemPicker({
         })
         .filter((draft) => draft.itemId),
     );
+
+    window.requestAnimationFrame(() => {
+      window.requestAnimationFrame(() => {
+        const preview = suggestionPreviewRef.current;
+        if (!preview) return;
+        const targetTop = preview.getBoundingClientRect().top + window.scrollY - 130;
+        window.scrollTo({
+          top: Math.max(0, targetTop),
+          behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
+        });
+        suggestionPreviewRef.current?.focus({ preventScroll: true });
+      });
+    });
   }
 
   function updateSuggestionDraft(suggestionId: string, patch: Partial<SuggestionDraftItem>) {
@@ -673,22 +687,22 @@ export function ItemPicker({
     return (
       <div className="space-y-4" aria-live="polite">
         <div className="flex flex-wrap items-center justify-between gap-2">
-          <p className="text-sm font-semibold text-white/90">
+          <p className="text-sm font-bold text-white">
             {searchResults.length} result{searchResults.length !== 1 ? "s" : ""} for &quot;{searchQuery}&quot;
           </p>
           <button
             type="button"
             onClick={() => setSearch("")}
-            className="min-h-11 rounded-lg border border-white/10 px-3 text-sm font-semibold text-white/60 hover:bg-white/4"
+            className="min-h-11 rounded-lg border border-white/15 px-3 text-sm font-bold text-white hover:bg-white/8"
           >
             Clear search
           </button>
         </div>
 
         {searchResults.length === 0 ? (
-          <div className="rounded-xl border border-white/10 bg-white/4 p-4 text-sm text-white/60">
-            <p className="font-semibold text-white/90">No matching items found.</p>
-            <p className="mt-1">Try another item name or browse more items.</p>
+          <div className="rounded-xl border border-white/15 bg-white/6 p-4 text-sm font-semibold text-white">
+            <p className="font-bold text-white">No matching items found.</p>
+            <p className="mt-1">Try another item name.</p>
           </div>
         ) : (
           <>
@@ -699,7 +713,7 @@ export function ItemPicker({
               <button
                 type="button"
                 onClick={() => setShowAllSearch(true)}
-                className="min-h-11 w-full rounded-xl border border-white/15 bg-white/5 px-4 text-sm font-bold text-white/75 hover:bg-white/10"
+                className="min-h-11 w-full rounded-xl border border-white/15 bg-white/8 px-4 text-sm font-bold text-white hover:bg-white/12"
               >
                 Show {searchResults.length - visibleSearchResults.length} more match
                 {searchResults.length - visibleSearchResults.length !== 1 ? "es" : ""}
@@ -728,7 +742,7 @@ export function ItemPicker({
               className={`min-h-11 rounded-md border px-3 py-2 text-left text-sm font-semibold transition focus:outline-none focus:ring-2 focus:ring-amber-400 ${
                 activeCategorySlug === category.slug
                   ? "border-amber-500 bg-amber-500 text-white"
-                  : "border-white/10 bg-white/5 text-white/75 hover:border-white/20"
+                  : "border-white/15 bg-white/8 text-white hover:border-white/30"
               }`}
             >
               <span className="block break-words">{category.label}</span>
@@ -739,12 +753,12 @@ export function ItemPicker({
         {activeCategory ? (
           <div className="space-y-2">
             <div className="flex flex-wrap items-center justify-between gap-2">
-              <h3 className="text-xs font-bold uppercase text-white/45">{activeCategory.label}</h3>
+              <h3 className="text-xs font-bold uppercase text-white">{activeCategory.label}</h3>
               {roomRecords.length > visibleRoomRecords.length && !showAllRoomItems && (
                 <button
                   type="button"
                   onClick={() => setShowAllRoomItems(true)}
-                  className="min-h-11 rounded-md border border-white/10 bg-white/5 px-3 text-sm font-semibold text-white/60 hover:bg-white/10"
+                  className="min-h-11 rounded-md border border-white/15 bg-white/8 px-3 text-sm font-bold text-white hover:bg-white/12"
                 >
                   Show all {roomRecords.length}
                 </button>
@@ -757,7 +771,7 @@ export function ItemPicker({
             </div>
           </div>
         ) : (
-          <div className="rounded-lg border border-dashed border-white/10 bg-white/3 p-4 text-sm text-white/45">
+          <div className="rounded-lg border border-dashed border-white/15 bg-white/6 p-4 text-sm font-semibold text-white">
             Choose a category to add more items.
           </div>
         )}
@@ -791,8 +805,8 @@ export function ItemPicker({
 
     return (
       <div className="space-y-3">
-        <p className="text-sm font-semibold text-white/75">
-          Or quickly add from our list of popular items below:
+        <p className="text-sm font-bold text-white">
+          Quick add
         </p>
         <div className="relative grid grid-cols-2 gap-2 overflow-visible sm:grid-cols-3">
           {ANYVAN_QUICK_GROUPS.map((group, index) => {
@@ -812,7 +826,7 @@ export function ItemPicker({
                   className={`grid min-h-12 w-full grid-cols-[18px_minmax(0,1fr)_16px] items-center gap-2 rounded border px-3 py-2 text-left text-sm font-semibold transition focus:outline-none focus:ring-2 focus:ring-amber-400 ${
                     selected
                       ? "border-amber-500 bg-amber-500 text-white"
-                      : "border-white/10 bg-white/5 text-white/75 hover:border-white/20"
+                      : "border-white/15 bg-white/8 text-white hover:border-white/30"
                   }`}
                   aria-expanded={selected}
                 >
@@ -822,7 +836,7 @@ export function ItemPicker({
                     <span aria-hidden="true" />
                   ) : (
                     <FiChevronDown
-                      className={`h-4 w-4 justify-self-end transition ${selected ? "rotate-180 text-white" : "text-white/30"}`}
+                      className={`h-4 w-4 justify-self-end transition ${selected ? "rotate-180 text-white" : "text-white"}`}
                       aria-hidden="true"
                     />
                   )}
@@ -866,7 +880,7 @@ export function ItemPicker({
 
     if (roomItems.length === 0) {
       return (
-        <div className="rounded-xl border border-dashed border-white/10 bg-white/4 p-4 text-sm text-white/45">
+        <div className="rounded-xl border border-dashed border-white/15 bg-white/6 p-4 text-sm font-semibold text-white">
           No confirmed items yet.
         </div>
       );
@@ -889,14 +903,13 @@ export function ItemPicker({
                   <div className="min-w-0">
                     <p className="break-words text-sm font-semibold text-white">{item.name}</p>
                     {item.roomName && !room && (
-                      <p className="text-xs font-semibold text-white/45">{item.roomName}</p>
+                      <p className="text-xs font-semibold text-white">{item.roomName}</p>
                     )}
-                    {item.itemId && <p className="break-all text-[11px] text-white/30">{item.itemId}</p>}
                   </div>
                   <button
                     type="button"
                     onClick={() => removeExistingItem(item, effectiveIndex)}
-                    className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg text-lg font-bold text-white/30 hover:bg-white/4 hover:text-red-500 focus:outline-none focus:ring-2 focus:ring-amber-400"
+                    className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg text-lg font-bold text-white hover:bg-white/8 hover:text-red-500 focus:outline-none focus:ring-2 focus:ring-amber-400"
                     aria-label={`Remove ${item.name}`}
                   >
                     x
@@ -919,22 +932,35 @@ export function ItemPicker({
     if (!suggestionDraft) return null;
 
     return (
-      <div className="space-y-3 rounded-xl border border-amber-500/20 bg-amber-500/10 p-3">
+      <div
+        ref={suggestionPreviewRef}
+        tabIndex={-1}
+        className="space-y-3 rounded-xl border border-amber-500/20 bg-amber-500/10 p-3 focus:outline-none focus:ring-2 focus:ring-amber-400"
+      >
         <div className="flex flex-wrap items-center justify-between gap-2">
           <h4 className="text-sm font-bold text-white">Review suggested items</h4>
-          <button
-            type="button"
-            onClick={() => setSuggestionDraft(null)}
-            className="min-h-11 rounded-lg px-3 text-sm font-semibold text-white/60" style={{ background: "rgba(255,255,255,0.06)", boxShadow: "0 0 0 1px rgba(255,255,255,0.10)" }}
-          >
-            Cancel
-          </button>
+          <div className="grid w-full grid-cols-2 gap-2 sm:w-auto">
+            <button
+              type="button"
+              onClick={() => confirmSuggestionDraft(room)}
+              className="min-h-11 rounded-lg bg-amber-500 px-3 text-sm font-black text-black hover:bg-amber-400 focus:outline-none focus:ring-2 focus:ring-amber-400"
+            >
+              Add selected
+            </button>
+            <button
+              type="button"
+              onClick={() => setSuggestionDraft(null)}
+              className="min-h-11 rounded-lg px-3 text-sm font-bold text-white"
+              style={{ background: "rgba(255,255,255,0.06)", boxShadow: "0 0 0 1px rgba(255,255,255,0.10)" }}
+            >
+              Cancel
+            </button>
+          </div>
         </div>
         <div className="space-y-2">
           {suggestionDraft.map((draft) => {
             const suggestion = suggestions.find((entry) => entry.id === draft.suggestionId);
             if (!suggestion) return null;
-            const selectedRecord = CATALOG_RECORD_BY_ID.get(draft.itemId);
             return (
               <div key={draft.suggestionId} className="rounded-lg p-3" style={{ background: "rgba(255,255,255,0.05)" }}>
                 <label className="flex items-start gap-3">
@@ -947,7 +973,7 @@ export function ItemPicker({
                   <span className="min-w-0 flex-1">
                     <span className="block text-sm font-semibold text-white">{suggestion.label}</span>
                     {suggestion.helperText && (
-                      <span className="mt-0.5 block text-xs text-white/45">{suggestion.helperText}</span>
+                      <span className="mt-0.5 block text-xs font-semibold text-white">{suggestion.helperText}</span>
                     )}
                   </span>
                 </label>
@@ -981,9 +1007,6 @@ export function ItemPicker({
                     aria-label={`${suggestion.label} quantity`}
                   />
                 </div>
-                {selectedRecord && (
-                  <p className="mt-1 break-all text-[11px] text-white/30">{selectedRecord.slug}</p>
-                )}
               </div>
             );
           })}
@@ -993,7 +1016,7 @@ export function ItemPicker({
           onClick={() => confirmSuggestionDraft(room)}
           className="min-h-11 w-full rounded-xl bg-amber-500/20 px-4 text-sm font-bold text-amber-400 ring-1 ring-amber-500/30 hover:bg-amber-500/30 focus:outline-none focus:ring-2 focus:ring-amber-400"
         >
-          Add checked items to {room.label}
+          Add selected items to {room.label}
         </button>
       </div>
     );
@@ -1023,8 +1046,8 @@ export function ItemPicker({
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <label htmlFor="item-search" className="block text-xl font-bold text-white">
-          What are you moving?
+        <label htmlFor="item-search" className="block text-xl font-black text-white">
+          Add items
         </label>
         {totalItems > 0 && (
           <span className="rounded-full border border-amber-500/20 bg-amber-500/10 px-3 py-1 text-xs font-bold text-amber-400">
@@ -1034,15 +1057,15 @@ export function ItemPicker({
       </div>
 
       {roomPlannerAvailable && (
-        <div className="rounded-xl border border-white/10 bg-white/4 p-3">
+        <div className="rounded-xl border border-amber-500/25 bg-white/6 p-3">
           <div className="grid grid-cols-2 gap-2">
             <button
               type="button"
               onClick={() => onInventoryModeChange?.("rooms")}
               className={`min-h-11 rounded-lg border px-3 text-sm font-bold transition focus:outline-none focus:ring-2 focus:ring-amber-400 ${
                 roomMode
-                  ? "border-amber-500 bg-amber-500/20 text-amber-400"
-                  : "border-white/10 bg-white/5 text-white/75 hover:border-white/20"
+                  ? "border-amber-500 bg-amber-500/25 text-amber-300"
+                  : "border-white/15 bg-white/8 text-white hover:border-white/30"
               }`}
             >
               Room-by-room
@@ -1052,8 +1075,8 @@ export function ItemPicker({
               onClick={() => onInventoryModeChange?.("items")}
               className={`min-h-11 rounded-lg border px-3 text-sm font-bold transition focus:outline-none focus:ring-2 focus:ring-amber-400 ${
                 !roomMode
-                  ? "border-amber-500 bg-amber-500/20 text-amber-400"
-                  : "border-white/10 bg-white/5 text-white/75 hover:border-white/20"
+                  ? "border-amber-500 bg-amber-500/25 text-amber-300"
+                  : "border-white/15 bg-white/8 text-white hover:border-white/30"
               }`}
             >
               Item list
@@ -1065,7 +1088,7 @@ export function ItemPicker({
       {roomMode ? (
         <div className="space-y-4">
           <section className="space-y-3">
-            <h3 className="text-sm font-bold text-white">How many bedrooms are you moving from?</h3>
+            <h3 className="text-sm font-black text-white">Home size</h3>
             <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
               {BEDROOM_OPTIONS.map((option) => (
                 <button
@@ -1074,8 +1097,8 @@ export function ItemPicker({
                   onClick={() => requestBedroomConfig(option.value, option.value === "5+" ? exactBedroomCount : 5)}
                   className={`min-h-11 rounded-lg border px-3 py-2 text-sm font-bold transition focus:outline-none focus:ring-2 focus:ring-amber-400 ${
                     bedroomCount === option.value
-                      ? "border-amber-500 bg-amber-500/20 text-amber-400"
-                      : "border-white/10 bg-white/5 text-white/75 hover:border-white/20"
+                      ? "border-amber-500 bg-amber-500/25 text-amber-300"
+                      : "border-white/15 bg-white/8 text-white hover:border-white/30"
                   }`}
                 >
                   {option.label}
@@ -1083,7 +1106,7 @@ export function ItemPicker({
               ))}
             </div>
             {bedroomCount === "5+" && (
-              <label className="block text-sm font-semibold text-white/75">
+              <label className="block text-sm font-bold text-white">
                 Exact bedrooms
                 <input
                   type="number"
@@ -1121,7 +1144,7 @@ export function ItemPicker({
                 <button
                   type="button"
                   onClick={() => setPendingBedroomChange(null)}
-                  className="min-h-11 rounded-lg border border-white/10 bg-white px-3 text-sm font-bold text-white/75 hover:bg-white/4"
+                  className="min-h-11 rounded-lg border border-white/15 bg-white/8 px-3 text-sm font-bold text-white hover:bg-white/12"
                 >
                   Cancel
                 </button>
@@ -1148,13 +1171,13 @@ export function ItemPicker({
                         }}
                         className={`min-h-14 rounded-xl border px-3 py-2 text-left transition focus:outline-none focus:ring-2 focus:ring-amber-400 ${
                           activeRoomId === room.id
-                            ? "border-amber-500 bg-amber-500/20 text-amber-400"
-                            : "border-white/10 bg-white/5 text-white/75 hover:border-white/20"
+                            ? "border-amber-500 bg-amber-500/25 text-amber-300"
+                            : "border-white/15 bg-white/8 text-white hover:border-white/30"
                         }`}
                       >
                         <span className="block break-words text-sm font-bold">{room.label}</span>
                         <span className="text-xs opacity-75">
-                          {room.skipped ? "Skipped" : count > 0 ? `${count} selected` : "No items"}
+                          {room.skipped ? "Skipped" : count > 0 ? `${count} selected` : "Empty"}
                         </span>
                       </button>
                     );
@@ -1167,7 +1190,7 @@ export function ItemPicker({
                       key={room.id}
                       type="button"
                       onClick={() => addOptionalRoom(room)}
-                      className="min-h-11 rounded-lg border border-white/10 bg-white/5 px-3 text-sm font-semibold text-white/75 hover:bg-white/10"
+                      className="min-h-11 rounded-lg border border-white/15 bg-white/8 px-3 text-sm font-bold text-white hover:bg-white/12"
                     >
                       Add {room.label}
                     </button>
@@ -1184,9 +1207,9 @@ export function ItemPicker({
                   <div className="flex flex-wrap items-start justify-between gap-3">
                     <div>
                       <h3 className="text-lg font-bold text-white">{activeRoom.label}</h3>
-                      <p className="text-sm text-white/45">
+                      <p className="text-sm font-semibold text-white">
                         {activeRoom.id === UNASSIGNED_ROOM.id
-                          ? "Legacy draft items without a saved room."
+                          ? "Draft items"
                           : `${roomItemCount(activeRoom)} confirmed item${roomItemCount(activeRoom) !== 1 ? "s" : ""}`}
                       </p>
                     </div>
@@ -1194,7 +1217,7 @@ export function ItemPicker({
                       <button
                         type="button"
                         onClick={() => updateRoom(activeRoom.id, { skipped: !activeRoom.skipped })}
-                        className="min-h-11 rounded-lg border border-white/10 px-3 text-sm font-bold text-white/75 hover:bg-white/4"
+                        className="min-h-11 rounded-lg border border-white/15 bg-white/8 px-3 text-sm font-bold text-white hover:bg-white/12"
                       >
                         {activeRoom.skipped ? "Use room" : "Skip room"}
                       </button>
@@ -1202,8 +1225,8 @@ export function ItemPicker({
                   </div>
 
                   {activeRoom.skipped ? (
-                    <div className="rounded-xl border border-dashed border-white/10 bg-white/4 p-4 text-sm text-white/45">
-                      This room is skipped. Existing confirmed items are still listed below.
+                    <div className="rounded-xl border border-dashed border-white/15 bg-white/6 p-4 text-sm font-semibold text-white">
+                      Room skipped. Confirmed items stay listed.
                     </div>
                   ) : (
                     <>
@@ -1219,6 +1242,7 @@ export function ItemPicker({
                               Add suggested items
                             </button>
                           </div>
+                          {renderSuggestionPreview(activeRoom)}
                           <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
                             {visibleSuggestions.map((suggestion) => {
                               const firstChoice = suggestion.choices.find((choice) => CATALOG_RECORD_BY_ID.has(choice.itemId));
@@ -1228,7 +1252,7 @@ export function ItemPicker({
                                   className="min-w-0 rounded-xl border border-white/10 bg-white/4 p-3"
                                 >
                                   <p className="break-words text-sm font-bold text-white">{suggestion.label}</p>
-                                  <p className="mt-1 text-xs text-white/45">
+                                  <p className="mt-1 text-xs font-semibold text-white">
                                     {suggestion.choices.length > 1 ? `${suggestion.choices.length} variants` : labelForChoice(firstChoice ?? suggestion.choices[0]!)}
                                   </p>
                                 </div>
@@ -1239,12 +1263,11 @@ export function ItemPicker({
                             <button
                               type="button"
                               onClick={() => setShowAllSuggestions(true)}
-                              className="min-h-11 w-full rounded-xl border border-white/15 bg-white/5 px-4 text-sm font-bold text-white/75 hover:bg-white/10"
+                              className="min-h-11 w-full rounded-xl border border-white/15 bg-white/8 px-4 text-sm font-bold text-white hover:bg-white/12"
                             >
                               Show more suggestions
                             </button>
                           )}
-                          {renderSuggestionPreview(activeRoom)}
                         </section>
                       )}
 
@@ -1271,7 +1294,7 @@ export function ItemPicker({
                             setSearch(event.target.value);
                             setShowAllSearch(false);
                           }}
-                          placeholder="Enter your item(s) here e.g. Sofa"
+                          placeholder="Search items"
                           className="booking-search-input min-h-11 w-full rounded-xl py-2 pl-9 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400"
                         />
                       </div>
@@ -1315,7 +1338,7 @@ export function ItemPicker({
                 setSearch(event.target.value);
                 setShowAllSearch(false);
               }}
-              placeholder="Enter your item(s) here e.g. Sofa"
+              placeholder="Search items"
               className="booking-search-input min-h-11 w-full rounded-xl py-2 pl-9 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400"
             />
           </div>
@@ -1332,7 +1355,7 @@ export function ItemPicker({
               <p className="text-sm font-bold text-white">
                 {totalItems} item{totalItems !== 1 ? "s" : ""} selected
               </p>
-              <p className="truncate text-xs text-white/45">
+              <p className="truncate text-xs font-semibold text-white">
                 {items.slice(0, 2).map((item) => `${item.roomName ? `${item.roomName}: ` : ""}${item.name} x ${item.quantity}`).join(", ")}
                 {totalLines > 2 ? `, +${totalLines - 2} more` : ""}
               </p>
@@ -1348,14 +1371,14 @@ export function ItemPicker({
           </div>
 
           {reviewOpen && (
-            <div className="mt-3 max-h-72 overflow-y-auto border-t border-slate-100 pt-3">
+            <div className="mt-3 max-h-72 overflow-y-auto border-t border-white/10 pt-3">
               {roomMode ? (
                 <div className="space-y-3">
                   {roomsWithLegacy
                     .filter((room) => roomItemCount(room) > 0)
                     .map((room) => (
                       <section key={room.id} className="space-y-2">
-                        <h4 className="text-xs font-bold uppercase text-white/45">{room.label}</h4>
+                        <h4 className="text-xs font-bold uppercase text-white">{room.label}</h4>
                         {renderConfirmedItems(room)}
                       </section>
                     ))}

@@ -101,7 +101,7 @@ export default function NotificationBell() {
     <div className="relative" ref={panelRef}>
       <button
         onClick={() => setOpen((o) => !o)}
-        className={`relative p-2 rounded-lg text-white/55 hover:text-white hover:bg-white/5 ${unread > 0 ? "animate-[wiggle_3s_ease-in-out_infinite]" : ""}`}
+        className={`relative p-2 rounded-lg text-white hover:text-white hover:bg-white/5 ${unread > 0 ? "animate-[wiggle_3s_ease-in-out_infinite]" : ""}`}
         aria-label="Notifications"
       >
         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -151,7 +151,7 @@ export default function NotificationBell() {
                   <div className="flex items-start gap-2">
                     <span className="text-base mt-0.5">{n.icon ?? "🔔"}</span>
                     <div className="flex-1 min-w-0">
-                      <p className={`text-sm font-medium truncate ${n.isRead ? "text-white/55" : "text-white"}`}>
+                      <p className={`text-sm font-medium truncate ${n.isRead ? "text-white" : "text-white"}`}>
                         {n.title}
                       </p>
                       <p className="text-xs text-white/40 mt-0.5 line-clamp-2">{n.message}</p>

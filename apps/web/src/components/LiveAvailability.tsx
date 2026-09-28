@@ -7,7 +7,6 @@ import { useEffect, useState } from "react";
  * Rotates practical quote guidance without implying live capacity data.
  */
 const POOL = [
-  "Photos help us quote bulky items accurately",
   "Access and parking details checked before dispatch",
   "Same-day enquiries reviewed when capacity allows",
   "Call for complex, long-distance, or multi-stop moves",

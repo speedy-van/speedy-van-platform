@@ -97,7 +97,7 @@ export default function ContentPage() {
       {success && <div className="bg-emerald-500/15 border border-emerald-500/20 text-emerald-400 rounded-lg px-4 py-3 text-sm">{success}</div>}
 
       <div className="flex items-center justify-between">
-        <p className="text-sm text-white/55">
+        <p className="text-sm text-white">
           Edit copy that appears across the site. Group entries by <span className="font-mono text-amber-400">section</span> and reference them by <span className="font-mono text-amber-400">key</span>.
         </p>
         <button

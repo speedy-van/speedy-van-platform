@@ -21,7 +21,7 @@ export default function LoginPage() {
           <h1 className="mt-6 text-2xl font-black text-white">
             Sign in to your account
           </h1>
-          <p className="mt-2 text-sm text-white/55">
+          <p className="mt-2 text-sm text-white">
             Manage your bookings, track moves, and more
           </p>
         </div>
@@ -37,7 +37,7 @@ export default function LoginPage() {
           <LoginForm />
         </div>
 
-        <p className="mt-6 text-center text-sm text-white/55">
+        <p className="mt-6 text-center text-sm text-white">
           Don&apos;t have an account?{" "}
           <a href="tel:07909032889" className="font-semibold text-amber-400 hover:text-amber-300 transition-colors">
             Call us to get started

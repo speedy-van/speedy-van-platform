@@ -95,7 +95,7 @@ export default function AdminServicesPage() {
     <div className="space-y-6">
       <header>
         <h1 className="text-2xl font-black text-white">Service availability</h1>
-        <p className="text-sm text-white/55 mt-1">
+        <p className="text-sm text-white mt-1">
           Turn services on or off and choose how customers reach you for special services.
           Changes take effect within ~30 seconds.
         </p>
@@ -154,7 +154,7 @@ export default function AdminServicesPage() {
                   </label>
                 </div>
 
-                <p className="mt-4 text-sm text-white/55 leading-relaxed">{copy.description}</p>
+                <p className="mt-4 text-sm text-white leading-relaxed">{copy.description}</p>
 
                 <div className="mt-5 flex items-center gap-2 text-sm">
                   <span

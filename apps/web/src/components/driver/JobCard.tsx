@@ -85,7 +85,7 @@ export function JobCard({ job, compact = false }: { job: DriverJobCard; compact?
       </div>
 
       {/* Info rows */}
-      <div className="space-y-1.5 text-sm text-white/55 mb-3">
+      <div className="space-y-1.5 text-sm text-white mb-3">
         <div className="flex flex-wrap gap-3">
           <span>📅 {dateStr}</span>
           {slot && <span>{slot}</span>}

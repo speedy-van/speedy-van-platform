@@ -6,7 +6,6 @@ import { LiveActivityFeed } from "@/components/LiveActivityFeed";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
 import { ExitIntentPopup } from "@/components/ExitIntentPopup";
 import { LocationPersonalization } from "@/components/LocationPersonalization";
-import { SofaItemPopup } from "@/components/SofaItemPopup";
 import { BackToTopButton } from "@/components/BackToTopButton";
 
 export default function SiteLayout({
@@ -26,7 +25,6 @@ export default function SiteLayout({
       <WhatsAppButton />
       <BackToTopButton />
       <ExitIntentPopup />
-      <SofaItemPopup />
     </>
   );
 }

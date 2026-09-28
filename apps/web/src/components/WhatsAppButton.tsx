@@ -78,6 +78,7 @@ export function WhatsAppButton() {
   const contextualMessage = buildContextualMessage(pathname);
   const href = WA_SHORT_LINK;
   void contextualMessage;
+  const positionClassName = pathname === "/" ? "bottom-28 md:bottom-8" : "bottom-24 md:bottom-6";
 
   return (
     <a
@@ -90,13 +91,13 @@ export function WhatsAppButton() {
       }}
       data-track-location="floating_button"
       aria-label="Chat with us on WhatsApp"
-      className={`fixed right-4 z-30 inline-flex h-14 w-14 items-center justify-center rounded-full bg-[#25D366] text-white shadow-xl ring-4 ring-white/40 transition-all duration-500 hover:scale-105 hover:bg-[#1DA851] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#25D366] focus-visible:ring-offset-2 bottom-24 md:bottom-6 ${
+      className={`fixed right-4 z-50 inline-flex h-12 w-12 items-center justify-center rounded-full bg-[#25D366] text-white shadow-xl ring-4 ring-white/35 transition-all duration-500 hover:scale-105 hover:bg-[#1DA851] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#25D366] focus-visible:ring-offset-2 lg:h-14 lg:w-14 ${positionClassName} ${
         mounted ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"
       }`}
     >
       <svg
         viewBox="0 0 32 32"
-        className="h-7 w-7"
+        className="h-6 w-6 lg:h-7 lg:w-7"
         fill="currentColor"
         aria-hidden="true"
       >

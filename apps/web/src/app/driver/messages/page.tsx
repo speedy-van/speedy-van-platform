@@ -44,7 +44,7 @@ export default function DriverMessagesPage() {
           <div className="text-center py-16">
             <p className="text-5xl mb-4">💬</p>
             <p className="text-lg font-black text-white">No conversations yet</p>
-            <p className="text-sm text-white/55 mt-2">Messages from admin and customers will appear here.</p>
+            <p className="text-sm text-white mt-2">Messages from admin and customers will appear here.</p>
           </div>
         )}
         {!loading && conversations.length > 0 && (
@@ -61,14 +61,14 @@ export default function DriverMessagesPage() {
                   <div className="flex items-start justify-between gap-2">
                     <div className="min-w-0">
                       <p className="text-sm font-bold text-white truncate">{conv.booking.reference}</p>
-                      <p className="text-xs text-white/55 truncate">{conv.booking.serviceName}</p>
+                      <p className="text-xs text-white truncate">{conv.booking.serviceName}</p>
                     </div>
                     <span className="text-xs text-white/40 shrink-0">
                       {last ? new Date(last.createdAt).toLocaleDateString("en-GB", { day: "numeric", month: "short" }) : ""}
                     </span>
                   </div>
                   {last && (
-                    <p className="text-xs text-white/55 mt-2 truncate">{last.body}</p>
+                    <p className="text-xs text-white mt-2 truncate">{last.body}</p>
                   )}
                 </Link>
               );

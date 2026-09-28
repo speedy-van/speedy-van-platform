@@ -111,12 +111,12 @@ export default function BookingsPage() {
                       <p className="text-sm font-medium text-white">{b.customerName}</p>
                       <p className="text-xs text-white/40">{b.customerEmail}</p>
                     </td>
-                    <td className="px-4 py-3 text-sm text-white/55">{b.serviceName}</td>
+                    <td className="px-4 py-3 text-sm text-white">{b.serviceName}</td>
                     <td className="px-4 py-3">
-                      <p className="text-sm text-white/55">{new Date(b.scheduledAt).toLocaleDateString("en-GB")}</p>
+                      <p className="text-sm text-white">{new Date(b.scheduledAt).toLocaleDateString("en-GB")}</p>
                       {b.selectedTimeSlot && <p className="text-xs text-white/40">{b.selectedTimeSlot}</p>}
                     </td>
-                    <td className="px-4 py-3 text-sm text-white/55">{b.driver?.user.name ?? "—"}</td>
+                    <td className="px-4 py-3 text-sm text-white">{b.driver?.user.name ?? "—"}</td>
                     <td className="px-4 py-3"><StatusBadge status={b.status} /></td>
                     <td className="px-4 py-3 text-sm font-mono font-semibold text-right text-amber-400">£{b.totalPrice.toFixed(2)}</td>
                     <td className="px-4 py-3 text-center">
@@ -133,12 +133,12 @@ export default function BookingsPage() {
       </div>
 
       {/* Pagination */}
-      <div className="flex items-center justify-between text-sm text-white/55">
+      <div className="flex items-center justify-between text-sm text-white">
         <span>{total} total</span>
         <div className="flex items-center gap-2">
-          <button disabled={page === 1} onClick={() => setPage((p) => p - 1)} className="px-3 py-1 rounded border border-amber-900/20 disabled:opacity-40 hover:bg-white/5 text-white/55 hover:text-white">Prev</button>
+          <button disabled={page === 1} onClick={() => setPage((p) => p - 1)} className="px-3 py-1 rounded border border-amber-900/20 disabled:opacity-40 hover:bg-white/5 text-white hover:text-white">Prev</button>
           <span className="font-medium text-white">{page} / {pages}</span>
-          <button disabled={page === pages} onClick={() => setPage((p) => p + 1)} className="px-3 py-1 rounded border border-amber-900/20 disabled:opacity-40 hover:bg-white/5 text-white/55 hover:text-white">Next</button>
+          <button disabled={page === pages} onClick={() => setPage((p) => p + 1)} className="px-3 py-1 rounded border border-amber-900/20 disabled:opacity-40 hover:bg-white/5 text-white hover:text-white">Next</button>
         </div>
       </div>
     </div>

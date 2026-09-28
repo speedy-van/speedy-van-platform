@@ -75,6 +75,17 @@ export function Navbar() {
           </Link>
         </div>
 
+        <div className="ml-auto mr-2 flex items-center lg:hidden">
+          <Link
+            href="/book"
+            data-track-event="quote_click"
+            data-track-location="mobile_nav"
+            className="inline-flex h-10 items-center justify-center rounded-lg bg-amber-400 px-3 text-xs font-black text-black transition hover:bg-amber-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-400"
+          >
+            Book
+          </Link>
+        </div>
+
         {/* A native disclosure keeps navigation usable before hydration. */}
         <details
           ref={menuRef}

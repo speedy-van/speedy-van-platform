@@ -37,7 +37,7 @@ function ProgressBar({ value, label, color = "bg-emerald-400" }: { value: number
   return (
     <div className="space-y-1">
       <div className="flex justify-between text-sm">
-        <span className="text-white/55">{label}</span>
+        <span className="text-white">{label}</span>
         <span className="font-mono font-semibold text-white">{value}%</span>
       </div>
       <div className="h-2.5 rounded-full overflow-hidden" style={{ background: "rgba(255,255,255,0.1)" }}>
@@ -96,7 +96,7 @@ export default function StatsPage() {
       {/* Header */}
       <div className="px-4 pt-6 pb-4" style={{ borderBottom: "1px solid rgba(245,158,11,0.15)" }}>
         <h1 className="text-2xl font-black text-white">Performance</h1>
-        <p className="text-white/55 text-sm mt-0.5">
+        <p className="text-white text-sm mt-0.5">
           Ranked #{stats.rank} of {stats.totalDrivers} drivers
         </p>
       </div>
@@ -113,7 +113,7 @@ export default function StatsPage() {
         <div className="rounded-xl p-4" style={{ background: "rgba(255,255,255,0.04)", boxShadow: "0 0 0 1px rgba(245,158,11,0.15), 0 4px 16px rgba(0,0,0,0.4)" }}>
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-white/55">Customer Rating</p>
+              <p className="text-sm text-white">Customer Rating</p>
               <div className="flex items-center gap-2 mt-1">
                 <span className="font-mono text-3xl font-black text-amber-400">
                   {stats.avgRating.toFixed(1)}

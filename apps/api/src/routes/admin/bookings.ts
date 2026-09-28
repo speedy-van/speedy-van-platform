@@ -188,6 +188,9 @@ app.post("/:id/recalculate", async (c) => {
       helpersCount: booking.helpersCount,
       needsPacking: booking.needsPacking,
       needsAssembly: booking.needsAssembly,
+      packingItemCount: 0,
+      assemblyItemCount: 0,
+      dismantlingItemCount: 0,
       selectedItems: booking.items.map((item) => ({
         itemId: item.item?.slug ?? item.itemId ?? undefined,
         name: item.name,

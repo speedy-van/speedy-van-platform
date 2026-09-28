@@ -149,8 +149,8 @@ export default function JobsPage() {
                       <p className="text-sm font-mono font-semibold text-white">{job.booking.reference}</p>
                       <p className="text-xs text-white/40">{job.booking.customerName}</p>
                     </td>
-                    <td className="px-4 py-3 text-sm text-white/55">{job.booking.serviceName}</td>
-                    <td className="px-4 py-3 text-sm text-white/55">{new Date(job.booking.scheduledAt).toLocaleDateString("en-GB")}</td>
+                    <td className="px-4 py-3 text-sm text-white">{job.booking.serviceName}</td>
+                    <td className="px-4 py-3 text-sm text-white">{new Date(job.booking.scheduledAt).toLocaleDateString("en-GB")}</td>
                     <td className="px-4 py-3 text-sm font-mono font-semibold text-right text-amber-400">£{job.booking.totalPrice.toFixed(2)}</td>
                     <td className="px-4 py-3 text-right">
                       <div className="flex items-center justify-end gap-1">

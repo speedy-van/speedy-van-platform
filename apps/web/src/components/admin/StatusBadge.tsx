@@ -38,7 +38,7 @@ interface Props {
 }
 
 export default function StatusBadge({ status, size = "sm" }: Props) {
-  const cls = STATUS_CLASSES[status] ?? "bg-white/8 text-white/55";
+  const cls = STATUS_CLASSES[status] ?? "bg-white/8 text-white";
   const label = STATUS_LABELS[status] ?? status;
   return (
     <span className={`inline-flex items-center rounded-full font-semibold ${size === "sm" ? "px-2.5 py-0.5 text-xs" : "px-3 py-1 text-sm"} ${cls}`}>

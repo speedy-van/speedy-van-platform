@@ -42,7 +42,7 @@ export default function LoginForm() {
       )}
 
       <div>
-        <label htmlFor="email" className="block text-sm font-medium text-white/55 mb-1.5">
+        <label htmlFor="email" className="block text-sm font-medium text-white mb-1.5">
           Email address
         </label>
         <input
@@ -58,7 +58,7 @@ export default function LoginForm() {
 
       <div>
         <div className="flex items-center justify-between mb-1.5">
-          <label htmlFor="password" className="block text-sm font-medium text-white/55">
+          <label htmlFor="password" className="block text-sm font-medium text-white">
             Password
           </label>
         </div>

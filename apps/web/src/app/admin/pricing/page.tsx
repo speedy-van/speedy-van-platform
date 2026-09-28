@@ -152,7 +152,7 @@ export default function PricingPage() {
                     return (
                       <tr key={item.id} className="hover:bg-amber-500/6 transition-colors" style={{ background: idx % 2 === 1 ? "rgba(255,255,255,0.02)" : "transparent" }}>
                         <td className="px-4 py-3 text-sm font-mono text-amber-400">{item.key}</td>
-                        <td className="px-4 py-3 text-sm text-white/55">{item.label ?? "—"}</td>
+                        <td className="px-4 py-3 text-sm text-white">{item.label ?? "—"}</td>
                         <td className="px-4 py-3 text-xs text-white/40 max-w-[200px]">{item.description ?? ""}</td>
                         <td className="px-4 py-3 text-right">
                           <input

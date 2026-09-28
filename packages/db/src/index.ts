@@ -1,6 +1,13 @@
+import dns from "node:dns";
 import { PrismaClient } from "@prisma/client";
 import { PrismaNeon } from "@prisma/adapter-neon";
-import { Pool } from "@neondatabase/serverless";
+import { Pool, neonConfig } from "@neondatabase/serverless";
+
+try {
+  dns.setDefaultResultOrder("ipv4first");
+} catch {
+  // Older Node runtimes may not support this; keep the DB client usable there.
+}
 
 function createPrismaClient(): PrismaClient {
   const databaseUrl = process.env["DATABASE_URL"];
@@ -14,6 +21,9 @@ function createPrismaClient(): PrismaClient {
     process.env["PRISMA_USE_NEON_ADAPTER"] === "1";
 
   if (databaseUrl && isServerless) {
+    if (typeof globalThis.WebSocket !== "undefined") {
+      neonConfig.webSocketConstructor = globalThis.WebSocket;
+    }
     const pool = new Pool({ connectionString: databaseUrl });
     const adapter = new PrismaNeon(pool);
     return new PrismaClient({

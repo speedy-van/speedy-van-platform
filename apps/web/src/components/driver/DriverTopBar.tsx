@@ -23,7 +23,7 @@ export function DriverTopBar({ title }: { title?: string }) {
       <div className="relative">
         <button
           onClick={() => setOpen((o) => !o)}
-          className="flex items-center gap-2 text-white/55 hover:text-white transition-colors p-1"
+          className="flex items-center gap-2 text-white hover:text-white transition-colors p-1"
         >
           <FiUser className="h-5 w-5" />
           <span className="text-sm font-medium hidden sm:block">{user?.name ?? user?.email}</span>

@@ -147,7 +147,7 @@ export default function BookingDetailPage() {
         <div>
           <button onClick={() => router.push("/admin/bookings")} className="text-sm text-white/40 hover:text-white/70 mb-2 flex items-center gap-1">← Back</button>
           <h2 className="text-xl font-black text-white font-mono">{booking.reference}</h2>
-          <p className="text-sm text-white/55 mt-1">{booking.customerName} — {booking.customerEmail}</p>
+          <p className="text-sm text-white mt-1">{booking.customerName} — {booking.customerEmail}</p>
         </div>
         <StatusBadge status={booking.status} size="md" />
       </div>
@@ -200,8 +200,8 @@ export default function BookingDetailPage() {
             <tbody className="divide-y divide-white/8">
               {booking.items.map((item) => (
                 <tr key={item.id} className="hover:bg-amber-500/6">
-                  <td className="px-4 py-2 text-sm text-white/55">{item.name}</td>
-                  <td className="px-4 py-2 text-sm text-right text-white/55">{item.quantity}</td>
+                  <td className="px-4 py-2 text-sm text-white">{item.name}</td>
+                  <td className="px-4 py-2 text-sm text-right text-white">{item.quantity}</td>
                 </tr>
               ))}
             </tbody>
@@ -232,7 +232,7 @@ export default function BookingDetailPage() {
         <div className="rounded-xl p-5 space-y-3" style={cardStyle}>
           <h3 className="text-sm font-semibold text-white/40 uppercase tracking-wider">Assign Driver</h3>
           {booking.driver && (
-            <div className="text-sm text-white/55 rounded-lg px-3 py-2 border border-amber-900/20 bg-white/3">
+            <div className="text-sm text-white rounded-lg px-3 py-2 border border-amber-900/20 bg-white/3">
               Currently: <span className="font-semibold text-white">{booking.driver.user.name}</span> ({booking.driver.vanSize})
             </div>
           )}
@@ -258,7 +258,7 @@ export default function BookingDetailPage() {
               <div>
                 <span className="text-xs font-semibold text-white/40 uppercase">{ev.type}</span>
                 {ev.isInternal && <span className="ml-2 text-xs font-semibold text-amber-400">Internal</span>}
-                <p className="text-white/55">{ev.message}</p>
+                <p className="text-white">{ev.message}</p>
               </div>
             </div>
           ))}
@@ -328,7 +328,7 @@ export default function BookingDetailPage() {
               <div key={h.id} className="flex items-start gap-3 text-sm">
                 <span className="text-xs text-white/40 whitespace-nowrap">{new Date(h.createdAt).toLocaleString("en-GB")}</span>
                 <StatusBadge status={h.status} />
-                {h.note && <span className="text-white/55">{h.note}</span>}
+                {h.note && <span className="text-white">{h.note}</span>}
               </div>
             ))}
           </div>
@@ -356,10 +356,10 @@ export default function BookingDetailPage() {
         <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
           <div className="rounded-xl p-6 w-full max-w-md space-y-4" style={{ background: "#0A0A0A", boxShadow: "0 0 0 1px rgba(245,158,11,0.15), 0 8px 32px rgba(0,0,0,0.4)" }}>
             <h3 className="text-lg font-black text-white">Cancel Booking</h3>
-            <p className="text-sm text-white/55">This will cancel <span className="font-mono font-semibold text-white">{booking.reference}</span>. Provide a reason:</p>
+            <p className="text-sm text-white">This will cancel <span className="font-mono font-semibold text-white">{booking.reference}</span>. Provide a reason:</p>
             <textarea value={cancelReason} onChange={(e) => setCancelReason(e.target.value)} rows={3} className={inputCls} placeholder="Reason for cancellation…" />
             <div className="flex gap-3">
-              <button onClick={() => setShowCancel(false)} className="flex-1 py-2 text-sm border border-amber-900/20 rounded-lg text-white/55 hover:text-white hover:bg-white/5">Keep Booking</button>
+              <button onClick={() => setShowCancel(false)} className="flex-1 py-2 text-sm border border-amber-900/20 rounded-lg text-white hover:text-white hover:bg-white/5">Keep Booking</button>
               <button onClick={cancelBooking} disabled={saving} className="flex-1 py-2 text-sm bg-red-500/15 text-red-400 border border-red-500/20 font-semibold rounded-lg hover:bg-red-500/25 disabled:opacity-50">
                 {saving ? "Cancelling…" : "Cancel Booking"}
               </button>
@@ -375,7 +375,7 @@ function Row({ label, value, mono }: { label: string; value: string; mono?: bool
   return (
     <div className="flex gap-2">
       <span className="text-xs font-semibold text-white/40 w-24 flex-shrink-0 pt-0.5">{label}</span>
-      <span className={`text-sm text-white/55 break-all ${mono ? "font-mono" : ""}`}>{value}</span>
+      <span className={`text-sm text-white break-all ${mono ? "font-mono" : ""}`}>{value}</span>
     </div>
   );
 }

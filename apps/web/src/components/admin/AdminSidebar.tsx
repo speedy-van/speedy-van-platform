@@ -54,7 +54,7 @@ export default function AdminSidebar({ open, onClose }: Props) {
               className={`flex items-center gap-3 px-3 py-2.5 rounded-lg mb-0.5 text-sm font-medium transition-colors ${
                 active
                   ? "bg-amber-500/10 text-amber-400 border-l-[3px] border-amber-400 pl-[calc(0.75rem-3px)]"
-                  : "text-white/55 hover:bg-white/5 hover:text-white"
+                  : "text-white hover:bg-white/5 hover:text-white"
               }`}
             >
               <span className="text-base w-5 text-center">{item.icon}</span>
@@ -70,7 +70,7 @@ export default function AdminSidebar({ open, onClose }: Props) {
         <p className="text-sm font-medium text-white mb-3 truncate">{user?.name ?? "Admin"}</p>
         <button
           onClick={logout}
-          className="w-full text-left text-sm text-white/55 hover:text-red-400 transition-colors"
+          className="w-full text-left text-sm text-white hover:text-red-400 transition-colors"
         >
           ← Sign out
         </button>

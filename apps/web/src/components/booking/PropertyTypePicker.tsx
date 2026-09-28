@@ -28,14 +28,14 @@ export function PropertyTypePicker({ value, onChange }: PropertyTypePickerProps)
 
   return (
     <div>
-      <label htmlFor={selectId} className="mb-2 block text-sm font-medium text-white/60">
+      <label htmlFor={selectId} className="mb-2 block text-sm font-black text-white">
         Property type
       </label>
       <select
         id={selectId}
         value={value}
         onChange={(event) => onChange(event.target.value as PropertyType)}
-        className="min-h-12 w-full rounded-xl border border-white/10 bg-white/5 px-4 text-base font-bold text-white outline-none transition focus:border-amber-400 focus:ring-2 focus:ring-amber-400/70"
+        className="min-h-14 w-full rounded-xl border border-amber-400/35 bg-white/10 px-4 text-base font-black text-white outline-none transition focus:border-amber-300 focus:ring-2 focus:ring-amber-400/70"
       >
         <option value="" className="bg-zinc-950 text-white">Select property type</option>
         {PROPERTY_TYPES.map((opt) => (

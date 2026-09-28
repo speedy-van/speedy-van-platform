@@ -106,7 +106,7 @@ export function LocationPersonalization() {
       role="status"
       aria-live="polite"
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2 flex items-center gap-3">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2.5 flex items-center gap-3">
         <span aria-hidden="true" className="text-base">📍</span>
         <p className="flex-1 text-xs sm:text-sm font-medium truncate">
           {title}
@@ -130,7 +130,7 @@ export function LocationPersonalization() {
             }
           }}
           aria-label="Dismiss banner"
-          className="inline-flex h-6 w-6 items-center justify-center rounded-full text-slate-400 hover:bg-white/10 hover:text-white"
+          className="inline-flex h-8 w-8 items-center justify-center rounded-full text-white/60 transition hover:bg-white/10 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-400"
         >
           <svg className="h-3.5 w-3.5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
             <path fillRule="evenodd" d="M4.5 4.5a1 1 0 011.4 0L10 8.6l4.1-4.1a1 1 0 111.4 1.4L11.4 10l4.1 4.1a1 1 0 01-1.4 1.4L10 11.4l-4.1 4.1a1 1 0 01-1.4-1.4L8.6 10 4.5 5.9a1 1 0 010-1.4z" clipRule="evenodd" />

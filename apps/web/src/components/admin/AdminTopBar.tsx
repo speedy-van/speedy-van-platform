@@ -36,7 +36,7 @@ export default function AdminTopBar({ onMenuClick }: Props) {
         {/* Hamburger (mobile) */}
         <button
           onClick={onMenuClick}
-          className="lg:hidden p-2 rounded-lg text-white/55 hover:text-white hover:bg-white/5"
+          className="lg:hidden p-2 rounded-lg text-white hover:text-white hover:bg-white/5"
           aria-label="Open menu"
         >
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -54,7 +54,7 @@ export default function AdminTopBar({ onMenuClick }: Props) {
           </div>
           <button
             onClick={logout}
-            className="hidden sm:block text-sm text-white/55 hover:text-white"
+            className="hidden sm:block text-sm text-white hover:text-white"
           >
             Sign out
           </button>

@@ -77,6 +77,9 @@ export interface BookingState {
   helpersCount: number;
   needsPacking: boolean;
   needsAssembly: boolean;
+  packingItemCount: number;
+  assemblyItemCount: number;
+  dismantlingItemCount: number;
 
   // Step 4 – Customer
   customerName: string;
@@ -170,6 +173,9 @@ export const INITIAL_BOOKING_STATE: BookingState = {
   helpersCount: 0,
   needsPacking: false,
   needsAssembly: false,
+  packingItemCount: 0,
+  assemblyItemCount: 0,
+  dismantlingItemCount: 0,
   customerName: "",
   customerEmail: "",
   customerPhone: "",
@@ -218,6 +224,7 @@ export type BookingAction =
   | { type: "SET_HELPERS"; count: number }
   | { type: "SET_PACKING"; value: boolean }
   | { type: "SET_ASSEMBLY"; value: boolean }
+  | { type: "SET_ADDON_COUNTS"; packingItemCount: number; assemblyItemCount: number; dismantlingItemCount: number }
   | { type: "SET_CUSTOMER"; name: string; email: string; phone: string }
   | { type: "SET_PRICE"; total: number }
   | { type: "SET_BREAKDOWN"; items: PriceLineItem[] }
@@ -247,6 +254,25 @@ function invalidateQuote(state: BookingState): BookingState {
     quoteToken: "",
     quoteExpiresAt: 0,
   };
+}
+
+function invalidateQuotePreservingSchedule(state: BookingState): BookingState {
+  return {
+    ...state,
+    clientTotal: 0,
+    clientSecret: "",
+    bookingId: "",
+    bookingRef: "",
+    priceBreakdown: [],
+    quoteStatus: state.clientTotal > 0 || state.selectedDate ? "stale" : "incomplete",
+    quoteError: "",
+    quoteToken: "",
+    quoteExpiresAt: 0,
+  };
+}
+
+function clampAddonCount(value: number): number {
+  return Math.max(0, Math.min(99, Math.trunc(Number.isFinite(value) ? value : 0)));
 }
 
 function serviceEntryIdentity(service: Pick<BookingState, "serviceSlug" | "entryServiceSlug" | "serviceName">): string {
@@ -317,9 +343,38 @@ export function bookingReducer(state: BookingState, action: BookingAction): Book
     case "SET_DATE": return { ...invalidateQuote(state), selectedDate: action.date, selectedTimeSlot: "" };
     case "SET_SLOT": return { ...invalidateQuote(state), selectedDate: state.selectedDate, selectedTimeSlot: action.slot };
     case "SET_HELPERS": return { ...invalidateQuote(state), helpersCount: action.count };
-    case "SET_PACKING": return { ...invalidateQuote(state), needsPacking: action.value };
-    case "SET_ASSEMBLY": return { ...invalidateQuote(state), needsAssembly: action.value };
-    case "RESET_UPSELLS": return { ...invalidateQuote(state), needsPacking: false, needsAssembly: false, helpersCount: 0 };
+    case "SET_PACKING": return {
+      ...invalidateQuote(state),
+      needsPacking: action.value,
+      packingItemCount: action.value ? Math.max(1, state.packingItemCount) : 0,
+    };
+    case "SET_ASSEMBLY": return {
+      ...invalidateQuote(state),
+      needsAssembly: action.value,
+      assemblyItemCount: action.value ? Math.max(1, state.assemblyItemCount) : 0,
+    };
+    case "SET_ADDON_COUNTS": {
+      const packingItemCount = clampAddonCount(action.packingItemCount);
+      const assemblyItemCount = clampAddonCount(action.assemblyItemCount);
+      const dismantlingItemCount = clampAddonCount(action.dismantlingItemCount);
+      return {
+        ...invalidateQuotePreservingSchedule(state),
+        needsPacking: packingItemCount > 0,
+        needsAssembly: assemblyItemCount > 0 || dismantlingItemCount > 0,
+        packingItemCount,
+        assemblyItemCount,
+        dismantlingItemCount,
+      };
+    }
+    case "RESET_UPSELLS": return {
+      ...invalidateQuote(state),
+      needsPacking: false,
+      needsAssembly: false,
+      helpersCount: 0,
+      packingItemCount: 0,
+      assemblyItemCount: 0,
+      dismantlingItemCount: 0,
+    };
     case "SET_CUSTOMER": return { ...state, customerName: action.name, customerEmail: action.email, customerPhone: action.phone };
     case "SET_PRICE": return action.total === state.clientTotal ? state : { ...state, clientTotal: action.total, clientSecret: "", bookingId: "", bookingRef: "" };
     case "SET_BREAKDOWN": return { ...state, priceBreakdown: action.items };
@@ -341,7 +396,16 @@ export function getReachableBookingStep(state: BookingState, requested: BookingS
   if (requested === 1 || !resolveBookingService(state.serviceSlug)) return 1;
   if (requested === 2 || !state.pickup || !state.dropoff || !Number.isFinite(state.distanceMiles) || state.distanceMiles <= 0) return 2;
   if (requested === 3 || !state.items.some((item) => Number.isInteger(item.quantity) && item.quantity > 0)) return 3;
-  if (requested === 4 || state.quoteStatus !== "valid" || !state.selectedDate || !state.selectedTimeSlot || !Number.isFinite(state.clientTotal) || state.clientTotal <= 0) return 4;
+  if (
+    requested === 4 ||
+    state.quoteStatus !== "valid" ||
+    !state.quoteToken ||
+    state.quoteExpiresAt <= 0 ||
+    !state.selectedDate ||
+    !state.selectedTimeSlot ||
+    !Number.isFinite(state.clientTotal) ||
+    state.clientTotal <= 0
+  ) return 4;
   return 5;
 }
 
@@ -394,6 +458,9 @@ export function restoreBookingDraft(raw: string | null, now = Date.now()): Booki
     }) : [];
     const date = text("selectedDate");
     const validDate = /^\d{4}-\d{2}-\d{2}$/.test(date) && Number.isFinite(Date.parse(`${date}T12:00:00Z`)) && new Date(`${date}T12:00:00Z`).toISOString().slice(0, 10) === date;
+    const packingItemCount = clampAddonCount(integer("packingItemCount", draft.needsPacking === true ? 1 : 0));
+    const assemblyItemCount = clampAddonCount(integer("assemblyItemCount", draft.needsAssembly === true ? 1 : 0));
+    const dismantlingItemCount = clampAddonCount(integer("dismantlingItemCount"));
     const state: BookingState = {
       ...INITIAL_BOOKING_STATE,
       ...service,
@@ -415,8 +482,11 @@ export function restoreBookingDraft(raw: string | null, now = Date.now()): Booki
       exactBedroomCount: Math.max(5, Math.min(10, integer("exactBedroomCount", 5))),
       inventoryRooms: rooms,
       helpersCount: Math.min(4, integer("helpersCount")),
-      needsPacking: draft.needsPacking === true,
-      needsAssembly: draft.needsAssembly === true,
+      needsPacking: draft.needsPacking === true || packingItemCount > 0,
+      needsAssembly: draft.needsAssembly === true || assemblyItemCount > 0 || dismantlingItemCount > 0,
+      packingItemCount,
+      assemblyItemCount,
+      dismantlingItemCount,
       selectedDate: validDate ? date : "",
       selectedTimeSlot: validDate && ["morning", "afternoon", "evening"].includes(text("selectedTimeSlot")) ? text("selectedTimeSlot") as TimeSlot : "",
       customerName: text("customerName"),

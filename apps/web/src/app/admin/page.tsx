@@ -86,9 +86,9 @@ export default function AdminDashboard() {
               ) : bookings.map((b, idx) => (
                 <tr key={b.id} className="hover:bg-amber-500/6 transition-colors" style={{ background: idx % 2 === 1 ? "rgba(255,255,255,0.02)" : "transparent" }}>
                   <td className="px-4 py-3 text-sm font-mono font-medium text-white">{b.reference}</td>
-                  <td className="px-4 py-3 text-sm text-white/55">{b.customerName}</td>
-                  <td className="px-4 py-3 text-sm text-white/55">{b.serviceName}</td>
-                  <td className="px-4 py-3 text-sm text-white/55">
+                  <td className="px-4 py-3 text-sm text-white">{b.customerName}</td>
+                  <td className="px-4 py-3 text-sm text-white">{b.serviceName}</td>
+                  <td className="px-4 py-3 text-sm text-white">
                     {new Date(b.scheduledAt).toLocaleDateString("en-GB", { day: "numeric", month: "short" })}
                   </td>
                   <td className="px-4 py-3"><StatusBadge status={b.status} /></td>
@@ -112,10 +112,10 @@ export default function AdminDashboard() {
           <Link href="/admin/drivers" className="text-black font-black text-sm px-5 py-2.5 rounded-lg transition-colors" style={{ background: "linear-gradient(135deg, #F59E0B 0%, #EA580C 100%)" }}>
             + Add Driver
           </Link>
-          <Link href="/admin/pricing" className="font-semibold text-sm px-5 py-2.5 rounded-lg transition-colors text-white/55 hover:text-white hover:bg-white/5 border border-amber-900/20">
+          <Link href="/admin/pricing" className="font-semibold text-sm px-5 py-2.5 rounded-lg transition-colors text-white hover:text-white hover:bg-white/5 border border-amber-900/20">
             Adjust Pricing
           </Link>
-          <Link href="/admin/jobs" className="font-semibold text-sm px-5 py-2.5 rounded-lg transition-colors text-white/55 hover:text-white hover:bg-white/5 border border-amber-900/20">
+          <Link href="/admin/jobs" className="font-semibold text-sm px-5 py-2.5 rounded-lg transition-colors text-white hover:text-white hover:bg-white/5 border border-amber-900/20">
             View Job Board
           </Link>
         </div>
