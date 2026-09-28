@@ -246,6 +246,7 @@ function paymentModuleHarness(publishableKey = "pk_test_offline") {
       if (specifier === "./PriceExplainerLink") return { PriceExplainerLink: "price-explainer" };
       if (specifier === "./CheckoutRecovery") return { CheckoutRecovery: "checkout-recovery" };
       if (specifier === "@/lib/analytics") return { trackPurchase() {} };
+      if (specifier === "@/lib/api-base") return { getApiBaseUrl: () => "http://api.test" };
       throw new Error(`Unexpected payment test dependency: ${specifier}`);
     },
   }, { filename });
@@ -728,6 +729,7 @@ function quoteSyncHarness(initial = state) {
       if (specifier === "react") return react;
       if (specifier === "@/lib/booking-store") return { useBooking: () => ({ state: current, dispatch }) };
       if (specifier === "@/lib/booking-quote") return sourceModule(path.join(root, "apps/web/src/lib/booking-quote.ts"));
+      if (specifier === "@/lib/api-base") return { getApiBaseUrl: () => "http://api.test" };
       if (specifier === "./quote-response") return { parsePricingResult };
       throw new Error(`Unexpected dependency: ${specifier}`);
     },

@@ -519,7 +519,7 @@ const EXISTING_AREAS: Area[] = [
       {
         question: "Do Broughty Ferry moves use Dundee service pages?",
         answer:
-          "Broughty Ferry has its own area and local service pages in this branch, while Dundee remains the broader city group. Use the Broughty Ferry URL when the collection or delivery is specifically there."
+          "Use Broughty Ferry when the collection or delivery is specifically there, because access, loading and route details should describe the actual property rather than the wider Dundee area."
       }
     ]
   },
@@ -1074,7 +1074,7 @@ const EXISTING_AREAS: Area[] = [
       "Longer journeys assessed before booking",
       "Approach roads and loading space considered"
     ],
-    nearbyAreas: ["caol", "inverness", "isle-of-skye", "mallaig"],
+    nearbyAreas: ["caol", "corpach", "spean-bridge", "mallaig", "ballachulish", "glencoe", "kinlochleven", "isle-of-skye"],
     metaDescription: "Man and van enquiries in Fort William for furniture and home moves. Share your route, inventory and vehicle access to check suitability and availability.",
     moveAdvice: [
       {
@@ -1127,7 +1127,7 @@ const EXISTING_AREAS: Area[] = [
       "Furniture, student and storage transport",
       "Highland route and property access checked"
     ],
-    nearbyAreas: ["fort-william", "mallaig", "inverness", "isle-of-skye"],
+    nearbyAreas: ["fort-william", "corpach", "mallaig", "spean-bridge", "inverness", "isle-of-skye"],
     metaDescription:
       "Man and van in Caol for furniture, flat moves, storage transport and house removals. Share exact access, route and item details for a quote.",
     moveAdvice: [
@@ -1152,12 +1152,232 @@ const EXISTING_AREAS: Area[] = [
       {
         question: "Is Caol covered separately from Fort William?",
         answer:
-          "Yes. Caol is included as its own locality page in this branch. Provide the Caol address, access details and route rather than using Fort William as a placeholder."
+          "Yes. Provide the Caol address, access details and route rather than using Fort William as a placeholder."
       },
       {
         question: "Can a Caol move continue to Skye or Glasgow?",
         answer:
           "You can request a quote for Scotland-origin routes across Britain. Give the complete destination, inventory, road access and any timing constraints before booking."
+      }
+    ]
+  },
+  {
+    slug: "corpach",
+    name: "Corpach",
+    region: "Highlands",
+    postcode: "PH33",
+    schemaType: "Place",
+    headline: "Man and Van in Corpach",
+    description:
+      "For a Corpach moving quote, use the exact property entrance, postcode and loading point rather than a general Fort William description. Include stairs, garden or garage items, driveway access and the delivery-side route.",
+    highlights: [
+      "Lochaber linked furniture and home moves",
+      "Garage and outdoor items listed separately",
+      "Access to the entrance checked before booking"
+    ],
+    nearbyAreas: ["fort-william", "caol", "mallaig", "spean-bridge"],
+    metaDescription:
+      "Man and van in Corpach for furniture, storage transport and house moves. Share inventory, loading access and Lochaber route details.",
+    moveAdvice: [
+      {
+        title: "Use the actual Corpach entrance",
+        body: "Give the stopping point, entrance route, stairs and distance from the van to the door. If items are in a garage, shed or garden, list them separately from the main rooms.",
+      },
+      {
+        title: "Plan the route beyond Fort William",
+        body: "For a journey towards Mallaig, Inverness or the central belt, add the destination access and any timing constraint. Road conditions and final property access both matter for the booking plan.",
+        source: {
+          label: "Traffic Scotland roadworks and route updates",
+          href: "https://www.traffic.gov.scot/traffic-information/roadworks"
+        }
+      }
+    ],
+    faqs: [
+      {
+        question: "Should I book Corpach as Fort William?",
+        answer:
+          "Use the Corpach address and access details. The quote should reflect the actual entrance, loading point and route, even where the job is close to Fort William."
+      },
+      {
+        question: "Can a Corpach job include storage or an extra stop?",
+        answer:
+          "Yes. List each stop in order, with access windows and which items belong at each destination."
+      }
+    ]
+  },
+  {
+    slug: "spean-bridge",
+    name: "Spean Bridge",
+    region: "Highlands",
+    postcode: "PH34",
+    schemaType: "Place",
+    headline: "Man and Van in Spean Bridge",
+    description:
+      "Request a Spean Bridge moving quote with the full address, route from the road, inventory and destination access. Properties outside the village centre may need extra detail for lanes, gates, turning space and carry distance.",
+    highlights: [
+      "A82 and A86 route details considered",
+      "Rural approaches described before booking",
+      "Furniture, storage and home move enquiries"
+    ],
+    nearbyAreas: ["fort-william", "corpach", "inverness", "caol"],
+    metaDescription:
+      "Man and van in Spean Bridge for furniture, storage transport and home moves. Share rural access, route and inventory details.",
+    moveAdvice: [
+      {
+        title: "Describe the route from the public road",
+        body: "Include property name, postcode, lane width, gate access, surface, turning space and the carrying distance from the nearest safe stopping point.",
+      },
+      {
+        title: "Check trunk-road conditions close to the date",
+        body: "Spean Bridge journeys may depend on the A82 or A86 before the final property approach. Check current road information and share any known restriction at either end of the move.",
+        source: {
+          label: "Traffic Scotland roadworks and route updates",
+          href: "https://www.traffic.gov.scot/traffic-information/roadworks"
+        }
+      }
+    ],
+    faqs: [
+      {
+        question: "Can you quote outside the Spean Bridge village centre?",
+        answer:
+          "Yes, if the full address, access route and inventory are supplied. Narrow lanes, gates and turning space need to be reviewed before confirming suitability."
+      },
+      {
+        question: "Can Spean Bridge furniture go to Inverness or Glasgow?",
+        answer:
+          "You can request a quote for Scotland-origin routes across Britain. Include the complete delivery address, item dimensions and access at both ends."
+      }
+    ]
+  },
+  {
+    slug: "ballachulish",
+    name: "Ballachulish",
+    region: "Highlands",
+    postcode: "PH49",
+    schemaType: "Place",
+    headline: "Man and Van in Ballachulish",
+    description:
+      "For a Ballachulish move, provide the full item list, entrance, turning space and delivery-side loading arrangements. Routes may continue towards Fort William, Oban, Glasgow or another Highland destination.",
+    highlights: [
+      "West Highland route planning",
+      "Furniture and household load details",
+      "Turning space and entrance access checked"
+    ],
+    nearbyAreas: ["fort-william", "glencoe", "kinlochleven", "oban"],
+    metaDescription:
+      "Man and van in Ballachulish for furniture delivery, storage transport and home removals. Share access, route and item details.",
+    moveAdvice: [
+      {
+        title: "Plan the whole West Highland route",
+        body: "Give both addresses, receiving-floor details and the preferred delivery window. A move to Fort William, Oban or Glasgow still needs property access checked at both ends.",
+      },
+      {
+        title: "Check road updates before relying on timing",
+        body: "Road conditions can affect West Highland journeys, but the final carrying route still needs separate detail. Include any gate, slope, long carry or restricted turning point.",
+        source: {
+          label: "Traffic Scotland roadworks and route updates",
+          href: "https://www.traffic.gov.scot/traffic-information/roadworks"
+        }
+      }
+    ],
+    faqs: [
+      {
+        question: "Can a Ballachulish move go south to Glasgow?",
+        answer:
+          "You can request a quote with the complete destination, inventory and access details. Timing and capacity are assessed for the full route."
+      },
+      {
+        question: "What should I send for bulky items in Ballachulish?",
+        answer:
+          "Send dimensions, photos where useful, door and stair details, and the point where the van can safely stop."
+      }
+    ]
+  },
+  {
+    slug: "glencoe",
+    name: "Glencoe",
+    region: "Highlands",
+    postcode: "PH49",
+    schemaType: "Place",
+    headline: "Man and Van in Glencoe",
+    description:
+      "For a Glencoe moving enquiry, describe rural access, gates, steep or narrow approaches and the exact collection and delivery addresses. Long-distance deliveries need keys, access windows and unloading details agreed before booking.",
+    highlights: [
+      "Rural access checked before vehicle choice",
+      "Furniture, storage and home move enquiries",
+      "Longer delivery routes planned with access"
+    ],
+    nearbyAreas: ["ballachulish", "fort-william", "kinlochleven", "oban"],
+    metaDescription:
+      "Man and van in Glencoe for furniture, storage transport and house moves. Include rural access, route and inventory details.",
+    moveAdvice: [
+      {
+        title: "Explain gates, gradients and stopping points",
+        body: "Provide the last approach from the public road, gate widths, surface, gradients, turning space and the distance items must be carried.",
+      },
+      {
+        title: "Route timing is not the same as access approval",
+        body: "Check current route information close to the move, then give destination floors, parking or loading notes separately so the unloading plan is not assumed from mileage alone.",
+        source: {
+          label: "Traffic Scotland roadworks and route updates",
+          href: "https://www.traffic.gov.scot/traffic-information/roadworks"
+        }
+      }
+    ],
+    faqs: [
+      {
+        question: "Can you assess a rural Glencoe address?",
+        answer:
+          "Yes. Send the full address, access description and photos where useful, especially for narrow, steep or gated approaches."
+      },
+      {
+        question: "Can Glencoe furniture be collected from a seller?",
+        answer:
+          "Yes, if the seller release time, item dimensions and delivery access are supplied before the quote is confirmed."
+      }
+    ]
+  },
+  {
+    slug: "kinlochleven",
+    name: "Kinlochleven",
+    region: "Highlands",
+    postcode: "PH50",
+    schemaType: "Place",
+    headline: "Man and Van in Kinlochleven",
+    description:
+      "Plan a Kinlochleven move with the full route, exact property entrance and access at both ends. If furniture is collected elsewhere in Lochaber, include the seller handover and delivery access in the same enquiry.",
+    highlights: [
+      "Lochaber furniture and home moves",
+      "Exact property entrance required",
+      "Extra stops listed before booking"
+    ],
+    nearbyAreas: ["fort-william", "glencoe", "ballachulish", "caol"],
+    metaDescription:
+      "Man and van in Kinlochleven for furniture delivery, storage transport and home removals. Share route, access and inventory details.",
+    moveAdvice: [
+      {
+        title: "List the route and every stop",
+        body: "State whether the move begins in Kinlochleven or includes a separate Lochaber collection. Give access windows, release contacts and which items belong at each destination.",
+      },
+      {
+        title: "Check route and access together",
+        body: "Review current road information close to the date, then provide the final approach, parking or loading point and carrying distance for each address.",
+        source: {
+          label: "Traffic Scotland roadworks and route updates",
+          href: "https://www.traffic.gov.scot/traffic-information/roadworks"
+        }
+      }
+    ],
+    faqs: [
+      {
+        question: "Can Kinlochleven moves include another Lochaber collection?",
+        answer:
+          "Yes. Provide the second address, release contact and inventory so the route and loading order can be assessed together."
+      },
+      {
+        question: "What access details are needed in Kinlochleven?",
+        answer:
+          "Include the stopping point, stairs, gates, slopes, turning space and the distance from the van to the door."
       }
     ]
   },
@@ -1175,7 +1395,7 @@ const EXISTING_AREAS: Area[] = [
       "Furniture, flat, home and business moving enquiries",
       "Bridge, ferry and rural-route details considered"
     ],
-    nearbyAreas: ["portree", "broadford", "fort-william", "inverness"],
+    nearbyAreas: ["portree", "broadford", "kyleakin", "dunvegan", "uig", "armadale-skye", "carbost", "staffin", "edinbane", "fort-william"],
     metaDescription:
       "Man and van enquiries on the Isle of Skye for furniture, home and business moves. Share the exact route, access and any ferry requirement before booking.",
     moveAdvice: [
@@ -1229,7 +1449,7 @@ const EXISTING_AREAS: Area[] = [
       "Furniture, storage and home move enquiries",
       "Rural access and property approach checked"
     ],
-    nearbyAreas: ["isle-of-skye", "portree", "fort-william", "mallaig"],
+    nearbyAreas: ["isle-of-skye", "portree", "kyleakin", "armadale-skye", "fort-william", "mallaig"],
     metaDescription:
       "Man and van in Broadford, Isle of Skye, for furniture, storage transport, house moves and business removals. Share route and access details.",
     moveAdvice: [
@@ -1261,9 +1481,317 @@ const EXISTING_AREAS: Area[] = [
           "Yes. Send item dimensions, seller or release details, the full destination and access notes at both ends. Awkward or bulky items need the carrying route checked before collection is confirmed."
       },
       {
-        question: "Does Broadford use the West Lothian Armadale page?",
+        question: "How should I describe Armadale on a Broadford or Skye route?",
         answer:
-          "No. Broadford is treated as a Skye locality. Any Armadale on a Skye route is described as Armadale, Skye and is not linked to the West Lothian /areas/armadale route."
+          "Write Armadale, Skye, and include the full postcode or ferry context where relevant so it is not confused with Armadale in West Lothian."
+      }
+    ]
+  },
+  {
+    slug: "kyleakin",
+    name: "Kyleakin",
+    region: "Highlands and Islands",
+    postcode: "IV41",
+    schemaType: "Place",
+    headline: "Man and Van in Kyleakin",
+    description:
+      "For a Kyleakin move, check the Skye Bridge and A87 route context, then describe the property entrance, loading point and item list. The crossing route does not replace the need for accurate access at each address.",
+    highlights: [
+      "Skye Bridge-side route checks",
+      "Furniture, storage and home move enquiries",
+      "Final carrying route described before booking"
+    ],
+    nearbyAreas: ["isle-of-skye", "broadford", "armadale-skye", "fort-william"],
+    metaDescription:
+      "Man and van in Kyleakin for furniture, storage transport and home moves. Include Skye Bridge route and property access details.",
+    moveAdvice: [
+      {
+        title: "Separate bridge checks from property access",
+        body: "Check current bridge information where the route uses the mainland crossing, then provide the collection entrance, stairs, parking and delivery access as separate details.",
+        source: {
+          label: "Traffic Scotland bridge information",
+          href: "https://www.traffic.gov.scot/traffic-information/bridges"
+        }
+      },
+      {
+        title: "Describe the final carry",
+        body: "Include gates, gradients, shared entrances, long carries and whether the van can safely turn or load near the property.",
+      }
+    ],
+    faqs: [
+      {
+        question: "Can Kyleakin moves go to the mainland?",
+        answer:
+          "Yes. Provide the mainland destination, inventory and access notes so route timing and unloading can be assessed together."
+      },
+      {
+        question: "What matters for bulky furniture in Kyleakin?",
+        answer:
+          "Measure the item and the route through both properties, including stairs, doorways, lifts where relevant and the receiving room."
+      }
+    ]
+  },
+  {
+    slug: "dunvegan",
+    name: "Dunvegan",
+    region: "Highlands and Islands",
+    postcode: "IV55",
+    schemaType: "Place",
+    headline: "Man and Van in Dunvegan",
+    description:
+      "Plan a Dunvegan move with the full postcode, road approach, turning details and destination access. If the move continues to the mainland, provide receiving access and key handover before booking.",
+    highlights: [
+      "West Skye access and turning checks",
+      "Furniture, storage and home move enquiries",
+      "Mainland routes assessed when required"
+    ],
+    nearbyAreas: ["isle-of-skye", "portree", "carbost", "edinbane"],
+    metaDescription:
+      "Man and van in Dunvegan for furniture delivery, storage transport and home removals. Share road approach, inventory and access.",
+    moveAdvice: [
+      {
+        title: "Give road approach and turning details",
+        body: "State the final approach from the public road, surface, gate widths, turning space and carry distance. Add photos where access for a loaded van may be uncertain.",
+      },
+      {
+        title: "Plan mainland delivery access early",
+        body: "If the load travels beyond Skye, include the receiving floor, loading point, key timing and whether there is a storage or extra stop.",
+        source: {
+          label: "Traffic Scotland bridge information",
+          href: "https://www.traffic.gov.scot/traffic-information/bridges"
+        }
+      }
+    ],
+    faqs: [
+      {
+        question: "Can Dunvegan furniture be moved to the mainland?",
+        answer:
+          "You can request a quote with complete collection and delivery details. Route, vehicle suitability and access are checked for the specific job."
+      },
+      {
+        question: "Should I include property photos for Dunvegan access?",
+        answer:
+          "Photos are useful where the approach is narrow, steep, gated or has limited turning space."
+      }
+    ]
+  },
+  {
+    slug: "uig",
+    name: "Uig",
+    region: "Highlands and Islands",
+    postcode: "IV51",
+    schemaType: "Place",
+    headline: "Man and Van in Uig",
+    description:
+      "For a Uig moving enquiry, make any ferry or island-route dependency explicit, then provide property access, inventory and preferred timing. The quote needs the loading and unloading details as well as the travel route.",
+    highlights: [
+      "Ferry or island-route dependency noted",
+      "Property access and loading details checked",
+      "Furniture, storage and home move enquiries"
+    ],
+    nearbyAreas: ["isle-of-skye", "portree", "staffin", "dunvegan"],
+    metaDescription:
+      "Man and van in Uig for furniture, storage transport and home moves. Share ferry dependency, access and inventory details.",
+    moveAdvice: [
+      {
+        title: "State any ferry dependency up front",
+        body: "If the move depends on a ferry or onward island route, provide the intended crossing context and both addresses before booking. Crossing availability is separate from the removal quote.",
+      },
+      {
+        title: "Use exact access notes for the property",
+        body: "Give the final approach, parking or loading point, gates, turning space, stairs and carry distance at collection and delivery.",
+        source: {
+          label: "Traffic Scotland bridge information",
+          href: "https://www.traffic.gov.scot/traffic-information/bridges"
+        }
+      }
+    ],
+    faqs: [
+      {
+        question: "Can a Uig move include another island route?",
+        answer:
+          "You can request a quote, but any ferry or onward route dependency must be shared before confirmation so timing and vehicle suitability can be reviewed."
+      },
+      {
+        question: "What details help with Uig storage transport?",
+        answer:
+          "Include the storage facility or final address, unit access, opening hours, inventory and property access at the other end."
+      }
+    ]
+  },
+  {
+    slug: "armadale-skye",
+    name: "Armadale, Skye",
+    region: "Highlands and Islands",
+    postcode: "IV45",
+    schemaType: "Place",
+    headline: "Man and Van in Armadale, Skye",
+    description:
+      "Use Armadale, Skye for moves involving the Sleat-side village and the Mallaig ferry context. Provide the exact address, inventory, ferry dependency where relevant and access at both properties.",
+    highlights: [
+      "Distinct from Armadale in West Lothian",
+      "Mallaig ferry context checked when relevant",
+      "Furniture, storage and home move enquiries"
+    ],
+    nearbyAreas: ["isle-of-skye", "mallaig", "broadford", "kyleakin"],
+    metaDescription:
+      "Man and van in Armadale, Skye, for furniture, storage transport and home moves. Share ferry context, route and access details.",
+    moveAdvice: [
+      {
+        title: "Identify Armadale as the Skye destination",
+        body: "Use the full Skye address and postcode so the enquiry cannot be confused with Armadale in West Lothian. Include the entrance, loading point and route to the door.",
+      },
+      {
+        title: "Confirm any Mallaig ferry context",
+        body: "If the route uses the Mallaig to Armadale ferry, provide the proposed crossing context, vehicle details and both property addresses. Ferry arrangements need checking separately.",
+        source: {
+          label: "CalMac Mallaig to Armadale route information",
+          href: "https://www.calmac.co.uk/route-information/mallaig-armadale/"
+        }
+      }
+    ],
+    faqs: [
+      {
+        question: "Is this the same as Armadale in West Lothian?",
+        answer:
+          "No. This page is for Armadale on the Isle of Skye. Use the full Skye address and postcode when requesting a quote."
+      },
+      {
+        question: "Can an Armadale, Skye move include the Mallaig ferry?",
+        answer:
+          "Yes, where suitable, but ferry timing and vehicle suitability need checking separately from the moving quote."
+      }
+    ]
+  },
+  {
+    slug: "carbost",
+    name: "Carbost",
+    region: "Highlands and Islands",
+    postcode: "IV47",
+    schemaType: "Place",
+    headline: "Man and Van in Carbost",
+    description:
+      "For a Carbost move, provide the full address, final approach, loading space and whether the journey stays on Skye or continues to the mainland. Bulky furniture needs item dimensions and access checked at both ends.",
+    highlights: [
+      "West Skye access details checked",
+      "Furniture, storage and home move enquiries",
+      "Mainland delivery context added when needed"
+    ],
+    nearbyAreas: ["isle-of-skye", "portree", "dunvegan", "edinbane"],
+    metaDescription:
+      "Man and van in Carbost for furniture, storage transport and home removals. Share full address, access and route details.",
+    moveAdvice: [
+      {
+        title: "Describe final approach and loading space",
+        body: "Include road approach, gate or driveway limits, turning space, stairs and carry distance. Say whether the van can stop near the entrance or needs a longer carry.",
+      },
+      {
+        title: "State whether the move leaves Skye",
+        body: "For mainland delivery, provide receiving-floor details, key timing and route expectations. Bridge or ferry context is separate from the property access plan.",
+        source: {
+          label: "Traffic Scotland bridge information",
+          href: "https://www.traffic.gov.scot/traffic-information/bridges"
+        }
+      }
+    ],
+    faqs: [
+      {
+        question: "Can Carbost furniture go to Portree or the mainland?",
+        answer:
+          "You can request a quote for local or onward delivery with item dimensions, full addresses and access notes."
+      },
+      {
+        question: "What if the Carbost address has limited turning space?",
+        answer:
+          "Share photos and describe where the vehicle can safely stop. Vehicle choice and carrying time depend on that access."
+      }
+    ]
+  },
+  {
+    slug: "staffin",
+    name: "Staffin",
+    region: "Highlands and Islands",
+    postcode: "IV51",
+    schemaType: "Place",
+    headline: "Man and Van in Staffin",
+    description:
+      "Plan a Staffin move around the route, entrance and any narrow or steep final approach. Larger loads need vehicle suitability checked before the date is agreed.",
+    highlights: [
+      "North Skye access and route checks",
+      "Furniture, storage and home move enquiries",
+      "Vehicle suitability reviewed for larger loads"
+    ],
+    nearbyAreas: ["isle-of-skye", "portree", "uig", "edinbane"],
+    metaDescription:
+      "Man and van in Staffin for furniture delivery, storage transport and home moves. Share route, inventory and access details.",
+    moveAdvice: [
+      {
+        title: "Check suitability before a larger load",
+        body: "Give the inventory, road approach, gradients, gates, turning space and carry distance before assuming a larger vehicle can reach the property.",
+      },
+      {
+        title: "Include route status and destination access",
+        body: "Where the move leaves north Skye, include bridge, ferry or Highland route expectations and the unloading access at the destination.",
+        source: {
+          label: "Traffic Scotland bridge information",
+          href: "https://www.traffic.gov.scot/traffic-information/bridges"
+        }
+      }
+    ],
+    faqs: [
+      {
+        question: "Can Staffin moves include a seller collection?",
+        answer:
+          "Yes. Provide the seller contact, item measurements, release window and destination access so the quote covers both handling and travel."
+      },
+      {
+        question: "Why does Staffin access need checking?",
+        answer:
+          "Narrow or steep approaches, gates and limited turning space can affect vehicle choice and loading time."
+      }
+    ]
+  },
+  {
+    slug: "edinbane",
+    name: "Edinbane",
+    region: "Highlands and Islands",
+    postcode: "IV51",
+    schemaType: "Place",
+    headline: "Man and Van in Edinbane",
+    description:
+      "For an Edinbane move, provide the property name, full address, gates, surface and turning details. If a seller collection is involved, include the release contact and item dimensions.",
+    highlights: [
+      "Township access and property names included",
+      "Furniture and home move enquiries",
+      "Seller collection details captured early"
+    ],
+    nearbyAreas: ["isle-of-skye", "portree", "dunvegan", "carbost"],
+    metaDescription:
+      "Man and van in Edinbane for furniture delivery, storage transport and home moves. Share property name, access and route details.",
+    moveAdvice: [
+      {
+        title: "Use property names and access notes",
+        body: "Where the address depends on a property name or township context, include postcode, approach, gate details, surface and turning space.",
+      },
+      {
+        title: "Add seller and destination details together",
+        body: "For a private-seller collection, include release contact, item dimensions, photos where useful and the delivery-side route before confirming collection.",
+        source: {
+          label: "Traffic Scotland bridge information",
+          href: "https://www.traffic.gov.scot/traffic-information/bridges"
+        }
+      }
+    ],
+    faqs: [
+      {
+        question: "Can Edinbane furniture be collected from a private seller?",
+        answer:
+          "Yes, when the release contact, item dimensions, collection window and delivery access are supplied."
+      },
+      {
+        question: "What access detail matters for Edinbane?",
+        answer:
+          "Property name, final approach, gate width, surface, turning space and distance from the stopping point to the door."
       }
     ]
   },

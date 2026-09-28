@@ -1781,12 +1781,12 @@ export const LOCAL_SERVICE_PAGES: LocalServicePage[] = [
     "areaSlug": "isle-of-skye",
     "serviceSlug": "office-removal",
     "title": "Office removals on the Isle of Skye",
-    "description": "Plan an Isle of Skye office or small business move with exact access, equipment labels, bridge or ferry checks and a clear handover.",
-    "introduction": "A Skye business move may involve an office, studio, workshop, shop back room or holiday-property administration space. The useful starting point is the equipment list, who can release it and the exact route to the vehicle.",
+    "description": "Plan an Isle of Skye office move with exact access, desk and equipment labels, bridge or ferry checks and a clear handover.",
+    "introduction": "A Skye office move should focus on desks, chairs, files, screens, printers and boxed office equipment. For shops, studios, workshops, stock rooms or wider commercial premises, use Business removals instead so the inventory and access questions match the job.",
     "sections": [
       {
         "title": "Define the working entrance",
-        "body": "Give the service entrance, stairs, loading point and any alarm or keyholder details. A customer entrance may not suit desks, stock, files or equipment. Identify what stays behind and what moves so the handover does not depend on decisions during loading."
+        "body": "Give the service entrance, stairs, loading point and any alarm or keyholder details. A customer entrance may not suit desks, files or office equipment. Identify what stays behind and what moves so the handover does not depend on decisions during loading."
       },
       {
         "title": "Check bridge, ferry and road dependencies",
@@ -1803,8 +1803,8 @@ export const LOCAL_SERVICE_PAGES: LocalServicePage[] = [
     ],
     "faqs": [
       {
-        "question": "Can a Skye office move include stock or workshop equipment?",
-        "answer": "List those items separately with dimensions, weight concerns and access. Some equipment may need specialist handling or further assessment before it is accepted."
+        "question": "Can a Skye office move include shop, studio or workshop items?",
+        "answer": "Use Business removals for those commercial loads. Office removals should stay focused on desks, chairs, files and boxed office equipment."
       },
       {
         "question": "Can the move be staged around opening hours?",

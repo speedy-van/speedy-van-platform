@@ -47,8 +47,15 @@ const EXTRA_GLASGOW_LINKED_AREAS = new Set([
 
 const SKYE_LOCALITY_AREAS = new Set([
   "isle-of-skye",
+  "armadale-skye",
   "portree",
   "broadford",
+  "carbost",
+  "dunvegan",
+  "edinbane",
+  "kyleakin",
+  "staffin",
+  "uig",
 ]);
 
 function isTargetArea(area: Area): boolean {
@@ -62,7 +69,7 @@ export function localExpansionGroup(area: Area): string {
   if (area.region === "Grampian") return "Aberdeen";
   if (["dundee", "broughty-ferry", "carnoustie", "arbroath", "forfar", "montrose", "brechin", "kirriemuir"].includes(area.slug)) return "Dundee";
   if (area.region === "Tayside & Fife") return "Perth";
-  if (["fort-william", "caol", "mallaig", "oban"].includes(area.slug)) return "Fort William";
+  if (["fort-william", "caol", "mallaig", "corpach", "spean-bridge", "ballachulish", "glencoe", "kinlochleven", "oban"].includes(area.slug)) return "Fort William";
   if (area.region === "Highlands") return "Inverness";
   return area.region;
 }
@@ -99,7 +106,7 @@ const SERVICE_TEMPLATES: Record<LocalServicePageServiceSlug, ServiceTemplate> = 
     introduction:
       "Plan the full household load, including rooms, loft, garage, garden items, key timings and anything that needs packing or dismantling.",
     scope:
-      "Use this page for house removals, home removals, residential removals, domestic removals and full-house moving enquiries. Bedroom count helps start the conversation, but the quote needs the actual furniture, boxes, access and route.",
+      "Start with the rooms being emptied, then add garage, shed, loft and garden contents separately. Bedroom count helps size the enquiry, but the quote still depends on the actual furniture, boxes, access and route.",
     access:
       "Include driveway width, street loading, stairs, garden paths, sheds and any key handover deadline. A two-bedroom move and a four-bedroom move can need very different van space and crew time.",
     quote:
@@ -114,7 +121,7 @@ const SERVICE_TEMPLATES: Record<LocalServicePageServiceSlug, ServiceTemplate> = 
     introduction:
       "Plan studio, apartment, shared-flat and one or two-bedroom flat moves around the real route from the room to the van.",
     scope:
-      "Use this page for flat removals, apartment removals, studio flat removals, one-bedroom flat removals and two-bedroom flat removals. Shared stairs, lifts, managed entrances and loading distance often matter as much as the number of rooms.",
+      "Describe the building entrance, floor, lift, stair turns and lawful loading point before listing rooms. Shared stairs, managed entrances and loading distance often matter as much as the flat size.",
     access:
       "Record floor levels, lift size, stair turns, entry systems and the lawful loading point at both addresses. Keep communal spaces clear and label belongings by destination when housemates have different loads.",
     quote:
@@ -129,7 +136,7 @@ const SERVICE_TEMPLATES: Record<LocalServicePageServiceSlug, ServiceTemplate> = 
     introduction:
       "Arrange furniture collection and delivery for sofas, beds, wardrobes, tables, marketplace purchases and other bulky pieces.",
     scope:
-      "Use this page for furniture removals, furniture movers, furniture courier work, single-item delivery, sofa delivery, bed collection, mattress delivery, wardrobe collection, second-hand furniture delivery and Facebook Marketplace, Gumtree or eBay collection.",
+      "Give each item, size, condition and release contact, especially for private-seller or shop collections. Measure sofas, beds, wardrobes and tables against doorways, stairs, lifts and the room where they need to finish.",
     access:
       "Send item dimensions, photos where useful, seller or retailer release details and access at both ends. Check that the item fits through doors, stairs, lifts and the intended receiving room before collection.",
     quote:
@@ -144,7 +151,7 @@ const SERVICE_TEMPLATES: Record<LocalServicePageServiceSlug, ServiceTemplate> = 
     introduction:
       "Move boxes, furniture and student belongings into or out of a booked storage unit. This is transport only, not storage-space rental.",
     scope:
-      "Use this page for storage collection and delivery, storage removals, furniture transport to storage, moving furniture into storage, collection from a storage unit, delivery to a storage unit, self-storage transport and student storage transport.",
+      "Separate items going into the unit from items going to a final address. Confirm the storage provider, unit access, opening hours, lift or trolley availability and who can authorise collection or delivery.",
     access:
       "Provide the storage facility address, unit floor, opening hours, lift or trolley access, release process and the home access at the other end. Separate items going to storage from items going to the final address.",
     quote:
@@ -159,7 +166,7 @@ const SERVICE_TEMPLATES: Record<LocalServicePageServiceSlug, ServiceTemplate> = 
     introduction:
       "Move desks, chairs, filing cabinets and boxed office equipment with building access and handover planned before the date.",
     scope:
-      "Use this page for office removals, office relocation, office movers, small office removals, office furniture removals, office equipment moving, office relocation quotes and weekend office removals.",
+      "Keep this page for workplace desks, chairs, files and boxed office equipment. Shops, studios, stock rooms and wider commercial loads belong on Business removals so the inventory and access questions fit the job.",
     access:
       "Confirm loading bays, goods lifts, security procedures, permitted moving hours and the destination layout. Your IT provider should handle backups, disconnection and reconnection unless separately arranged.",
     quote:
@@ -174,7 +181,7 @@ const SERVICE_TEMPLATES: Record<LocalServicePageServiceSlug, ServiceTemplate> = 
     introduction:
       "Plan commercial moves for shops, studios, business furniture, display items, suitable stock and business equipment.",
     scope:
-      "Use this page for business removals, commercial removals, business relocation, commercial relocation, shop relocation, retail removals, business equipment transport, commercial furniture delivery and business relocation quotes.",
+      "List the commercial premises, release contact, service entrance and what is moving: stock, displays, shelving, treatment furniture, workshop benches or boxed business equipment. Specialist machinery and regulated goods need separate assessment.",
     access:
       "Give the premises contact, release point, loading bay, service entrance, access window, destination layout and any stock or display items needing special care. Specialist machinery and regulated goods need separate assessment.",
     quote:
@@ -189,7 +196,7 @@ const SERVICE_TEMPLATES: Record<LocalServicePageServiceSlug, ServiceTemplate> = 
     introduction:
       "Book van-with-driver help for smaller loads, single rooms, marketplace collections, storage runs and flexible local transport.",
     scope:
-      "Use this page for man and van, man with a van, man with van, van and man, man & van, two men and a van, Luton van with driver, local man and van and man and van removals.",
+      "Use item-level detail rather than a broad load description. List every stop, the largest pieces, stairs, lifts, loading distance and whether one helper, extra helpers or customer assistance is expected.",
     access:
       "List every item and stop, then describe stairs, lifts, loading distance and parking. A short journey can still need extra lifting help if the access or item size is difficult.",
     quote:
@@ -204,7 +211,7 @@ const SERVICE_TEMPLATES: Record<LocalServicePageServiceSlug, ServiceTemplate> = 
     introduction:
       "Move student belongings between halls, shared flats, family homes and storage with tenancy and key timing included.",
     scope:
-      "Use this page for student removals, student movers, student man and van, university removals, student accommodation removals, student room moves and student storage transport.",
+      "Identify the halls, room, private flat or family address, then add check-in or check-out windows. Keep personal belongings, shared-flat items and any storage stop separate in the inventory.",
     access:
       "Provide the halls or flat address, room or block, floor, lift or stair details, check-in or check-out time and any storage stop between tenancies.",
     quote:
@@ -219,7 +226,7 @@ const SERVICE_TEMPLATES: Record<LocalServicePageServiceSlug, ServiceTemplate> = 
     introduction:
       "Move a few items, a single room, a partial load or bulky pieces without booking a full-house removal.",
     scope:
-      "Use this page for small removals, small moves, small-load removals, single-room removals and part-load removals. It can also suit a few boxes, a bed, a sofa or a combined furniture and storage run.",
+      "Small means the inventory is limited, not that access can be ignored. Describe whether it is a single room, partial load, bulky item pair, box run or combined collection and delivery.",
     access:
       "Small describes the load, not always the lifting effort. Send item dimensions, access details and any extra stop before the vehicle and crew are planned.",
     quote:
@@ -234,7 +241,7 @@ const SERVICE_TEMPLATES: Record<LocalServicePageServiceSlug, ServiceTemplate> = 
     introduction:
       "Plan packing help for house, flat, office or student moves where packing is part of the agreed moving scope.",
     scope:
-      "Use this page for packing and moving services, house packing service, packing services for moving, removals with packing service, furniture dismantling and reassembly and furniture assembly and delivery where available by quote.",
+      "Define the packing scope by room and item type: full packing, fragile-only packing, dismantling, assembly or materials. Keep essentials, documents, medication and keys out of the packed load.",
     access:
       "Separate full packing, fragile-only packing, dismantling, assembly and materials. Keep essentials with you and leave safe working space before loading day.",
     quote:

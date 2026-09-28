@@ -281,6 +281,9 @@ export const BOOKING_SERVICE_OPTIONS: BookingServiceOption[] = [
 ];
 
 const OPTION_BY_ID = new Map(BOOKING_SERVICE_OPTIONS.map((option) => [option.id, option]));
+const OPTION_ID_BY_LABEL = new Map(
+  BOOKING_SERVICE_OPTIONS.map((option) => [option.label.trim().toLowerCase(), option.id]),
+);
 
 const INTENT_ALIASES: Record<string, BookingIntentId> = {
   house: "house-removals",
@@ -325,6 +328,25 @@ export function getBookingServiceOptionForState(
   serviceSlug?: string | null,
 ): BookingServiceOption | null {
   return getBookingServiceOption(entryServiceSlug) ?? getBookingServiceOption(serviceSlug);
+}
+
+export interface BookingServiceIdentityInput {
+  serviceSlug: string;
+  serviceName?: string | null;
+  entryServiceSlug?: string | null;
+}
+
+export function getBookingServiceIdentity(input: BookingServiceIdentityInput): string {
+  const entry = resolveBookingService(input.entryServiceSlug);
+  const canonical = resolveBookingService(input.serviceSlug);
+  const canonicalServiceSlug = canonical?.serviceSlug ?? entry?.serviceSlug ?? input.serviceSlug;
+  const entryIntent = entry?.entryServiceSlug ?? input.entryServiceSlug ?? canonical?.entryServiceSlug ?? input.serviceSlug;
+  const labelIntent = OPTION_ID_BY_LABEL.get(input.serviceName?.trim().toLowerCase() ?? "");
+  let bookingIntent = entryIntent === "other" && labelIntent ? labelIntent : entryIntent;
+  if (bookingIntent === "other" && canonicalServiceSlug === "man-and-van") {
+    bookingIntent = "man-and-van";
+  }
+  return `${canonicalServiceSlug}:${bookingIntent}`;
 }
 
 export function getBookingServiceStartingFrom(option: BookingServiceOption): number | null {

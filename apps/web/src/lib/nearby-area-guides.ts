@@ -784,18 +784,21 @@ const FORT_WILLIAM_NEARBY_AREA_GROUPS: readonly NearbyAreaGroup[] = [
       {
         slug: "caol",
         name: "Caol",
+        areaSlug: "caol",
         description:
           "For Caol furniture or home moves, provide the route from the loading point to the entrance and identify any extra stop in Fort William. If the move continues south or north, include the full destination access.",
       },
       {
         slug: "corpach",
         name: "Corpach",
+        areaSlug: "corpach",
         description:
           "Corpach enquiries should include the collection entrance, any narrow residential approach and delivery-side stairs. List outdoor or garage items separately from the main rooms.",
       },
       {
         slug: "spean-bridge",
         name: "Spean Bridge",
+        areaSlug: "spean-bridge",
         description:
           "Spean Bridge moves need the exact address and access from the road, especially where the property is outside the village centre. Add any A82 or A86 route constraint and the final carrying distance.",
       },
@@ -817,18 +820,21 @@ const FORT_WILLIAM_NEARBY_AREA_GROUPS: readonly NearbyAreaGroup[] = [
       {
         slug: "ballachulish",
         name: "Ballachulish",
+        areaSlug: "ballachulish",
         description:
           "Ballachulish collections should include the full item list, entrance and turning space. If delivery is to Fort William, Oban or Glasgow, include the receiving-floor and loading arrangements.",
       },
       {
         slug: "glencoe",
         name: "Glencoe",
+        areaSlug: "glencoe",
         description:
           "For Glencoe moves, describe rural access, gates and any steep or narrow approach before confirming a vehicle. Long-distance delivery should include keys and unloading details at the destination.",
       },
       {
         slug: "kinlochleven",
         name: "Kinlochleven",
+        areaSlug: "kinlochleven",
         description:
           "Kinlochleven enquiries need the full route and exact property entrance. If furniture is collected from elsewhere in Lochaber, include the seller handover and delivery access together.",
       },
@@ -860,30 +866,35 @@ const ISLE_OF_SKYE_NEARBY_AREA_GROUPS: readonly NearbyAreaGroup[] = [
       {
         slug: "broadford",
         name: "Broadford",
+        areaSlug: "broadford",
         description:
           "Broadford enquiries can link the A87 route with local home or furniture access. Provide the complete delivery address, any narrow approach and the final stopping point for the vehicle.",
       },
       {
         slug: "kyleakin",
         name: "Kyleakin",
+        areaSlug: "kyleakin",
         description:
           "For Kyleakin and Skye Bridge-side moves, check current bridge and road conditions, then describe the property entrance. The bridge crossing does not resolve the carrying route at the address.",
       },
       {
         slug: "dunvegan",
         name: "Dunvegan",
+        areaSlug: "dunvegan",
         description:
           "Dunvegan moves should include the full postcode, road approach and turning details. If the move continues to the mainland, provide the receiving access and key handover before booking.",
       },
       {
         slug: "uig",
         name: "Uig",
+        areaSlug: "uig",
         description:
           "Uig enquiries may connect with onward ferry or island routes. Make any ferry dependency explicit and share the property access, load and preferred date for route assessment.",
       },
       {
         slug: "armadale-skye",
         name: "Armadale, Skye",
+        areaSlug: "armadale-skye",
         description:
           "Armadale enquiries should state whether the Mallaig ferry is part of the move. Provide the collection or delivery address, ferry details where relevant and the receiving access before confirming arrangements.",
       },
@@ -904,18 +915,21 @@ const ISLE_OF_SKYE_NEARBY_AREA_GROUPS: readonly NearbyAreaGroup[] = [
       {
         slug: "carbost",
         name: "Carbost",
+        areaSlug: "carbost",
         description:
           "Carbost furniture and household moves should include the full address, final approach and any loading space limitation. Tell us whether the move stays on Skye or continues to the mainland.",
       },
       {
         slug: "staffin",
         name: "Staffin",
+        areaSlug: "staffin",
         description:
           "Staffin enquiries should identify the route, entrance and any narrow or steep final approach. A larger load needs vehicle suitability checked before the date is agreed.",
       },
       {
         slug: "edinbane",
         name: "Edinbane",
+        areaSlug: "edinbane",
         description:
           "For Edinbane and nearby townships, provide property names, gates, surface and turning details. If a seller collection is involved, include release contact and item dimensions.",
       },

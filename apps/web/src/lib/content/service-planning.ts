@@ -148,7 +148,7 @@ export const SERVICE_PLANNING: Partial<Record<string, ServicePlanning>> = {
     vehicleAndCrew:
       "The business inventory, release contact, service entrance, loading bay, lift and access window determine the vehicle and crew. Tell us whether items are packed, palletised, boxed, loose, fragile or displayed so handling can be assessed before confirmation.",
     pricing:
-      "Business relocation pricing uses the commercial inventory, route, crew time, access constraints, date and any agreed packing, dismantling or additional stops. It reuses the office pricing base but keeps a distinct business booking intent and saved service label.",
+      "Business relocation pricing uses the commercial inventory, route, crew time, access constraints, date and any agreed packing, dismantling or additional stops. Shops, studios and wider commercial loads should be described as business removals so the quote keeps the right scope and labels.",
     notIncluded: [
       "Specialist machinery installation, regulated goods, hazardous materials or waste disposal.",
       "IT system disconnection, data migration or reconnection.",
