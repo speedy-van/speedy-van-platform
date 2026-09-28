@@ -440,7 +440,7 @@ const EXISTING_AREAS: Area[] = [
       "Furniture and home removal enquiries",
       "Halls and storage access times considered"
     ],
-    nearbyAreas: ["perth", "kirkcaldy", "st-andrews", "arbroath"],
+    nearbyAreas: ["broughty-ferry", "perth", "st-andrews", "arbroath"],
     metaDescription: "Man and van in Dundee for student rooms, flat moves and furniture delivery. Share your inventory, dates and access details to check your options.",
     moveAdvice: [
       {
@@ -472,6 +472,54 @@ const EXISTING_AREAS: Area[] = [
       {
         "question": "Is a Broughty Ferry sofa delivery priced only by the driving distance?",
         "answer": "No. Sofa size, the people needed to handle it, stair turns and the distance from the van to each door also affect the work. Send measurements and access details as well as both addresses."
+      }
+    ]
+  },
+  {
+    slug: "broughty-ferry",
+    name: "Broughty Ferry",
+    region: "Tayside & Fife",
+    postcode: "DD5",
+    schemaType: "Place",
+    headline: "Man and Van in Broughty Ferry",
+    description:
+      "Request a Broughty Ferry quote for furniture collection, flat moves, storage transport or a house move. Include the exact collection entrance, stairs, driveway or street access and the destination details before booking. Coastal properties, shop collections and routes into Dundee can each need different loading arrangements.",
+    highlights: [
+      "Furniture collections and home moves",
+      "Dundee-linked routes and coastal access",
+      "Storage, flat and business enquiries assessed by route"
+    ],
+    nearbyAreas: ["dundee", "carnoustie", "monifieth", "arbroath"],
+    metaDescription:
+      "Man and van in Broughty Ferry for furniture delivery, house moves, storage transport and business removals. Request a quote with full access details.",
+    moveAdvice: [
+      {
+        title: "Use the real loading entrance",
+        body: "For a Broughty Ferry shop, flat or waterfront property, identify the doorway used for bulky items rather than relying only on the public frontage. Explain the carry from the van to the room, including any shared stair, garden path or rear entrance.",
+      },
+      {
+        title: "Check Dundee-linked road and parking details",
+        body: "Where the collection depends on restricted street space, review Dundee City Council's parking dispensation guidance and current signs before the date. A convenient space nearby is not the same as a loading plan for furniture or a home move.",
+        source: {
+          label: "Dundee City Council parking dispensation guidance",
+          href: "https://www.dundeecity.gov.uk/parking-information/parking-dispensation"
+        }
+      },
+      {
+        title: "Describe the full Dundee or Angus route",
+        body: "A Broughty Ferry move to Dundee, Carnoustie or beyond should include both addresses, item dimensions and key timing. Add storage-unit access or seller release details before the van and crew are planned.",
+      },
+    ],
+    faqs: [
+      {
+        question: "Can you collect furniture in Broughty Ferry and deliver into Dundee?",
+        answer:
+          "Yes. Provide the seller or retailer collection details, item measurements, destination access and any stairs or lift information before booking."
+      },
+      {
+        question: "Do Broughty Ferry moves use Dundee service pages?",
+        answer:
+          "Broughty Ferry has its own area and local service pages in this branch, while Dundee remains the broader city group. Use the Broughty Ferry URL when the collection or delivery is specifically there."
       }
     ]
   },
@@ -1026,7 +1074,7 @@ const EXISTING_AREAS: Area[] = [
       "Longer journeys assessed before booking",
       "Approach roads and loading space considered"
     ],
-    nearbyAreas: ["inverness", "isle-of-skye", "oban", "mallaig"],
+    nearbyAreas: ["caol", "inverness", "isle-of-skye", "mallaig"],
     metaDescription: "Man and van enquiries in Fort William for furniture and home moves. Share your route, inventory and vehicle access to check suitability and availability.",
     moveAdvice: [
       {
@@ -1066,6 +1114,54 @@ const EXISTING_AREAS: Area[] = [
     ]
   },
   {
+    slug: "caol",
+    name: "Caol",
+    region: "Highlands",
+    postcode: "PH33",
+    schemaType: "Place",
+    headline: "Man and Van in Caol",
+    description:
+      "For a Caol move, give the exact property address, access from the road, loading point and the route to the destination. Furniture collections, storage runs, student belongings and home moves can link with Fort William or longer Highland journeys, but each job still needs the full item list and access details.",
+    highlights: [
+      "Fort William and Lochaber linked moves",
+      "Furniture, student and storage transport",
+      "Highland route and property access checked"
+    ],
+    nearbyAreas: ["fort-william", "mallaig", "inverness", "isle-of-skye"],
+    metaDescription:
+      "Man and van in Caol for furniture, flat moves, storage transport and house removals. Share exact access, route and item details for a quote.",
+    moveAdvice: [
+      {
+        title: "Separate Caol access from Fort William access",
+        body: "Use the Caol property entrance and postcode rather than a general Fort William description. Include parking, shared access, stairs, gates and the distance from the stopping point to the door.",
+      },
+      {
+        title: "Check longer Highland routes before booking",
+        body: "For moves using the A82 or routes towards Mallaig, Skye or Inverness, check current road conditions close to the date and provide the final property approach at both ends.",
+        source: {
+          label: "Traffic Scotland roadworks and route updates",
+          href: "https://www.traffic.gov.scot/traffic-information/roadworks"
+        }
+      },
+      {
+        title: "Include storage and extra stops early",
+        body: "If belongings are split between a Caol address, storage and another destination, list each stop with access windows. The van capacity and loading order should be planned before collection day.",
+      },
+    ],
+    faqs: [
+      {
+        question: "Is Caol covered separately from Fort William?",
+        answer:
+          "Yes. Caol is included as its own locality page in this branch. Provide the Caol address, access details and route rather than using Fort William as a placeholder."
+      },
+      {
+        question: "Can a Caol move continue to Skye or Glasgow?",
+        answer:
+          "You can request a quote for Scotland-origin routes across Britain. Give the complete destination, inventory, road access and any timing constraints before booking."
+      }
+    ]
+  },
+  {
     slug: "isle-of-skye",
     schemaType: "Place",
     name: "Isle of Skye",
@@ -1079,7 +1175,7 @@ const EXISTING_AREAS: Area[] = [
       "Furniture, flat, home and business moving enquiries",
       "Bridge, ferry and rural-route details considered"
     ],
-    nearbyAreas: ["fort-william", "inverness", "portree", "mallaig"],
+    nearbyAreas: ["portree", "broadford", "fort-william", "inverness"],
     metaDescription:
       "Man and van enquiries on the Isle of Skye for furniture, home and business moves. Share the exact route, access and any ferry requirement before booking.",
     moveAdvice: [
@@ -1116,6 +1212,58 @@ const EXISTING_AREAS: Area[] = [
       {
         question: "Can you quote a furniture collection from Portree or Broadford?",
         answer: "You can request a quote with the seller address, item dimensions, full destination and access notes. Larger or awkward items need the carrying route checked at both ends before collection is confirmed."
+      }
+    ]
+  },
+  {
+    slug: "broadford",
+    name: "Broadford",
+    region: "Highlands and Islands",
+    postcode: "",
+    schemaType: "Place",
+    headline: "Man and Van in Broadford, Isle of Skye",
+    description:
+      "Request a Broadford moving quote with the full property address, island route, inventory and access notes. Furniture collections, student moves, storage transport and business enquiries should identify whether the journey uses the Skye Bridge, a ferry leg or another Highland route, then describe the final approach from the public road.",
+    highlights: [
+      "Skye Bridge and A87 route planning",
+      "Furniture, storage and home move enquiries",
+      "Rural access and property approach checked"
+    ],
+    nearbyAreas: ["isle-of-skye", "portree", "fort-william", "mallaig"],
+    metaDescription:
+      "Man and van in Broadford, Isle of Skye, for furniture, storage transport, house moves and business removals. Share route and access details.",
+    moveAdvice: [
+      {
+        title: "Confirm the Skye route and the final approach",
+        body: "Broadford enquiries often depend on the A87 and the final access to the property. Check bridge and road conditions, then describe gates, single-track approaches, gradients and turning space separately from the trunk-road journey.",
+        source: {
+          label: "Traffic Scotland bridge and A87 updates",
+          href: "https://www.traffic.gov.scot/traffic-information/bridges"
+        }
+      },
+      {
+        title: "Use the actual Broadford address",
+        body: "Provide the property name, postcode where available and delivery contact. For a collection from a seller or business, confirm the release point and whether items are assembled, boxed or upstairs.",
+      },
+      {
+        title: "State any ferry dependency",
+        body: "If the Broadford move includes a ferry leg elsewhere in the route, state that before booking. Ferry space, sailing status and vehicle suitability need checking separately from ordinary loading and unloading.",
+        source: {
+          label: "CalMac Mallaig to Armadale route information",
+          href: "https://www.calmac.co.uk/route-information/mallaig-armadale/"
+        }
+      },
+    ],
+    faqs: [
+      {
+        question: "Can you quote a furniture collection in Broadford?",
+        answer:
+          "Yes. Send item dimensions, seller or release details, the full destination and access notes at both ends. Awkward or bulky items need the carrying route checked before collection is confirmed."
+      },
+      {
+        question: "Does Broadford use the West Lothian Armadale page?",
+        answer:
+          "No. Broadford is treated as a Skye locality. Any Armadale on a Skye route is described as Armadale, Skye and is not linked to the West Lothian /areas/armadale route."
       }
     ]
   },

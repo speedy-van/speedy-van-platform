@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getAreaBySlug } from "@/lib/areas";
 import { SERVICES } from "@/lib/services";
-import { LOCAL_SERVICE_PAGES } from "@/lib/content/city-service-pages";
+import { LOCAL_SERVICE_PAGES } from "@/lib/content/local-service-pages";
 import { buildPageMetadata } from "@/lib/seo/metadata";
 import { MovingContentPage } from "@/components/areas/MovingContentPage";
 import { relatedLocalServiceLinks } from "@/lib/seo/local-service-links";

@@ -2,7 +2,7 @@ import { Hono } from "hono";
 import { zValidator } from "@hono/zod-validator";
 import { z } from "zod";
 import { db } from "@speedy-van/db";
-import { ok, fail } from "@speedy-van/shared";
+import { ok } from "@speedy-van/shared";
 import { randomBytes } from "crypto";
 
 const app = new Hono();

@@ -248,12 +248,12 @@ export const SERVICES: Service[] = [
   {
     slug: "office-removal",
     name: "Office Removals",
-    tagline: "Business, office, and commercial relocations",
+    tagline: "Office relocations planned around workstations and building access",
     icon: "💼",
     description:
-      "Office removals and business relocations planned around your equipment, building access and staff handover.",
+      "Office removals planned around desks, chairs, files, boxed equipment, building access and staff handover.",
     longDescription:
-      "An office removal starts with an inventory and a plan for both buildings. Desks, chairs, filing cabinets, boxed equipment and suitable commercial stock need clear labels and agreed destinations. Tell us about loading bays, service lifts, access permissions and the time your team needs to resume work. Shop, studio and other business moves are assessed against the items and handling required.",
+      "An office removal starts with an inventory and a plan for both workplaces. Desks, chairs, filing cabinets and boxed office equipment need clear labels and agreed destinations. Tell us about loading bays, service lifts, access permissions and the time your team needs to resume work. Shop, studio and other commercial moves should use the business removals page so the scope is not confused with an office-only move.",
     includes: [
       "Out-of-hours and weekend scheduling where available",
       "Desk, chair, file, and equipment moving",
@@ -263,12 +263,12 @@ export const SERVICES: Service[] = [
     ],
     whyUs: [
       "Planned around downtime and access windows",
-      "Suitable for small offices, clinics, studios, and retail units",
-      "Clear scope before move day",
+      "Suitable for small offices and workplace relocations",
+      "Clear office scope before move day",
     ],
     startingFrom: 150,
     metaDescription:
-      "Office removals, business relocation and commercial moves across Scotland from £150. Out-of-hours options and equipment moving support.",
+      "Office removals across Scotland from £150. Plan desks, chairs, files, boxed equipment, access windows and workplace handover before booking.",
     faqs: [
       {
         question: "Can you move office IT equipment?",
@@ -281,9 +281,53 @@ export const SERVICES: Service[] = [
           "Evening and weekend moves can often be arranged so staff can return to work with less disruption. Availability depends on crew and route capacity.",
       },
       {
-        question: "Do you handle commercial stock or shop moves?",
+        question: "Is a shop or studio move an office removal?",
         answer:
-          "Yes, where the stock is safe and lawful to transport. Tell us about volume, access, fragility, and any time-sensitive handover requirements.",
+          "Use business removals for shops, studios, commercial furniture and suitable business equipment. Use office removals when the main load is office desks, chairs, files and boxed workplace equipment.",
+      },
+    ],
+  },
+  {
+    slug: "business-removals",
+    name: "Business Removals",
+    tagline: "Commercial moves for shops, studios and business equipment",
+    icon: "🏬",
+    description:
+      "Business and commercial removals for shops, studios, stock rooms, business furniture and suitable equipment.",
+    longDescription:
+      "Business removals cover commercial moves that are not simply an office desk move: shop relocations, studio contents, commercial furniture delivery, business equipment transport and suitable stock or display items. The quote needs the release contact, loading entrance, access window, item list and destination plan. Specialist machinery, hazardous goods, regulated stock and installation work need separate assessment before acceptance.",
+    includes: [
+      "Commercial furniture and business equipment transport",
+      "Shop, studio and suitable small-business relocation enquiries",
+      "Loading-bay, service-entrance and access-window planning",
+      "Labelled loading for displays, shelving, boxed stock and equipment",
+      "Evening or weekend timing discussed where capacity allows",
+    ],
+    whyUs: [
+      "Keeps business moves separate from ordinary office-only removals",
+      "Quote based on stock, equipment, access and timing",
+      "Suitable for local and Scotland-origin commercial routes by assessment",
+    ],
+    startingFrom: 150,
+    metaDescription:
+      "Business removals and commercial relocation across Scotland from £150. Move shops, studios, commercial furniture and suitable business equipment by quote.",
+    bookingServiceSlug: "office-removal",
+    bookable: false,
+    faqs: [
+      {
+        question: "What is the difference between office and business removals?",
+        answer:
+          "Office removals focus on workplace desks, chairs, files and boxed office equipment. Business removals cover wider commercial moves such as shops, studios, business furniture, display items and suitable equipment.",
+      },
+      {
+        question: "Can you move commercial stock?",
+        answer:
+          "Suitable stock can be assessed when it is safe and lawful to transport. Provide quantity, packaging, fragility, access and any time-sensitive handover requirements before booking.",
+      },
+      {
+        question: "Do business removals include specialist machinery installation?",
+        answer:
+          "No. Machinery installation, hazardous goods and regulated materials need a separate specialist assessment and are not assumed from a business removal quote.",
       },
     ],
   },
@@ -368,6 +412,51 @@ export const SERVICES: Service[] = [
         question: "What if the furniture does not fit?",
         answer:
           "We will not force an item through an unsafe access route. If fit is uncertain, send dimensions and photos before booking.",
+      },
+    ],
+  },
+  {
+    slug: "storage-transport",
+    name: "Storage Transport",
+    tagline: "Transport to or from your storage unit",
+    icon: "📦",
+    description:
+      "Storage collection and delivery for furniture, boxes and smaller loads going into or out of a storage unit.",
+    longDescription:
+      "Storage transport is for moving possessions to or from a storage facility. It does not sell storage space. Provide the home address, storage facility address, unit floor, opening hours, lift or trolley access and a clear list of items. Student storage, furniture into storage and collections from a unit can be quoted when the access and route are clear.",
+    includes: [
+      "Collection from homes, flats, businesses or storage facilities",
+      "Delivery to or from a booked storage unit",
+      "Item list and access checks for the unit and property",
+      "Boxes, bags, furniture and smaller household loads",
+      "Additional stops only when included before confirmation",
+    ],
+    whyUs: [
+      "Storage transport is priced as a moving job, not storage rental",
+      "Useful for student storage, furniture storage and temporary gaps",
+      "Unit access and opening times checked before the van is planned",
+    ],
+    startingFrom: 45,
+    priceUnit: "hour",
+    metaDescription:
+      "Storage transport across Scotland from £45/hr. Move furniture, boxes and student belongings to or from your booked storage unit.",
+    bookingServiceSlug: "man-and-van",
+    bookable: false,
+    faqs: [
+      {
+        question: "Do you provide the storage unit?",
+        answer:
+          "No. Book the storage space with your chosen facility first, then request transport using the unit address, access details and item list.",
+      },
+      {
+        question: "Can you collect from a storage unit and deliver home?",
+        answer:
+          "Yes. Provide the facility address, unit floor, opening hours, access code or release process, and the destination access before booking.",
+      },
+      {
+        question: "Is storage transport suitable for students?",
+        answer:
+          "Yes, where the load and access are suitable. Include boxes, suitcases, small furniture and any halls or tenancy timing so collection and delivery can be arranged together.",
       },
     ],
   },

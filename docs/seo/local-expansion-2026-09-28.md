@@ -4,14 +4,14 @@
 
 - Editing worktree: `C:\speedy-van-platform-prod-baseline-d2b9e3d`
 - Repository: `https://github.com/speedy-van/speedy-van-platform.git`
-- Base SHA before this branch work: `d2b9e3d97c438909bc33146aba04ebfd8298f05e`
 - Branch: `seo/local-expansion-2026-09-28`
+- Starting HEAD for this round: `724a67868b343ec3c4514d43d4469226a8777146`
 - Original dirty checkout preserved: `C:\speedy-van-platform`
   - `M apps/web/src/app/(site)/layout.tsx`
   - `D apps/web/src/components/SofaItemPopup.tsx`
   - `M packages/db/prisma/schema.prisma`
 
-No deployment, Vercel relink, database migration, pricing rewrite, payment change, admin change, driver change or API contract change was made.
+No deployment, Vercel relink, database migration, production data write, real booking, real payment, admin refactor or driver workflow change was made.
 
 ## Search Console access
 
@@ -23,139 +23,136 @@ The HYPD connector exposed only the Search Console connection description in thi
 
 The callable tools needed to list properties, inspect URLs, submit or read sitemaps, or query performance rows were not exposed in this session. This report therefore does not claim Google indexing, ranking, impressions, clicks, or URL Inspection state.
 
-## Inventory
+## Inventory outcome
 
-Source-counted area URL inventory:
+The expansion now creates standalone local-service URLs for verified cities, towns and villages in the eight requested geographic groups. Synonyms from the keyword corpus are grouped by intent; they do not create separate doorway pages.
 
-| State | Standalone `/areas/{slug}` | Local service `/areas/{area}/{service}` | Combined `/areas` URLs |
-| --- | ---: | ---: | ---: |
-| Before `origin/main` | 160 | 48 | 208 |
-| After this change | 161 | 60 | 221 |
-| Delta | +1 | +12 | +13 |
+| Item | Count |
+| --- | ---: |
+| Target geographic groups | 8 |
+| Target localities in those groups | 102 |
+| Service intents per target locality | 10 |
+| Target locality/service matrix | 1,020 URLs |
+| Total `LOCAL_SERVICE_PAGES` exposed to Next | 1,026 URLs |
+| Sitemap `<loc>` entries on local dev | 1,235 |
+| Sitemap local-service entries | 1,026 |
 
-Rendered sitemap check against the final local source tree on `http://localhost:3004`:
+The six extra local-service URLs outside the target matrix are retained reviewed pages from earlier authored content. They remain because they are valid existing content, not new duplicate targets.
 
-- Total `<loc>` entries: 264
-- `/areas/*` entries: 221
-- Added URLs checked: 13
-- Duplicate sitemap locs: 0
-- `/areas/not-a-real-place`: 404 with `noindex`
+## Geographic matrix
 
-## Geographic outcomes
+| Group | Localities | Service URLs | Outcome |
+| --- | ---: | ---: | --- |
+| Glasgow | 23 | 230 | Reviewed and expanded to the full service matrix, including Glasgow, neighbourhoods and nearby towns such as Paisley, East Kilbride and Hamilton. |
+| Edinburgh | 22 | 220 | Reviewed and expanded to the full service matrix, including Edinburgh, Edinburgh Leith, Musselburgh, Livingston and Lothian towns. |
+| Inverness | 10 | 100 | Reviewed and expanded to Highland localities such as Inverness, Nairn and Dingwall. |
+| Aberdeen | 16 | 160 | Reviewed and expanded to Aberdeen/Grampian localities including Westhill and Inverurie. |
+| Dundee | 8 | 80 | Reviewed and expanded to Dundee/Angus localities including Broughty Ferry and Carnoustie. |
+| Fort William | 3 | 30 | Reviewed and expanded to Fort William, Caol and Mallaig. |
+| Isle of Skye | 3 | 30 | Reviewed and expanded to Isle of Skye, Portree and Broadford. Skye does not link to West Lothian `/areas/armadale`. |
+| Perth | 17 | 170 | Reviewed and expanded to Perth/Perthshire localities including Crieff and Blairgowrie. |
 
-| Group | Outcome |
-| --- | --- |
-| Glasgow | Reviewed and retained. Existing core page, six local service pages and nearby groups already cover city, neighbourhood, flat, house, furniture, student, office and packing intent. No duplicate pages added. |
-| Edinburgh | Reviewed and retained. Existing city page, six service pages and neighbourhood/town links already cover Old Town, New Town, Leith, South Edinburgh and Lothians intent. No duplicate pages added. |
-| Inverness | Reviewed and retained. Existing city page and six service pages remain the core Highland city cluster. Fort William now has stronger linked coverage instead of being treated only as an Inverness-adjacent mention. |
-| Aberdeen | Reviewed and retained. Existing city page and six service pages already cover city-centre, LEZ, office, flat and furniture intent. No duplicate pages added. |
-| Dundee | Improved nearby-area content only. Existing six service pages retained; added grouped Dundee neighbourhood, Angus/Tay coast and North Fife route guidance without creating thin town pages. |
-| Perth | Improved nearby-area content only. Existing six service pages retained; added Perth city/suburb and Perthshire route groups without creating duplicate service combinations. |
-| Fort William | Implemented remaining gap. Existing area page kept and six authored local service pages added. Nearby Lochaber groups added. |
-| Isle of Skye | Implemented remaining gap. Added accurate island area page, six authored local service pages and Skye locality groups. Copy now focuses on bridge, ferry, rural approach and vehicle-access detail rather than internal SEO classification. |
+## Service-intent matrix
+
+| Public service URL slug | Keyword intent grouped here | Booking entry |
+| --- | --- | --- |
+| `house-removal` | house removals, home removals, residential removals, full-house moving | `/book?service=house-removal`; persisted service `house-removal`; room inventory |
+| `flat-removals` | flat removals, apartment removals, studio moves, one-bed and two-bed flat moves | `/book?service=flat-removals`; persisted service `man-and-van`; entry `flat-removals`; room inventory |
+| `furniture-delivery` | furniture removals, sofa delivery, bed collection, wardrobe delivery, marketplace collection | `/book?service=furniture-delivery`; persisted service `furniture-delivery`; item inventory |
+| `storage-transport` | storage transport, storage collection and delivery, moving furniture into or out of storage | `/book?service=storage-transport`; persisted service `man-and-van`; entry `storage`; item inventory |
+| `office-removal` | office removals, office relocation, office furniture and office equipment moving | `/book?service=office-removal`; persisted service `office-removal`; entry `office`; item inventory |
+| `business-removals` | business removals, commercial removals, shop relocation, studio and commercial furniture moves | `/book?service=business-removals`; persisted service `office-removal`; entry `business`; item inventory |
+| `man-and-van` | man and van, man with a van, van and man, two men and a van, local van-with-driver | `/book?service=man-and-van`; persisted service `man-and-van`; item inventory |
+| `student-move` | student removals, student movers, student storage transport, halls/shared-flat moves | `/book?service=student-move`; persisted service `student-move`; item inventory |
+| `small-moves` | small moves, small removals, single-room moves, part-load removals | `/book?service=small-moves`; persisted service `man-and-van`; entry `small-moves`; room inventory |
+| `packing-service` | packing service, removals with packing, packing and moving, dismantling/assembly context | `/book?service=packing-service`; persisted service `packing-service`; room inventory |
+
+`Business Removals` is intentionally distinct from `Office Removals` in the UI, draft identity, quote request signature and booking payload. The database service remains `office-removal` for compatibility, while `entryServiceSlug=business` and `serviceName=Business Removals` preserve the business-specific context for pricing and displays. `Storage Transport` remains transport-only; no storage-space rental claim was added.
 
 ## Schema decision
 
-Schema.org `City` is not limited to formal city-status pages in this codebase; it can be used for towns and civic localities where that is the chosen modelling style. Fort William keeps the existing schema modelling instead of being changed solely because it is a town; `Place` would also be acceptable, but it is not mandatory. `Place` is used for Isle of Skye because it is an island/service area rather than a town or city page.
+Schema.org `City` includes towns in this project model and is not limited to formal city-status pages. `Place` is acceptable for Fort William but not mandatory. No schema churn was made solely to relabel towns.
 
-## Added pages reviewed individually
+## Rendered SEO checks
 
-Each page was reviewed against existing Glasgow, Edinburgh, Inverness, Aberdeen, Dundee and Perth siblings. The pages keep distinct service intent, use local route/access facts, avoid invented claims, and are linked from the parent area page plus the matching service hub. Canonicals are the production URL at `https://www.speedyvan.uk`.
+Representative pages checked on `http://localhost:3000`:
 
-| URL | Distinct intent and useful local information | Sources | Verified inbound links |
-| --- | --- | --- | --- |
-| `/areas/fort-william/house-removal` | Whole-house inventory, town-centre controlled access, A82 route and final-approach planning. | Highland Council Fort William High Street bollards; Traffic Scotland roadworks. | `/areas/fort-william`, `/services/house-removal`, related local service links. |
-| `/areas/fort-william/flat-removals` | Floor/stair detail, pedestrian versus van access and route checks near the move date. | Highland Council bollards; Traffic Scotland roadworks. | `/areas/fort-william`, `/services/flat-removals`, related local service links. |
-| `/areas/fort-william/furniture-delivery` | Seller release point, item measurement, delivery route and rural/longer delivery legs. | Highland Council bollards; Traffic Scotland roadworks. | `/areas/fort-william`, `/services/furniture-delivery`, related local service links. |
-| `/areas/fort-william/office-removal` | Service entrance restrictions, business timing, equipment labels and Fort William access. | Highland Council bollards; Traffic Scotland roadworks. | `/areas/fort-william`, `/services/office-removal`, related local service links. |
-| `/areas/fort-william/student-move` | Residence details, personal inventory, key timing and town-centre access. | UHI Fort William accommodation; Highland Council bollards. | `/areas/fort-william`, `/services/student-move`, related local service links. |
-| `/areas/fort-william/packing-service` | Packing scope, fragile items, route-to-vehicle planning and separate packing/loading dates. | Highland Council bollards; Traffic Scotland roadworks. | `/areas/fort-william`, `/services/packing-service`, related local service links. |
-| `/areas/isle-of-skye/house-removal` | Full island-house move, exact address detail, bridge/ferry route checks and final approach. | Traffic Scotland bridges; CalMac Mallaig-Armadale route. | `/areas/isle-of-skye`, `/services/house-removal`, related local service links. |
-| `/areas/isle-of-skye/flat-removals` | Village/building entrance, floor/stair details and bridge route dependency. | Traffic Scotland bridges. | `/areas/isle-of-skye`, `/services/flat-removals`, related local service links. |
-| `/areas/isle-of-skye/furniture-delivery` | Seller handover, item condition, crossing/ferry route and receiving-room access. | CalMac Mallaig-Armadale route. | `/areas/isle-of-skye`, `/services/furniture-delivery`, related local service links. |
-| `/areas/isle-of-skye/office-removal` | Small business/office entrance, equipment labels and bridge/ferry/road dependency. | Traffic Scotland bridges. | `/areas/isle-of-skye`, `/services/office-removal`, related local service links. |
-| `/areas/isle-of-skye/student-move` | Campus/private address accuracy, Portree/Broadford study-centre context and personal inventory. | UHI Portree centre; UHI Broadford centre. | `/areas/isle-of-skye`, `/services/student-move`, related local service links. |
-| `/areas/isle-of-skye/packing-service` | Island packing scope, fragile preparation, bridge/ferry timing and rural final carry. | Traffic Scotland bridges. | `/areas/isle-of-skye`, `/services/packing-service`, related local service links. |
+| URL | HTTP | Canonical | Robots | CTA |
+| --- | ---: | --- | --- | --- |
+| `/areas/glasgow/business-removals` | 200 | `https://www.speedyvan.uk/areas/glasgow/business-removals` | `index, follow` | `/book?service=business-removals` |
+| `/areas/edinburgh/storage-transport` | 200 | `https://www.speedyvan.uk/areas/edinburgh/storage-transport` | `index, follow` | `/book?service=storage-transport` |
+| `/areas/inverness/man-and-van` | 200 | `https://www.speedyvan.uk/areas/inverness/man-and-van` | `index, follow` | `/book?service=man-and-van` |
+| `/areas/aberdeen/office-removal` | 200 | `https://www.speedyvan.uk/areas/aberdeen/office-removal` | `index, follow` | `/book?service=office-removal` |
+| `/areas/broughty-ferry/flat-removals` | 200 | `https://www.speedyvan.uk/areas/broughty-ferry/flat-removals` | `index, follow` | `/book?service=flat-removals` |
+| `/areas/caol/student-move` | 200 | `https://www.speedyvan.uk/areas/caol/student-move` | `index, follow` | `/book?service=student-move` |
+| `/areas/broadford/furniture-delivery` | 200 | `https://www.speedyvan.uk/areas/broadford/furniture-delivery` | `index, follow` | `/book?service=furniture-delivery` |
+| `/areas/perth/packing-service` | 200 | `https://www.speedyvan.uk/areas/perth/packing-service` | `index, follow` | `/book?service=packing-service` |
+| `/areas/isle-of-skye/business-removals` | 200 | `https://www.speedyvan.uk/areas/isle-of-skye/business-removals` | `index, follow` | `/book?service=business-removals` |
 
-## Sources used
+Additional checks:
 
-- Glasgow parking suspensions and dispensations: `https://www.glasgow.gov.uk/article/3801/Apply-for-Dispensation-or-a-Parking-Suspension`
-- Glasgow LEZ information: `https://www.glasgow.gov.uk/article/3982/Glasgow-s-LEZ-Key-Information`
-- Edinburgh dispensations and suspensions: `https://www.edinburgh.gov.uk/parking-spaces/dispensations-suspensions`
-- Highland Council Fort William High Street bollards: `https://www.highland.gov.uk/news/article/17266/fort-william-high-street-automatic-bollards-begin-operation`
-- Highland Council parking/loading guidance: `https://www.highland.gov.uk/parking-fines-enforcement/good-parking-guidance/5`
-- Traffic Scotland roadworks: `https://www.traffic.gov.scot/traffic-information/roadworks`
-- Traffic Scotland bridge information: `https://www.traffic.gov.scot/traffic-information/bridges`
-- CalMac Mallaig to Armadale route: `https://www.calmac.co.uk/route-information/mallaig-armadale/`
-- Dundee LEZ: `https://www.dundeecity.gov.uk/service-area/city-development/sustainable-transport-and-roads/dundee-low-emission-zone-scheme-lez`
-- Perth and Kinross bay suspensions and dispensations: `https://www.pkc.gov.uk/article/22131/Bay-suspensions-and-dispensations`
-- Aberdeen parking information: `https://www.aberdeencity.gov.uk/link/parking-information`
-- Aberdeen LEZ: `https://www.aberdeencity.gov.uk/Council-Services/roads-parking-and-travel/low-emission-zone-lez`
-- UHI Fort William accommodation: `https://www.uhi.ac.uk/en/studying-at-uhi/accommodation/uni/fort-william/`
-- UHI North, West and Hebrides Portree centre: `https://www.nwh.uhi.ac.uk/en/about-us/campuses-and-centres/portree/`
-- UHI North, West and Hebrides Broadford centre: `https://www.nwh.uhi.ac.uk/en/about-us/campuses-and-centres/broadford/`
+- `/areas/not-a-real-place/business-removals`: 404 with `noindex`.
+- `/areas/glasgow/not-real-service`: 404 with `noindex`.
+- `/sitemap.xml`: 1,235 locs; 1,026 local-service URLs.
+- Service counts in sitemap: `house-removal` 103, `flat-removals` 103, `furniture-delivery` 103, `storage-transport` 102, `office-removal` 103, `business-removals` 102, `man-and-van` 102, `student-move` 103, `small-moves` 102, `packing-service` 103.
+- Selected sitemap URLs present: `/areas/broughty-ferry/storage-transport`, `/areas/caol/business-removals`, `/areas/broadford/furniture-delivery`, `/areas/east-kilbride/business-removals`, `/areas/hamilton/storage-transport`, `/areas/edinburgh-leith/man-and-van`.
+- Internal links present from `/areas/broughty-ferry`, `/areas/caol`, `/areas/broadford`, `/services/storage-transport` and `/services/business-removals`.
+- `/areas/isle-of-skye` contains Skye Armadale context but no `href="/areas/armadale"`.
 
-## Verification
+Browser-rendered 360px and 768px checks:
 
-Tested final source tree locally from `C:\speedy-van-platform-prod-baseline-d2b9e3d` on branch `seo/local-expansion-2026-09-28`.
+- `/areas/glasgow/business-removals`, `/areas/edinburgh/storage-transport`, `/areas/broughty-ferry/flat-removals`, `/areas/caol/student-move`, `/areas/broadford/furniture-delivery`: 200, expected H1 visible, CTA visible, no horizontal overflow, no console errors.
+- `/book?service=business-removals`: opens `Plan the business move` at both widths, no horizontal overflow, no console errors.
+- `/book?service=storage-transport`: opens `Plan the storage run` at both widths, no horizontal overflow, no console errors.
 
-Checks run:
+Existing locality sections from the previous PR fix were rechecked in this round:
 
-- `npm run lint -w apps/web`: passed with existing image warnings only:
-  - `src/components/european/EuropeanEnquiryForm.tsx` uses `<img>`
-  - `src/components/FaqSearch.tsx` uses `<img>`
-  - `next lint` deprecation warning from Next.js 15.5.25
-- `npm run typecheck -w apps/web`: passed.
-- `npm run build -w apps/web`: passed; generated 292 static pages.
+- `/areas/dundee`: 200, nearby content rendered, at least 14 locality links visible in server HTML.
+- `/areas/perth`: 200, nearby content rendered, at least 9 locality links visible in server HTML.
+- `/areas/fort-william`: 200, nearby content rendered, at least 8 locality links visible in server HTML.
+- `/areas/isle-of-skye`: 200, nearby content rendered, at least 10 locality links visible in server HTML, no West Lothian Armadale link.
 
-SEO route checks on final local production build at `http://localhost:3004`:
+## Booking checks
 
-- `/areas/isle-of-skye`: 200, canonical `https://www.speedyvan.uk/areas/isle-of-skye`, robots index/follow.
-- All twelve added local service URLs: 200, canonical matches production URL, robots index/follow.
-- `/sitemap.xml`: 200, 264 locs, duplicate count 0, all 13 added URLs present.
-- `/areas`: links to `/areas/isle-of-skye`.
-- `/areas/fort-william`: links to the six Fort William service URLs and `/areas/isle-of-skye`.
-- `/areas/isle-of-skye`: links to the six Skye service URLs.
-- `/services/{service}` pages link to the corresponding Fort William and Skye local-service URLs.
-- `/areas/not-a-real-place`: 404 with `noindex`.
-
-Rendered nearby-content review checks on the final local production build at `http://localhost:3004`:
-
-| Page | Server-rendered nearby section | Visible at 360px | Visible at 768px | Locality cards | Group anchors | Notes |
-| --- | ---: | --- | --- | ---: | ---: | --- |
-| `/areas/dundee` | 1 | Yes | Yes | 14/14 | 3 | First card: Dundee City Centre; last card: Cupar. |
-| `/areas/perth` | 1 | Yes | Yes | 9/9 | 2 | First card: Perth City Centre; last card: Aberfeldy. |
-| `/areas/fort-william` | 1 | Yes | Yes | 8/8 | 2 | First card: Caol; last card: Oban. |
-| `/areas/isle-of-skye` | 1 | Yes | Yes | 10/10 | 2 | First card: Portree; last card: Edinbane. |
-
-Guide-page duplication checks on `http://localhost:3004`:
-
-- `/areas/glasgow`: nearby locality section rendered once.
-- `/areas/edinburgh`: nearby locality section rendered once.
-- `/areas/inverness`: nearby locality section rendered once.
-- `/areas/aberdeen`: nearby locality section rendered once.
-- `/areas/isle-of-skye`: no link to the West Lothian `/areas/armadale` route; the Skye locality card is labelled `Armadale, Skye` and has no `areaSlug`.
-- The visible Skye postcode range `IV41-IV56` was removed using the existing empty-string convention until independently verified.
-- Browser console during locality rendering checks: no errors. One pre-existing Next.js warning remains for `/logo.png?v=amber-20260921-1` needing `images.localPatterns` before Next.js 16.
-
-Booking checks on `http://localhost:3000` at 360px viewport:
-
-The booking checks used the local API already running on `http://localhost:4000`, not production API end-to-end. That API process was from `C:\speedy-van-platform\apps\api`, repository `https://github.com/speedy-van/speedy-van-platform.git`, branch `booking-v2-phase-a`, commit `b49872706ae67c03080a1d5d9b33d204a051ffa7`, package `@speedy-van/api` version `1.0.0`.
+Frontend checks on `http://localhost:3000`:
 
 - `/book` with fresh storage: 200, service selection rendered.
-- `/book?service=house-removals`: 200, opens the home-move journey step.
-- `/book?service=house`: 200, valid alias opens the home-move journey step.
+- `/book?service=house-removals`: 200, opens `Plan the home move`.
+- `/book?service=house`: 200, valid alias opens `Plan the home move`.
 - `/book?service=unknown`: 200, unknown service ignored and service selection rendered.
-- Restored draft: 200, restored to inventory step with saved item visible.
-- Quote calculation: `/pricing/calculate` returned 200 with `success: true`, 28 days and a quote token.
-- Initial displayed total after selecting cheapest slot: GBP 188.19.
-- After changing a price-affecting input from house to fourth-floor flat, the quote area entered calculating state, the action-bar `Continue` was disabled while stale/loading, and the second `/pricing/calculate` returned 200 with `success: true`, 28 days and a quote token.
-- Updated displayed total: GBP 237.66.
-- No `/booking/create` request was made; no real booking or payment was submitted.
-- Browser console during these booking checks: no errors and no warnings.
+- Restored draft, same service via `/book?service=storage-transport`: restored to `Storage load`; saved item remained visible; quote retry state shown.
+- Restored draft, different service via `/book?service=business-removals`: reset to `Plan the business move`; reload preserved the business move context.
+- Payment stayed blocked when quote status was not valid; no `/booking/create` request was made.
+
+Matching API checks:
+
+- Matching local API on `http://localhost:4010` and a second matching attempt on `http://localhost:4011` both returned `503 PRICING_CONFIG_UNAVAILABLE` for `/pricing/calculate`.
+- Sanitised Prisma cause: the matching API cannot reach the configured Neon host on TCP `5432` from this environment.
+- Because pricing config is unavailable on the matching API, a complete current quote recalculation after edits could not be verified end-to-end in this environment.
+
+Non-matching comparison only:
+
+- Existing API on `http://localhost:4000` is from `C:\speedy-van-platform\apps\api`, branch `booking-v2-phase-a`, commit `b49872706ae67c03080a1d5d9b33d204a051ffa7`.
+- It returns pricing responses, but it is not the matching API revision and does not prove this PR end-to-end.
+- Concrete incompatibility: old API priced `business` and `business-removals` as the fallback base (`52.8` in the sample request), while `office`/`office-removal` returned `153.8`; the new code maps business/commercial intents to `officeBasePrice`.
+
+## Quality checks
+
+Checks run against this worktree after implementation:
+
+- `npm run typecheck -w apps/web`: passed.
+- `npm run typecheck -w apps/api`: passed.
+- `npm run typecheck -w packages/shared --if-present`: passed.
+- `npm run lint -w apps/web`: passed with pre-existing warnings only:
+  - `src/components/european/EuropeanEnquiryForm.tsx` uses `<img>`.
+  - `src/components/FaqSearch.tsx` uses `<img>`.
+  - `next lint` deprecation warning from Next.js 15.5.25.
+- `npm run lint -w apps/api`: passed after removing an unused `fail` import in `apps/api/src/routes/draft.ts`.
+- `npm run build -w apps/api`: passed.
+- `npm run build -w apps/web`: passed and generated 1,263 static pages.
 
 ## Remaining limitations
 
 - No authenticated Search Console metrics or URL Inspection evidence was available through callable tools.
 - No production deployment was made and no production indexing/ranking claim is made.
-- Booking was verified only to quote/recalculation and stale payment blocking against a local API process. No production end-to-end payment was submitted.
+- Matching API quote and payment end-to-end verification remains blocked by local inability to reach the configured Neon database from this environment. No production data write, booking creation or payment attempt was performed.

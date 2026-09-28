@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { JsonLd } from "@/components/seo/JsonLd";
+import { getBookingHrefForService } from "@/lib/booking-service-options";
 import { SERVICES, getServicePriceLabel } from "@/lib/services";
 import { buildPageMetadata } from "@/lib/seo/metadata";
 import { buildBreadcrumbSchema, buildServiceCatalogSchema } from "@/lib/seo/schemas";
@@ -23,7 +24,7 @@ export default function ServicesPage() {
           url: `/services/${service.slug}`,
           startingFrom: service.startingFrom,
           priceUnit: service.priceUnit,
-          bookingUrl: `/book?service=${service.slug}`,
+          bookingUrl: getBookingHrefForService(service.slug),
         }))),
       ]} />
       <div className="mx-auto max-w-7xl">

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { Area } from "@/lib/areas";
 import { JsonLd } from "@/components/seo/JsonLd";
+import { getBookingHrefForService } from "@/lib/booking-service-options";
 import { buildBreadcrumbSchema } from "@/lib/seo/schemas";
 import { absoluteUrl, SITE_LEGAL_NAME, SITE_URL } from "@/lib/seo/constants";
 
@@ -21,6 +22,8 @@ interface MovingContentPageProps {
 
 /** Server-rendered planning information. Quote links retain existing booking drafts. */
 export function MovingContentPage({ path, title, description, introduction, origin, serviceSlug, breadcrumbs, sections, faqs, related }: MovingContentPageProps) {
+  const bookingHref = getBookingHrefForService(serviceSlug);
+
   return (
     <article className="bg-stone-950 px-4 py-12 text-white sm:px-6 lg:py-20">
       <JsonLd id="moving-content-jsonld" data={[
@@ -49,7 +52,7 @@ export function MovingContentPage({ path, title, description, introduction, orig
         </nav>
         <h1 className="max-w-4xl text-3xl font-black leading-tight sm:text-5xl">{title}</h1>
         <p className="mt-6 max-w-3xl text-lg leading-relaxed text-stone-300">{introduction}</p>
-        <Link href="/book" data-track-event="quote_click" data-track-location="moving_guide_hero" data-track-area={origin.slug} data-track-service={serviceSlug} className="mt-7 inline-flex min-h-12 items-center justify-center rounded-lg bg-amber-400 px-6 py-3 text-center font-bold text-stone-950 hover:bg-amber-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-300 focus-visible:ring-offset-4 focus-visible:ring-offset-stone-950">Get a moving quote</Link>
+        <Link href={bookingHref} data-track-event="quote_click" data-track-location="moving_guide_hero" data-track-area={origin.slug} data-track-service={serviceSlug} className="mt-7 inline-flex min-h-12 items-center justify-center rounded-lg bg-amber-400 px-6 py-3 text-center font-bold text-stone-950 hover:bg-amber-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-300 focus-visible:ring-offset-4 focus-visible:ring-offset-stone-950">Get a moving quote</Link>
         <nav aria-label="On this page" className="mt-10 rounded-xl border border-white/15 p-5">
           <p className="font-bold">Plan your move</p>
           <ul className="mt-3 grid gap-3 sm:grid-cols-2">
@@ -81,7 +84,7 @@ export function MovingContentPage({ path, title, description, introduction, orig
           <h2 className="text-xl font-bold">More help with your move</h2>
           <ul className="mt-4 flex flex-wrap gap-x-6 gap-y-4">
             {related.map((link) => <li key={link.href}><Link href={link.href} className={movingTextLink}>{link.name}</Link></li>)}
-            <li><Link href="/book" data-track-event="quote_click" data-track-location="moving_guide_footer" data-track-area={origin.slug} data-track-service={serviceSlug} className={movingTextLink}>Start a quote</Link></li>
+            <li><Link href={bookingHref} data-track-event="quote_click" data-track-location="moving_guide_footer" data-track-area={origin.slug} data-track-service={serviceSlug} className={movingTextLink}>Start a quote</Link></li>
           </ul>
         </nav>
       </div>

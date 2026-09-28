@@ -2,12 +2,11 @@
 
 import { useEffect, useRef } from "react";
 import { useBooking } from "@/lib/booking-store";
+import { getApiBaseUrl } from "@/lib/api-base";
 import { canRequestBookingQuote, getBookingPricingKey, getBookingPricingRequest } from "@/lib/booking-quote";
 import { parsePricingResult } from "./quote-response";
 
-const API_BASE = process.env.NODE_ENV === "development"
-  ? "http://localhost:4000"
-  : (process.env.NEXT_PUBLIC_API_URL ?? "https://api.speedyvan.uk");
+const API_BASE = getApiBaseUrl();
 
 /** One request owner stays mounted when the customer goes Back or edits a previous step. */
 export function BookingQuoteSync() {

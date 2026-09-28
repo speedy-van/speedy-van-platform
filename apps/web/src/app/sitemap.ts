@@ -1,6 +1,6 @@
 import type { MetadataRoute } from "next";
 import { AREAS } from "@/lib/areas";
-import { LOCAL_SERVICE_PAGES } from "@/lib/content/city-service-pages";
+import { LOCAL_SERVICE_PAGES } from "@/lib/content/local-service-pages";
 import { MOVING_ROUTE_PAGES } from "@/lib/content/moving-route-pages";
 import { SERVICES } from "@/lib/services";
 import { absoluteUrl } from "@/lib/seo/constants";

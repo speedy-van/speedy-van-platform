@@ -135,7 +135,7 @@ export function suggestVanUpgrade(items: VolumeItem[], currentTier: VanTier): Va
 }
 
 export function defaultVanTierForService(serviceSlug: string): VanTier {
-  if (["house-removals", "long-distance-removals", "office-removal"].includes(serviceSlug)) return "large";
-  if (["furniture", "furniture-delivery", "ikea-delivery", "piano-moving"].includes(serviceSlug)) return "medium";
+  if (["house-removals", "long-distance-removals", "office-removal", "business", "business-removals"].includes(serviceSlug)) return "large";
+  if (["furniture", "furniture-delivery", "ikea-delivery", "piano-moving", "storage", "storage-transport"].includes(serviceSlug)) return "medium";
   return "small";
 }
