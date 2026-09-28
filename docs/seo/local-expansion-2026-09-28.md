@@ -33,7 +33,7 @@ Source-counted area URL inventory:
 | After this change | 161 | 60 | 221 |
 | Delta | +1 | +12 | +13 |
 
-Rendered sitemap check against the final local source tree on `http://localhost:3000`:
+Rendered sitemap check against the final local source tree on `http://localhost:3004`:
 
 - Total `<loc>` entries: 264
 - `/areas/*` entries: 221
@@ -52,7 +52,7 @@ Rendered sitemap check against the final local source tree on `http://localhost:
 | Dundee | Improved nearby-area content only. Existing six service pages retained; added grouped Dundee neighbourhood, Angus/Tay coast and North Fife route guidance without creating thin town pages. |
 | Perth | Improved nearby-area content only. Existing six service pages retained; added Perth city/suburb and Perthshire route groups without creating duplicate service combinations. |
 | Fort William | Implemented remaining gap. Existing area page kept and six authored local service pages added. Nearby Lochaber groups added. |
-| Isle of Skye | Implemented remaining gap. Added accurate island area page, six authored local service pages and Skye locality groups. Copy avoids treating Skye as a city or fixed-radius market. |
+| Isle of Skye | Implemented remaining gap. Added accurate island area page, six authored local service pages and Skye locality groups. Copy now focuses on bridge, ferry, rural approach and vehicle-access detail rather than internal SEO classification. |
 
 ## Schema decision
 
@@ -108,7 +108,7 @@ Checks run:
 - `npm run typecheck -w apps/web`: passed.
 - `npm run build -w apps/web`: passed; generated 292 static pages.
 
-SEO route checks on final local production build at `http://localhost:3000`:
+SEO route checks on final local production build at `http://localhost:3004`:
 
 - `/areas/isle-of-skye`: 200, canonical `https://www.speedyvan.uk/areas/isle-of-skye`, robots index/follow.
 - All twelve added local service URLs: 200, canonical matches production URL, robots index/follow.
@@ -119,7 +119,28 @@ SEO route checks on final local production build at `http://localhost:3000`:
 - `/services/{service}` pages link to the corresponding Fort William and Skye local-service URLs.
 - `/areas/not-a-real-place`: 404 with `noindex`.
 
+Rendered nearby-content review checks on the final local production build at `http://localhost:3004`:
+
+| Page | Server-rendered nearby section | Visible at 360px | Visible at 768px | Locality cards | Group anchors | Notes |
+| --- | ---: | --- | --- | ---: | ---: | --- |
+| `/areas/dundee` | 1 | Yes | Yes | 14/14 | 3 | First card: Dundee City Centre; last card: Cupar. |
+| `/areas/perth` | 1 | Yes | Yes | 9/9 | 2 | First card: Perth City Centre; last card: Aberfeldy. |
+| `/areas/fort-william` | 1 | Yes | Yes | 8/8 | 2 | First card: Caol; last card: Oban. |
+| `/areas/isle-of-skye` | 1 | Yes | Yes | 10/10 | 2 | First card: Portree; last card: Edinbane. |
+
+Guide-page duplication checks on `http://localhost:3004`:
+
+- `/areas/glasgow`: nearby locality section rendered once.
+- `/areas/edinburgh`: nearby locality section rendered once.
+- `/areas/inverness`: nearby locality section rendered once.
+- `/areas/aberdeen`: nearby locality section rendered once.
+- `/areas/isle-of-skye`: no link to the West Lothian `/areas/armadale` route; the Skye locality card is labelled `Armadale, Skye` and has no `areaSlug`.
+- The visible Skye postcode range `IV41-IV56` was removed using the existing empty-string convention until independently verified.
+- Browser console during locality rendering checks: no errors. One pre-existing Next.js warning remains for `/logo.png?v=amber-20260921-1` needing `images.localPatterns` before Next.js 16.
+
 Booking checks on `http://localhost:3000` at 360px viewport:
+
+The booking checks used the local API already running on `http://localhost:4000`, not production API end-to-end. That API process was from `C:\speedy-van-platform\apps\api`, repository `https://github.com/speedy-van/speedy-van-platform.git`, branch `booking-v2-phase-a`, commit `b49872706ae67c03080a1d5d9b33d204a051ffa7`, package `@speedy-van/api` version `1.0.0`.
 
 - `/book` with fresh storage: 200, service selection rendered.
 - `/book?service=house-removals`: 200, opens the home-move journey step.
@@ -137,4 +158,4 @@ Booking checks on `http://localhost:3000` at 360px viewport:
 
 - No authenticated Search Console metrics or URL Inspection evidence was available through callable tools.
 - No production deployment was made and no production indexing/ranking claim is made.
-- Booking was verified only to quote/recalculation and stale payment blocking. No end-to-end payment was submitted.
+- Booking was verified only to quote/recalculation and stale payment blocking against a local API process. No production end-to-end payment was submitted.

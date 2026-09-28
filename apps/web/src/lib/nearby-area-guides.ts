@@ -882,9 +882,8 @@ const ISLE_OF_SKYE_NEARBY_AREA_GROUPS: readonly NearbyAreaGroup[] = [
           "Uig enquiries may connect with onward ferry or island routes. Make any ferry dependency explicit and share the property access, load and preferred date for route assessment.",
       },
       {
-        slug: "armadale",
-        name: "Armadale",
-        areaSlug: "armadale",
+        slug: "armadale-skye",
+        name: "Armadale, Skye",
         description:
           "Armadale enquiries should state whether the Mallaig ferry is part of the move. Provide the collection or delivery address, ferry details where relevant and the receiving access before confirming arrangements.",
       },

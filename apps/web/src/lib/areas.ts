@@ -1070,16 +1070,16 @@ const EXISTING_AREAS: Area[] = [
     schemaType: "Place",
     name: "Isle of Skye",
     region: "Highlands and Islands",
-    postcode: "IV41-IV56",
+    postcode: "",
     headline: "Man and Van on the Isle of Skye",
     description:
-      "For an Isle of Skye move, provide the exact village or township, full postcode, inventory and access notes before asking for a quote. Skye is an island, not a city: moves may use the A87 Skye Bridge route, a ferry-dependent route, or a longer Highland journey depending on the addresses and date. Availability, vehicle suitability and any crossing arrangements are checked for the specific job.",
+      "For an Isle of Skye move, provide the exact village or township, full postcode, inventory and access notes before asking for a quote. Moves may use the A87 Skye Bridge route, a ferry-dependent route, or a longer Highland journey depending on the addresses and date. Include gates, single-track approaches, gradients and turning space so vehicle suitability and timing can be checked for the specific job.",
     highlights: [
       "Island and Highland access reviewed before booking",
       "Furniture, flat, home and business moving enquiries",
       "Bridge, ferry and rural-route details considered"
     ],
-    nearbyAreas: ["fort-william", "inverness", "portree", "armadale"],
+    nearbyAreas: ["fort-william", "inverness", "portree", "mallaig"],
     metaDescription:
       "Man and van enquiries on the Isle of Skye for furniture, home and business moves. Share the exact route, access and any ferry requirement before booking.",
     moveAdvice: [
@@ -1106,8 +1106,8 @@ const EXISTING_AREAS: Area[] = [
     ],
     faqs: [
       {
-        question: "Is Skye treated as a city service page?",
-        answer: "No. The Isle of Skye is an island and Highland service area. Enquiries are assessed by exact route, inventory, access and date rather than by a city radius or fixed coverage promise."
+        question: "What details help with an Isle of Skye moving quote?",
+        answer: "Give the full property address, postcode, inventory, route notes and the final approach from the public road. Tell us whether the route is expected to use the bridge or a ferry, and mention gates, narrow approaches or limited turning space."
       },
       {
         question: "Does every Skye move need a ferry?",
