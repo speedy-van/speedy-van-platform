@@ -41,7 +41,7 @@ async function buildStandalone({ outputDirectory = path.join(outputRoot, "standa
   const deploymentConfig = {
     version: 2,
     installCommand: "npm ci --include=dev",
-    builds: [{ src: "handler.js", use: "@vercel/node@13.0.1", config: {
+    builds: [{ src: "handler.js", use: "@vercel/node@13.0.2", config: {
       includeFiles: ["node_modules/@prisma/client/**", "node_modules/.prisma/client/**"],
     } }],
     routes: [{ src: "/(.*)", dest: "handler.js" }],
