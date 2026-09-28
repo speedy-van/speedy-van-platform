@@ -579,10 +579,359 @@ const ABERDEEN_NEARBY_AREA_GROUPS: readonly NearbyAreaGroup[] = [
   },
 ];
 
+const DUNDEE_NEARBY_AREA_GROUPS: readonly NearbyAreaGroup[] = [
+  {
+    id: "dundee-neighbourhoods",
+    title: "Dundee neighbourhood moves",
+    introduction:
+      "Dundee moves often depend on the actual entrance, stair and city-centre approach. Give the building name, floor, lift or close details and the lawful loading point before confirming a student room, furniture collection or flat move.",
+    places: [
+      {
+        slug: "dundee-city-centre",
+        name: "Dundee City Centre",
+        description:
+          "For city-centre flats, offices and shop collections, check whether the route enters the Dundee Low Emission Zone and identify the service entrance rather than only the public frontage. Include any loading dispensation or building access notes with the quote request.",
+      },
+      {
+        slug: "dundee-west-end",
+        name: "Dundee West End",
+        description:
+          "West End and Perth Road enquiries can involve tenement stairs, student rooms and shared closes. Measure bulky furniture against landings and tell us whether belongings are moving to halls, storage or another city.",
+      },
+      {
+        slug: "broughty-ferry",
+        name: "Broughty Ferry",
+        description:
+          "For Broughty Ferry collections, confirm the actual release point, whether the item is upstairs and the receiving access. A coastal home move should include driveway, garden and garage contents as well as main-room furniture.",
+      },
+      {
+        slug: "lochee",
+        name: "Lochee",
+        description:
+          "Lochee furniture and flat moves should include shared access, stairs and the delivery floor. If the route continues to the West End, Broughty Ferry or outside Dundee, provide every stop before the vehicle is planned.",
+      },
+      {
+        slug: "stobswell",
+        name: "Stobswell",
+        description:
+          "For Stobswell flats and smaller moves, separate boxes, furniture and any storage stop in the inventory. Tell us whether collection uses a close, a rear entrance or a managed block with a lift.",
+      },
+    ],
+  },
+  {
+    id: "angus-and-tay-coast",
+    title: "Angus and Tay coast towns linked to Dundee",
+    introduction:
+      "These towns often link to Dundee for student moves, furniture collections and onward removals. The quote needs both ends of the route, not only the town names, because a short coastal journey can still involve stairs, seller handover or limited parking.",
+    places: [
+      {
+        slug: "monifieth",
+        name: "Monifieth",
+        description:
+          "For Monifieth moves, include driveway or street access, the room inventory and any delivery into Dundee. Furniture bought in Dundee for a Monifieth home should be checked against the receiving doorway and stairs first.",
+      },
+      {
+        slug: "carnoustie",
+        name: "Carnoustie",
+        areaSlug: "carnoustie",
+        description:
+          "Carnoustie enquiries can cover furniture delivery, house moves and longer routes across Scotland. Give the collection window, item dimensions and destination access before a coastal or city delivery is confirmed.",
+      },
+      {
+        slug: "arbroath",
+        name: "Arbroath",
+        areaSlug: "arbroath",
+        description:
+          "Arbroath moves may combine local household contents with a Dundee delivery or seller collection. List each stop separately and identify any business or harbour-side loading constraint before booking.",
+      },
+      {
+        slug: "forfar",
+        name: "Forfar",
+        areaSlug: "forfar",
+        description:
+          "Forfar home and furniture moves should describe rural approaches, gates and turning space when applicable. Include Dundee or Aberdeen delivery access at the same time so the whole journey can be priced.",
+      },
+      {
+        slug: "kirriemuir",
+        name: "Kirriemuir",
+        areaSlug: "kirriemuir",
+        description:
+          "Kirriemuir enquiries should include the full postcode, property approach and any outbuilding contents. If the move connects with Dundee, provide the city-side stairs, lift or loading notes as well.",
+      },
+    ],
+  },
+  {
+    id: "north-fife-and-tay-bridge",
+    title: "North Fife and Tay Bridge routes",
+    introduction:
+      "Moves crossing the Tay need a route and access plan at both ends. Include any Dundee city-centre restrictions, the Fife-side address and the load details before relying on a collection time.",
+    places: [
+      {
+        slug: "newport-on-tay",
+        name: "Newport-on-Tay",
+        description:
+          "For Newport-on-Tay furniture delivery or a small household move, describe the street access and receiving room. If the item is collected in Dundee, confirm the seller handover and whether the route enters the city centre.",
+      },
+      {
+        slug: "tayport",
+        name: "Tayport",
+        description:
+          "Tayport enquiries should include the full route, any coastal access constraints and the largest item dimensions. Add Dundee loading notes where the move starts or finishes in the city.",
+      },
+      {
+        slug: "st-andrews",
+        name: "St Andrews",
+        areaSlug: "st-andrews",
+        description:
+          "St Andrews student and household moves often link with Dundee or storage. Give residence or tenancy instructions, stair access and the delivery window before the route is agreed.",
+      },
+      {
+        slug: "cupar",
+        name: "Cupar",
+        areaSlug: "cupar",
+        description:
+          "Cupar collections and home moves should identify the entrance, any tight town-centre access and the destination floor. Add Dundee or Perth onward details before requesting the quote.",
+      },
+    ],
+  },
+];
+
+const PERTH_NEARBY_AREA_GROUPS: readonly NearbyAreaGroup[] = [
+  {
+    id: "perth-city-and-suburbs",
+    title: "Perth city and nearby suburbs",
+    introduction:
+      "Perth enquiries should separate city-centre access from suburban driveway or village access. Provide the exact entrance and any pedestrian-zone, bay suspension or dispensation requirement before confirming a flat, house or furniture collection.",
+    places: [
+      {
+        slug: "perth-city-centre",
+        name: "Perth City Centre",
+        description:
+          "For city-centre flats, shops and offices, check whether the address sits within the pedestrianised area or another restricted street. Identify the loading side, stair entrance and carrying distance rather than using the nearest shop name.",
+      },
+      {
+        slug: "scone",
+        name: "Scone",
+        description:
+          "Scone house and furniture moves should include driveway access, garden or garage contents and any onward route into Perth. If there is a long carry from the road, include that before the vehicle and crew are planned.",
+      },
+      {
+        slug: "bridge-of-earn",
+        name: "Bridge of Earn",
+        description:
+          "For Bridge of Earn moves, provide the full postcode, property approach and destination access. Routes into Perth, Dundee or Edinburgh should include the receiving building details in the same enquiry.",
+      },
+      {
+        slug: "auchtermuchty",
+        name: "Auchtermuchty",
+        description:
+          "Auchtermuchty collections and removals should list the exact load and any narrow approach. If the route connects with Perth or Fife, give both ends of the journey before confirming a date.",
+      },
+    ],
+  },
+  {
+    id: "perthshire-towns",
+    title: "Perthshire towns and onward routes",
+    introduction:
+      "Perthshire moves can cover town flats, rural homes and routes along the A9, A85 or M90. Give the full destination, key timing and property approach so the quote covers loading, the journey and unloading together.",
+    places: [
+      {
+        slug: "crieff",
+        name: "Crieff",
+        areaSlug: "crieff",
+        description:
+          "Crieff enquiries can include household moves, furniture collections and onward delivery across Britain. Add any rural access, gates or storage stop before the route is assessed.",
+      },
+      {
+        slug: "auchterarder",
+        name: "Auchterarder",
+        areaSlug: "auchterarder",
+        description:
+          "Auchterarder moves should describe driveway access, stairs and any business or hotel-style loading arrangements. Include Perth or Glasgow delivery details at the quote stage.",
+      },
+      {
+        slug: "blairgowrie",
+        name: "Blairgowrie",
+        areaSlug: "blairgowrie",
+        description:
+          "For Blairgowrie furniture and home moves, list the full load and identify any extra collection in the town or surrounding villages. A rural delivery needs the approach, gate and turning details.",
+      },
+      {
+        slug: "pitlochry",
+        name: "Pitlochry",
+        areaSlug: "pitlochry",
+        description:
+          "Pitlochry enquiries often involve longer Perthshire routes. Provide the exact address, access and delivery window before relying on any travel estimate or onward connection.",
+      },
+      {
+        slug: "aberfeldy",
+        name: "Aberfeldy",
+        areaSlug: "aberfeldy",
+        description:
+          "Aberfeldy moves should include the property approach, any narrow rural road and the complete item list. If delivery continues beyond Perthshire, share the receiving access and key handover details.",
+      },
+    ],
+  },
+];
+
+const FORT_WILLIAM_NEARBY_AREA_GROUPS: readonly NearbyAreaGroup[] = [
+  {
+    id: "lochaber-communities",
+    title: "Lochaber communities around Fort William",
+    introduction:
+      "Fort William and Lochaber moves can involve town-centre restrictions, rural approaches and longer Highland routes. Include the property name, postcode, vehicle approach and any High Street or estate access instruction before booking.",
+    places: [
+      {
+        slug: "caol",
+        name: "Caol",
+        description:
+          "For Caol furniture or home moves, provide the route from the loading point to the entrance and identify any extra stop in Fort William. If the move continues south or north, include the full destination access.",
+      },
+      {
+        slug: "corpach",
+        name: "Corpach",
+        description:
+          "Corpach enquiries should include the collection entrance, any narrow residential approach and delivery-side stairs. List outdoor or garage items separately from the main rooms.",
+      },
+      {
+        slug: "spean-bridge",
+        name: "Spean Bridge",
+        description:
+          "Spean Bridge moves need the exact address and access from the road, especially where the property is outside the village centre. Add any A82 or A86 route constraint and the final carrying distance.",
+      },
+      {
+        slug: "mallaig",
+        name: "Mallaig",
+        areaSlug: "mallaig",
+        description:
+          "Mallaig enquiries may involve mainland moves or ferry-linked routes. State clearly whether the job includes a ferry leg and provide the sailing, property and vehicle details for assessment.",
+      },
+    ],
+  },
+  {
+    id: "glencoe-and-west-highland",
+    title: "Glencoe, Ballachulish and West Highland routes",
+    introduction:
+      "Moves south and west of Fort William should be planned around the whole journey, including trunk-road conditions, rural access and the delivery appointment. Do not rely on a broad village name where an exact property approach is needed.",
+    places: [
+      {
+        slug: "ballachulish",
+        name: "Ballachulish",
+        description:
+          "Ballachulish collections should include the full item list, entrance and turning space. If delivery is to Fort William, Oban or Glasgow, include the receiving-floor and loading arrangements.",
+      },
+      {
+        slug: "glencoe",
+        name: "Glencoe",
+        description:
+          "For Glencoe moves, describe rural access, gates and any steep or narrow approach before confirming a vehicle. Long-distance delivery should include keys and unloading details at the destination.",
+      },
+      {
+        slug: "kinlochleven",
+        name: "Kinlochleven",
+        description:
+          "Kinlochleven enquiries need the full route and exact property entrance. If furniture is collected from elsewhere in Lochaber, include the seller handover and delivery access together.",
+      },
+      {
+        slug: "oban",
+        name: "Oban",
+        areaSlug: "oban",
+        description:
+          "Oban moves can connect with Fort William or ferry-dependent routes. Give every stop and make clear whether the job remains on the mainland or requires a crossing.",
+      },
+    ],
+  },
+];
+
+const ISLE_OF_SKYE_NEARBY_AREA_GROUPS: readonly NearbyAreaGroup[] = [
+  {
+    id: "skye-main-settlements",
+    title: "Skye towns, villages and townships",
+    introduction:
+      "Skye enquiries need exact addresses rather than a general island label. State the village or township, full postcode, final approach and any gate, bridge, ferry or single-track access that may affect the route.",
+    places: [
+      {
+        slug: "portree",
+        name: "Portree",
+        areaSlug: "portree",
+        description:
+          "Portree moves should identify the loading point, floor and route through the property. For furniture collected elsewhere on Skye, give item measurements and the delivery-room access before collection is agreed.",
+      },
+      {
+        slug: "broadford",
+        name: "Broadford",
+        description:
+          "Broadford enquiries can link the A87 route with local home or furniture access. Provide the complete delivery address, any narrow approach and the final stopping point for the vehicle.",
+      },
+      {
+        slug: "kyleakin",
+        name: "Kyleakin",
+        description:
+          "For Kyleakin and Skye Bridge-side moves, check current bridge and road conditions, then describe the property entrance. The bridge crossing does not resolve the carrying route at the address.",
+      },
+      {
+        slug: "dunvegan",
+        name: "Dunvegan",
+        description:
+          "Dunvegan moves should include the full postcode, road approach and turning details. If the move continues to the mainland, provide the receiving access and key handover before booking.",
+      },
+      {
+        slug: "uig",
+        name: "Uig",
+        description:
+          "Uig enquiries may connect with onward ferry or island routes. Make any ferry dependency explicit and share the property access, load and preferred date for route assessment.",
+      },
+      {
+        slug: "armadale",
+        name: "Armadale",
+        areaSlug: "armadale",
+        description:
+          "Armadale enquiries should state whether the Mallaig ferry is part of the move. Provide the collection or delivery address, ferry details where relevant and the receiving access before confirming arrangements.",
+      },
+    ],
+  },
+  {
+    id: "sleat-and-west-skye",
+    title: "Sleat, Carbost, Staffin and west Skye",
+    introduction:
+      "Smaller Skye communities can have access constraints that matter more than distance. Include single-track approaches, passing-place concerns, livestock gates, ferry plans and the distance from the nearest stopping point to the door.",
+    places: [
+      {
+        slug: "sleat",
+        name: "Sleat",
+        description:
+          "For a Sleat move, describe the exact township, the road approach and whether the route uses Armadale ferry or the bridge. List bulky items and access at both properties.",
+      },
+      {
+        slug: "carbost",
+        name: "Carbost",
+        description:
+          "Carbost furniture and household moves should include the full address, final approach and any loading space limitation. Tell us whether the move stays on Skye or continues to the mainland.",
+      },
+      {
+        slug: "staffin",
+        name: "Staffin",
+        description:
+          "Staffin enquiries should identify the route, entrance and any narrow or steep final approach. A larger load needs vehicle suitability checked before the date is agreed.",
+      },
+      {
+        slug: "edinbane",
+        name: "Edinbane",
+        description:
+          "For Edinbane and nearby townships, provide property names, gates, surface and turning details. If a seller collection is involved, include release contact and item dimensions.",
+      },
+    ],
+  },
+];
+
 export function getNearbyAreaGroups(slug: string): readonly NearbyAreaGroup[] {
   if (slug === "glasgow") return GLASGOW_NEARBY_AREA_GROUPS;
   if (slug === "edinburgh") return EDINBURGH_NEARBY_AREA_GROUPS;
   if (slug === "inverness") return INVERNESS_NEARBY_AREA_GROUPS;
   if (slug === "aberdeen") return ABERDEEN_NEARBY_AREA_GROUPS;
+  if (slug === "dundee") return DUNDEE_NEARBY_AREA_GROUPS;
+  if (slug === "perth") return PERTH_NEARBY_AREA_GROUPS;
+  if (slug === "fort-william") return FORT_WILLIAM_NEARBY_AREA_GROUPS;
+  if (slug === "isle-of-skye") return ISLE_OF_SKYE_NEARBY_AREA_GROUPS;
   return [];
 }

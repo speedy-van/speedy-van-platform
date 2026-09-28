@@ -1026,7 +1026,7 @@ const EXISTING_AREAS: Area[] = [
       "Longer journeys assessed before booking",
       "Approach roads and loading space considered"
     ],
-    nearbyAreas: ["inverness", "oban", "mallaig", "spean-bridge"],
+    nearbyAreas: ["inverness", "isle-of-skye", "oban", "mallaig"],
     metaDescription: "Man and van enquiries in Fort William for furniture and home moves. Share your route, inventory and vehicle access to check suitability and availability.",
     moveAdvice: [
       {
@@ -1062,6 +1062,60 @@ const EXISTING_AREAS: Area[] = [
       {
         "question": "What should I send for a rural collection near Fort William?",
         "answer": "Provide the full address and entrance location, plus details of the approach surface, gates, turning space and distance to the door. Include photographs where useful and identify any large or specialist items for assessment."
+      }
+    ]
+  },
+  {
+    slug: "isle-of-skye",
+    schemaType: "Place",
+    name: "Isle of Skye",
+    region: "Highlands and Islands",
+    postcode: "IV41-IV56",
+    headline: "Man and Van on the Isle of Skye",
+    description:
+      "For an Isle of Skye move, provide the exact village or township, full postcode, inventory and access notes before asking for a quote. Skye is an island, not a city: moves may use the A87 Skye Bridge route, a ferry-dependent route, or a longer Highland journey depending on the addresses and date. Availability, vehicle suitability and any crossing arrangements are checked for the specific job.",
+    highlights: [
+      "Island and Highland access reviewed before booking",
+      "Furniture, flat, home and business moving enquiries",
+      "Bridge, ferry and rural-route details considered"
+    ],
+    nearbyAreas: ["fort-william", "inverness", "portree", "armadale"],
+    metaDescription:
+      "Man and van enquiries on the Isle of Skye for furniture, home and business moves. Share the exact route, access and any ferry requirement before booking.",
+    moveAdvice: [
+      {
+        title: "Skye Bridge and A87 route checks",
+        body: "Many mainland-to-Skye journeys use the A87 Skye Bridge. Check current Traffic Scotland bridge, roadworks and weather updates before relying on a route, then give the property approach separately. The trunk road may bring the van to the island, but gates, single-track approaches, gradients and turning space still decide whether the final loading plan works.",
+        source: {
+          label: "Traffic Scotland bridge and A87 updates",
+          href: "https://www.traffic.gov.scot/traffic-information/bridges"
+        }
+      },
+      {
+        title: "When a ferry is part of the route",
+        body: "If your move uses the Mallaig to Armadale ferry or another ferry-dependent leg, state that at enquiry stage with both property addresses and the proposed crossing. Ferry space, sailing status and vehicle suitability are separate from the moving quote; do not treat a mainland or Skye collection as confirmation of a booked crossing.",
+        source: {
+          label: "CalMac Mallaig to Armadale route information",
+          href: "https://www.calmac.co.uk/route-information/mallaig-armadale/"
+        }
+      },
+      {
+        title: "Rural addresses and township access",
+        body: "Use the complete address, postcode and property name where relevant, and describe the last approach from the public road. Tell us about single-track sections, livestock gates, steep drives, limited turning space or a long carry from the nearest stopping point. Provide photos for awkward access before confirming bulky furniture."
+      }
+    ],
+    faqs: [
+      {
+        question: "Is Skye treated as a city service page?",
+        answer: "No. The Isle of Skye is an island and Highland service area. Enquiries are assessed by exact route, inventory, access and date rather than by a city radius or fixed coverage promise."
+      },
+      {
+        question: "Does every Skye move need a ferry?",
+        answer: "No. Many routes use the Skye Bridge, while some journeys may use a ferry such as Mallaig to Armadale. Tell us which route is proposed so crossing status, vehicle suitability and timing can be reviewed before booking."
+      },
+      {
+        question: "Can you quote a furniture collection from Portree or Broadford?",
+        answer: "You can request a quote with the seller address, item dimensions, full destination and access notes. Larger or awkward items need the carrying route checked at both ends before collection is confirmed."
       }
     ]
   },
