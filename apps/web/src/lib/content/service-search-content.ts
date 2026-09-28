@@ -31,12 +31,28 @@ export const SERVICE_SEARCH_CONTENT: Partial<Record<string, ServiceSearchContent
       "Bought a sofa, moving a bed or arranging a furniture collection? Request a quote to move sofas, tables, chairs, beds and wardrobes between homes, shops, private sellers and storage across Scotland. Our furniture movers plan the van and lifting help around your items and the access at both addresses. Delivery to your chosen room depends on safe access and the furniture fitting the route. Send dimensions, floor numbers and the collection window so your quote covers the work you need.",
   },
   "office-removal": {
-    metadataTitle: "Office Removals Scotland | Business Moving Quotes",
+    metadataTitle: "Office Removals Scotland | Workplace Moving Quotes",
     metadataDescription:
-      "Get an office removal quote in Scotland for desks, chairs and business equipment. Plan your commercial relocation around building access and team handover.",
-    headline: "Office removals and business relocation across Scotland",
+      "Get an office removal quote in Scotland for desks, chairs, files and boxed office equipment. Plan workplace access and team handover before moving.",
+    headline: "Office removals across Scotland",
     introduction:
-      "Move your office with a quote based on the equipment, buildings and schedule your business needs. Our office removals cover desks, chairs, filing cabinets and boxed equipment across Scotland. Shop, studio and other commercial relocation enquiries are assessed against the items and handling required. Share the inventory, destination layout, loading bay and lift arrangements so the crew can plan collection and unloading. Evening and weekend options depend on availability; arrange IT disconnection and reconnection separately with your own team.",
+      "Move your workplace with a quote based on office furniture, boxed equipment, building access and staff handover. Our office removals cover desks, chairs, filing cabinets and boxed office equipment across Scotland. Share the inventory, destination layout, loading bay and lift arrangements so the crew can plan collection and unloading. Evening and weekend options depend on availability; arrange IT disconnection and reconnection separately with your own team. For shops, studios and wider commercial moves, use business removals instead.",
+  },
+  "business-removals": {
+    metadataTitle: "Business Removals Scotland | Commercial Moving Quotes",
+    metadataDescription:
+      "Business removals and commercial relocation in Scotland for shops, studios, commercial furniture and suitable business equipment. Get a quote by route and inventory.",
+    headline: "Business removals and commercial relocation across Scotland",
+    introduction:
+      "Move a shop, studio, commercial furniture load or suitable business equipment with a quote based on the real inventory, access and route. Business removals are kept separate from office-only moves so stock, displays, shelving, business equipment and service entrances can be assessed properly. Share the release contact, loading bay, access window, destination layout and any fragile or heavy items before booking. Specialist machinery, hazardous goods and installation work are not assumed.",
+  },
+  "storage-transport": {
+    metadataTitle: "Storage Transport Scotland | Storage Collection & Delivery",
+    metadataDescription:
+      "Storage transport in Scotland for furniture, boxes and student belongings going to or from a booked storage unit. Transport only, not storage rental.",
+    headline: "Storage transport to and from your unit",
+    introduction:
+      "Move furniture, boxes, student belongings or a small load into or out of a booked storage unit. Storage transport covers the van, route and lifting plan; it does not sell storage space. Provide the home address, facility address, unit floor, opening hours, lift or trolley access and the item list before booking. If the move includes a later delivery or another stop, include it in the original quote request.",
   },
   "long-distance-removals": {
     metadataTitle: "Long Distance Removals from Scotland Across Britain",

@@ -10,7 +10,7 @@ import {
   type ReactNode,
 } from "react";
 import type { BedroomCount, InventoryMode, InventoryRoom } from "./room-inventory";
-import { resolveBookingService } from "./booking-service-options";
+import { getBookingServiceIdentity, resolveBookingService } from "./booking-service-options";
 import { getBookingPricingKey, getQuoteSelection } from "./booking-quote";
 import type { PricingResult } from "@/components/booking/quote-response";
 
@@ -266,13 +266,7 @@ function invalidateQuote(state: BookingState, keepCalendar = false): BookingStat
 }
 
 function serviceEntryIdentity(service: Pick<BookingState, "serviceSlug" | "entryServiceSlug" | "serviceName">): string {
-  const entry = resolveBookingService(service.entryServiceSlug);
-  const canonical = resolveBookingService(service.serviceSlug);
-  const name = service.serviceName.trim().toLowerCase();
-  // Public aliases share a booking service; distinct flat/small/intercity intents retain their names.
-  const isDefaultName = [entry?.serviceName, canonical?.serviceName]
-    .some((candidate) => candidate?.trim().toLowerCase() === name);
-  return [service.serviceSlug, entry?.entryServiceSlug ?? service.entryServiceSlug, isDefaultName ? "" : name].join(":");
+  return getBookingServiceIdentity(service);
 }
 
 export function bookingReducer(state: BookingState, action: BookingAction): BookingState {

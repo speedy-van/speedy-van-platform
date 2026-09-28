@@ -12,6 +12,7 @@ import {
 } from "@stripe/react-stripe-js";
 import { serialiseBookingDraft, useBooking, type SelectedItem, type TimeSlot } from "@/lib/booking-store";
 import { STEP_PRIMARY_CTA_ID } from "@/lib/booking-steps";
+import { getApiBaseUrl } from "@/lib/api-base";
 import { useRouter } from "next/navigation";
 import { trackPurchase } from "@/lib/analytics";
 import { PriceExplainerLink } from "./PriceExplainerLink";
@@ -31,10 +32,7 @@ function getStripeClientPromise(): StripeClientPromise | null {
   }
   return cachedStripePromise;
 }
-const API_BASE =
-  process.env.NODE_ENV === "development"
-    ? "http://localhost:4000"
-    : (process.env.NEXT_PUBLIC_API_URL ?? "https://api.speedyvan.uk");
+const API_BASE = getApiBaseUrl();
 
 const money = new Intl.NumberFormat("en-GB", {
   style: "currency",

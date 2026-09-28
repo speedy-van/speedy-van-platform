@@ -100,7 +100,7 @@ export function InventorySelector({ onBack, onContinue }: InventorySelectorProps
       </section>
 
       {/* ── Van-fill meter (T7) ── */}
-      <VanFillMeter items={state.items} serviceSlug={state.serviceSlug} />
+      <VanFillMeter items={state.items} serviceSlug={state.entryServiceSlug || state.serviceSlug} />
 
       {error && (
         <p role="alert" className="rounded-xl px-4 py-3 text-sm font-medium text-red-300" style={{ background: "rgba(239,68,68,0.10)", boxShadow: "0 0 0 1px rgba(239,68,68,0.20)" }}>
