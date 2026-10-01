@@ -6,6 +6,10 @@ export const COOKIE_SETTINGS_EVENT = "sv:cookie-settings";
 const CONSENT_CHANGED_EVENT = "sv:cookie-consent-changed";
 const PURCHASE_KEY = "sv-purchase:";
 
+// Native paid-booking action for Google Ads customer 307-075-7088.
+export const GOOGLE_ADS_ID = "AW-18483787592";
+const GOOGLE_ADS_PURCHASE_DESTINATION = `${GOOGLE_ADS_ID}/8NSGCPiVpYsdEMju4O1E`;
+
 type AnalyticsFunction = (...args: unknown[]) => void;
 type MetaPixelFunction = AnalyticsFunction & {
   callMethod?: AnalyticsFunction;
@@ -105,18 +109,25 @@ export function subscribeCookieConsent(onChange: () => void): () => void {
 
 export function initialiseAnalytics(gaId?: string, metaId?: string) {
   if (!hasAnalyticsConsent() || typeof window === "undefined") return;
-  if (gaId && !initialisedGoogleIds.has(gaId)) {
+  const googleIds = gaId ? [gaId, GOOGLE_ADS_ID] : [GOOGLE_ADS_ID];
+  if (googleIds.some(id => !initialisedGoogleIds.has(id))) {
     window.dataLayer = window.dataLayer || [];
     window.gtag = window.gtag || function (..._args: unknown[]) {
       // eslint-disable-next-line prefer-rest-params -- gtag consumes an IArguments queue entry.
       window.dataLayer?.push(arguments);
     };
-    window.gtag("consent", "default", consentParameters(false));
-    window.gtag("consent", "update", consentParameters(true));
-    window.gtag("js", new Date());
-    // Page views have one owner, including App Router navigation.
-    window.gtag("config", gaId, { send_page_view: false });
-    initialisedGoogleIds.add(gaId);
+    if (initialisedGoogleIds.size === 0) {
+      window.gtag("consent", "default", consentParameters(false));
+      window.gtag("consent", "update", consentParameters(true));
+      window.gtag("js", new Date());
+    }
+    for (const id of googleIds) {
+      if (initialisedGoogleIds.has(id)) continue;
+      // GA4 page views retain one owner, including App Router navigation.
+      if (id === gaId) window.gtag("config", id, { send_page_view: false });
+      else window.gtag("config", id);
+      initialisedGoogleIds.add(id);
+    }
   }
   if (metaId && !initialisedMetaIds.has(metaId)) {
     if (!window.fbq) {
@@ -209,6 +220,23 @@ function markPurchaseSent(key: string) {
   try { window.sessionStorage.setItem(key, "1"); } catch { /* The memory guard remains active. */ }
 }
 
+function trackGoogleAdsPurchase(bookingRef: string, value: number): boolean {
+  if (!hasAnalyticsConsent() || typeof window === "undefined") return false;
+  if (!isPublicAnalyticsPath(window.location.pathname)) return false;
+  if (!initialisedGoogleIds.has(GOOGLE_ADS_ID) || typeof window.gtag !== "function") return false;
+  try {
+    window.gtag("event", "conversion", {
+      send_to: GOOGLE_ADS_PURCHASE_DESTINATION,
+      transaction_id: bookingRef,
+      value,
+      currency: "GBP",
+      page_location: analyticsLocation(),
+    });
+    return true;
+  } catch { /* An unavailable tag must not interrupt the paid booking. */ }
+  return false;
+}
+
 // Call only after the server has confirmed the booking and successful payment.
 export function trackPurchase(bookingRef: string, value: number, serviceSlug: string) {
   if (!hasAnalyticsConsent() || !bookingRef.trim() || !serviceSlug.trim() || !Number.isFinite(value) || value <= 0) return;
@@ -216,6 +244,9 @@ export function trackPurchase(bookingRef: string, value: number, serviceSlug: st
   if (!purchaseWasSent(googleKey) && trackAnalyticsEvent("purchase", {
     transaction_id: bookingRef, currency: "GBP", value, items: [{ item_id: serviceSlug }],
   })) markPurchaseSent(googleKey);
+  // Native Ads and GA4 use separate guards; Google also deduplicates transaction IDs.
+  const adsKey = `${PURCHASE_KEY}ads:${bookingRef}`;
+  if (!purchaseWasSent(adsKey) && trackGoogleAdsPurchase(bookingRef, value)) markPurchaseSent(adsKey);
   const metaKey = `${PURCHASE_KEY}meta:${bookingRef}`;
   if (!purchaseWasSent(metaKey) && trackMetaEvent("Purchase", {
     value, currency: "GBP", content_ids: [serviceSlug],

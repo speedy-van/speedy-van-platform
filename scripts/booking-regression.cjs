@@ -49,7 +49,8 @@ const state = {
   items: [{ lineId: "bedroom-1-bed", itemId: "double-bed", name: "Double bed", quantity: 1, roomId: "bedroom-1", roomName: "Bedroom 1" }],
   inventoryMode: "rooms", bedroomCount: "2", exactBedroomCount: 5,
   inventoryRooms: [{ id: "bedroom-1", label: "Bedroom 1", kind: "bedroom", index: 1, skipped: false }],
-  selectedDate: "2026-09-23", selectedTimeSlot: "morning", clientTotal: 120, quoteStatus: "valid", step: 5,
+  selectedDate: "2026-09-23", selectedTimeSlot: "morning", clientTotal: 120, quoteStatus: "valid",
+  quoteToken: "quote_test", quoteExpiresAt: now + 30 * 60 * 1000, cheapestDay: "2026-09-23", step: 5,
   clientSecret: "secret_test", bookingId: "booking_test", bookingRef: "reference_test",
   customerName: "Test Customer", customerEmail: "test@example.com", customerPhone: "07700900000",
 };
@@ -212,6 +213,14 @@ function paymentModuleHarness(publishableKey = "pk_test_offline") {
         active.effects.push(() => { hook.cleanup?.(); hook.cleanup = effect(); });
       }
     },
+    useMemo: (factory, dependencies) => {
+      const hook = nextHook(() => ({ dependencies: undefined, value: undefined }));
+      if (!hook.dependencies || dependencies.some((value, index) => !Object.is(value, hook.dependencies[index]))) {
+        hook.dependencies = dependencies;
+        hook.value = factory();
+      }
+      return hook.value;
+    },
   };
   const jsx = (type, props) => ({ type, props });
   const module = { exports: {} };
@@ -235,6 +244,7 @@ function paymentModuleHarness(publishableKey = "pk_test_offline") {
         useStripe: () => stripeClient,
         useElements: () => stripeClient ? {} : null,
       };
+      if (specifier === "react-icons/fa") return { FaWhatsapp: "fa-whatsapp" };
       if (specifier === "@/lib/booking-store") return {
         useBooking: () => ({ state: { ...state, checkoutLocked: false }, dispatch() {} }),
         serialiseBookingDraft,
@@ -577,14 +587,19 @@ const pricing = {
 
 test("stepInfo maps booking state steps to the four visible progress steps", () => {
   assert.deepEqual(stepInfo(1), { number: 0, total: 4, label: "Service", isPay: false });
-  assert.deepEqual(stepInfo(2), { number: 1, total: 4, label: "Journey", isPay: false });
+  assert.deepEqual(stepInfo(2), { number: 1, total: 4, label: "Addresses", isPay: false });
   assert.deepEqual(stepInfo(3), { number: 2, total: 4, label: "Items", isPay: false });
   assert.deepEqual(stepInfo(4), { number: 3, total: 4, label: "Date", isPay: false });
   assert.deepEqual(stepInfo(5), { number: 4, total: 4, label: "Pay", isPay: true });
 });
 
 test("pricing accepts only real finite GBP slots and valid dates", () => {
-  assert.deepEqual(parsePricingResult(pricing), pricing);
+  assert.deepEqual(parsePricingResult(pricing), {
+    ...pricing,
+    cheapestDay: undefined,
+    quoteToken: undefined,
+    quoteExpiresAt: undefined,
+  });
   for (const price of [NaN, Infinity, 0, -1, "120"]) {
     assert.equal(parsePricingResult({ ...pricing, days: [{ ...pricing.days[0], slots: [{ slot: "morning", price, tier: "yellow" }] }] }), null);
   }

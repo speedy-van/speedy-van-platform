@@ -217,13 +217,62 @@ test("initialisation uses denied defaults, disables automatic page views and run
   f.api.initialiseAnalytics("G-TEST", "pixel-test");
   f.api.initialiseAnalytics("G-TEST", "pixel-test");
   const config = f.events.filter((event) => event[0] === "config");
-  assert.equal(config.length, 1);
+  assert.equal(config.length, 2);
+  assert.equal(config[0][1], "G-TEST");
   assert.equal(config[0][2].send_page_view, false);
+  assert.equal(config[1][1], "AW-18483787592");
+  assert.equal(f.events.filter((event) => event[0] === "js").length, 1);
   assert.equal(f.events[0][0], "consent");
   assert.equal(f.events[0][1], "default");
   assert.equal(f.events[0][2].ad_user_data, "denied");
   assert.equal(f.meta.filter((event) => event[0] === "init").length, 1);
   assert.equal(f.events.filter((event) => event[1] === "page_view").length, 0);
+});
+
+test("native Ads initialises without GA4 and sends a confirmed GBP booking once independently of GA4", () => {
+  const f = fixture({ consent: "accepted" });
+  f.api.trackPurchase("booking-native", 137.94, "house-removal");
+  assert.equal(f.events.filter((event) => event[1] === "conversion").length, 0);
+  f.api.initialiseAnalytics(undefined, undefined);
+  f.api.initialiseAnalytics(undefined, undefined);
+  assert.equal(f.events.filter((event) => event[0] === "config" && event[1] === "AW-18483787592").length, 1);
+  f.api.trackPurchase("booking-native", 137.94, "house-removal");
+  f.api.trackPurchase("booking-native", 137.94, "house-removal");
+  const reloaded = fixture({ browser: f.window });
+  reloaded.api.initialiseAnalytics(undefined, undefined);
+  reloaded.api.trackPurchase("booking-native", 137.94, "house-removal");
+  const conversions = f.events.filter((event) => event[1] === "conversion");
+  assert.equal(conversions.length, 1);
+  assert.equal(f.events.filter((event) => event[1] === "purchase").length, 1);
+  const payload = conversions[0][2];
+  assert.equal(payload.send_to, "AW-18483787592/8NSGCPiVpYsdEMju4O1E");
+  assert.equal(payload.transaction_id, "booking-native");
+  assert.equal(payload.value, 137.94);
+  assert.equal(payload.currency, "GBP");
+  assert.equal(payload.page_location, "https://example.test/book");
+  assert.deepEqual(Object.keys(payload).sort(), ["currency", "page_location", "send_to", "transaction_id", "value"]);
+});
+
+test("native Ads respects consent, private paths, invalid values and failed dispatch retries", () => {
+  const f = fixture();
+  f.api.initialiseAnalytics();
+  f.api.trackPurchase("booking-no-consent", 90, "man-and-van");
+  assert.equal(f.events.length, 0);
+  f.api.setCookieConsent("accepted");
+  f.api.initialiseAnalytics();
+  for (const value of [0, -1, NaN, Infinity]) f.api.trackPurchase("booking-invalid", value, "man-and-van");
+  f.window.location.pathname = "/admin";
+  f.api.trackPurchase("booking-private", 90, "man-and-van");
+  f.window.location.pathname = "/book";
+  const gtag = f.window.gtag;
+  f.window.gtag = () => { throw new Error("Blocked provider"); };
+  assert.doesNotThrow(() => f.api.trackPurchase("booking-retry", 90, "man-and-van"));
+  assert.equal(f.window.sessionStorage.getItem("sv-purchase:ads:booking-retry"), null);
+  f.window.gtag = gtag;
+  f.api.trackPurchase("booking-retry", 90, "man-and-van");
+  f.api.setCookieConsent("declined");
+  f.api.trackPurchase("booking-revoked", 90, "man-and-van");
+  assert.equal(f.events.filter((event) => event[1] === "conversion").length, 1);
 });
 
 test("private pages never send application events", () => {

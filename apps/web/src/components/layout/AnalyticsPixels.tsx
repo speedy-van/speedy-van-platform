@@ -3,10 +3,11 @@
 import { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import Script from "next/script";
-import { initialiseAnalytics, isPublicAnalyticsPath, syncAnalyticsConsent, trackPageView } from "@/lib/analytics";
+import { GOOGLE_ADS_ID, initialiseAnalytics, isPublicAnalyticsPath, syncAnalyticsConsent, trackPageView } from "@/lib/analytics";
 import { useCookieConsent } from "./CookieConsent";
 
 const GA_ID = process.env.NEXT_PUBLIC_GA_ID;
+const GOOGLE_TAG_ID = GA_ID || GOOGLE_ADS_ID;
 const FB_PIXEL_ID = process.env.NEXT_PUBLIC_FB_PIXEL_ID;
 
 export function AnalyticsPixels() {
@@ -40,10 +41,10 @@ export function AnalyticsPixels() {
 
   return (
     <>
-      {GA_ID && (
+      {GOOGLE_TAG_ID && (
         <Script
-          id="ga-library"
-          src={`https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(GA_ID)}`}
+          id="google-tag-library"
+          src={`https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(GOOGLE_TAG_ID)}`}
           strategy="afterInteractive"
         />
       )}
