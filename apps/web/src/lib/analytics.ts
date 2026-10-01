@@ -110,42 +110,49 @@ export function subscribeCookieConsent(onChange: () => void): () => void {
 export function initialiseAnalytics(gaId?: string, metaId?: string) {
   if (!hasAnalyticsConsent() || typeof window === "undefined") return;
   const googleIds = gaId ? [gaId, GOOGLE_ADS_ID] : [GOOGLE_ADS_ID];
-  if (googleIds.some(id => !initialisedGoogleIds.has(id))) {
-    window.dataLayer = window.dataLayer || [];
-    window.gtag = window.gtag || function (..._args: unknown[]) {
-      // eslint-disable-next-line prefer-rest-params -- gtag consumes an IArguments queue entry.
-      window.dataLayer?.push(arguments);
-    };
-    if (initialisedGoogleIds.size === 0) {
-      window.gtag("consent", "default", consentParameters(false));
-      window.gtag("consent", "update", consentParameters(true));
-      window.gtag("js", new Date());
-    }
-    for (const id of googleIds) {
-      if (initialisedGoogleIds.has(id)) continue;
-      // GA4 page views retain one owner, including App Router navigation.
-      if (id === gaId) window.gtag("config", id, { send_page_view: false });
-      else window.gtag("config", id);
-      initialisedGoogleIds.add(id);
-    }
-  }
-  if (metaId && !initialisedMetaIds.has(metaId)) {
-    if (!window.fbq) {
-      const pixel: MetaPixelFunction = (...args) => {
-        if (pixel.callMethod) pixel.callMethod(...args);
-        else pixel.queue?.push(args);
+  // Optional providers initialise independently; one failure must not hide every script.
+  try {
+    if (googleIds.some(id => !initialisedGoogleIds.has(id))) {
+      window.dataLayer = window.dataLayer || [];
+      window.gtag = window.gtag || function (..._args: unknown[]) {
+        // eslint-disable-next-line prefer-rest-params -- gtag consumes an IArguments queue entry.
+        window.dataLayer?.push(arguments);
       };
-      pixel.queue = [];
-      pixel.push = pixel;
-      pixel.loaded = true;
-      pixel.version = "2.0";
-      window.fbq = pixel;
-      window._fbq = pixel;
+      if (initialisedGoogleIds.size === 0) {
+        window.gtag("consent", "default", consentParameters(false));
+        window.gtag("consent", "update", consentParameters(true));
+        window.gtag("js", new Date());
+      }
+      for (const id of googleIds) {
+        if (initialisedGoogleIds.has(id)) continue;
+        try {
+          // GA4 page views retain one owner, including App Router navigation.
+          if (id === gaId) window.gtag("config", id, { send_page_view: false });
+          else window.gtag("config", id);
+          initialisedGoogleIds.add(id);
+        } catch { /* One rejected destination must not disable the other. Leave it retryable. */ }
+      }
     }
-    window.fbq("consent", "grant");
-    window.fbq("init", metaId);
-    initialisedMetaIds.add(metaId);
-  }
+  } catch { /* A blocked Google provider must not suppress Meta or the script loader. */ }
+  try {
+    if (metaId && !initialisedMetaIds.has(metaId)) {
+      if (!window.fbq) {
+        const pixel: MetaPixelFunction = (...args) => {
+          if (pixel.callMethod) pixel.callMethod(...args);
+          else pixel.queue?.push(args);
+        };
+        pixel.queue = [];
+        pixel.push = pixel;
+        pixel.loaded = true;
+        pixel.version = "2.0";
+        window.fbq = pixel;
+        window._fbq = pixel;
+      }
+      window.fbq("consent", "grant");
+      window.fbq("init", metaId);
+      initialisedMetaIds.add(metaId);
+    }
+  } catch { /* A blocked Meta provider must not suppress Google or the script loader. */ }
   syncAnalyticsConsent("accepted");
 }
 

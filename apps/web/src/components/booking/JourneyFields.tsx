@@ -26,7 +26,7 @@ export function JourneyFields({ onBack, onContinue }: JourneyFieldsProps) {
   const serviceOption = getBookingServiceOptionForState(state.entryServiceSlug, state.serviceSlug);
   const [error, setError] = useState("");
   const [loadingDistance, setLoadingDistance] = useState(false);
-  const [route, setRoute] = useState<DrivingRouteResult | null>(null);
+  const [, setRoute] = useState<DrivingRouteResult | null>(null);
   const [routeError, setRouteError] = useState("");
   const [routeRetryToken, setRouteRetryToken] = useState(0);
   const hasRouteInputs = hasUsableCoordinates(state.pickup) && hasUsableCoordinates(state.dropoff);
