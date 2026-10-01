@@ -1,0 +1,53 @@
+name: Google tag checks
+
+on:
+  push:
+    branches:
+      - main
+      - fix/google-tag-isolation-2026-10-01
+    paths:
+      - apps/web/src/lib/analytics.ts
+      - apps/web/src/components/layout/AnalyticsPixels.tsx
+      - apps/web/src/components/layout/CookieConsent.tsx
+      - scripts/*regression.cjs
+      - .github/workflows/google-tag-checks.yml
+  pull_request:
+    paths:
+      - apps/web/src/lib/analytics.ts
+      - apps/web/src/components/layout/AnalyticsPixels.tsx
+      - apps/web/src/components/layout/CookieConsent.tsx
+      - scripts/*regression.cjs
+      - .github/workflows/google-tag-checks.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: google-tag-checks-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  regression-and-build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '22'
+          cache: npm
+      - name: Install locked dependencies
+        run: npm ci
+      - name: Generate local Prisma client without database access
+        run: npm run db:generate
+      - name: Run offline regression suites
+        run: npm run test:regression
+      - name: Check workspace types
+        run: npm run typecheck
+      - name: Lint web application
+        run: npm run lint -w apps/web
+      - name: Build web application
+        run: npm run build -w apps/web
