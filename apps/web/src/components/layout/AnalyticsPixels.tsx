@@ -7,7 +7,8 @@ import { GOOGLE_ADS_ID, initialiseAnalytics, isPublicAnalyticsPath, syncAnalytic
 import { useCookieConsent } from "./CookieConsent";
 
 const GA_ID = process.env.NEXT_PUBLIC_GA_ID;
-const GOOGLE_TAG_ID = GA_ID || GOOGLE_ADS_ID;
+// The paid-booking destination owns the shared loader; GA4 is configured separately.
+const GOOGLE_TAG_ID = GOOGLE_ADS_ID;
 const FB_PIXEL_ID = process.env.NEXT_PUBLIC_FB_PIXEL_ID;
 
 export function AnalyticsPixels() {
