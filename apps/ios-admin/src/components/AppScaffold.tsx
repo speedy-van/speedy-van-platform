@@ -27,19 +27,34 @@ export function ScreenHeader({
   children?: ReactNode;
 }): JSX.Element {
   return (
-    <View className="bg-svDark px-4 pb-5 pt-3">
+    <View style={{ backgroundColor: colors.svPanel }} className="px-4 pb-6 pt-4">
       <View className="flex-row items-start justify-between gap-4">
         <View className="flex-1 flex-row items-center gap-3">
-          <View className="h-12 w-12 items-center justify-center rounded-lg bg-white/10">
+          <View
+            className="h-12 w-12 items-center justify-center rounded-2xl"
+            style={{ backgroundColor: `${colors.svBrand}28` }}
+          >
             <Ionicons name={icon} size={24} color={colors.svBrand} />
           </View>
           <View className="flex-1">
-            {eyebrow ? <Text className="text-xs font-extrabold uppercase tracking-wide text-orange-200">{eyebrow}</Text> : null}
-            <Text className="text-2xl font-extrabold text-white" numberOfLines={2} adjustsFontSizeToFit>
+            {eyebrow ? (
+              <Text
+                className="text-[10px] font-extrabold uppercase"
+                style={{ color: `${colors.svBrand}B0`, letterSpacing: 1.2 }}
+              >
+                {eyebrow}
+              </Text>
+            ) : null}
+            <Text
+              className="text-2xl font-extrabold text-white"
+              numberOfLines={1}
+              adjustsFontSizeToFit
+              style={{ letterSpacing: -0.3 }}
+            >
               {title}
             </Text>
             {subtitle ? (
-              <Text className="mt-1 text-sm leading-5 text-slate-300" numberOfLines={2}>
+              <Text className="mt-0.5 text-[13px] leading-5" style={{ color: "#94A3B8" }} numberOfLines={2}>
                 {subtitle}
               </Text>
             ) : null}
@@ -54,13 +69,16 @@ export function ScreenHeader({
 
 export function HeaderMetric({ label, value, icon }: { label: string; value: string; icon: IconName }): JSX.Element {
   return (
-    <View className="min-w-[46%] flex-1 flex-row items-center gap-2 rounded-lg border border-white/10 bg-white/10 px-3 py-2">
-      <Ionicons name={icon} size={16} color="#FED7AA" />
+    <View
+      className="min-w-[46%] flex-1 flex-row items-center gap-2 rounded-xl px-3 py-2.5"
+      style={{ backgroundColor: "rgba(255,255,255,0.08)", borderWidth: 1, borderColor: "rgba(255,255,255,0.1)" }}
+    >
+      <Ionicons name={icon} size={15} color={colors.svBrand} />
       <View className="flex-1">
-        <Text className="text-[11px] font-bold uppercase text-slate-300" numberOfLines={1}>
+        <Text className="text-[10px] font-bold uppercase text-slate-400" style={{ letterSpacing: 0.6 }} numberOfLines={1}>
           {label}
         </Text>
-        <Text className="text-base font-extrabold text-white" numberOfLines={1} adjustsFontSizeToFit>
+        <Text className="text-sm font-extrabold text-white" numberOfLines={1} adjustsFontSizeToFit>
           {value}
         </Text>
       </View>
@@ -82,21 +100,24 @@ export function SectionCard({
   children: ReactNode;
 }): JSX.Element {
   return (
-    <View className="rounded-lg border border-svLine bg-white p-4 shadow-sm">
+    <View className="overflow-hidden rounded-2xl bg-white p-4" style={{ borderWidth: 1, borderColor: colors.svLine }}>
       {title ? (
         <View className="mb-4 flex-row items-start justify-between gap-3">
           <View className="flex-1 flex-row items-center gap-3">
             {icon ? (
-              <View className="h-9 w-9 items-center justify-center rounded-lg bg-svBrandSubtle">
-                <Ionicons name={icon} size={18} color={colors.svBrand} />
+              <View
+                className="h-10 w-10 items-center justify-center rounded-xl"
+                style={{ backgroundColor: `${colors.svBrand}18` }}
+              >
+                <Ionicons name={icon} size={19} color={colors.svBrand} />
               </View>
             ) : null}
             <View className="flex-1">
-              <Text className="text-lg font-extrabold text-svDark" numberOfLines={1}>
+              <Text className="text-base font-extrabold text-svDark" numberOfLines={1} style={{ letterSpacing: -0.2 }}>
                 {title}
               </Text>
               {subtitle ? (
-                <Text className="mt-0.5 text-sm text-slate-500" numberOfLines={2}>
+                <Text className="mt-0.5 text-xs text-slate-500" numberOfLines={2}>
                   {subtitle}
                 </Text>
               ) : null}
@@ -153,23 +174,28 @@ export function ActionButton({
   disabled?: boolean;
   tone?: ButtonTone;
 }): JSX.Element {
-  const toneClass = disabled
-    ? "bg-slate-200"
+  const bgColor = disabled
+    ? "#E2E8F0"
     : tone === "dark"
-      ? "bg-svDark"
+      ? colors.svDark
       : tone === "danger"
-        ? "bg-svRed"
+        ? colors.svRed
         : tone === "success"
-          ? "bg-svGreen"
+          ? colors.svGreen
           : tone === "muted"
-            ? "bg-slate-100"
-            : "bg-svBrand";
-  const textClass = disabled || tone === "muted" ? "text-slate-600" : "text-white";
+            ? "#F1F5F9"
+            : colors.svBrand;
+  const textColor = disabled || tone === "muted" ? colors.muted : "#FFFFFF";
 
   return (
-    <Pressable disabled={disabled} onPress={onPress} className={`flex-row items-center justify-center gap-2 rounded-lg px-4 py-3 ${toneClass}`}>
-      <Ionicons name={icon} size={17} color={disabled || tone === "muted" ? colors.muted : "#FFFFFF"} />
-      <Text className={`font-extrabold ${textClass}`} numberOfLines={1} adjustsFontSizeToFit>
+    <Pressable
+      disabled={disabled}
+      onPress={onPress}
+      className="flex-row items-center justify-center gap-2 rounded-2xl px-4 py-3.5"
+      style={{ backgroundColor: bgColor }}
+    >
+      <Ionicons name={icon} size={17} color={textColor} />
+      <Text className="font-extrabold" style={{ color: textColor }} numberOfLines={1} adjustsFontSizeToFit>
         {label}
       </Text>
     </Pressable>
@@ -178,8 +204,11 @@ export function ActionButton({
 
 export function SearchField(props: TextInputProps): JSX.Element {
   return (
-    <View className="flex-row items-center gap-2 rounded-lg border border-svLine bg-white px-3 py-2 shadow-sm">
-      <Ionicons name="search" size={18} color={colors.muted} />
+    <View
+      className="flex-row items-center gap-2 rounded-2xl bg-white px-3 py-2"
+      style={{ borderWidth: 1.5, borderColor: colors.svLine }}
+    >
+      <Ionicons name="search" size={17} color={colors.muted} />
       <TextInput
         placeholderTextColor="#94A3B8"
         {...props}
@@ -192,16 +221,16 @@ export function SearchField(props: TextInputProps): JSX.Element {
 export function ModalHeader({ title, subtitle, onClose }: { title: string; subtitle?: string; onClose: () => void }): JSX.Element {
   return (
     <View className="border-b border-svLine bg-white px-4 pb-4 pt-5">
-      <View className="mx-auto mb-4 h-1 w-12 rounded-full bg-slate-300" />
+      <View className="mx-auto mb-3 h-1 w-10 rounded-full bg-slate-200" />
       <View className="flex-row items-start justify-between gap-4">
         <View className="flex-1">
-          <Text className="text-2xl font-extrabold text-svDark" numberOfLines={1} adjustsFontSizeToFit>
+          <Text className="text-xl font-extrabold text-svDark" numberOfLines={1} adjustsFontSizeToFit style={{ letterSpacing: -0.3 }}>
             {title}
           </Text>
-          {subtitle ? <Text className="mt-1 text-sm text-slate-500">{subtitle}</Text> : null}
+          {subtitle ? <Text className="mt-1 text-xs text-slate-500">{subtitle}</Text> : null}
         </View>
-        <Pressable onPress={onClose} className="h-10 w-10 items-center justify-center rounded-lg bg-slate-100">
-          <Ionicons name="close" size={20} color={colors.svDark} />
+        <Pressable onPress={onClose} className="h-9 w-9 items-center justify-center rounded-xl bg-slate-100">
+          <Ionicons name="close" size={18} color={colors.muted} />
         </Pressable>
       </View>
     </View>

@@ -1,4 +1,5 @@
 import { ScrollView, Text, Pressable } from "react-native";
+import { colors } from "@/theme/colors";
 
 export type FilterChipOption<T extends string> = {
   label: string;
@@ -16,8 +17,8 @@ export function FilterChips<T extends string>({ options, value, onChange }: Filt
     <ScrollView
       horizontal
       showsHorizontalScrollIndicator={false}
-      style={{ maxHeight: 64, minHeight: 64 }}
-      contentContainerStyle={{ alignItems: "center", gap: 8, paddingHorizontal: 16, paddingVertical: 12 }}
+      style={{ maxHeight: 60, minHeight: 60 }}
+      contentContainerStyle={{ alignItems: "center", gap: 8, paddingHorizontal: 16, paddingVertical: 10 }}
     >
       {options.map((option) => {
         const selected = option.value === value;
@@ -25,13 +26,17 @@ export function FilterChips<T extends string>({ options, value, onChange }: Filt
           <Pressable
             key={option.label}
             onPress={() => onChange(option.value)}
-            className={
+            className="rounded-full px-4 py-2"
+            style={
               selected
-                ? "rounded-lg border border-svBrand bg-svBrand px-4 py-2 shadow-sm"
-                : "rounded-lg border border-svLine bg-white px-4 py-2"
+                ? { backgroundColor: colors.svBrand }
+                : { backgroundColor: "#F8FAFC", borderWidth: 1, borderColor: colors.svLine }
             }
           >
-            <Text className={selected ? "text-sm font-extrabold text-white" : "text-sm font-extrabold text-slate-600"}>
+            <Text
+              className="text-[13px] font-extrabold"
+              style={{ color: selected ? "#FFFFFF" : "#64748B", letterSpacing: 0.1 }}
+            >
               {option.label}
             </Text>
           </Pressable>

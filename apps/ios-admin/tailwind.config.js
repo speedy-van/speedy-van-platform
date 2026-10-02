@@ -6,25 +6,25 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        svBrand: "#F97316",
-        svBrandHover: "#EA580C",
-        svBrandActive: "#C2410C",
-        svBrandSubtle: "#FFF7ED",
-        svBrandSelected: "#FFEDD5",
-        svBrandBorder: "#FDBA74",
-        svBrandStrong: "#9A3412",
-        svDark: "#120A00",
-        svSlate: "#241505",
-        svPanel: "#1A1200",
-        svBackground: "#F8F1E7",
+        svBrand: "#4F46E5",
+        svBrandHover: "#4338CA",
+        svBrandActive: "#3730A3",
+        svBrandSubtle: "#EEF2FF",
+        svBrandSelected: "#E0E7FF",
+        svBrandBorder: "#A5B4FC",
+        svBrandStrong: "#312E81",
+        svDark: "#0F172A",
+        svSlate: "#1E293B",
+        svPanel: "#111827",
+        svBackground: "#F6F8FC",
         svSurface: "#FFFFFF",
-        svSoft: "#FFFBF5",
-        svLine: "#E7D6C4",
+        svSoft: "#F8FAFC",
+        svLine: "#E2E8F0",
         svGreen: "#059669",
         svRed: "#DC2626",
-        svWarning: "#F59E0B",
-        svGold: "#D97706",
-        svOlive: "#65A30D"
+        svWarning: "#D97706",
+        svGold: "#CA8A04",
+        svOlive: "#0F766E"
       }
     }
   },

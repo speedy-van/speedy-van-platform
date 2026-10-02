@@ -7,8 +7,15 @@ type StatusBadgeProps = {
 
 export function StatusBadge({ label, color }: StatusBadgeProps): JSX.Element {
   return (
-    <View className="self-start rounded-lg border px-2.5 py-1" style={{ backgroundColor: `${color}14`, borderColor: `${color}40` }}>
-      <Text className="text-xs font-extrabold uppercase" style={{ color }} numberOfLines={1}>
+    <View
+      className="self-start rounded-full px-2.5 py-1"
+      style={{ backgroundColor: `${color}18`, borderWidth: 1, borderColor: `${color}35` }}
+    >
+      <Text
+        className="text-[11px] font-extrabold uppercase"
+        style={{ color, letterSpacing: 0.4 }}
+        numberOfLines={1}
+      >
         {label}
       </Text>
     </View>

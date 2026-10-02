@@ -20,20 +20,29 @@ export default function TabLayout() {
       screenOptions={{
         headerShown: false,
         tabBarActiveTintColor: colors.svBrand,
-        tabBarInactiveTintColor: colors.muted,
+        tabBarInactiveTintColor: "#9CA3AF",
         tabBarStyle: {
-          height: 68,
-          paddingBottom: 10,
+          height: 72,
+          paddingBottom: 12,
           paddingTop: 8,
-          borderTopColor: colors.border,
-          backgroundColor: colors.surface
+          borderTopWidth: 1,
+          borderTopColor: colors.svLine,
+          backgroundColor: "#FFFFFF",
+          shadowColor: "#000",
+          shadowOffset: { width: 0, height: -2 },
+          shadowOpacity: 0.05,
+          shadowRadius: 8,
+          elevation: 8,
         },
         tabBarLabelStyle: {
-          fontSize: 11,
-          fontWeight: "800"
+          fontSize: 10,
+          fontWeight: "800",
+          letterSpacing: 0.2,
+          marginTop: 2,
         },
         tabBarItemStyle: {
-          borderRadius: 8
+          borderRadius: 10,
+          paddingTop: 2,
         }
       }}
     >
@@ -46,15 +55,15 @@ export default function TabLayout() {
           tabBarBadge: pending.data > 0 ? pending.data : undefined
         }}
       />
-      <Tabs.Screen name="drivers/index" options={{ title: "Drivers", tabBarIcon: tabIcon("people") }} />
-      <Tabs.Screen name="jobs" options={{ title: "Jobs", tabBarIcon: tabIcon("briefcase") }} />
+      <Tabs.Screen name="jobs" options={{ title: "Dispatch", tabBarIcon: tabIcon("briefcase") }} />
+      <Tabs.Screen name="notifications" options={{ title: "Alerts", tabBarIcon: tabIcon("notifications") }} />
       <Tabs.Screen name="more" options={{ title: "More", tabBarIcon: tabIcon("ellipsis-horizontal-circle") }} />
       <Tabs.Screen name="bookings/[id]" options={{ href: null, title: "Booking" }} />
+      <Tabs.Screen name="drivers/index" options={{ href: null, title: "Drivers" }} />
       <Tabs.Screen name="drivers/[id]" options={{ href: null, title: "Driver" }} />
       <Tabs.Screen name="analytics" options={{ href: null, title: "Analytics" }} />
       <Tabs.Screen name="enquiries" options={{ href: null, title: "Enquiries" }} />
       <Tabs.Screen name="images" options={{ href: null, title: "Images" }} />
-      <Tabs.Screen name="notifications" options={{ href: null, title: "Notifications" }} />
       <Tabs.Screen name="visitors" options={{ href: null, title: "Visitors" }} />
     </Tabs>
   );

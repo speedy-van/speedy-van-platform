@@ -71,51 +71,60 @@ export function BookingsScreen() {
 function BookingRow({ booking, onPress }: { booking: BookingListItem; onPress: () => void }) {
   const meta = bookingStatusMeta(booking.status);
   const date = booking.scheduledDate ?? booking.scheduledAt;
-  const timeSlot = booking.timeSlot ?? booking.selectedTimeSlot ?? "Time TBC";
 
   return (
-    <Pressable onPress={onPress} className="mb-3 rounded-lg border border-svLine bg-white p-4 shadow-sm">
-      <View className="flex-row items-start justify-between gap-3">
-        <View className="flex-1 flex-row gap-3">
-          <View className="h-11 w-11 items-center justify-center rounded-lg bg-svBrandSubtle">
-            <Ionicons name={booking.isDraft ? "time-outline" : "receipt-outline"} size={21} color={colors.svBrand} />
-          </View>
+    <Pressable
+      onPress={onPress}
+      className="mb-3 overflow-hidden rounded-2xl bg-white"
+      style={{ borderWidth: 1, borderColor: colors.svLine }}
+    >
+      <View className="absolute bottom-0 left-0 top-0 w-1 rounded-l-2xl" style={{ backgroundColor: meta.color }} />
+      <View className="px-4 py-3.5 pl-5">
+        <View className="flex-row items-start justify-between gap-3">
           <View className="flex-1">
-            <Text className="font-mono text-xs font-extrabold uppercase text-slate-500">{booking.reference}</Text>
-            <Text className="mt-1 text-lg font-extrabold text-svDark" numberOfLines={1}>
+            <View className="flex-row items-center gap-2">
+              <Text className="font-mono text-[11px] font-extrabold uppercase" style={{ color: colors.muted }}>
+                {booking.reference}
+              </Text>
+              {booking.isDraft ? (
+                <View
+                  className="rounded px-1.5 py-0.5"
+                  style={{ backgroundColor: `${colors.svWarning}20` }}
+                >
+                  <Text className="text-[10px] font-extrabold uppercase" style={{ color: colors.svWarning }}>
+                    Draft
+                  </Text>
+                </View>
+              ) : null}
+            </View>
+            <Text className="mt-1 text-[17px] font-extrabold text-svDark" numberOfLines={1} style={{ letterSpacing: -0.3 }}>
               {booking.customerName}
             </Text>
-            {booking.isDraft ? (
-              <Text className="mt-1 text-xs font-extrabold uppercase text-svWarning">
-                Pending checkout{booking.checkoutStage ? ` - ${booking.checkoutStage}` : ""}
-              </Text>
-            ) : null}
+            <Text className="mt-0.5 text-sm font-bold text-slate-500" numberOfLines={1}>
+              {booking.serviceName ?? booking.serviceSlug}
+            </Text>
+          </View>
+          <View className="items-end gap-1.5">
+            <StatusBadge label={meta.label} color={meta.color} />
+            <Text className="text-base font-extrabold" style={{ color: colors.svGreen }}>
+              {formatMoney(booking.totalPrice ?? booking.price)}
+            </Text>
           </View>
         </View>
-        <StatusBadge label={meta.label} color={meta.color} />
-      </View>
-      <View className="mt-4 gap-2">
-        <View className="flex-row items-center gap-2">
-          <Ionicons name="cube-outline" size={15} color={colors.muted} />
-          <Text className="flex-1 text-sm font-bold text-slate-600" numberOfLines={1}>
-            {booking.serviceName ?? booking.serviceSlug}
-          </Text>
-        </View>
-        <View className="flex-row items-center gap-2">
-          <Ionicons name="location-outline" size={15} color={colors.muted} />
-          <Text className="flex-1 text-sm text-slate-500" numberOfLines={1}>
-            {booking.pickupAddress}
-          </Text>
-        </View>
-      </View>
-      <View className="mt-4 flex-row items-center justify-between border-t border-slate-100 pt-3">
-        <View>
-          <Text className="text-xs font-bold uppercase text-slate-400">Scheduled</Text>
-          <Text className="mt-0.5 text-sm font-extrabold text-svDark">{formatDate(date)} - {timeSlot}</Text>
-        </View>
-        <View className="flex-row items-center gap-2">
-          <Text className="text-base font-extrabold text-svGreen">{formatMoney(booking.totalPrice ?? booking.price)}</Text>
-          <Ionicons name="chevron-forward" size={18} color={colors.muted} />
+        <View className="mt-3 flex-row items-center justify-between border-t pt-2.5" style={{ borderColor: "#F1F5F9" }}>
+          <View className="flex-row items-center gap-1.5">
+            <Ionicons name="location-outline" size={13} color={colors.muted} />
+            <Text className="text-xs text-slate-400" numberOfLines={1} style={{ maxWidth: 180 }}>
+              {booking.pickupAddress}
+            </Text>
+          </View>
+          <View className="flex-row items-center gap-1">
+            <Ionicons name="calendar-outline" size={13} color={colors.muted} />
+            <Text className="text-xs font-bold text-slate-500">
+              {formatDate(date)}
+            </Text>
+            <Ionicons name="chevron-forward" size={14} color={colors.muted} />
+          </View>
         </View>
       </View>
     </Pressable>

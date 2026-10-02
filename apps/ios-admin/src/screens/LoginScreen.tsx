@@ -56,26 +56,34 @@ export function LoginScreen() {
   }
 
   return (
-    <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : undefined} className="flex-1 bg-svDark">
+    <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : undefined} className="flex-1" style={{ backgroundColor: colors.svPanel }}>
       <View className="flex-1">
-        <View className="px-6 pb-8 pt-16">
-          <View className="h-14 w-14 items-center justify-center rounded-lg bg-white/10">
-            <Ionicons name="shield-checkmark" size={30} color={colors.svBrand} />
+        <View className="px-6 pb-10 pt-20">
+          <View
+            className="h-16 w-16 items-center justify-center rounded-2xl"
+            style={{ backgroundColor: `${colors.svBrand}28` }}
+          >
+            <Ionicons name="shield-checkmark" size={32} color={colors.svBrand} />
           </View>
-          <Text className="mt-5 text-4xl font-extrabold text-white" numberOfLines={1} adjustsFontSizeToFit>
+          <Text
+            className="mt-6 text-4xl font-extrabold text-white"
+            numberOfLines={1}
+            adjustsFontSizeToFit
+            style={{ letterSpacing: -1 }}
+          >
             SpeedyVan Admin
           </Text>
-          <Text className="mt-2 text-base font-bold leading-6 text-slate-300">
-            Secure operations access for bookings, drivers, jobs, and enquiries.
+          <Text className="mt-2 text-[15px] leading-6" style={{ color: "#94A3B8" }}>
+            Secure operations access.
           </Text>
         </View>
-        <View className="flex-1 items-center rounded-t-lg bg-svBackground px-6 pt-7">
+        <View className="flex-1 items-center rounded-t-3xl bg-svBackground px-6 pt-8">
           <View className="w-full max-w-md">
-            <Text className="text-2xl font-extrabold text-svDark">Sign in</Text>
-            <Text className="mt-1 text-sm font-bold text-slate-500">Use your admin credentials to continue.</Text>
+            <Text className="text-2xl font-extrabold text-svDark" style={{ letterSpacing: -0.5 }}>Sign in</Text>
+            <Text className="mt-1 text-sm text-slate-500">Use your admin credentials to continue.</Text>
             {error ? <ErrorBanner message={error} /> : null}
             <LoginFormContainer
-              className="mt-6 gap-4"
+              className="mt-6 gap-3"
               onSubmit={() => {
                 void submit();
               }}
@@ -84,7 +92,7 @@ export function LoginScreen() {
                 <TextInput
                   value={email}
                   onChangeText={setEmail}
-                  placeholder="Email"
+                  placeholder="Email address"
                   placeholderTextColor="#94A3B8"
                   keyboardType="email-address"
                   autoCapitalize="none"
@@ -113,18 +121,22 @@ export function LoginScreen() {
               </AuthField>
               <Pressable
                 onPress={() => setShowForgotPassword(true)}
-                className="self-end rounded-lg px-1 py-1"
+                className="self-end py-1"
               >
-                <Text className="text-sm font-extrabold text-svBrand">Forgot password?</Text>
+                <Text className="text-sm font-extrabold" style={{ color: colors.svBrand }}>Forgot password?</Text>
               </Pressable>
               <Pressable
                 disabled={!canSubmit}
                 onPress={() => {
                   void submit();
                 }}
-                className={canSubmit ? "rounded-lg bg-svBrand py-4 shadow-sm" : "rounded-lg bg-slate-200 py-4"}
+                className="mt-1 rounded-2xl py-4"
+                style={{ backgroundColor: canSubmit ? colors.svBrand : "#E2E8F0" }}
               >
-                <Text className={canSubmit ? "text-center text-base font-extrabold text-white" : "text-center text-base font-extrabold text-slate-500"}>
+                <Text
+                  className="text-center text-base font-extrabold"
+                  style={{ color: canSubmit ? "#FFFFFF" : "#94A3B8" }}
+                >
                   {isSubmitting ? "Signing In..." : "Sign In"}
                 </Text>
               </Pressable>
@@ -143,8 +155,11 @@ export function LoginScreen() {
 
 function AuthField({ icon, children }: PropsWithChildren<{ icon: ComponentProps<typeof Ionicons>["name"] }>) {
   return (
-    <View className="flex-row items-center gap-3 rounded-lg border border-svLine bg-white px-4 py-2 shadow-sm">
-      <Ionicons name={icon} size={19} color={colors.muted} />
+    <View
+      className="flex-row items-center gap-3 rounded-2xl bg-white px-4 py-2"
+      style={{ borderWidth: 1.5, borderColor: colors.svLine }}
+    >
+      <Ionicons name={icon} size={18} color={colors.muted} />
       {children}
     </View>
   );
