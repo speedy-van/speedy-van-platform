@@ -1,18 +1,23 @@
 import "../global.css";
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
+import { useCallback } from "react";
+import { BookingAlertProvider, useBookingAlerts } from "@/alerts/BookingAlertProvider";
 import { AuthGate, AuthProvider, useAuth } from "@/auth/AuthContext";
 import { AppErrorBoundary } from "@/components/AppErrorBoundary";
 import { LoadingView } from "@/components/LoadingView";
 import { useNewBookingNotifications } from "@/hooks/useNewBookingNotifications";
+import type { BookingListItem } from "@/models";
 
 export default function RootLayout() {
   return (
     <AppErrorBoundary>
       <AuthProvider>
         <AuthGate>
-          <NewBookingNotificationWatcher />
-          <RootStack />
+          <BookingAlertProvider>
+            <NewBookingNotificationWatcher />
+            <RootStack />
+          </BookingAlertProvider>
         </AuthGate>
         <StatusBar style="dark" />
       </AuthProvider>
@@ -21,7 +26,12 @@ export default function RootLayout() {
 }
 
 function NewBookingNotificationWatcher() {
-  useNewBookingNotifications();
+  const { enqueueBookingAlert } = useBookingAlerts();
+  const onNewBooking = useCallback((booking: BookingListItem) => {
+    enqueueBookingAlert(booking);
+  }, [enqueueBookingAlert]);
+
+  useNewBookingNotifications(onNewBooking);
   return null;
 }
 

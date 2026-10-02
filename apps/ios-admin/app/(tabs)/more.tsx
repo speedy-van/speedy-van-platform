@@ -1,61 +1,218 @@
 import { Ionicons } from "@expo/vector-icons";
+import Constants from "expo-constants";
+import * as Notifications from "expo-notifications";
 import { useRouter } from "expo-router";
 import type { ComponentProps } from "react";
-import { Pressable, Text, View } from "react-native";
+import { useEffect, useState } from "react";
+import { Alert, Pressable, ScrollView, Switch, Text, View } from "react-native";
 import { useAuth } from "@/auth/AuthContext";
-import { ActionButton, HeaderMetric, ScreenHeader, ScreenShell, SectionCard } from "@/components/AppScaffold";
+import { ActionButton, ScreenHeader, ScreenShell } from "@/components/AppScaffold";
+import { previewNewBookingSound } from "@/notifications/bookingNotifications";
+import { useNotificationSettings } from "@/notifications/notificationSettings";
 import { colors } from "@/theme/colors";
 
 type IconName = ComponentProps<typeof Ionicons>["name"];
 
+function initials(name: string): string {
+  return name
+    .split(" ")
+    .map((w) => w[0] ?? "")
+    .join("")
+    .toUpperCase()
+    .slice(0, 2);
+}
+
 export default function MoreRoute() {
   const router = useRouter();
-  const { logout, user } = useAuth();
+  const { logout, user, startupPhase } = useAuth();
+  const { settings, update } = useNotificationSettings();
+  const displayName = user?.name ?? "Admin";
+  const [permissionStatus, setPermissionStatus] = useState("Not checked");
+
+  useEffect(() => {
+    let cancelled = false;
+    void Notifications.getPermissionsAsync()
+      .then((permission) => {
+        if (!cancelled) setPermissionStatus(permission.status);
+      })
+      .catch(() => {
+        if (!cancelled) setPermissionStatus("Unavailable");
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  async function previewSound(): Promise<void> {
+    const played = await previewNewBookingSound();
+    if (!played) {
+      Alert.alert("Notifications unavailable", "Allow notifications in iOS Settings to hear the booking sound preview.");
+    } else {
+      setPermissionStatus("granted");
+    }
+  }
 
   return (
     <ScreenShell>
       <ScreenHeader
         title="More"
-        subtitle="Admin shortcuts, account context, and secure sign out."
+        subtitle="Admin tools, account info, and sign out."
         eyebrow="Workspace"
         icon="grid"
-      >
-        <View className="flex-row flex-wrap gap-2">
-          <HeaderMetric label="Signed in" value={user?.name ?? "Admin"} icon="shield-checkmark" />
-          <HeaderMetric label="Role" value={user?.role ?? "Admin"} icon="key" />
+      />
+      <ScrollView contentContainerClassName="gap-4 p-4 pb-8">
+        <View
+          className="overflow-hidden rounded-2xl bg-white p-4"
+          style={{ borderWidth: 1, borderColor: colors.svLine }}
+        >
+          <View className="flex-row items-center gap-3">
+            <View
+              className="h-14 w-14 items-center justify-center rounded-2xl"
+              style={{ backgroundColor: `${colors.svBrand}18` }}
+            >
+              <Text className="text-xl font-extrabold" style={{ color: colors.svBrand }}>
+                {initials(displayName)}
+              </Text>
+            </View>
+            <View className="flex-1">
+              <Text className="text-lg font-extrabold text-svDark" numberOfLines={1} style={{ letterSpacing: -0.3 }}>
+                {displayName}
+              </Text>
+              <Text className="mt-0.5 text-sm text-slate-500" numberOfLines={1}>
+                {user?.email ?? ""}
+              </Text>
+            </View>
+            <View
+              className="rounded-full px-2.5 py-1"
+              style={{ backgroundColor: `${colors.svGreen}15` }}
+            >
+              <Text className="text-[11px] font-extrabold" style={{ color: colors.svGreen }}>
+                {user?.role ?? "Admin"}
+              </Text>
+            </View>
+          </View>
         </View>
-      </ScreenHeader>
-      <View className="gap-4 p-4">
-        <SectionCard title="Profile" subtitle={user?.email ?? "Signed in"} icon="person-circle-outline">
-          <Text className="text-2xl font-extrabold text-svDark" numberOfLines={1} adjustsFontSizeToFit>
-            {user?.name ?? "Admin"}
-          </Text>
-          <Text className="mt-1 text-sm font-bold text-slate-500">{user?.email ?? "Signed in"}</Text>
-        </SectionCard>
-        <View className="gap-3">
+        <View
+          className="overflow-hidden rounded-2xl bg-white"
+          style={{ borderWidth: 1, borderColor: colors.svLine }}
+        >
           <MoreLink icon="analytics-outline" title="Analytics" subtitle="Revenue and demand trends" onPress={() => router.push("/analytics")} />
+          <MoreLink icon="people-outline" title="Drivers" subtitle="Fleet records and driver actions" onPress={() => router.push("/drivers")} />
+          <MoreLink icon="briefcase-outline" title="Dispatch" subtitle="Published jobs and driver pay" onPress={() => router.push("/jobs")} />
           <MoreLink icon="pulse-outline" title="Visitors" subtitle="Live website sessions" onPress={() => router.push("/visitors")} />
-          <MoreLink icon="images-outline" title="Images" subtitle="Remove, replace, or upload media" onPress={() => router.push("/images")} />
+          <MoreLink icon="images-outline" title="Images" subtitle="Manage media assets" onPress={() => router.push("/images")} />
           <MoreLink icon="mail-outline" title="Enquiries" subtitle="European quote requests" onPress={() => router.push("/enquiries")} />
-          <MoreLink icon="notifications-outline" title="Notifications" subtitle="Admin alerts and events" onPress={() => router.push("/notifications")} />
+          <MoreLink icon="notifications-outline" title="Notifications" subtitle="Admin alerts and events" onPress={() => router.push("/notifications")} isLast />
         </View>
-        <ActionButton label="Logout" icon="log-out-outline" tone="danger" onPress={() => void logout()} />
-      </View>
+
+        <View
+          className="overflow-hidden rounded-2xl bg-white p-4"
+          style={{ borderWidth: 1, borderColor: colors.svLine }}
+        >
+          <Text className="text-base font-extrabold text-svDark">Alert Settings</Text>
+          <SettingsRow
+            icon="volume-high-outline"
+            title="Booking sound"
+            subtitle="Play the bundled notification chime when supported."
+            value={settings.soundEnabled}
+            onValueChange={(value) => update({ soundEnabled: value })}
+          />
+          <SettingsRow
+            icon="phone-portrait-outline"
+            title="Haptic pulse"
+            subtitle="Vibrate briefly for foreground booking alerts."
+            value={settings.hapticsEnabled}
+            onValueChange={(value) => update({ hapticsEnabled: value })}
+          />
+          <View className="mt-4 rounded-2xl bg-svSoft p-3">
+            <Text className="text-xs font-extrabold uppercase text-slate-400">iOS notification permission</Text>
+            <Text className="mt-1 text-sm font-bold text-svDark">{permissionStatus}</Text>
+          </View>
+          <View className="mt-4">
+            <ActionButton label="Preview Sound" icon="play-outline" tone="dark" onPress={() => void previewSound()} />
+          </View>
+        </View>
+
+        <View
+          className="overflow-hidden rounded-2xl bg-white p-4"
+          style={{ borderWidth: 1, borderColor: colors.svLine }}
+        >
+          <Text className="text-base font-extrabold text-svDark">Build Diagnostics</Text>
+          <Text className="mt-2 text-xs font-bold text-slate-500">Root: apps/ios-admin</Text>
+          <Text className="mt-1 text-xs font-bold text-slate-500">Bundle: co.uk.speedy-van.admin</Text>
+          <Text className="mt-1 text-xs font-bold text-slate-500">
+            Version: {Constants.expoConfig?.version ?? "unknown"} ({Constants.expoConfig?.ios?.buildNumber ?? "unknown"})
+          </Text>
+          <Text className="mt-1 text-xs font-bold text-slate-500">Startup: {startupPhase}</Text>
+        </View>
+        <ActionButton label="Sign Out" icon="log-out-outline" tone="danger" onPress={() => void logout()} />
+      </ScrollView>
     </ScreenShell>
   );
 }
 
-function MoreLink({ icon, title, subtitle, onPress }: { icon: IconName; title: string; subtitle: string; onPress: () => void }) {
+function SettingsRow({
+  icon,
+  title,
+  subtitle,
+  value,
+  onValueChange,
+}: {
+  icon: IconName;
+  title: string;
+  subtitle: string;
+  value: boolean;
+  onValueChange: (value: boolean) => void;
+}) {
   return (
-    <Pressable onPress={onPress} className="flex-row items-center gap-3 rounded-lg border border-svLine bg-white p-4 shadow-sm">
-      <View className="h-11 w-11 items-center justify-center rounded-lg bg-svBrandSubtle">
-        <Ionicons name={icon} size={21} color={colors.svBrand} />
+    <View className="mt-4 flex-row items-center gap-3">
+      <View className="h-10 w-10 items-center justify-center rounded-xl bg-svBrandSubtle">
+        <Ionicons name={icon} size={19} color={colors.svBrand} />
       </View>
       <View className="flex-1">
-        <Text className="text-base font-extrabold text-svDark">{title}</Text>
-        <Text className="mt-0.5 text-sm font-bold text-slate-500">{subtitle}</Text>
+        <Text className="text-sm font-extrabold text-svDark">{title}</Text>
+        <Text className="mt-0.5 text-xs text-slate-500">{subtitle}</Text>
       </View>
-      <Ionicons name="chevron-forward" size={18} color={colors.muted} />
+      <Switch
+        value={value}
+        onValueChange={onValueChange}
+        trackColor={{ false: "#CBD5E1", true: colors.svBrandBorder }}
+        thumbColor={value ? colors.svBrand : "#FFFFFF"}
+      />
+    </View>
+  );
+}
+
+function MoreLink({
+  icon,
+  title,
+  subtitle,
+  onPress,
+  isLast = false,
+}: {
+  icon: IconName;
+  title: string;
+  subtitle: string;
+  onPress: () => void;
+  isLast?: boolean;
+}) {
+  return (
+    <Pressable
+      onPress={onPress}
+      className="flex-row items-center gap-3 px-4 py-3.5"
+      style={!isLast ? { borderBottomWidth: 1, borderBottomColor: "#F1F5F9" } : undefined}
+    >
+      <View
+        className="h-10 w-10 items-center justify-center rounded-xl"
+        style={{ backgroundColor: `${colors.svBrand}14` }}
+      >
+        <Ionicons name={icon} size={19} color={colors.svBrand} />
+      </View>
+      <View className="flex-1">
+        <Text className="text-[15px] font-extrabold text-svDark">{title}</Text>
+        <Text className="mt-0.5 text-xs text-slate-500">{subtitle}</Text>
+      </View>
+      <Ionicons name="chevron-forward" size={16} color="#CBD5E1" />
     </Pressable>
   );
 }

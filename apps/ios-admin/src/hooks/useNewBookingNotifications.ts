@@ -11,6 +11,12 @@ import { showNewBookingNotification } from "@/notifications/bookingNotifications
 const LAST_SEEN_BOOKING_CREATED_AT_KEY = "sv_admin_last_seen_booking_created_at";
 const POLL_INTERVAL_MS = 30000;
 const POLL_LIMIT = 50;
+const MAX_RECONCILE_PAGES = 3;
+
+type BookingCursor = {
+  createdAt: number;
+  idsAtCreatedAt: string[];
+};
 
 function createdAtTime(booking: BookingListItem): number {
   const time = new Date(booking.createdAt).getTime();
@@ -22,13 +28,33 @@ function newestBookingTime(bookings: BookingListItem[]): number {
 }
 
 function isNotifiableBooking(booking: BookingListItem): boolean {
-  return booking.isDraft !== true;
+  return booking.isDraft !== true && booking.status !== "CANCELLED";
 }
 
-export function useNewBookingNotifications(): void {
+function cursorKey(userId: string | undefined): string {
+  return `${LAST_SEEN_BOOKING_CREATED_AT_KEY}_${userId ?? "unknown"}`;
+}
+
+function cursorFromBookings(bookings: BookingListItem[]): BookingCursor | null {
+  const latestTime = newestBookingTime(bookings);
+  if (latestTime <= 0) return null;
+  return {
+    createdAt: latestTime,
+    idsAtCreatedAt: bookings.filter((booking) => createdAtTime(booking) === latestTime).map((booking) => booking.id),
+  };
+}
+
+function isAfterCursor(booking: BookingListItem, cursor: BookingCursor): boolean {
+  const time = createdAtTime(booking);
+  if (time > cursor.createdAt) return true;
+  if (time < cursor.createdAt) return false;
+  return !cursor.idsAtCreatedAt.includes(booking.id);
+}
+
+export function useNewBookingNotifications(onNewBooking?: (booking: BookingListItem) => void): void {
   const router = useRouter();
-  const { isAuthenticated } = useAuth();
-  const lastSeenRef = useRef<number | null>(null);
+  const { isAuthenticated, user } = useAuth();
+  const cursorRef = useRef<BookingCursor | null>(null);
   const seenIdsRef = useRef<Set<string>>(new Set());
   const isCheckingRef = useRef(false);
 
@@ -47,26 +73,46 @@ export function useNewBookingNotifications(): void {
 
   useEffect(() => {
     if (!isAuthenticated) {
-      lastSeenRef.current = null;
+      cursorRef.current = null;
       seenIdsRef.current = new Set();
       return undefined;
     }
 
     let cancelled = false;
 
-    async function loadLastSeen(): Promise<number | null> {
-      if (lastSeenRef.current !== null) return lastSeenRef.current;
+    async function loadCursor(): Promise<BookingCursor | null> {
+      if (cursorRef.current !== null) return cursorRef.current;
 
-      const raw = await AsyncStorage.getItem(LAST_SEEN_BOOKING_CREATED_AT_KEY);
-      const parsed = raw ? Number(raw) : 0;
-      const value = Number.isFinite(parsed) && parsed > 0 ? parsed : null;
-      lastSeenRef.current = value;
-      return value;
+      try {
+        const raw = await AsyncStorage.getItem(cursorKey(user?.id));
+        if (!raw) return null;
+        const parsed = JSON.parse(raw) as Partial<BookingCursor>;
+        const cursor = typeof parsed.createdAt === "number" && Array.isArray(parsed.idsAtCreatedAt)
+          ? { createdAt: parsed.createdAt, idsAtCreatedAt: parsed.idsAtCreatedAt.filter((id): id is string => typeof id === "string") }
+          : null;
+        cursorRef.current = cursor;
+        return cursor;
+      } catch (error) {
+        console.warn("[notifications] cursor restore failed", error);
+        return null;
+      }
     }
 
-    async function saveLastSeen(value: number): Promise<void> {
-      lastSeenRef.current = value;
-      await AsyncStorage.setItem(LAST_SEEN_BOOKING_CREATED_AT_KEY, String(value));
+    async function saveCursor(value: BookingCursor): Promise<void> {
+      cursorRef.current = value;
+      await AsyncStorage.setItem(cursorKey(user?.id), JSON.stringify(value));
+    }
+
+    async function fetchRecentBookings(): Promise<BookingListItem[]> {
+      const all: BookingListItem[] = [];
+      for (let page = 1; page <= MAX_RECONCILE_PAGES; page += 1) {
+        const response = await apiClient.getPaginated<BookingListItem>(
+          endpoints.bookings({ page, limit: POLL_LIMIT })
+        );
+        all.push(...response.data);
+        if (page * response.pagination.limit >= response.pagination.total) break;
+      }
+      return all.filter(isNotifiableBooking);
     }
 
     async function checkForNewBookings(): Promise<void> {
@@ -74,40 +120,41 @@ export function useNewBookingNotifications(): void {
       isCheckingRef.current = true;
 
       try {
-        const response = await apiClient.getPaginated<BookingListItem>(
-          endpoints.bookings({ page: 1, limit: POLL_LIMIT })
-        );
+        const bookings = await fetchRecentBookings();
         if (cancelled) return;
 
-        const bookings = response.data.filter(isNotifiableBooking);
-        const latestTime = newestBookingTime(bookings);
-        const lastSeen = await loadLastSeen();
+        const latestCursor = cursorFromBookings(bookings);
+        const cursor = await loadCursor();
 
-        if (lastSeen === null) {
+        if (cursor === null) {
           bookings.forEach((booking) => seenIdsRef.current.add(booking.id));
-          if (latestTime > 0) await saveLastSeen(latestTime);
+          if (latestCursor) await saveCursor(latestCursor);
           return;
         }
 
         const newBookings = bookings
-          .filter((booking) => createdAtTime(booking) > lastSeen && !seenIdsRef.current.has(booking.id))
+          .filter((booking) => isAfterCursor(booking, cursor) && !seenIdsRef.current.has(booking.id))
           .sort((a, b) => createdAtTime(a) - createdAtTime(b));
 
         for (const booking of newBookings) {
           if (cancelled) return;
           seenIdsRef.current.add(booking.id);
-          await showNewBookingNotification(booking);
+          onNewBooking?.(booking);
+          const sounded = await showNewBookingNotification(booking, user?.id);
+          if (!sounded) {
+            console.info("[notifications] visible alert delivered without notification sound", booking.reference);
+          }
         }
 
-        if (latestTime > lastSeen) {
-          await saveLastSeen(latestTime);
+        if (latestCursor && (latestCursor.createdAt > cursor.createdAt || newBookings.length > 0)) {
+          await saveCursor(latestCursor);
         }
 
         if (seenIdsRef.current.size > POLL_LIMIT * 3) {
           seenIdsRef.current = new Set(Array.from(seenIdsRef.current).slice(-POLL_LIMIT));
         }
-      } catch {
-        // Keep the watcher quiet; regular screens already surface API/auth errors.
+      } catch (error) {
+        console.warn("[notifications] booking reconciliation failed", error);
       } finally {
         isCheckingRef.current = false;
       }
@@ -122,5 +169,5 @@ export function useNewBookingNotifications(): void {
       cancelled = true;
       clearInterval(interval);
     };
-  }, [isAuthenticated]);
+  }, [isAuthenticated, onNewBooking, user?.id]);
 }
