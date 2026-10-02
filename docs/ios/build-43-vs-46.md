@@ -40,6 +40,23 @@ The current source fix therefore keeps the Worklets removal, removes stale lockf
 - Notifications: no `setNotificationHandler` side effect at module import; setup is lazy and permission denial leaves the app usable.
 - New-booking alerts: visible modal queue is separated from optional notification sound and does not mutate booking state.
 
+## Build 47 release candidate
+
+- Branch: `admin-build46-repair-redesign-2026-10-02`
+- Commit built by EAS: `d4657fe3b0b51e79843d6ecd25ace4ef2e93dce5`
+- EAS build ID: `b018360f-3257-4d16-a004-eef7b9956d8f`
+- Build profile: `production`
+- Version/build: `1.0.0 (47)`
+- App root: `apps/ios-admin`
+- Bundle ID: `co.uk.speedy-van.admin`
+- EAS project ID: `37fb9ca1-cad4-4b02-b3d9-b79f67372bf0`
+- Artifact: `https://expo.dev/artifacts/eas/TrV_EniDwedpmTx-2jMnorJe-aaNnKuA77Kzevu1UhM.ipa`
+- Fingerprint hash: `73d6046162681242dd14f247239e9586c5f511ac`
+- EAS submission ID: `236da256-7c93-4ccc-94d9-8d2316ed5c45`
+- App Store Connect app ID: `6812268357`
+- Submit status: `FINISHED`; Apple processing/TestFlight availability is external to EAS after upload.
+- Remote log checks: one `[ios-admin preflight]` match in the EAS log; zero `RNWorklets`, `react-native-worklets`, or `WorkletsModule` matches in the Xcode log.
+
 ## External documentation checked
 
 - Reanimated compatibility docs state that `react-native-worklets` is a Reanimated 4 dependency and that Reanimated 3 will not work with `react-native-worklets` installed: https://docs.swmansion.com/react-native-reanimated/docs/guides/compatibility/
