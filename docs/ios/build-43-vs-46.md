@@ -40,22 +40,24 @@ The current source fix therefore keeps the Worklets removal, removes stale lockf
 - Notifications: no `setNotificationHandler` side effect at module import; setup is lazy and permission denial leaves the app usable.
 - New-booking alerts: visible modal queue is separated from optional notification sound and does not mutate booking state.
 
-## Build 47 release candidate
+## Build 48 release candidate
 
 - Branch: `admin-build46-repair-redesign-2026-10-02`
-- Commit built by EAS: `d4657fe3b0b51e79843d6ecd25ace4ef2e93dce5`
-- EAS build ID: `b018360f-3257-4d16-a004-eef7b9956d8f`
+- Commit built by EAS: `f65f179229d891a8466a7eca3316d85201ff0ef4`
+- EAS build ID: `2d02cbf5-a7f4-4475-87cb-fd66738cca83`
 - Build profile: `production`
-- Version/build: `1.0.0 (47)`
+- Version/build: `1.0.0 (48)`
 - App root: `apps/ios-admin`
 - Bundle ID: `co.uk.speedy-van.admin`
 - EAS project ID: `37fb9ca1-cad4-4b02-b3d9-b79f67372bf0`
-- Artifact: `https://expo.dev/artifacts/eas/TrV_EniDwedpmTx-2jMnorJe-aaNnKuA77Kzevu1UhM.ipa`
-- Fingerprint hash: `73d6046162681242dd14f247239e9586c5f511ac`
-- EAS submission ID: `236da256-7c93-4ccc-94d9-8d2316ed5c45`
+- Artifact: `https://expo.dev/artifacts/eas/JCkaQcjxKIhPctoKK0zWtoxRhyGTqRpD_UfpovLRLsk.ipa`
+- Fingerprint hash: `14571b3b8f0c8d9fc5f6b340efa71e6f1c30b60c`
+- EAS submission ID: `aafde877-43ec-4c1d-b950-be1f20b93855`
 - App Store Connect app ID: `6812268357`
 - Submit status: `FINISHED`; Apple processing/TestFlight availability is external to EAS after upload.
-- Remote log checks: one `[ios-admin preflight]` match in the EAS log; zero `RNWorklets`, `react-native-worklets`, or `WorkletsModule` matches in the Xcode log.
+- Remote log checks: one `[ios-admin preflight]` match in the EAS log; two `query-string` / `7.1.3` matches proving the router-compatible pin; zero `RNWorklets`, `react-native-worklets`, or `WorkletsModule` matches.
+
+Build 47 was superseded before device validation after a tester screenshot showed the app error boundary with `TypeError: undefined is not a function`. Local browser reproduction exposed the precise stack as `queryString.stringify is not a function` in Expo Router path serialization. Build 48 pins `query-string` to `7.1.3`, where `stringify` is available as a CommonJS named export.
 
 ## External documentation checked
 

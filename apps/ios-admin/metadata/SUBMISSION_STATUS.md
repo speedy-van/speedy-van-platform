@@ -22,8 +22,9 @@
 - Production iOS EAS builds pinned to `macos-sequoia-15.6-xcode-26.2` to satisfy Apple's iOS 26 SDK upload requirement.
 - TypeScript validation, Expo Doctor, and local iOS bundle export passed on 2026-09-15.
 - EAS iOS signing credentials are configured and valid for `co.uk.speedy-van.admin`.
-- EAS Submit uploaded build `1.0.0 (47)` to App Store Connect/TestFlight on 2026-10-02.
+- EAS Submit uploaded build `1.0.0 (48)` to App Store Connect/TestFlight on 2026-10-02.
 - New booking local notifications use the bundled `new-booking.wav` sound without enabling the remote push entitlement.
+- Build 48 supersedes build 47 after fixing the Expo Router `queryString.stringify` display crash.
 
 ## Submitted Build
 
@@ -37,17 +38,17 @@ eas submit --platform ios --profile production --latest --non-interactive
 
 Result:
 
-- EAS build ID: `b018360f-3257-4d16-a004-eef7b9956d8f`
-- EAS submission ID: `236da256-7c93-4ccc-94d9-8d2316ed5c45`
+- EAS build ID: `2d02cbf5-a7f4-4475-87cb-fd66738cca83`
+- EAS submission ID: `aafde877-43ec-4c1d-b950-be1f20b93855`
 - App Store Connect app ID: `6812268357`
 - Bundle ID: `co.uk.speedy-van.admin`
-- Version/build: `1.0.0 (47)`
+- Version/build: `1.0.0 (48)`
 - Build image: `macos-sequoia-15.6-xcode-26.2`
 - Build status: `FINISHED`
 - Submit status: `FINISHED`
 - Apple upload result: successfully uploaded package to App Store Connect; Apple may take a few minutes to finish TestFlight processing.
-- Artifact: `https://expo.dev/artifacts/eas/TrV_EniDwedpmTx-2jMnorJe-aaNnKuA77Kzevu1UhM.ipa`
-- EAS fingerprint hash: `73d6046162681242dd14f247239e9586c5f511ac`
+- Artifact: `https://expo.dev/artifacts/eas/JCkaQcjxKIhPctoKK0zWtoxRhyGTqRpD_UfpovLRLsk.ipa`
+- EAS fingerprint hash: `14571b3b8f0c8d9fc5f6b340efa71e6f1c30b60c`
 - App Store Connect distribution URL: `https://appstoreconnect.apple.com/apps/6812268357/distribution`
 
 ## App Store Assets

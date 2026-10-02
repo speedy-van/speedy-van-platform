@@ -35,12 +35,12 @@ The production profile is configured to use Apple's required iOS 26 SDK builder:
 
 ## Current Submitted Build
 
-- EAS build ID: `b018360f-3257-4d16-a004-eef7b9956d8f`
-- EAS submission ID: `236da256-7c93-4ccc-94d9-8d2316ed5c45`
+- EAS build ID: `2d02cbf5-a7f4-4475-87cb-fd66738cca83`
+- EAS submission ID: `aafde877-43ec-4c1d-b950-be1f20b93855`
 - App Store Connect app ID: `6812268357`
-- Version/build: `1.0.0 (47)`
+- Version/build: `1.0.0 (48)`
 - Submit result: uploaded to App Store Connect/TestFlight processing on 2026-10-02.
-- Artifact: `https://expo.dev/artifacts/eas/TrV_EniDwedpmTx-2jMnorJe-aaNnKuA77Kzevu1UhM.ipa`
+- Artifact: `https://expo.dev/artifacts/eas/JCkaQcjxKIhPctoKK0zWtoxRhyGTqRpD_UfpovLRLsk.ipa`
 - App Store Connect distribution URL: `https://appstoreconnect.apple.com/apps/6812268357/distribution`
 
 ## App Store Connect App ID
@@ -62,8 +62,8 @@ The numeric `ascAppId` is already present in `eas.json`:
 ## Check Status
 
 ```bash
-eas build:view b018360f-3257-4d16-a004-eef7b9956d8f --json
-eas submit:view 236da256-7c93-4ccc-94d9-8d2316ed5c45 --json
+eas build:view 2d02cbf5-a7f4-4475-87cb-fd66738cca83 --json
+eas submit:view aafde877-43ec-4c1d-b950-be1f20b93855 --json
 ```
 
 ## If Using Local Apple Credentials
