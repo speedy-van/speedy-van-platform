@@ -26,6 +26,7 @@ function getDevApiBaseURL(): string {
 }
 
 const configuredApiURL = process.env.EXPO_PUBLIC_API_URL;
+const REQUEST_TIMEOUT_MS = 15000;
 const baseURL = withoutTrailingSlash(
   configuredApiURL && configuredApiURL.length > 0
     ? configuredApiURL
@@ -90,7 +91,12 @@ async function parseResponse<T>(response: Response, hasToken: boolean): Promise<
   }
 
   const text = await response.text();
-  const payload = text.length > 0 ? (JSON.parse(text) as unknown) : null;
+  let payload: unknown = null;
+  try {
+    payload = text.length > 0 ? (JSON.parse(text) as unknown) : null;
+  } catch {
+    throw new APIError("The server returned an unreadable response.", response.status);
+  }
 
   if (!response.ok) {
     const message = isObject(payload) && typeof payload.error === "string"
@@ -113,16 +119,30 @@ async function parseResponse<T>(response: Response, hasToken: boolean): Promise<
 
 async function request<T>(method: RequestMethod, path: string, body?: unknown): Promise<{ data: T; pagination?: PaginationMeta }> {
   const token = await loadToken();
-  const response = await fetch(`${baseURL}${path}`, {
-    method,
-    headers: {
-      "Content-Type": "application/json",
-      ...(token ? { Authorization: `Bearer ${token}` } : {})
-    },
-    body: body === undefined ? undefined : JSON.stringify(body)
-  });
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
 
-  return parseResponse<T>(response, Boolean(token));
+  try {
+    const response = await fetch(`${baseURL}${path}`, {
+      method,
+      headers: {
+        "Content-Type": "application/json",
+        ...(token ? { Authorization: `Bearer ${token}` } : {})
+      },
+      body: body === undefined ? undefined : JSON.stringify(body),
+      signal: controller.signal
+    });
+
+    return await parseResponse<T>(response, Boolean(token));
+  } catch (error) {
+    if (error instanceof APIError) throw error;
+    if (error instanceof Error && error.name === "AbortError") {
+      throw new APIError("The server took too long to respond. Check the connection and try again.");
+    }
+    throw new APIError(error instanceof Error ? error.message : "Network request failed.");
+  } finally {
+    clearTimeout(timeout);
+  }
 }
 
 function pickNamedList<T>(payload: unknown, keys: string[]): T[] {

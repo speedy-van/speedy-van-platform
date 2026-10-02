@@ -6,9 +6,11 @@ import type { AdminUser, LoginResponse } from "@/models";
 import { clearSession, loadToken, loadUser, saveSession } from "./tokenStore";
 
 type AuthStatus = "loading" | "authenticated" | "anonymous";
+type StartupPhase = "configuration" | "storage" | "auth" | "ready";
 
 type AuthContextValue = {
   status: AuthStatus;
+  startupPhase: StartupPhase;
   user: AdminUser | null;
   isAuthenticated: boolean;
   login: (email: string, password: string) => Promise<void>;
@@ -19,6 +21,7 @@ const AuthContext = createContext<AuthContextValue | null>(null);
 
 export function AuthProvider({ children }: PropsWithChildren): JSX.Element {
   const [status, setStatus] = useState<AuthStatus>("loading");
+  const [startupPhase, setStartupPhase] = useState<StartupPhase>("configuration");
   const [user, setUser] = useState<AdminUser | null>(null);
 
   const logout = useCallback(async () => {
@@ -40,18 +43,29 @@ export function AuthProvider({ children }: PropsWithChildren): JSX.Element {
     let mounted = true;
 
     async function restore(): Promise<void> {
+      console.info("[startup] configuration validation complete");
+      setStartupPhase("storage");
+
       const [token, storedUser] = await Promise.all([loadToken(), loadUser()]);
       if (!mounted) return;
 
+      setStartupPhase("auth");
       if (token) {
         setUser(storedUser);
         setStatus("authenticated");
       } else {
         setStatus("anonymous");
       }
+      setStartupPhase("ready");
     }
 
-    void restore();
+    void restore().catch((error) => {
+      console.error("[startup] session restore failed", error);
+      if (!mounted) return;
+      setUser(null);
+      setStatus("anonymous");
+      setStartupPhase("ready");
+    });
 
     return () => {
       mounted = false;
@@ -68,12 +82,13 @@ export function AuthProvider({ children }: PropsWithChildren): JSX.Element {
   const value = useMemo<AuthContextValue>(
     () => ({
       status,
+      startupPhase,
       user,
       isAuthenticated: status === "authenticated",
       login,
       logout
     }),
-    [login, logout, status, user]
+    [login, logout, startupPhase, status, user]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
@@ -88,7 +103,7 @@ export function useAuth(): AuthContextValue {
 }
 
 export function AuthGate({ children }: PropsWithChildren): JSX.Element {
-  const { status, isAuthenticated } = useAuth();
+  const { status, isAuthenticated, startupPhase } = useAuth();
   const router = useRouter();
   const segments = useSegments();
 
@@ -106,6 +121,10 @@ export function AuthGate({ children }: PropsWithChildren): JSX.Element {
       router.replace("/");
     }
   }, [isAuthenticated, router, segments, status]);
+
+  if (status === "loading") {
+    console.info(`[startup] waiting for ${startupPhase}`);
+  }
 
   return <>{children}</>;
 }
