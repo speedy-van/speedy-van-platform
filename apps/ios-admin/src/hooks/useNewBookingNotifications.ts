@@ -21,6 +21,10 @@ function newestBookingTime(bookings: BookingListItem[]): number {
   return Math.max(0, ...bookings.map(createdAtTime));
 }
 
+function isNotifiableBooking(booking: BookingListItem): boolean {
+  return booking.isDraft !== true;
+}
+
 export function useNewBookingNotifications(): void {
   const router = useRouter();
   const { isAuthenticated } = useAuth();
@@ -75,7 +79,7 @@ export function useNewBookingNotifications(): void {
         );
         if (cancelled) return;
 
-        const bookings = response.data;
+        const bookings = response.data.filter(isNotifiableBooking);
         const latestTime = newestBookingTime(bookings);
         const lastSeen = await loadLastSeen();
 

@@ -56,6 +56,8 @@ export async function ensureNewBookingNotificationSetup(): Promise<boolean> {
 }
 
 export async function showNewBookingNotification(booking: BookingListItem): Promise<void> {
+  if (booking.isDraft) return;
+
   const allowed = await ensureNewBookingNotificationSetup();
   if (!allowed) return;
 
