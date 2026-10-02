@@ -20,7 +20,7 @@ test("ios-admin release preflight accepts the authoritative app root", () => {
 
   assert.equal(result.status, 0, result.stderr || result.stdout);
   assert.match(result.stdout, /root=apps\\ios-admin|root=apps\/ios-admin/);
-  assert.match(result.stdout, /build=47/);
+  assert.match(result.stdout, /build=48/);
 });
 
 test("ios-admin release preflight keeps worklets out of manifest and lockfile", () => {
@@ -30,6 +30,16 @@ test("ios-admin release preflight keeps worklets out of manifest and lockfile", 
   assert.doesNotMatch(packageJson, /react-native-worklets/);
   assert.doesNotMatch(lockfile, /apps\/ios-admin\/node_modules\/react-native-worklets/);
   assert.doesNotMatch(lockfile, /"react-native-worklets": "0\.2\.0"/);
+});
+
+test("ios-admin pins query-string to the Expo Router compatible CommonJS API", () => {
+  const packageJson = JSON.parse(fs.readFileSync(path.join(appRoot, "package.json"), "utf8"));
+  const lockfile = JSON.parse(fs.readFileSync(path.join(repoRoot, "package-lock.json"), "utf8"));
+  const queryString = require(path.join(appRoot, "node_modules/query-string"));
+
+  assert.equal(packageJson.dependencies["query-string"], "7.1.3");
+  assert.equal(lockfile.packages["apps/ios-admin/node_modules/query-string"].version, "7.1.3");
+  assert.equal(typeof queryString.stringify, "function");
 });
 
 test("ios-admin-clean refuses production EAS builds", () => {

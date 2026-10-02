@@ -13,7 +13,7 @@
     ],
     "ios": {
       "bundleIdentifier": "co.uk.speedy-van.admin",
-      "buildNumber": "47",
+      "buildNumber": "48",
       "supportsTablet": false,
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false
