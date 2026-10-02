@@ -13,7 +13,7 @@
     ],
     "ios": {
       "bundleIdentifier": "co.uk.speedy-van.admin",
-      "buildNumber": "45",
+      "buildNumber": "47",
       "supportsTablet": false,
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false
@@ -43,7 +43,7 @@
         "./plugins/with-local-notification-sounds",
         {
           "sounds": [
-            "./assets/sounds/new-booking.mp3"
+            "./assets/sounds/new-booking.wav"
           ]
         }
       ]

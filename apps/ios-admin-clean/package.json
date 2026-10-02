@@ -22,7 +22,8 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "typecheck": "tsc --noEmit",
-    "doctor": "expo-doctor"
+    "doctor": "expo-doctor",
+    "eas-build-pre-install": "node scripts/reject-production-build.cjs"
   },
   "private": true
 }

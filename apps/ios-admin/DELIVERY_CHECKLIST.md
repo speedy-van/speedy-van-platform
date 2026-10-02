@@ -6,6 +6,8 @@
 - [x] Login stores JWT in SecureStore on native and localStorage on web preview
 - [x] 401 responses clear auth and return to login
 - [x] Tabs are configured and Bookings includes the pending badge hook
+- [x] Build preflight rejects stale Worklets, wrong identity, and old build numbers
+- [x] New booking alert queue, sound toggle, haptic toggle, and preview controls exist
 - [ ] Dashboard KPIs load from live API
 - [ ] Bookings search/filter/detail/status/cancel flows work
 - [ ] Drivers list/detail/toggle/mark-paid/reset-password flows work

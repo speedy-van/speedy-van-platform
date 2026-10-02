@@ -4,6 +4,7 @@
 
 ```bash
 npm run typecheck -w apps/ios-admin
+npm run preflight -w apps/ios-admin
 npx expo-doctor
 npx expo export:embed --eager --platform ios --dev false
 ```
@@ -14,7 +15,7 @@ Run from `apps/ios-admin`:
 
 ```bash
 $env:EAS_BUILD_NO_EXPO_GO_WARNING="true"
-eas build --platform ios --profile production --auto-submit --non-interactive --no-wait --message "SpeedyVan Admin TestFlight build - 2026-09-21"
+eas build --platform ios --profile production --auto-submit --non-interactive --no-wait --message "SpeedyVan Admin build 47"
 ```
 
 The production profile is configured to use Apple's required iOS 26 SDK builder:
@@ -33,11 +34,11 @@ The production profile is configured to use Apple's required iOS 26 SDK builder:
 
 ## Current Submitted Build
 
-- EAS build ID: `678edf94-94e4-445c-9885-695ea081fe56`
-- EAS submission ID: `6eabc027-7ddf-4f5b-ab05-ea2b60c00ff4`
+- EAS build ID: `0acbf8b4-0878-4343-a88e-9b56c8f3a9ed`
+- EAS submission ID: `68170afe-0256-454e-82bd-9fd44fae76c4`
 - App Store Connect app ID: `6812268357`
-- Version/build: `1.0.0 (20)`
-- Submit result: uploaded successfully to App Store Connect/TestFlight processing on 2026-09-21.
+- Version/build: `1.0.0 (46)`
+- Submit result: queued for TestFlight on 2026-10-02.
 - App Store Connect distribution URL: `https://appstoreconnect.apple.com/apps/6812268357/distribution`
 
 ## App Store Connect App ID
@@ -59,8 +60,8 @@ The numeric `ascAppId` is already present in `eas.json`:
 ## Check Status
 
 ```bash
-eas build:view 678edf94-94e4-445c-9885-695ea081fe56 --json
-eas submit:view 6eabc027-7ddf-4f5b-ab05-ea2b60c00ff4 --json
+eas build:view 0acbf8b4-0878-4343-a88e-9b56c8f3a9ed --json
+eas submit:view 68170afe-0256-454e-82bd-9fd44fae76c4 --json
 ```
 
 ## If Using Local Apple Credentials

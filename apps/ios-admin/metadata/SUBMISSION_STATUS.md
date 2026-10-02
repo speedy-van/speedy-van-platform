@@ -5,8 +5,8 @@
 - Expo SDK 52 app created under `apps/ios-admin`.
 - TypeScript, Expo Router, NativeWind v4, SecureStore, and typed models are in place.
 - Bundle ID configured as `co.uk.speedy-van.admin`.
-- EAS project linked as `@ahmadawadalwakai/speedyvan-admin`.
-- EAS project ID configured as `24bad6a1-a00e-425a-88fa-c4c9e38208e1`.
+- EAS project linked as `@wakaaahmad607/speedyvan-admin`.
+- EAS project ID configured as `37fb9ca1-cad4-4b02-b3d9-b79f67372bf0`.
 - Apple Developer team visible in the browser as `AHMAD AWAD ALWAKAI - BXK52CMHR2`.
 - Apple Bundle ID registered as `SpeedyVan Admin - co.uk.speedy-van.admin`.
 - App Store Connect record created with `ascAppId` `6812268357`.
@@ -18,28 +18,29 @@
 - Expo web preview verified at `http://localhost:8082/login`.
 - `expo-font`, `react-native-web`, `react-dom`, and `@expo/metro-runtime` added for web/NativeWind compatibility.
 - Web token storage fallback added; iOS still uses SecureStore.
-- `react-native-worklets` pinned to `0.2.0` so NativeWind's Babel plugin resolves while remaining compatible with React Native `0.76.9`.
+- `react-native-worklets` is intentionally absent; Reanimated 3 in the Expo SDK 52 app must not ship with standalone Worklets.
 - Production iOS EAS builds pinned to `macos-sequoia-15.6-xcode-26.2` to satisfy Apple's iOS 26 SDK upload requirement.
 - TypeScript validation, Expo Doctor, and local iOS bundle export passed on 2026-09-15.
 - EAS iOS signing credentials are configured and valid for `co.uk.speedy-van.admin`.
-- EAS Submit uploaded build `1.0.0 (20)` to App Store Connect/TestFlight processing on 2026-09-21.
-- New booking local notifications use the bundled `new-booking.mp3` sound without enabling the remote push entitlement.
+- EAS Submit uploaded build `1.0.0 (46)` to App Store Connect/TestFlight on 2026-10-02.
+- New booking local notifications use the bundled `new-booking.wav` sound without enabling the remote push entitlement.
 
 ## Submitted Build
 
 Command:
 
 ```bash
-eas build --platform ios --profile production --auto-submit --non-interactive --no-wait --message "SpeedyVan Admin TestFlight build - 2026-09-21"
+npm run preflight -w apps/ios-admin
+eas build --platform ios --profile production --auto-submit --non-interactive --no-wait --message "SpeedyVan Admin build 47"
 ```
 
 Result:
 
-- EAS build ID: `678edf94-94e4-445c-9885-695ea081fe56`
-- EAS submission ID: `6eabc027-7ddf-4f5b-ab05-ea2b60c00ff4`
+- EAS build ID: `0acbf8b4-0878-4343-a88e-9b56c8f3a9ed`
+- EAS submission ID: `68170afe-0256-454e-82bd-9fd44fae76c4`
 - App Store Connect app ID: `6812268357`
 - Bundle ID: `co.uk.speedy-van.admin`
-- Version/build: `1.0.0 (20)`
+- Version/build: `1.0.0 (46)`
 - Build image: `macos-sequoia-15.6-xcode-26.2`
 - Build status: `FINISHED`
 - Submit status: `FINISHED`
