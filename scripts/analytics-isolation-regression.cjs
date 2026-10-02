@@ -91,6 +91,14 @@ function component(f) {
 
 const adsConfig = f => f.events.filter(e => e[0] === "config" && e[1] === "AW-18483787592");
 const conversions = f => f.events.filter(e => e[0] === "event" && e[1] === "conversion");
+const consentDefaults = f => f.events.filter(e => e[0] === "consent" && e[1] === "default");
+const jsInitialisers = f => f.events.filter(e => e[0] === "js");
+function runInlineScript(source, f) {
+  vm.runInNewContext(source, { window: f.window, Date }, { filename: "google-tag-bootstrap.js" });
+}
+function queuedCommands(f) {
+  return f.window.dataLayer.map(entry => Array.from(entry));
+}
 
 test("a throwing Meta provider cannot suppress the Google script after consent", () => {
   const f = fixture();
@@ -156,11 +164,50 @@ test("the Ads-owned library URL is stable with and without an optional GA4 ID", 
   }
 });
 
-test("unknown, declined and invalid consent never mount optional scripts", () => {
+test("component emits bootstrap before the external Google library and shares one owner with prepareGoogleTag", () => {
+  const f = fixture();
+  const mounted = component(f).render();
+  const bootstrapIndex = mounted.findIndex(s => s.id === "google-tag-bootstrap");
+  const libraryIndex = mounted.findIndex(s => s.id === "google-tag-library");
+  assert.equal(bootstrapIndex, 0);
+  assert.equal(libraryIndex, 1);
+  assert.ok(bootstrapIndex < libraryIndex, "Default denied consent must be inline before the external library");
+  assert.equal(mounted.filter(s => s.id === "google-tag-library").length, 1);
+  runInlineScript(mounted[bootstrapIndex].children, f);
+  assert.equal(consentDefaults(f).length, 1);
+  assert.equal(jsInitialisers(f).length, 1);
+  assert.equal(adsConfig(f).length, 1);
+});
+
+test("bootstrap can run before runtime initialisation without duplicate defaults or Ads config", () => {
+  const f = fixture();
+  f.window.gtag = undefined;
+  runInlineScript(f.api.googleTagBootstrapScript("AW-18483787592"), f);
+  f.api.prepareGoogleTag();
+  f.api.initialiseAnalytics("G-TEST", "pixel-test");
+  const queued = queuedCommands(f);
+  const adsConfigs = queued.filter(e => e[0] === "config" && e[1] === "AW-18483787592");
+  const gaConfigs = queued.filter(e => e[0] === "config" && e[1] === "G-TEST");
+  const defaultIndex = queued.findIndex(e => e[0] === "consent" && e[1] === "default");
+  const adsConfigIndex = queued.findIndex(e => e[0] === "config" && e[1] === "AW-18483787592");
+  assert.equal(queued.filter(e => e[0] === "consent" && e[1] === "default").length, 1);
+  assert.equal(queued.filter(e => e[0] === "js").length, 1);
+  assert.equal(adsConfigs.length, 1);
+  assert.equal(gaConfigs.length, 1);
+  assert.ok(defaultIndex > -1 && defaultIndex < adsConfigIndex);
+  assert.equal(queued[defaultIndex][2].ad_storage, "denied");
+  assert.ok(queued.some(e => e[0] === "consent" && e[1] === "update" && e[2].ad_storage === "granted"));
+});
+
+test("unknown, declined and invalid consent mount only the denied Google base path", () => {
   for (const consent of [null, "declined", "unexpected"]) {
     const f = fixture({ consent });
-    assert.deepEqual(component(f).render(), []);
-    assert.equal(adsConfig(f).length, 0);
+    const mounted = component(f).render();
+    assert.equal(mounted.filter(s => s.id === "google-tag-bootstrap").length, 1);
+    assert.equal(mounted.filter(s => s.id === "google-tag-library").length, 1);
+    assert.equal(mounted.filter(s => s.id === "fb-pixel-library").length, 0);
+    assert.equal(adsConfig(f).length, 1);
+    assert.equal(f.events.filter(e => e[1] === "page_view").length, 0);
     assert.equal(conversions(f).length, 0);
   }
 });
@@ -192,7 +239,7 @@ test("withdrawal blocks future purchase dispatch and reacceptance does not dupli
   const mounted = component(f);
   mounted.render();
   f.api.setCookieConsent("declined");
-  assert.deepEqual(mounted.render(), []);
+  assert.equal(mounted.render().filter(s => s.id === "fb-pixel-library").length, 0);
   f.api.trackPurchase("mock-withdrawn", 125, "house-removal");
   assert.equal(conversions(f).length, 0);
   f.api.setCookieConsent("accepted");
@@ -204,8 +251,8 @@ test("paid booking mock retains independent deduplication, GBP amount and the ex
   const f = fixture();
   f.window.fbq = () => { throw new Error("Blocked Meta provider"); };
   assert.doesNotThrow(() => f.api.initialiseAnalytics("G-TEST", "pixel-test"));
-  f.api.trackPurchase("mock-paid", 137.94, "house-removal");
-  f.api.trackPurchase("mock-paid", 137.94, "house-removal");
+  f.api.trackPurchase("mock-paid", 137.94, "house-removal", { email: " Customer@Example.COM ", phone: "07909 032889" });
+  f.api.trackPurchase("mock-paid", 137.94, "house-removal", { email: "dupe@example.test" });
   assert.equal(conversions(f).length, 1);
   const data = conversions(f)[0][2];
   assert.equal(data.send_to, "AW-18483787592/8NSGCPiVpYsdEMju4O1E");
@@ -213,6 +260,10 @@ test("paid booking mock retains independent deduplication, GBP amount and the ex
   assert.equal(data.value, 137.94);
   assert.equal(data.currency, "GBP");
   assert.equal(f.events.filter(e => e[1] === "purchase").length, 1);
+  const userData = f.events.filter(e => e[0] === "set" && e[1] === "user_data");
+  assert.equal(userData.length, 1);
+  assert.equal(userData[0][2].email, "customer@example.com");
+  assert.equal(userData[0][2].phone_number, "+447909032889");
 });
 
 test("initialisation queues denied defaults before granted consent and config when no provider exists", () => {
@@ -220,10 +271,15 @@ test("initialisation queues denied defaults before granted consent and config wh
   f.window.gtag = undefined;
   f.window.fbq = undefined;
   f.api.initialiseAnalytics("G-TEST", "pixel-test");
-  const queued = f.window.dataLayer.map(e => Array.from(e));
-  assert.equal(queued[0][0], "consent");
-  assert.equal(queued[0][1], "default");
-  assert.equal(queued[0][2].ad_storage, "denied");
-  assert.equal(queued[1][2].ad_storage, "granted");
-  assert.equal(queued.filter(e => e[0] === "config").length, 2);
+  const queued = queuedCommands(f);
+  const defaultIndex = queued.findIndex(e => e[0] === "consent" && e[1] === "default");
+  const adsConfigIndex = queued.findIndex(e => e[0] === "config" && e[1] === "AW-18483787592");
+  assert.equal(defaultIndex, 0);
+  assert.ok(defaultIndex < adsConfigIndex);
+  assert.equal(queued[defaultIndex][2].ad_storage, "denied");
+  assert.equal(queued.filter(e => e[0] === "consent" && e[1] === "default").length, 1);
+  assert.equal(queued.filter(e => e[0] === "js").length, 1);
+  assert.equal(queued.filter(e => e[0] === "config" && e[1] === "AW-18483787592").length, 1);
+  assert.equal(queued.filter(e => e[0] === "config" && e[1] === "G-TEST").length, 1);
+  assert.ok(queued.some(e => e[0] === "consent" && e[1] === "update" && e[2].ad_storage === "granted"));
 });

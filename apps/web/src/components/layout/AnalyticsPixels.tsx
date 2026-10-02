@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import Script from "next/script";
-import { GOOGLE_ADS_ID, initialiseAnalytics, isPublicAnalyticsPath, prepareGoogleTag, syncAnalyticsConsent, trackPageView } from "@/lib/analytics";
+import { GOOGLE_ADS_ID, googleTagBootstrapScript, initialiseAnalytics, isPublicAnalyticsPath, prepareGoogleTag, syncAnalyticsConsent, trackPageView } from "@/lib/analytics";
 import { useCookieConsent } from "./CookieConsent";
 
 const GA_ID = process.env.NEXT_PUBLIC_GA_ID || process.env.NEXT_PUBLIC_GA4_ID;
@@ -11,21 +11,7 @@ const GA_ID = process.env.NEXT_PUBLIC_GA_ID || process.env.NEXT_PUBLIC_GA4_ID;
 const GOOGLE_TAG_ID = GOOGLE_ADS_ID;
 const FB_PIXEL_ID = process.env.NEXT_PUBLIC_FB_PIXEL_ID;
 
-const GOOGLE_TAG_BOOTSTRAP = `
-window.dataLayer = window.dataLayer || [];
-window.gtag = window.gtag || function(){window.dataLayer.push(arguments);};
-window.gtag('consent', 'default', {
-  analytics_storage: 'denied',
-  ad_storage: 'denied',
-  ad_user_data: 'denied',
-  ad_personalization: 'denied',
-  wait_for_update: 500
-});
-window.gtag('set', 'ads_data_redaction', true);
-window.gtag('set', 'url_passthrough', true);
-window.gtag('js', new Date());
-window.gtag('config', ${JSON.stringify(GOOGLE_TAG_ID)}, { allow_enhanced_conversions: true });
-`;
+const GOOGLE_TAG_BOOTSTRAP = googleTagBootstrapScript(GOOGLE_TAG_ID);
 
 export function AnalyticsPixels() {
   const consent = useCookieConsent();

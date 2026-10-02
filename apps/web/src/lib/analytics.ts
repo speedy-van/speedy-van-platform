@@ -5,6 +5,7 @@ export const COOKIE_CONSENT_KEY = "sv-cookie-consent";
 export const COOKIE_SETTINGS_EVENT = "sv:cookie-settings";
 const CONSENT_CHANGED_EVENT = "sv:cookie-consent-changed";
 const PURCHASE_KEY = "sv-purchase:";
+const GOOGLE_TAG_STATE_KEY = "__speedyvanGoogleTag";
 
 // Native paid-booking action verified in Google Ads customer 307-075-7088.
 export const GOOGLE_ADS_ID = process.env.NEXT_PUBLIC_GOOGLE_ADS_ID || "AW-18483787592";
@@ -19,6 +20,10 @@ type MetaPixelFunction = AnalyticsFunction & {
   loaded?: boolean;
   version?: string;
 };
+type GoogleTagState = {
+  defaultConsentSet?: boolean;
+  configuredIds?: Record<string, true>;
+};
 
 declare global {
   interface Window {
@@ -26,6 +31,7 @@ declare global {
     fbq?: MetaPixelFunction;
     _fbq?: MetaPixelFunction;
     dataLayer?: unknown[];
+    __speedyvanGoogleTag?: GoogleTagState;
   }
 }
 
@@ -33,7 +39,6 @@ let memoryConsent: ConsentState | undefined;
 const sentPurchases = new Set<string>();
 const initialisedGoogleIds = new Set<string>();
 const initialisedMetaIds = new Set<string>();
-let googleBaseInitialised = false;
 
 function parseConsent(value: string | null): ConsentState {
   return value === "accepted" || value === "declined" ? value : null;
@@ -80,10 +85,55 @@ function ensureGoogleQueue() {
   };
 }
 
-function configureGoogleId(id: string, options?: Record<string, unknown>) {
-  if (initialisedGoogleIds.has(id)) return;
-  window.gtag?.("config", id, options ?? {});
+function googleTagState(): GoogleTagState {
+  const state = window[GOOGLE_TAG_STATE_KEY] ?? {};
+  state.configuredIds = state.configuredIds ?? {};
+  window[GOOGLE_TAG_STATE_KEY] = state;
+  return state;
+}
+
+function googleIdWasConfigured(id: string): boolean {
+  return initialisedGoogleIds.has(id) || googleTagState().configuredIds?.[id] === true;
+}
+
+function markGoogleIdConfigured(id: string) {
   initialisedGoogleIds.add(id);
+  googleTagState().configuredIds![id] = true;
+}
+
+function configureGoogleId(id: string, options?: Record<string, unknown>) {
+  if (googleIdWasConfigured(id)) {
+    initialisedGoogleIds.add(id);
+    return;
+  }
+  window.gtag?.("config", id, options ?? {});
+  markGoogleIdConfigured(id);
+}
+
+export function googleTagBootstrapScript(tagId = GOOGLE_ADS_ID): string {
+  return `
+(function(w){
+  var tagId = ${JSON.stringify(tagId)};
+  if (!tagId) return;
+  w.dataLayer = w.dataLayer || [];
+  w.gtag = w.gtag || function(){w.dataLayer.push(arguments);};
+  var state = w.${GOOGLE_TAG_STATE_KEY} = w.${GOOGLE_TAG_STATE_KEY} || {};
+  state.configuredIds = state.configuredIds || {};
+  try {
+    if (!state.defaultConsentSet) {
+      w.gtag('consent', 'default', ${JSON.stringify({ ...consentParameters(false), wait_for_update: 500 })});
+      w.gtag('set', 'ads_data_redaction', true);
+      w.gtag('set', 'url_passthrough', true);
+      w.gtag('js', new Date());
+      state.defaultConsentSet = true;
+    }
+    if (!state.configuredIds[tagId]) {
+      w.gtag('config', tagId, { allow_enhanced_conversions: true });
+      state.configuredIds[tagId] = true;
+    }
+  } catch (_) {}
+})(window);
+`;
 }
 
 export function syncAnalyticsConsent(state: ConsentState) {
@@ -131,7 +181,8 @@ export function prepareGoogleTag() {
   if (typeof window === "undefined" || !GOOGLE_ADS_ID) return;
   try {
     ensureGoogleQueue();
-    if (!googleBaseInitialised) {
+    const state = googleTagState();
+    if (!state.defaultConsentSet) {
       window.gtag?.("consent", "default", {
         ...consentParameters(false),
         wait_for_update: 500,
@@ -139,7 +190,7 @@ export function prepareGoogleTag() {
       window.gtag?.("set", "ads_data_redaction", true);
       window.gtag?.("set", "url_passthrough", true);
       window.gtag?.("js", new Date());
-      googleBaseInitialised = true;
+      state.defaultConsentSet = true;
     }
     configureGoogleId(GOOGLE_ADS_ID, { allow_enhanced_conversions: true });
     syncAnalyticsConsent(getCookieConsent());
@@ -300,7 +351,7 @@ function trackGoogleAdsPurchase(bookingRef: string, value: number, customer?: Pu
   if (!hasAnalyticsConsent() || typeof window === "undefined") return false;
   if (!isPublicAnalyticsPath(window.location.pathname)) return false;
   prepareGoogleTag();
-  if (!initialisedGoogleIds.has(GOOGLE_ADS_ID) || typeof window.gtag !== "function") return false;
+  if (!googleIdWasConfigured(GOOGLE_ADS_ID) || typeof window.gtag !== "function") return false;
   try {
     setGoogleAdsUserData(customer);
     window.gtag("event", "conversion", {

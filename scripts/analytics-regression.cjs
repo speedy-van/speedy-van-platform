@@ -57,6 +57,14 @@ function fixture({ consent, blockedStorage = false, browser } = {}) {
   return { api: context.exports, window, events, meta, listeners };
 }
 
+function runBootstrapScript(f, tagId = "AW-18483787592") {
+  vm.runInNewContext(f.api.googleTagBootstrapScript(tagId), { window: f.window, Date }, { filename: "google-tag-bootstrap.js" });
+}
+
+function queuedCommands(f) {
+  return f.window.dataLayer.map((entry) => Array.from(entry));
+}
+
 function loadComponent(relativePath, imports = {}, globals = {}) {
   const componentSource = fs.readFileSync(path.join(root, relativePath), "utf8");
   const componentJs = ts.transpileModule(componentSource, {
@@ -220,10 +228,14 @@ test("initialisation uses denied defaults, disables automatic page views and run
   f.api.initialiseAnalytics("G-TEST", "pixel-test");
   const config = f.events.filter((event) => event[0] === "config");
   assert.equal(config.length, 2);
-  assert.equal(config[0][1], "G-TEST");
-  assert.equal(config[0][2].send_page_view, false);
-  assert.equal(config[1][1], "AW-18483787592");
+  const adsConfig = config.find((event) => event[1] === "AW-18483787592");
+  const gaConfig = config.find((event) => event[1] === "G-TEST");
+  assert.ok(adsConfig);
+  assert.ok(gaConfig);
+  assert.equal(adsConfig[2].allow_enhanced_conversions, true);
+  assert.equal(gaConfig[2].send_page_view, false);
   assert.equal(f.events.filter((event) => event[0] === "js").length, 1);
+  assert.equal(f.events.filter((event) => event[0] === "consent" && event[1] === "default").length, 1);
   assert.equal(f.events[0][0], "consent");
   assert.equal(f.events[0][1], "default");
   assert.equal(f.events[0][2].ad_user_data, "denied");
@@ -231,10 +243,27 @@ test("initialisation uses denied defaults, disables automatic page views and run
   assert.equal(f.events.filter((event) => event[1] === "page_view").length, 0);
 });
 
+test("inline bootstrap and runtime initialisation share one document-level Google owner", () => {
+  const f = fixture({ consent: "accepted" });
+  f.window.gtag = undefined;
+  runBootstrapScript(f);
+  f.api.prepareGoogleTag();
+  f.api.initialiseAnalytics("G-TEST", "pixel-test");
+  runBootstrapScript(f);
+  const queued = queuedCommands(f);
+  const defaultIndex = queued.findIndex((event) => event[0] === "consent" && event[1] === "default");
+  const adsConfigIndex = queued.findIndex((event) => event[0] === "config" && event[1] === "AW-18483787592");
+  assert.equal(defaultIndex, 0);
+  assert.ok(defaultIndex < adsConfigIndex);
+  assert.equal(queued.filter((event) => event[0] === "consent" && event[1] === "default").length, 1);
+  assert.equal(queued.filter((event) => event[0] === "js").length, 1);
+  assert.equal(queued.filter((event) => event[0] === "config" && event[1] === "AW-18483787592").length, 1);
+  assert.equal(queued.filter((event) => event[0] === "config" && event[1] === "G-TEST").length, 1);
+});
+
 test("native Ads initialises without GA4 and sends a confirmed GBP booking once independently of GA4", () => {
   const f = fixture({ consent: "accepted" });
   f.api.trackPurchase("booking-native", 137.94, "house-removal");
-  assert.equal(f.events.filter((event) => event[1] === "conversion").length, 0);
   f.api.initialiseAnalytics(undefined, undefined);
   f.api.initialiseAnalytics(undefined, undefined);
   assert.equal(f.events.filter((event) => event[0] === "config" && event[1] === "AW-18483787592").length, 1);
@@ -259,7 +288,7 @@ test("native Ads respects consent, private paths, invalid values and failed disp
   const f = fixture();
   f.api.initialiseAnalytics();
   f.api.trackPurchase("booking-no-consent", 90, "man-and-van");
-  assert.equal(f.events.length, 0);
+  assert.equal(f.events.filter((event) => event[1] === "purchase" || event[1] === "conversion").length, 0);
   f.api.setCookieConsent("accepted");
   f.api.initialiseAnalytics();
   for (const value of [0, -1, NaN, Infinity]) f.api.trackPurchase("booking-invalid", value, "man-and-van");
