@@ -49,6 +49,11 @@ const money = new Intl.NumberFormat("en-GB", {
 
 const BOOKING_ERROR_MESSAGE =
   "We couldn't create your booking right now. Please retry, or contact us if it keeps happening.";
+const PURCHASE_RECOVERY_LAST_KEY = "sv-purchase-recovery:last";
+
+function purchaseRecoveryKey(bookingRef: string) {
+  return `sv-purchase-recovery:${bookingRef}`;
+}
 
 const CARD_STYLE = {
   hidePostalCode: true,
@@ -438,6 +443,21 @@ function CheckoutForm({ onComplete, stripePromise }: CheckoutFormProps) {
         }
       });
       const { bookingRef, totalPrice: finalAmount } = session;
+
+      try {
+        const purchaseRecoveryPayload = JSON.stringify({
+          bookingRef,
+          totalPrice: finalAmount,
+          serviceSlug: state.serviceSlug,
+          email: email.trim(),
+          phone: phone.trim(),
+          createdAt: Date.now(),
+        });
+        localStorage.setItem(purchaseRecoveryKey(bookingRef), purchaseRecoveryPayload);
+        localStorage.setItem(PURCHASE_RECOVERY_LAST_KEY, purchaseRecoveryPayload);
+      } catch {
+        /* Conversion recovery must never interrupt confirmation. */
+      }
 
       if (!purchaseTrackedRef.current) {
         purchaseTrackedRef.current = true;

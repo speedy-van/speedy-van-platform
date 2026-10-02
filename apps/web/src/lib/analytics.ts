@@ -316,19 +316,30 @@ function trackGoogleAdsPurchase(bookingRef: string, value: number, customer?: Pu
 }
 
 // Call only after the server has confirmed the booking and successful payment.
-export function trackPurchase(bookingRef: string, value: number, serviceSlug: string, customer?: PurchaseCustomerData) {
-  if (!hasAnalyticsConsent() || !bookingRef.trim() || !serviceSlug.trim() || !Number.isFinite(value) || value <= 0) return;
+export function trackPurchase(bookingRef: string, value: number, serviceSlug: string, customer?: PurchaseCustomerData): boolean {
+  if (!hasAnalyticsConsent() || !bookingRef.trim() || !serviceSlug.trim() || !Number.isFinite(value) || value <= 0) return false;
+  let sent = false;
   const googleKey = `${PURCHASE_KEY}google:${bookingRef}`;
   if (!purchaseWasSent(googleKey) && trackAnalyticsEvent("purchase", {
     transaction_id: bookingRef, currency: "GBP", value, items: [{ item_id: serviceSlug }],
-  })) markPurchaseSent(googleKey);
+  })) {
+    markPurchaseSent(googleKey);
+    sent = true;
+  }
   // Native Ads and GA4 use separate guards; Google also deduplicates transaction IDs.
   const adsKey = `${PURCHASE_KEY}ads:${bookingRef}`;
-  if (!purchaseWasSent(adsKey) && trackGoogleAdsPurchase(bookingRef, value, customer)) markPurchaseSent(adsKey);
+  if (!purchaseWasSent(adsKey) && trackGoogleAdsPurchase(bookingRef, value, customer)) {
+    markPurchaseSent(adsKey);
+    sent = true;
+  }
   const metaKey = `${PURCHASE_KEY}meta:${bookingRef}`;
   if (!purchaseWasSent(metaKey) && trackMetaEvent("Purchase", {
     value, currency: "GBP", content_ids: [serviceSlug],
-  })) markPurchaseSent(metaKey);
+  })) {
+    markPurchaseSent(metaKey);
+    sent = true;
+  }
+  return sent;
 }
 
 export function trackLead(serviceSlug?: string) {

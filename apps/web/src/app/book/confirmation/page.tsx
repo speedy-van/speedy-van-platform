@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { InvoiceButton } from "./InvoiceButton";
+import { ConfirmationPurchaseTracker } from "./ConfirmationPurchaseTracker";
 import { SITE_EMAIL, SITE_LEGAL_NAME, SITE_PHONE_DISPLAY } from "@/lib/seo/constants";
 
 export const metadata: Metadata = {
@@ -42,6 +43,7 @@ export default async function ConfirmationPage({ searchParams }: PageProps) {
 
   return (
     <main className="min-h-screen bg-[#050505] px-4 py-8 text-white sm:px-6 lg:px-8">
+      <ConfirmationPurchaseTracker reference={ref} />
       <div className="mx-auto flex min-h-[calc(100vh-4rem)] max-w-6xl flex-col justify-center">
         <header className="mb-8 flex flex-wrap items-center justify-between gap-4">
           <Link href="/" className="inline-flex items-center gap-3 rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400">
