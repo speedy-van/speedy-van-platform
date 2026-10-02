@@ -22,6 +22,7 @@ import {
 } from "@speedy-van/shared";
 import { getWeatherSurchargesByDate } from "./weather.service";
 import { issueQuoteToken } from "../lib/quote-token";
+import { getDatabaseConfigError } from "../lib/database-config";
 
 const CALENDAR_DAYS = 14;
 
@@ -46,6 +47,10 @@ async function loadConfig(): Promise<Record<string, Record<string, number>>> {
   if (cache && Date.now() - cache.loadedAt < CACHE_TTL_MS) return cache.values;
 
   const rows = await db.pricingConfig.findMany().catch((cause: unknown) => {
+    if (process.env.NODE_ENV !== "production" && getDatabaseConfigError()) {
+      console.warn("[pricing] DATABASE_URL is not configured; using default pricing values in local development.");
+      return [];
+    }
     throw new Error("PRICING_CONFIG_UNAVAILABLE", { cause });
   });
 

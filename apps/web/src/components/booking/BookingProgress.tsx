@@ -13,6 +13,15 @@ export function BookingProgress() {
 
   return (
     <div className="space-y-3">
+      <div className="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-amber-500/20 bg-amber-500/10 px-3 py-2">
+        <p className="text-xs font-black uppercase tracking-[0.08em] text-amber-400/70">
+          Booking reference
+        </p>
+        <p className="font-mono text-sm font-black text-white">
+          {state.bookingRef || "Preparing..."}
+        </p>
+      </div>
+
       <div className="flex items-center justify-between gap-3 md:hidden">
         <p className="text-xs font-bold uppercase tracking-[0.08em] text-amber-400/60">
           Step {current.number} of {current.total}

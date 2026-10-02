@@ -2,7 +2,7 @@ import { SITE } from "@speedy-van/config";
 
 export const SITE_URL = SITE.url.replace(/\/$/, "");
 export const SITE_NAME = "SpeedyVan";
-export const SITE_LEGAL_NAME = "Speedy Van";
+export const SITE_LEGAL_NAME = "SPEEDYVAN LOGISTICS LTD";
 export const SITE_DOMAIN = SITE.domain;
 export const SITE_OG_IMAGE = `${SITE_URL}/og-image.png?v=amber-20260921-1`;
 export const SITE_OG_IMAGE_WIDTH = 1254;

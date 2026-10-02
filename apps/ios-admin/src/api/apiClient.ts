@@ -38,6 +38,8 @@ type RequestMethod = "GET" | "POST" | "PATCH" | "DELETE";
 type UnauthorizedHandler = () => void;
 
 let unauthorizedHandler: UnauthorizedHandler | null = null;
+let unauthorizedStrikeCount = 0;
+let lastUnauthorizedAt = 0;
 
 export class APIError extends Error {
   readonly status?: number;
@@ -70,10 +72,20 @@ function isPagination(value: unknown): value is PaginationMeta {
   );
 }
 
-async function parseResponse<T>(response: Response): Promise<{ data: T; pagination?: PaginationMeta }> {
+function shouldClearSessionAfterUnauthorized(hasToken: boolean): boolean {
+  if (!hasToken) return false;
+  const now = Date.now();
+  unauthorizedStrikeCount = now - lastUnauthorizedAt > 15000 ? 1 : unauthorizedStrikeCount + 1;
+  lastUnauthorizedAt = now;
+  return unauthorizedStrikeCount >= 2;
+}
+
+async function parseResponse<T>(response: Response, hasToken: boolean): Promise<{ data: T; pagination?: PaginationMeta }> {
   if (response.status === 401) {
-    await clearSession();
-    unauthorizedHandler?.();
+    if (shouldClearSessionAfterUnauthorized(hasToken)) {
+      await clearSession();
+      unauthorizedHandler?.();
+    }
     throw new APIError("Your session has expired. Please sign in again.", 401);
   }
 
@@ -86,6 +98,8 @@ async function parseResponse<T>(response: Response): Promise<{ data: T; paginati
       : `Request failed with status ${response.status}`;
     throw new APIError(message, response.status);
   }
+
+  unauthorizedStrikeCount = 0;
 
   if (isEnvelope<T>(payload)) {
     if (payload.success === false) {
@@ -108,7 +122,7 @@ async function request<T>(method: RequestMethod, path: string, body?: unknown): 
     body: body === undefined ? undefined : JSON.stringify(body)
   });
 
-  return parseResponse<T>(response);
+  return parseResponse<T>(response, Boolean(token));
 }
 
 function pickNamedList<T>(payload: unknown, keys: string[]): T[] {

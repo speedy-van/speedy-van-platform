@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { buildPageMetadata } from "@/lib/seo/metadata";
+import { SITE_LEGAL_NAME } from "@/lib/seo/constants";
 
 export const metadata: Metadata = buildPageMetadata({
   title: "Privacy Policy",
@@ -9,7 +10,7 @@ export const metadata: Metadata = buildPageMetadata({
   path: "/privacy",
 });
 
-const LAST_UPDATED = "21 September 2026";
+const LAST_UPDATED = "2 October 2026";
 
 export default function PrivacyPage() {
   return (
@@ -35,7 +36,7 @@ export default function PrivacyPage() {
           style={{ color: "rgba(255,255,255,0.60)" }}
         >
           <p>
-            This Privacy Policy explains how <strong>SpeedyVan</strong>
+            This Privacy Policy explains how <strong>{SITE_LEGAL_NAME}</strong>, trading as SpeedyVan,
             {" "}(&ldquo;we&rdquo;, &ldquo;us&rdquo;, &ldquo;our&rdquo;)
             collects, uses, stores and protects personal information when you
             use our website, book a removal or delivery, or otherwise interact
@@ -50,6 +51,7 @@ export default function PrivacyPage() {
             across Scotland.
           </p>
           <ul>
+            <li><strong>Legal entity:</strong> {SITE_LEGAL_NAME}</li>
             <li><strong>Trading name:</strong> SpeedyVan</li>
             <li>
               <strong>Registered office:</strong> 1 Barrack Street, Office 2.18,
@@ -209,6 +211,12 @@ export default function PrivacyPage() {
               <strong>Strictly necessary</strong> — session, login, CSRF
               protection and your saved cookie preference. These are not
               controlled by the optional-cookie choice.
+            </li>
+            <li>
+              <strong>Operational visitor sessions</strong> — short-lived page
+              activity used by our admin team to understand live demand and
+              recover incomplete bookings. This is separate from optional
+              advertising or analytics cookies.
             </li>
             <li>
               <strong>Analytics</strong> — Google Analytics 4, when enabled.

@@ -2,8 +2,6 @@
 
 import { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
-import { hasAnalyticsConsent } from "@/lib/analytics";
-import { useCookieConsent } from "@/components/layout/CookieConsent";
 
 const API_BASE =
   process.env.NODE_ENV === "development"
@@ -13,7 +11,6 @@ const API_BASE =
 const SESSION_KEY = "sv-visitor-session";
 
 async function post(path: string, body: object) {
-  if (!hasAnalyticsConsent()) return;
   try {
     await fetch(`${API_BASE}${path}`, {
       method: "POST",
@@ -25,21 +22,12 @@ async function post(path: string, body: object) {
 }
 
 export default function VisitorTracker() {
-  const consent = useCookieConsent();
   const pathname = usePathname();
   const [sessionId, setSessionId] = useState<string | null>(null);
   const landingPage = useRef(pathname);
   const lastPage = useRef<string | null>(null);
 
   useEffect(() => {
-    if (consent !== "accepted") {
-      // The server snapshot is null until the client reads a saved choice.
-      if (hasAnalyticsConsent()) return;
-      setSessionId(null);
-      lastPage.current = null;
-      try { sessionStorage.removeItem(SESSION_KEY); } catch { /* Storage may be unavailable. */ }
-      return;
-    }
     try {
       const stored = sessionStorage.getItem(SESSION_KEY);
       if (stored) {
@@ -65,7 +53,7 @@ export default function VisitorTracker() {
         });
         if (!response.ok) return;
         const result: unknown = await response.json();
-        if (!active || !hasAnalyticsConsent() || !result || typeof result !== "object") return;
+        if (!active || !result || typeof result !== "object") return;
         const envelope = result as { success?: boolean; data?: { sessionId?: unknown } };
         const id = envelope.data?.sessionId;
         if (envelope.success !== true || typeof id !== "string" || !id) return;
@@ -78,10 +66,10 @@ export default function VisitorTracker() {
       active = false;
       controller.abort();
     };
-  }, [consent]);
+  }, []);
 
   useEffect(() => {
-    if (consent !== "accepted" || !sessionId) return;
+    if (!sessionId) return;
     const heartbeat = setInterval(() => {
       if (document.visibilityState === "visible") {
         void post("/tracking/heartbeat", { sessionId });
@@ -93,10 +81,10 @@ export default function VisitorTracker() {
       clearInterval(heartbeat);
       window.removeEventListener("pagehide", onExit);
     };
-  }, [consent, sessionId]);
+  }, [sessionId]);
 
   useEffect(() => {
-    if (consent !== "accepted" || !sessionId || !pathname) return;
+    if (!sessionId || !pathname) return;
     const key = `${sessionId}:${pathname}`;
     if (lastPage.current === key) return;
     lastPage.current = key;
@@ -106,7 +94,7 @@ export default function VisitorTracker() {
       page: pathname,
       metadata: {},
     });
-  }, [consent, pathname, sessionId]);
+  }, [pathname, sessionId]);
 
   return null;
 }

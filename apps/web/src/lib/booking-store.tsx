@@ -15,7 +15,12 @@ import { getBookingPricingKey, getQuoteSelection } from "./booking-quote";
 import type { PricingResult } from "@/components/booking/quote-response";
 
 export const BOOKING_DRAFT_STORAGE_KEY = "sv_booking_draft_v1";
+export const BOOKING_SERVER_DRAFT_SESSION_KEY = "sv_booking_draft_session_v1";
 export const BOOKING_DRAFT_TTL_MS = 24 * 60 * 60 * 1000; // 24h
+const API_BASE =
+  process.env.NODE_ENV === "development"
+    ? "http://localhost:4000"
+    : (process.env.NEXT_PUBLIC_API_URL ?? "https://api.speedyvan.uk");
 
 // ─── Types ─────────────────────────────────────────────────────────────────
 
@@ -232,6 +237,7 @@ export type BookingAction =
   | { type: "SET_PRICE"; total: number }
   | { type: "SET_BREAKDOWN"; items: PriceLineItem[] }
   | { type: "SET_QUOTE_STATUS"; status: QuoteStatus; error?: string }
+  | { type: "SET_DRAFT_REFERENCE"; bookingRef: string }
   | { type: "SET_BOOKING"; bookingId: string; bookingRef: string; clientSecret: string; total: number }
   | { type: "QUOTE_REQUESTED"; inputKey: string; requestId: string }
   | { type: "QUOTE_RECEIVED"; inputKey: string; requestId: string; pricing: PricingResult }
@@ -251,7 +257,7 @@ function invalidateQuote(state: BookingState, keepCalendar = false): BookingStat
     clientTotal: 0,
     clientSecret: "",
     bookingId: "",
-    bookingRef: "",
+    bookingRef: state.bookingRef,
     priceBreakdown: [],
     quoteCalendar: keepCalendar ? state.quoteCalendar : null,
     quoteInputKey: keepCalendar ? state.quoteInputKey : "",
@@ -358,9 +364,11 @@ export function bookingReducer(state: BookingState, action: BookingAction): Book
     case "SET_ASSEMBLY": return { ...invalidateQuote(state), needsAssembly: action.value, assemblyType: action.assemblyType ?? (action.value ? state.assemblyType : ""), assemblyQty: action.assemblyQty ?? (action.value ? state.assemblyQty : 1) };
     case "RESET_UPSELLS": return { ...invalidateQuote(state), needsPacking: false, needsAssembly: false, helpersCount: 0, assemblyType: "", assemblyQty: 1 };
     case "SET_CUSTOMER": return { ...state, customerName: action.name, customerEmail: action.email, customerPhone: action.phone };
-    case "SET_PRICE": return action.total === state.clientTotal ? state : { ...state, clientTotal: action.total, clientSecret: "", bookingId: "", bookingRef: "" };
+    case "SET_PRICE": return action.total === state.clientTotal ? state : { ...state, clientTotal: action.total, clientSecret: "", bookingId: "" };
     case "SET_BREAKDOWN": return { ...state, priceBreakdown: action.items };
     case "SET_QUOTE_STATUS": return { ...(action.status === "stale" || action.status === "failed" ? invalidateQuote(state) : state), quoteStatus: action.status, quoteError: action.error ?? "" };
+    case "SET_DRAFT_REFERENCE":
+      return state.bookingRef || !action.bookingRef ? state : { ...state, bookingRef: action.bookingRef };
     case "SET_BOOKING": return { ...state, checkoutLocked: true, bookingId: action.bookingId, bookingRef: action.bookingRef, clientSecret: action.clientSecret, clientTotal: action.total };
     case "START_CHECKOUT": return { ...state, checkoutLocked: true };
     case "CHECKOUT_REJECTED": return state.bookingId || state.clientSecret ? state : { ...state, checkoutLocked: false };
@@ -471,7 +479,7 @@ export function restoreBookingDraft(raw: string | null, now = Date.now()): Booki
       quoteStatus: "stale",
       checkoutLocked: draft.checkoutLocked === true,
       bookingId: draft.checkoutLocked === true ? text("bookingId") : "",
-      bookingRef: draft.checkoutLocked === true ? text("bookingRef") : "",
+      bookingRef: text("bookingRef"),
     };
     const requested = typeof draft.step === "number" && Number.isInteger(draft.step) && draft.step >= 1 && draft.step <= 5 ? draft.step as BookingState["step"] : 2;
     state.step = state.checkoutLocked ? 5 : getReachableBookingStep(state, requested);
@@ -493,7 +501,7 @@ export function serialiseBookingDraft(state: BookingState, savedAt = Date.now())
     cheapestDay: "",
     clientSecret: "",
     bookingId: state.checkoutLocked ? state.bookingId : "",
-    bookingRef: state.checkoutLocked ? state.bookingRef : "",
+    bookingRef: state.bookingRef,
   } });
 }
 
@@ -545,6 +553,59 @@ export function BookingProvider({ children }: { children: ReactNode }) {
     } catch {
       // Booking remains usable when storage is unavailable or full.
     }
+  }, [ready, state]);
+
+  useEffect(() => {
+    if (!ready || !state.serviceSlug || state.step <= 1 || state.checkoutLocked) return;
+
+    const controller = new AbortController();
+    const timeout = window.setTimeout(() => {
+      let sessionKey = "";
+      try {
+        sessionKey = localStorage.getItem(BOOKING_SERVER_DRAFT_SESSION_KEY) ?? "";
+      } catch {
+        sessionKey = "";
+      }
+
+      void fetch(`${API_BASE}/draft/save`, {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        signal: controller.signal,
+        body: JSON.stringify({
+          payload: serialiseBookingDraft(state),
+          email: state.customerEmail || undefined,
+          sessionKey: sessionKey || undefined,
+        }),
+      })
+        .then(async (response) => {
+          if (!response.ok) return null;
+          return response.json() as Promise<{ success?: boolean; data?: { sessionKey?: unknown; reference?: unknown } }>;
+        })
+        .then((payload) => {
+          if (!payload?.success) return;
+          const nextSessionKey = payload.data?.sessionKey;
+          const reference = payload.data?.reference;
+          try {
+            if (typeof nextSessionKey === "string" && nextSessionKey) {
+              localStorage.setItem(BOOKING_SERVER_DRAFT_SESSION_KEY, nextSessionKey);
+            }
+          } catch {
+            // The server cookie still preserves the draft in production.
+          }
+          if (typeof reference === "string" && reference && !state.bookingRef) {
+            dispatch({ type: "SET_DRAFT_REFERENCE", bookingRef: reference });
+          }
+        })
+        .catch(() => {
+          // Server draft sync is an admin convenience; the customer flow remains usable.
+        });
+    }, 700);
+
+    return () => {
+      window.clearTimeout(timeout);
+      controller.abort();
+    };
   }, [ready, state]);
 
   return (

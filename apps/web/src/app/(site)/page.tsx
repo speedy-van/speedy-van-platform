@@ -17,7 +17,15 @@ import {
   buildFaqSchema,
   buildServiceCatalogSchema,
 } from "@/lib/seo/schemas";
-import { SITE_OG_IMAGE, SITE_OG_IMAGE_HEIGHT, SITE_OG_IMAGE_WIDTH, SITE_URL } from "@/lib/seo/constants";
+import {
+  SITE_EMAIL,
+  SITE_LEGAL_NAME,
+  SITE_OG_IMAGE,
+  SITE_OG_IMAGE_HEIGHT,
+  SITE_OG_IMAGE_WIDTH,
+  SITE_PHONE_DISPLAY,
+  SITE_URL,
+} from "@/lib/seo/constants";
 import {
   BOOKING_SERVICE_OPTIONS,
 } from "@/lib/booking-service-options";
@@ -53,6 +61,13 @@ const TRUST_STATS = [
   { value: "£10k", label: "Goods-in-transit cover" },
   { value: "7 days", label: "Available every day" },
   { value: "Fixed", label: "Price shown before you book" },
+];
+
+const AD_TRUST_POINTS = [
+  { label: "Company", value: `${SITE_LEGAL_NAME} trading as SpeedyVan` },
+  { label: "Office", value: "1 Barrack Street, Office 2.18, Hamilton ML3 0HS" },
+  { label: "Contact", value: `${SITE_PHONE_DISPLAY} · ${SITE_EMAIL}` },
+  { label: "Payment", value: "Review the route, access details, date and total before card payment." },
 ];
 
 const PHOTO_QUOTE_HREF =
@@ -446,6 +461,37 @@ export default function HomePage() {
               </li>
             ))}
           </ul>
+        </div>
+      </section>
+
+      <section
+        className="border-b border-amber-500/10 bg-[#0A0A0A] py-8"
+        aria-labelledby="booking-assurance-heading"
+      >
+        <div className="mx-auto grid max-w-7xl gap-6 px-4 sm:px-6 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.5fr)] lg:px-8">
+          <div>
+            <p className="text-xs font-black uppercase tracking-[0.16em] text-amber-400">
+              Clear before you book
+            </p>
+            <h2 id="booking-assurance-heading" className="mt-2 text-2xl font-black text-white sm:text-3xl">
+              Real moving service, clear contact details, secure payment.
+            </h2>
+            <p className="mt-3 text-sm leading-6 text-white/55">
+              SpeedyVan quotes are based on the service, route, access, item list and date you enter. The final total is shown before card payment.
+            </p>
+          </div>
+          <dl className="grid gap-3 sm:grid-cols-2">
+            {AD_TRUST_POINTS.map((point) => (
+              <div key={point.label} className="border-l border-amber-400/35 pl-4">
+                <dt className="text-[11px] font-black uppercase tracking-[0.14em] text-amber-300/70">
+                  {point.label}
+                </dt>
+                <dd className="mt-1 text-sm font-semibold leading-6 text-white/70">
+                  {point.value}
+                </dd>
+              </div>
+            ))}
+          </dl>
         </div>
       </section>
 

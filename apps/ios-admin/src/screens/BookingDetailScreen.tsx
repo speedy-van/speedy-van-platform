@@ -57,6 +57,16 @@ export function BookingDetailScreen({ id }: { id: string }) {
         </ScreenHeader>
         {detail.error ? <ErrorBanner message={detail.error} /> : null}
         <View className="gap-4 p-4">
+          {booking.isDraft ? (
+            <View className="rounded-lg border border-amber-200 bg-amber-50 p-4">
+              <Text className="text-sm font-extrabold uppercase text-amber-700">Pending checkout</Text>
+              <Text className="mt-1 text-sm font-bold leading-5 text-slate-600">
+                The customer has started this booking but has not finished payment yet.
+                {booking.checkoutStage ? ` Last seen at: ${booking.checkoutStage}.` : ""}
+              </Text>
+            </View>
+          ) : null}
+
           <SectionCard title="Customer" subtitle="Primary contact for this move." icon="person-outline">
             <InfoRow label="Name" value={booking.customerName} />
             <InfoRow label="Email" value={booking.customerEmail} />
@@ -71,39 +81,51 @@ export function BookingDetailScreen({ id }: { id: string }) {
             <View className="mt-3">
               <StatusBadge label={meta.label} color={meta.color} />
             </View>
-            <TextInput
-              value={statusNote}
-              onChangeText={setStatusNote}
-              placeholder="Optional status note"
-              placeholderTextColor="#94A3B8"
-              className="mt-4 rounded-lg border border-svLine bg-svSoft px-3 py-3 text-svDark"
-            />
-            <View className="mt-3 flex-row flex-wrap gap-2">
-              {statuses.map((status) => {
-                const statusMeta = bookingStatusMeta(status);
-                const selected = booking.status === status;
-                return (
-                  <Pressable
-                    key={status}
-                    onPress={() => void detail.updateStatus(status, statusNote)}
-                    className="rounded-lg border px-3 py-2"
-                    style={{
-                      backgroundColor: selected ? `${statusMeta.color}18` : "#FFFFFF",
-                      borderColor: selected ? `${statusMeta.color}66` : colors.border
-                    }}
-                  >
-                    <Text className="text-xs font-extrabold uppercase" style={{ color: statusMeta.color }}>
-                      {statusMeta.label}
-                    </Text>
-                  </Pressable>
-                );
-              })}
-            </View>
+            {booking.isDraft ? (
+              <Text className="mt-4 text-sm font-bold text-slate-500">
+                Status controls unlock after the customer completes checkout.
+              </Text>
+            ) : (
+              <>
+                <TextInput
+                  value={statusNote}
+                  onChangeText={setStatusNote}
+                  placeholder="Optional status note"
+                  placeholderTextColor="#94A3B8"
+                  className="mt-4 rounded-lg border border-svLine bg-svSoft px-3 py-3 text-svDark"
+                />
+                <View className="mt-3 flex-row flex-wrap gap-2">
+                  {statuses.map((status) => {
+                    const statusMeta = bookingStatusMeta(status);
+                    const selected = booking.status === status;
+                    return (
+                      <Pressable
+                        key={status}
+                        onPress={() => void detail.updateStatus(status, statusNote)}
+                        className="rounded-lg border px-3 py-2"
+                        style={{
+                          backgroundColor: selected ? `${statusMeta.color}18` : "#FFFFFF",
+                          borderColor: selected ? `${statusMeta.color}66` : colors.border
+                        }}
+                      >
+                        <Text className="text-xs font-extrabold uppercase" style={{ color: statusMeta.color }}>
+                          {statusMeta.label}
+                        </Text>
+                      </Pressable>
+                    );
+                  })}
+                </View>
+              </>
+            )}
           </SectionCard>
 
           <SectionCard title="Driver" subtitle="Assign or reassign this move." icon="car-outline">
             <InfoRow label="Assigned" value={booking.driver?.user.name ?? "Unassigned"} />
-            <ActionButton label="Assign Driver" icon="person-add" onPress={() => setShowDrivers(true)} />
+            {booking.isDraft ? (
+              <Text className="mt-3 text-sm font-bold text-slate-500">Assign a driver after checkout is completed.</Text>
+            ) : (
+              <ActionButton label="Assign Driver" icon="person-add" onPress={() => setShowDrivers(true)} />
+            )}
           </SectionCard>
 
           <SectionCard title="Extras" subtitle="Optional add-ons selected by the customer." icon="add-circle-outline">
@@ -158,38 +180,50 @@ export function BookingDetailScreen({ id }: { id: string }) {
                 ))}
               </View>
             )}
-            <TextInput
-              value={trackingNote}
-              onChangeText={setTrackingNote}
-              placeholder="Add internal note"
-              placeholderTextColor="#94A3B8"
-              multiline
-              className="mt-4 min-h-24 rounded-lg border border-svLine bg-svSoft px-3 py-3 text-svDark"
-            />
-            <View className="mt-3">
-              <ActionButton
-                label="Add Note"
-                icon="add-circle"
-                disabled={trackingNote.trim().length === 0}
-                onPress={() => {
-                  void detail.addTrackingNote(trackingNote.trim());
-                  setTrackingNote("");
-                }}
-              />
-            </View>
+            {booking.isDraft ? (
+              <Text className="mt-4 text-sm font-bold text-slate-500">Internal notes unlock after checkout is completed.</Text>
+            ) : (
+              <>
+                <TextInput
+                  value={trackingNote}
+                  onChangeText={setTrackingNote}
+                  placeholder="Add internal note"
+                  placeholderTextColor="#94A3B8"
+                  multiline
+                  className="mt-4 min-h-24 rounded-lg border border-svLine bg-svSoft px-3 py-3 text-svDark"
+                />
+                <View className="mt-3">
+                  <ActionButton
+                    label="Add Note"
+                    icon="add-circle"
+                    disabled={trackingNote.trim().length === 0}
+                    onPress={() => {
+                      void detail.addTrackingNote(trackingNote.trim());
+                      setTrackingNote("");
+                    }}
+                  />
+                </View>
+              </>
+            )}
           </SectionCard>
 
           <SectionCard title="Actions" subtitle="Use destructive actions carefully." icon="warning-outline">
-            <TextInput
-              value={cancelReason}
-              onChangeText={setCancelReason}
-              placeholder="Cancellation reason"
-              placeholderTextColor="#94A3B8"
-              className="rounded-lg border border-svLine bg-svSoft px-3 py-3 text-svDark"
-            />
-            <View className="mt-3">
-              <ActionButton label="Cancel Booking" icon="ban" tone="danger" onPress={() => setShowCancel(true)} />
-            </View>
+            {booking.isDraft ? (
+              <Text className="text-sm font-bold text-slate-500">There is no confirmed booking to cancel yet.</Text>
+            ) : (
+              <>
+                <TextInput
+                  value={cancelReason}
+                  onChangeText={setCancelReason}
+                  placeholder="Cancellation reason"
+                  placeholderTextColor="#94A3B8"
+                  className="rounded-lg border border-svLine bg-svSoft px-3 py-3 text-svDark"
+                />
+                <View className="mt-3">
+                  <ActionButton label="Cancel Booking" icon="ban" tone="danger" onPress={() => setShowCancel(true)} />
+                </View>
+              </>
+            )}
           </SectionCard>
         </View>
         <DriverPicker

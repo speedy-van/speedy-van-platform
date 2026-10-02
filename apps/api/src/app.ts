@@ -41,6 +41,11 @@ const databaseConfigError = getDatabaseConfigError();
 const DATABASE_OPTIONAL_PATH_PREFIXES = ["/geocode", "/weather"];
 
 function canRunWithoutDatabase(path: string): boolean {
+  if (process.env.NODE_ENV !== "production" && path === "/pricing/calculate") return true;
+  if (process.env.NODE_ENV !== "production" && (path === "/booking/create" || path === "/booking/confirm")) return true;
+  if (process.env.NODE_ENV !== "production" && path.startsWith("/booking/invoice/")) return true;
+  if (process.env.NODE_ENV !== "production" && path.startsWith("/draft")) return true;
+  if (process.env.NODE_ENV !== "production" && path.startsWith("/tracking")) return true;
   return DATABASE_OPTIONAL_PATH_PREFIXES.some((prefix) => path === prefix || path.startsWith(`${prefix}/`));
 }
 

@@ -78,13 +78,18 @@ function BookingRow({ booking, onPress }: { booking: BookingListItem; onPress: (
       <View className="flex-row items-start justify-between gap-3">
         <View className="flex-1 flex-row gap-3">
           <View className="h-11 w-11 items-center justify-center rounded-lg bg-svBrandSubtle">
-            <Ionicons name="receipt-outline" size={21} color={colors.svBrand} />
+            <Ionicons name={booking.isDraft ? "time-outline" : "receipt-outline"} size={21} color={colors.svBrand} />
           </View>
           <View className="flex-1">
             <Text className="font-mono text-xs font-extrabold uppercase text-slate-500">{booking.reference}</Text>
             <Text className="mt-1 text-lg font-extrabold text-svDark" numberOfLines={1}>
               {booking.customerName}
             </Text>
+            {booking.isDraft ? (
+              <Text className="mt-1 text-xs font-extrabold uppercase text-svWarning">
+                Pending checkout{booking.checkoutStage ? ` - ${booking.checkoutStage}` : ""}
+              </Text>
+            ) : null}
           </View>
         </View>
         <StatusBadge label={meta.label} color={meta.color} />

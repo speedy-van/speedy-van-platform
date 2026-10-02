@@ -61,7 +61,7 @@ export function BookingActionBar() {
     if (disabled) return;
     const button = primaryButton();
     if (!button || button.disabled) return;
-    if (current.isPay) {
+    if (current.isPay && button.dataset.actionBarBehaviour !== "click") {
       button.scrollIntoView({ behavior: "smooth", block: "center" });
       window.setTimeout(() => button.focus({ preventScroll: true }), 200);
       return;
@@ -112,10 +112,15 @@ export function BookingActionBar() {
             type="button"
             onClick={clickPrimaryAction}
             disabled={disabled}
-            className="min-h-12 w-full rounded-xl px-3 text-sm font-black text-black shadow-lg transition hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:ring-offset-2 focus-visible:ring-offset-booking-background disabled:cursor-not-allowed disabled:opacity-40"
+            className="inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-xl px-3 text-sm font-black text-black shadow-lg transition hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:ring-offset-2 focus-visible:ring-offset-booking-background disabled:cursor-not-allowed disabled:opacity-65"
             style={{ background: "linear-gradient(135deg, #F59E0B 0%, #EA580C 100%)" }}
           >
-            {primaryState.processing ? "Processing…" : current.isPay ? "Review & pay" : "Continue"}
+            {primaryState.processing ? (
+              <>
+                <span className="h-4 w-4 animate-spin rounded-full border-2 border-black/80 border-t-transparent" aria-hidden="true" />
+                Processing payment...
+              </>
+            ) : current.isPay ? "Review & pay" : "Continue"}
           </button>
         </div>
       </div>

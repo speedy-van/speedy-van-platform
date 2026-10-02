@@ -3,31 +3,62 @@
 import { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import Script from "next/script";
-import { GOOGLE_ADS_ID, initialiseAnalytics, isPublicAnalyticsPath, syncAnalyticsConsent, trackPageView } from "@/lib/analytics";
+import { GOOGLE_ADS_ID, initialiseAnalytics, isPublicAnalyticsPath, prepareGoogleTag, syncAnalyticsConsent, trackPageView } from "@/lib/analytics";
 import { useCookieConsent } from "./CookieConsent";
 
-const GA_ID = process.env.NEXT_PUBLIC_GA_ID;
+const GA_ID = process.env.NEXT_PUBLIC_GA_ID || process.env.NEXT_PUBLIC_GA4_ID;
 // The paid-booking destination owns the shared loader; GA4 is configured separately.
 const GOOGLE_TAG_ID = GOOGLE_ADS_ID;
 const FB_PIXEL_ID = process.env.NEXT_PUBLIC_FB_PIXEL_ID;
+
+const GOOGLE_TAG_BOOTSTRAP = `
+window.dataLayer = window.dataLayer || [];
+window.gtag = window.gtag || function(){window.dataLayer.push(arguments);};
+window.gtag('consent', 'default', {
+  analytics_storage: 'denied',
+  ad_storage: 'denied',
+  ad_user_data: 'denied',
+  ad_personalization: 'denied',
+  wait_for_update: 500
+});
+window.gtag('set', 'ads_data_redaction', true);
+window.gtag('set', 'url_passthrough', true);
+window.gtag('js', new Date());
+window.gtag('config', ${JSON.stringify(GOOGLE_TAG_ID)}, { allow_enhanced_conversions: true });
+`;
 
 export function AnalyticsPixels() {
   const consent = useCookieConsent();
   const pathname = usePathname();
   const [ready, setReady] = useState(false);
   const lastPage = useRef<string | null>(null);
+  const isPublicPath = Boolean(pathname && isPublicAnalyticsPath(pathname));
 
   useEffect(() => {
-    if (consent !== "accepted" || !pathname || !isPublicAnalyticsPath(pathname)) {
+    if (!pathname || !isPublicAnalyticsPath(pathname)) {
       syncAnalyticsConsent(null);
       setReady(false);
       lastPage.current = null;
       return;
     }
+
+    try {
+      prepareGoogleTag();
+    } catch {
+      // A blocked Google tag must not interrupt booking or navigation.
+    }
+
+    if (consent !== "accepted") {
+      syncAnalyticsConsent(consent);
+      setReady(false);
+      lastPage.current = null;
+      return;
+    }
+
     try {
       initialiseAnalytics(GA_ID, FB_PIXEL_ID);
     } catch {
-      // A blocked tag must not interrupt booking or navigation.
+      // A blocked optional provider must not interrupt booking or navigation.
       return;
     }
     setReady(true);
@@ -37,19 +68,23 @@ export function AnalyticsPixels() {
     }
   }, [consent, pathname]);
 
-  // No third-party script request is made before an affirmative choice.
-  if (consent !== "accepted" || !ready || !pathname || !isPublicAnalyticsPath(pathname)) return null;
+  if (!isPublicPath) return null;
 
   return (
     <>
       {GOOGLE_TAG_ID && (
-        <Script
-          id="google-tag-library"
-          src={`https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(GOOGLE_TAG_ID)}`}
-          strategy="afterInteractive"
-        />
+        <>
+          <Script id="google-tag-bootstrap" strategy="afterInteractive">
+            {GOOGLE_TAG_BOOTSTRAP}
+          </Script>
+          <Script
+            id="google-tag-library"
+            src={`https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(GOOGLE_TAG_ID)}`}
+            strategy="afterInteractive"
+          />
+        </>
       )}
-      {FB_PIXEL_ID && (
+      {consent === "accepted" && ready && FB_PIXEL_ID && (
         <Script
           id="fb-pixel-library"
           src="https://connect.facebook.net/en_US/fbevents.js"

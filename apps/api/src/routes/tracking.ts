@@ -8,6 +8,7 @@ import {
   VisitorSessionSchema,
   VisitorEventSchema,
 } from "@speedy-van/shared";
+import { getDatabaseConfigError } from "../lib/database-config";
 
 const app = new Hono();
 
@@ -15,7 +16,14 @@ function newSessionId(): string {
   return `vis_${Date.now()}_${Math.random().toString(36).slice(2, 10)}`;
 }
 
+function useLocalTrackingStub(): boolean {
+  return process.env.NODE_ENV !== "production" && Boolean(getDatabaseConfigError());
+}
+
 app.post("/session", zValidator("json", VisitorSessionSchema), async (c) => {
+  if (useLocalTrackingStub()) {
+    return c.json(ok({ sessionId: newSessionId(), persisted: false }));
+  }
   const data = c.req.valid("json");
   const sessionId = newSessionId();
   await db.visitor.create({
@@ -31,6 +39,7 @@ app.post("/session", zValidator("json", VisitorSessionSchema), async (c) => {
 });
 
 app.post("/event", zValidator("json", VisitorEventSchema), async (c) => {
+  if (useLocalTrackingStub()) return c.json(ok({ success: true, persisted: false }));
   const { sessionId, type, page, element, metadata } = c.req.valid("json");
   const visitor = await db.visitor.findUnique({ where: { sessionId } });
   if (!visitor) return c.json(fail("Session not found", "NOT_FOUND"), 404);
@@ -60,6 +69,7 @@ app.post(
   "/heartbeat",
   zValidator("json", z.object({ sessionId: z.string() })),
   async (c) => {
+    if (useLocalTrackingStub()) return c.json(ok({ success: true, persisted: false }));
     const { sessionId } = c.req.valid("json");
     const visitor = await db.visitor.findUnique({ where: { sessionId } });
     if (!visitor) return c.json(fail("Session not found", "NOT_FOUND"), 404);
@@ -79,6 +89,7 @@ app.post(
   "/exit",
   zValidator("json", z.object({ sessionId: z.string() })),
   async (c) => {
+    if (useLocalTrackingStub()) return c.json(ok({ success: true, persisted: false }));
     const { sessionId } = c.req.valid("json");
     await db.visitor.updateMany({
       where: { sessionId },

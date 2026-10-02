@@ -7,8 +7,9 @@ const CONSENT_CHANGED_EVENT = "sv:cookie-consent-changed";
 const PURCHASE_KEY = "sv-purchase:";
 
 // Native paid-booking action verified in Google Ads customer 307-075-7088.
-export const GOOGLE_ADS_ID = "AW-18483787592";
-const GOOGLE_ADS_PURCHASE_DESTINATION = `${GOOGLE_ADS_ID}/8NSGCPiVpYsdEMju4O1E`;
+export const GOOGLE_ADS_ID = process.env.NEXT_PUBLIC_GOOGLE_ADS_ID || "AW-18483787592";
+const GOOGLE_ADS_PURCHASE_LABEL = process.env.NEXT_PUBLIC_GOOGLE_ADS_PURCHASE_LABEL || "8NSGCPiVpYsdEMju4O1E";
+const GOOGLE_ADS_PURCHASE_DESTINATION = `${GOOGLE_ADS_ID}/${GOOGLE_ADS_PURCHASE_LABEL}`;
 
 type AnalyticsFunction = (...args: unknown[]) => void;
 type MetaPixelFunction = AnalyticsFunction & {
@@ -32,6 +33,7 @@ let memoryConsent: ConsentState | undefined;
 const sentPurchases = new Set<string>();
 const initialisedGoogleIds = new Set<string>();
 const initialisedMetaIds = new Set<string>();
+let googleBaseInitialised = false;
 
 function parseConsent(value: string | null): ConsentState {
   return value === "accepted" || value === "declined" ? value : null;
@@ -66,10 +68,28 @@ function consentParameters(accepted: boolean) {
   };
 }
 
+function publicGaId(): string | undefined {
+  return process.env.NEXT_PUBLIC_GA_ID || process.env.NEXT_PUBLIC_GA4_ID;
+}
+
+function ensureGoogleQueue() {
+  window.dataLayer = window.dataLayer || [];
+  window.gtag = window.gtag || function (..._args: unknown[]) {
+    // eslint-disable-next-line prefer-rest-params -- gtag consumes an IArguments queue entry.
+    window.dataLayer?.push(arguments);
+  };
+}
+
+function configureGoogleId(id: string, options?: Record<string, unknown>) {
+  if (initialisedGoogleIds.has(id)) return;
+  window.gtag?.("config", id, options ?? {});
+  initialisedGoogleIds.add(id);
+}
+
 export function syncAnalyticsConsent(state: ConsentState) {
   if (typeof window === "undefined") return;
   const accepted = state === "accepted";
-  const gaId = process.env.NEXT_PUBLIC_GA_ID;
+  const gaId = publicGaId();
   if (gaId) {
     (window as unknown as Record<string, unknown>)[`ga-disable-${gaId}`] = !accepted;
   }
@@ -107,29 +127,39 @@ export function subscribeCookieConsent(onChange: () => void): () => void {
   };
 }
 
+export function prepareGoogleTag() {
+  if (typeof window === "undefined" || !GOOGLE_ADS_ID) return;
+  try {
+    ensureGoogleQueue();
+    if (!googleBaseInitialised) {
+      window.gtag?.("consent", "default", {
+        ...consentParameters(false),
+        wait_for_update: 500,
+      });
+      window.gtag?.("set", "ads_data_redaction", true);
+      window.gtag?.("set", "url_passthrough", true);
+      window.gtag?.("js", new Date());
+      googleBaseInitialised = true;
+    }
+    configureGoogleId(GOOGLE_ADS_ID, { allow_enhanced_conversions: true });
+    syncAnalyticsConsent(getCookieConsent());
+  } catch { /* A blocked Google provider must not interrupt booking or navigation. */ }
+}
+
 export function initialiseAnalytics(gaId?: string, metaId?: string) {
-  if (!hasAnalyticsConsent() || typeof window === "undefined") return;
-  const googleIds = gaId ? [gaId, GOOGLE_ADS_ID] : [GOOGLE_ADS_ID];
+  if (typeof window === "undefined") return;
+  prepareGoogleTag();
+  if (!hasAnalyticsConsent()) return;
+  const googleIds = gaId ? [gaId] : [];
   // Optional providers initialise independently; one failure must not hide every script.
   try {
     if (googleIds.some(id => !initialisedGoogleIds.has(id))) {
-      window.dataLayer = window.dataLayer || [];
-      window.gtag = window.gtag || function (..._args: unknown[]) {
-        // eslint-disable-next-line prefer-rest-params -- gtag consumes an IArguments queue entry.
-        window.dataLayer?.push(arguments);
-      };
-      if (initialisedGoogleIds.size === 0) {
-        window.gtag("consent", "default", consentParameters(false));
-        window.gtag("consent", "update", consentParameters(true));
-        window.gtag("js", new Date());
-      }
+      ensureGoogleQueue();
       for (const id of googleIds) {
         if (initialisedGoogleIds.has(id)) continue;
         try {
           // GA4 page views retain one owner, including App Router navigation.
-          if (id === gaId) window.gtag("config", id, { send_page_view: false });
-          else window.gtag("config", id);
-          initialisedGoogleIds.add(id);
+          configureGoogleId(id, { send_page_view: false });
         } catch { /* One rejected destination must not disable the other. Leave it retryable. */ }
       }
     }
@@ -227,11 +257,52 @@ function markPurchaseSent(key: string) {
   try { window.sessionStorage.setItem(key, "1"); } catch { /* The memory guard remains active. */ }
 }
 
-function trackGoogleAdsPurchase(bookingRef: string, value: number): boolean {
+interface PurchaseCustomerData {
+  email?: string;
+  phone?: string;
+}
+
+function normaliseEmail(value?: string): string | undefined {
+  const email = value?.trim().toLowerCase();
+  return email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) ? email : undefined;
+}
+
+function normaliseUkPhone(value?: string): string | undefined {
+  const digits = value?.replace(/[^\d+]/g, "");
+  if (!digits) return undefined;
+  let phone = "";
+  if (digits.startsWith("+")) {
+    phone = digits;
+  } else if (digits.startsWith("0044")) {
+    phone = `+44${digits.slice(4)}`;
+  } else if (digits.startsWith("44")) {
+    phone = `+${digits}`;
+  } else if (digits.startsWith("0") && digits.length === 11) {
+    phone = `+44${digits.slice(1)}`;
+  }
+  return /^\+\d{11,15}$/.test(phone) ? phone : undefined;
+}
+
+function setGoogleAdsUserData(customer?: PurchaseCustomerData) {
+  if (!customer || typeof window === "undefined" || typeof window.gtag !== "function") return;
+  const email = normaliseEmail(customer.email);
+  const phone = normaliseUkPhone(customer.phone);
+  if (!email && !phone) return;
+  try {
+    window.gtag("set", "user_data", {
+      ...(email ? { email } : {}),
+      ...(phone ? { phone_number: phone } : {}),
+    });
+  } catch { /* Enhanced conversion data is optional and must not block payment confirmation. */ }
+}
+
+function trackGoogleAdsPurchase(bookingRef: string, value: number, customer?: PurchaseCustomerData): boolean {
   if (!hasAnalyticsConsent() || typeof window === "undefined") return false;
   if (!isPublicAnalyticsPath(window.location.pathname)) return false;
+  prepareGoogleTag();
   if (!initialisedGoogleIds.has(GOOGLE_ADS_ID) || typeof window.gtag !== "function") return false;
   try {
+    setGoogleAdsUserData(customer);
     window.gtag("event", "conversion", {
       send_to: GOOGLE_ADS_PURCHASE_DESTINATION,
       transaction_id: bookingRef,
@@ -245,7 +316,7 @@ function trackGoogleAdsPurchase(bookingRef: string, value: number): boolean {
 }
 
 // Call only after the server has confirmed the booking and successful payment.
-export function trackPurchase(bookingRef: string, value: number, serviceSlug: string) {
+export function trackPurchase(bookingRef: string, value: number, serviceSlug: string, customer?: PurchaseCustomerData) {
   if (!hasAnalyticsConsent() || !bookingRef.trim() || !serviceSlug.trim() || !Number.isFinite(value) || value <= 0) return;
   const googleKey = `${PURCHASE_KEY}google:${bookingRef}`;
   if (!purchaseWasSent(googleKey) && trackAnalyticsEvent("purchase", {
@@ -253,7 +324,7 @@ export function trackPurchase(bookingRef: string, value: number, serviceSlug: st
   })) markPurchaseSent(googleKey);
   // Native Ads and GA4 use separate guards; Google also deduplicates transaction IDs.
   const adsKey = `${PURCHASE_KEY}ads:${bookingRef}`;
-  if (!purchaseWasSent(adsKey) && trackGoogleAdsPurchase(bookingRef, value)) markPurchaseSent(adsKey);
+  if (!purchaseWasSent(adsKey) && trackGoogleAdsPurchase(bookingRef, value, customer)) markPurchaseSent(adsKey);
   const metaKey = `${PURCHASE_KEY}meta:${bookingRef}`;
   if (!purchaseWasSent(metaKey) && trackMetaEvent("Purchase", {
     value, currency: "GBP", content_ids: [serviceSlug],

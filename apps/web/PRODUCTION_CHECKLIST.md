@@ -53,7 +53,7 @@
 - [ ] DATABASE_URL set
 - [ ] JWT_SECRET set
 - [ ] STRIPE_SECRET_KEY set (live)
-- [ ] STRIPE_PUBLISHABLE_KEY set (live)
+- [ ] NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY set (live)
 - [ ] STRIPE_WEBHOOK_SECRET set
 - [ ] NEXT_PUBLIC_MAPBOX_TOKEN set
 - [ ] RESEND_API_KEY set

@@ -484,11 +484,20 @@ function TrackContent() {
 
             {/* Actions */}
             <div className="flex gap-3">
+              <a
+                href={`${API_BASE}/booking/invoice/${encodeURIComponent(data.reference)}?email=${encodeURIComponent(email)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex-1 text-center font-black text-black py-3 rounded-xl text-sm transition hover:opacity-90 active:scale-95"
+                style={{ background: "linear-gradient(135deg, #F59E0B 0%, #EA580C 100%)" }}
+              >
+                View invoice
+              </a>
               {data.status === "COMPLETED" && (
                 <Link
                   href={`/book/review/${data.reference}?email=${encodeURIComponent(email)}`}
-                  className="flex-1 text-center font-black text-black py-3 rounded-xl text-sm transition hover:opacity-90 active:scale-95"
-                  style={{ background: "linear-gradient(135deg, #F59E0B 0%, #EA580C 100%)" }}
+                  className="flex-1 text-center font-semibold text-white/75 py-3 rounded-xl text-sm transition hover:border-amber-500/30 hover:text-white"
+                  style={{ background: "rgba(255,255,255,0.05)", boxShadow: "0 0 0 1px rgba(255,255,255,0.10)" }}
                 >
                   Leave a review
                 </Link>

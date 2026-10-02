@@ -437,13 +437,13 @@ function UpsellNav({
   onSkip: () => void;
 }) {
   return (
-    <div className="space-y-3 pt-2">
+    <div className={hasSelection ? "space-y-3 pt-2" : ""}>
       <button
         id={STEP_PRIMARY_CTA_ID}
+        data-action-bar-behaviour="click"
         type="button"
         onClick={onContinue}
-        className="min-h-12 w-full rounded-xl px-5 text-sm font-black text-black shadow-lg transition hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400"
-        style={{ background: "linear-gradient(135deg, #F59E0B 0%, #EA580C 100%)" }}
+        className="hidden"
       >
         {continueLabel}
       </button>

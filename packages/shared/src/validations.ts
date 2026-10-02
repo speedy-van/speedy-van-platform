@@ -32,6 +32,9 @@ export const SelectedItemSchema = z.object({
 });
 
 export const CreateBookingSchema = z.object({
+  draftReference: z.string().regex(/^SVR-\d{4}-[A-Z2-9]{6}$/).optional(),
+  draftSessionKey: z.string().min(16).max(128).optional(),
+
   customerName: z.string().min(1),
   customerEmail: z.string().email(),
   customerPhone: z.string().min(1),

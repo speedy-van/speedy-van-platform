@@ -5,6 +5,7 @@ import { CookieSettingsButton } from "./CookieConsent";
 import { Logo } from "./Logo";
 import { SERVICES } from "@/lib/services";
 import { FEATURED_AREAS } from "@/lib/areas";
+import { SITE_LEGAL_NAME } from "@/lib/seo/constants";
 
 const QUICK_LINKS = [
   { href: "/about", label: "About us" },
@@ -170,7 +171,7 @@ export function Footer() {
         {/* NAP — critical for local SEO consistency */}
         <div className="mt-12 pt-8 border-t" style={{ borderColor: "rgba(255,255,255,0.08)" }}>
           <address className="not-italic text-xs leading-5 text-center sm:text-left" style={{ color: "rgba(255,255,255,0.30)" }}>
-            <strong className="text-white/40">SpeedyVan</strong> · 1 Barrack Street, Office 2.18, Hamilton, ML3 0HS, Scotland ·{" "}
+            <strong className="text-white/40">{SITE_LEGAL_NAME}</strong> trading as SpeedyVan · 1 Barrack Street, Office 2.18, Hamilton, ML3 0HS, Scotland ·{" "}
             <a href="tel:07909032889" className="hover:text-white/60 transition-colors">07909 032889</a> ·{" "}
             <a href="mailto:hello@speedyvan.uk" className="hover:text-white/60 transition-colors">hello@speedyvan.uk</a>
           </address>
@@ -179,7 +180,7 @@ export function Footer() {
         {/* Bottom bar */}
         <div className="mt-12 pt-8 border-t flex flex-col sm:flex-row justify-between items-center gap-4" style={{ borderColor: "rgba(255,255,255,0.08)" }}>
           <p className="text-center text-xs text-white/65">
-            © {new Date().getFullYear()} SpeedyVan Ltd. All rights reserved.
+            © {new Date().getFullYear()} {SITE_LEGAL_NAME}. All rights reserved.
           </p>
           <div className="flex flex-wrap justify-center gap-x-6 gap-y-2">
             <Link href="/privacy" className="inline-flex min-h-6 items-center rounded text-xs text-white/65 hover:text-white transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-400">

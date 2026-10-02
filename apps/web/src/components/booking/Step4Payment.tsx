@@ -10,7 +10,13 @@ import {
   useStripe,
   useElements,
 } from "@stripe/react-stripe-js";
-import { serialiseBookingDraft, useBooking, type SelectedItem, type TimeSlot } from "@/lib/booking-store";
+import {
+  BOOKING_SERVER_DRAFT_SESSION_KEY,
+  serialiseBookingDraft,
+  useBooking,
+  type SelectedItem,
+  type TimeSlot,
+} from "@/lib/booking-store";
 import { STEP_PRIMARY_CTA_ID } from "@/lib/booking-steps";
 import { useRouter } from "next/navigation";
 import { trackPurchase } from "@/lib/analytics";
@@ -48,10 +54,12 @@ const CARD_STYLE = {
   hidePostalCode: true,
   style: {
     base: {
-      fontSize: "16px",
+      fontSize: "18px",
       color: "#FFFFFF",
+      iconColor: "#F59E0B",
+      fontWeight: "700",
       fontFamily: "Manrope, system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif",
-      "::placeholder": { color: "rgba(255,255,255,0.30)" },
+      "::placeholder": { color: "rgba(254,243,199,0.72)" },
       backgroundColor: "transparent",
     },
     invalid: { color: "#f87171" },
@@ -96,57 +104,80 @@ function itemKey(item: SelectedItem, index: number): string {
 function ReviewSection({
   title,
   editStep,
+  summary,
   children,
 }: {
   title: string;
   editStep: 1 | 2 | 3 | 4;
+  summary: ReactNode;
   children: ReactNode;
 }) {
   const { state, dispatch } = useBooking();
   const router = useRouter();
+  const [open, setOpen] = useState(false);
 
   return (
     <section
-      className="rounded-2xl p-5"
+      className="rounded-2xl p-4"
       style={{ background: "rgba(255,255,255,0.04)", boxShadow: "0 0 0 1px rgba(245,158,11,0.15), 0 8px 32px rgba(0,0,0,0.4)" }}
     >
       <div className="flex items-center justify-between gap-3">
-        <h2 className="text-base font-black text-white">{title}</h2>
-        <button
-          type="button"
-          disabled={state.checkoutLocked}
-          onClick={() => {
-            if (editStep === 1) {
-              router.push("/#get-quote");
-              return;
-            }
-            dispatch({ type: "SET_STEP", step: editStep });
-          }}
-          className="min-h-10 rounded-lg px-3 text-sm font-bold text-amber-400 transition hover:text-amber-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 disabled:cursor-not-allowed disabled:opacity-40"
-        >
-          Edit
-        </button>
+        <div className="min-w-0">
+          <h2 className="text-base font-black text-white">{title}</h2>
+          <div className="mt-1 truncate text-sm text-white/55">{summary}</div>
+        </div>
+        <div className="flex shrink-0 items-center gap-2">
+          <button
+            type="button"
+            onClick={() => setOpen((value) => !value)}
+            aria-expanded={open}
+            className="min-h-10 rounded-lg px-3 text-sm font-bold text-white/70 ring-1 ring-white/15 transition hover:bg-white/8 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400"
+          >
+            {open ? "Hide" : "View"}
+          </button>
+          <button
+            type="button"
+            disabled={state.checkoutLocked}
+            onClick={() => {
+              if (editStep === 1) {
+                router.push("/#get-quote");
+                return;
+              }
+              dispatch({ type: "SET_STEP", step: editStep });
+            }}
+            className="min-h-10 rounded-lg px-3 text-sm font-bold text-amber-400 transition hover:text-amber-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 disabled:cursor-not-allowed disabled:opacity-40"
+          >
+            Edit
+          </button>
+        </div>
       </div>
-      <div className="mt-4 text-sm leading-6 text-white/60">{children}</div>
+      {open && <div className="mt-4 text-sm leading-6 text-white/60">{children}</div>}
     </section>
   );
 }
 
 function BookingReview() {
   const { state } = useBooking();
+  const totalItems = state.items.reduce((total, item) => total + item.quantity, 0);
   const extras = [
     state.needsPacking ? "Packing service" : "",
     state.needsAssembly ? "Assembly or disassembly" : "",
     state.helpersCount > 0 ? `${state.helpersCount} extra helper${state.helpersCount > 1 ? "s" : ""}` : "",
   ].filter(Boolean);
+  const pickupSummary = state.pickup?.postcode || (state.pickup ? shortAddress(state.pickup.address) : "Pickup missing");
+  const dropoffSummary = state.dropoff?.postcode || (state.dropoff ? shortAddress(state.dropoff.address) : "Drop-off missing");
+  const appointmentSummary =
+    state.selectedDate && state.selectedTimeSlot
+      ? `${formatDate(state.selectedDate)}, ${SLOT_LABELS[state.selectedTimeSlot]} - ${money.format(state.clientTotal)}`
+      : money.format(state.clientTotal);
 
   return (
     <div className="space-y-4">
-      <ReviewSection title="Service" editStep={1}>
+      <ReviewSection title="Service" editStep={1} summary={state.serviceName || "Not selected"}>
         <p className="font-bold text-white">{state.serviceName || "Not selected"}</p>
       </ReviewSection>
 
-      <ReviewSection title="Journey and access" editStep={2}>
+      <ReviewSection title="Journey and access" editStep={2} summary={`${pickupSummary} to ${dropoffSummary}`}>
         <div className="grid gap-3 md:grid-cols-2">
           <div className="rounded-xl p-4" style={{ background: "rgba(245,158,11,0.07)", boxShadow: "0 0 0 1px rgba(245,158,11,0.15)" }}>
             <p className="text-xs font-bold uppercase tracking-widest text-amber-400/70">Pickup</p>
@@ -168,7 +199,11 @@ function BookingReview() {
         )}
       </ReviewSection>
 
-      <ReviewSection title="Items and help" editStep={3}>
+      <ReviewSection
+        title="Items and help"
+        editStep={3}
+        summary={`${totalItems} item${totalItems === 1 ? "" : "s"}${extras.length ? `, ${extras.length} extra${extras.length === 1 ? "" : "s"}` : ""}`}
+      >
         {state.items.length > 0 ? (
           <ul className="divide-y divide-white/8 rounded-xl" style={{ boxShadow: "0 0 0 1px rgba(255,255,255,0.08)" }}>
             {state.items.map((item, index) => (
@@ -198,7 +233,7 @@ function BookingReview() {
         </div>
       </ReviewSection>
 
-      <ReviewSection title="Appointment and price" editStep={4}>
+      <ReviewSection title="Appointment and price" editStep={4} summary={appointmentSummary}>
         <div
           className="flex flex-wrap items-start justify-between gap-3 rounded-xl p-4"
           style={{ background: "rgba(245,158,11,0.10)", boxShadow: "0 0 0 1px rgba(245,158,11,0.30)" }}
@@ -303,10 +338,18 @@ function CheckoutForm({ onComplete, stripePromise }: CheckoutFormProps) {
       let session = pendingSession.current;
       if (!session) {
         waitingForCreateResponse = true;
+        let draftSessionKey = "";
+        try {
+          draftSessionKey = localStorage.getItem(BOOKING_SERVER_DRAFT_SESSION_KEY) ?? "";
+        } catch {
+          draftSessionKey = "";
+        }
         const createRes = await fetch(`${API_BASE}/booking/create`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
+            draftReference: state.bookingRef || undefined,
+            draftSessionKey: draftSessionKey || undefined,
             customerName: name.trim(),
             customerEmail: email.trim(),
             customerPhone: phone.trim(),
@@ -399,15 +442,18 @@ function CheckoutForm({ onComplete, stripePromise }: CheckoutFormProps) {
       if (!purchaseTrackedRef.current) {
         purchaseTrackedRef.current = true;
         try {
-          trackPurchase(bookingRef, finalAmount, state.serviceSlug);
+          trackPurchase(bookingRef, finalAmount, state.serviceSlug, {
+            email: email.trim(),
+            phone: phone.trim(),
+          });
         } catch {
           /* ignore tracking failures */
         }
       }
 
       try { localStorage.removeItem("sv_booking_draft_v1"); } catch { /* Storage may be unavailable. */ }
-      if (mounted.current) onComplete(bookingRef);
       try { localStorage.setItem("sv-customer-email", email.trim()); } catch { /* ignore */ }
+      if (mounted.current) onComplete(bookingRef);
     } catch (err) {
       if (!mounted.current) return;
       if (waitingForCreateResponse) {
@@ -430,7 +476,87 @@ function CheckoutForm({ onComplete, stripePromise }: CheckoutFormProps) {
       onSubmit={handleSubmit}
       className="space-y-5"
       noValidate
+      aria-busy={submitting}
     >
+      {submitting && (
+        <div
+          role="status"
+          aria-live="assertive"
+          className="fixed inset-x-4 top-4 z-[70] mx-auto max-w-md rounded-2xl border-2 border-amber-300 bg-black/95 p-4 text-white shadow-[0_18px_70px_rgba(0,0,0,0.72),0_0_32px_rgba(245,158,11,0.28)] sm:top-6"
+        >
+          <div className="flex items-center gap-3">
+            <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-amber-400 text-black">
+              <span className="h-5 w-5 animate-spin rounded-full border-2 border-black/80 border-t-transparent" aria-hidden="true" />
+            </span>
+            <div>
+              <p className="text-base font-black">Processing payment</p>
+              <p className="mt-1 text-sm font-semibold text-amber-100/70">
+                Please keep this page open. Do not press back or refresh.
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ── Payment details ── */}
+      {!paymentUnavailable && (!stripePromise || !stripe || !elements) ? (
+        <div role="status" className="rounded-2xl p-5 text-sm text-amber-100" style={cardStyle}>
+          Loading secure payment form…
+        </div>
+      ) : stripePromise && !paymentUnavailable ? (
+        <div
+          className={`rounded-2xl border-2 bg-black/72 p-5 shadow-[0_18px_58px_rgba(0,0,0,0.58),0_0_34px_rgba(245,158,11,0.16)] sm:p-6 ${
+            submitting ? "border-amber-300 ring-4 ring-amber-300/20" : "border-amber-400/70"
+          }`}
+          style={{
+            background: "linear-gradient(135deg, rgba(245,158,11,0.16), rgba(0,0,0,0.80) 38%, rgba(0,0,0,0.90))",
+          }}
+        >
+          <div className="mb-5 flex flex-wrap items-start justify-between gap-4">
+            <div className="min-w-0">
+              <div className="flex flex-wrap items-center gap-2">
+                <p className="text-xs font-black uppercase tracking-widest text-amber-300">Secure Stripe checkout</p>
+                <span className="rounded-full bg-white px-2.5 py-1 text-xs font-black text-[#635bff] shadow-sm">
+                  Stripe
+                </span>
+              </div>
+              <h2 className="mt-2 text-2xl font-black text-white sm:text-3xl">Card payment</h2>
+              <p className="mt-1 text-sm font-semibold text-amber-100/70">Enter card number, expiry and CVC below.</p>
+            </div>
+            <p className="rounded-xl bg-amber-300 px-4 py-2 text-lg font-black text-black shadow-lg">
+              {money.format(state.clientTotal)}
+            </p>
+          </div>
+          <label className="mb-2 block text-sm font-black uppercase tracking-widest text-white/85">
+            Stripe card details
+          </label>
+          <div
+            className="min-h-[74px] rounded-2xl px-5 py-5"
+            style={{
+              background: "rgba(0,0,0,0.70)",
+              boxShadow: "inset 0 0 0 2px rgba(245,158,11,0.82), 0 0 0 4px rgba(245,158,11,0.12), 0 14px 34px rgba(0,0,0,0.42)",
+            }}
+          >
+            <CardElement options={CARD_STYLE} />
+          </div>
+          <p className="mt-3 text-sm font-semibold text-white/62">Secured by Stripe. We never store your card details.</p>
+          {submitting && (
+            <div className="mt-4 rounded-xl border border-amber-300/35 bg-amber-300/10 px-4 py-3 text-sm font-bold text-amber-100">
+              Payment is processing now. Wait for confirmation before closing this page.
+            </div>
+          )}
+        </div>
+      ) : (
+        <div
+          className="rounded-2xl p-5 text-sm"
+          style={{ background: "rgba(245,158,11,0.10)", boxShadow: "0 0 0 1px rgba(245,158,11,0.30), 0 12px 44px rgba(0,0,0,0.45)" }}
+        >
+          <p className="text-xs font-black uppercase tracking-widest text-amber-400/75">Secure payment</p>
+          <p className="mt-1 text-lg font-black text-amber-300">Online payment unavailable</p>
+          <p className="mt-1 text-amber-100/65">Please contact us to arrange your booking. No online payment has been confirmed.</p>
+        </div>
+      )}
+
       {/* ── Your details ── */}
       <div className="rounded-2xl p-5 space-y-4" style={cardStyle}>
         <h2 className="text-base font-black text-white">Your details</h2>
@@ -483,32 +609,6 @@ function CheckoutForm({ onComplete, stripePromise }: CheckoutFormProps) {
         </div>
       </div>
 
-      {/* ── Payment details ── */}
-      {!paymentUnavailable && (!stripePromise || !stripe || !elements) ? (
-        <div role="status" className="rounded-2xl p-5 text-sm text-amber-100" style={cardStyle}>
-          Loading secure payment form…
-        </div>
-      ) : stripePromise && !paymentUnavailable ? (
-        <div className="rounded-2xl p-5" style={cardStyle}>
-          <h2 className="text-base font-black text-white mb-3">Payment details</h2>
-          <div
-            className="rounded-xl px-4 py-3.5"
-            style={{ background: "rgba(255,255,255,0.06)", boxShadow: "0 0 0 1px rgba(245,158,11,0.20)" }}
-          >
-            <CardElement options={CARD_STYLE} />
-          </div>
-          <p className="text-xs text-white/35 mt-2">Secured by Stripe. We never store your card details.</p>
-        </div>
-      ) : (
-        <div
-          className="rounded-2xl p-4 text-sm"
-          style={{ background: "rgba(245,158,11,0.08)", boxShadow: "0 0 0 1px rgba(245,158,11,0.20)" }}
-        >
-          <p className="font-bold text-amber-400">Online payment unavailable</p>
-          <p className="mt-1 text-amber-100/60">Please contact us to arrange your booking. No online payment has been confirmed.</p>
-        </div>
-      )}
-
       {error && (
         <p role="alert" className="rounded-xl px-4 py-3 text-sm font-medium text-red-300" style={{ background: "rgba(239,68,68,0.10)", boxShadow: "0 0 0 1px rgba(239,68,68,0.20)" }}>
           {error}
@@ -555,15 +655,15 @@ function CheckoutForm({ onComplete, stripePromise }: CheckoutFormProps) {
       {/* ── Pay CTA ── */}
       <button
         id={STEP_PRIMARY_CTA_ID}
+        data-action-bar-behaviour="click"
         type="submit"
         disabled={submitting || creationUncertain || paymentUnavailable || !stripe || !elements || state.quoteStatus !== "valid" || state.clientTotal <= 0}
-        className="flex min-h-12 w-full items-center justify-center rounded-xl px-5 text-base font-black text-black shadow-lg transition hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:ring-offset-2 focus-visible:ring-offset-booking-background disabled:cursor-not-allowed disabled:opacity-40"
-        style={{ background: "linear-gradient(135deg, #F59E0B 0%, #EA580C 100%)" }}
+        className="hidden"
       >
         {submitting ? (
           <span className="flex items-center justify-center gap-2">
             <span className="h-4 w-4 animate-spin rounded-full border-2 border-black border-t-transparent" />
-            Processing...
+            Processing payment...
           </span>
         ) : (
           creationUncertain ? "Check booking status" : `Pay ${money.format(state.clientTotal)} and confirm →`
@@ -590,7 +690,7 @@ export function Step4Payment() {
 
   const content = (
     <div className="space-y-6">
-      <div>
+      <div className="space-y-1">
         <button
           type="button"
           disabled={state.checkoutLocked}
@@ -599,12 +699,11 @@ export function Step4Payment() {
         >
           <span aria-hidden="true">←</span> Back
         </button>
-        <p className="text-xs font-bold uppercase tracking-widest text-amber-400">Step 4 of 4 · Review &amp; Pay</p>
-        <h1 className="mt-2 text-3xl font-black tracking-tight text-white">Review and pay</h1>
-        <p className="mt-2 max-w-2xl text-base leading-7 text-amber-100/55">
-          Check the summary, enter your details, then pay the exact amount shown.
-        </p>
+        <p className="text-xs font-black uppercase tracking-widest text-amber-400">Step 4 of 4 · Secure card payment</p>
+        <h1 className="sr-only">Review and pay</h1>
       </div>
+
+      <CheckoutForm onComplete={handleComplete} stripePromise={stripePromise} />
 
       {state.checkoutLocked && (
         <div role="status" className="rounded-2xl border border-amber-500/30 bg-amber-500/10 p-4 text-sm leading-6 text-amber-100">
@@ -622,7 +721,6 @@ export function Step4Payment() {
 
       <CheckoutRecovery />
       <BookingReview />
-      <CheckoutForm onComplete={handleComplete} stripePromise={stripePromise} />
     </div>
   );
 

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { buildPageMetadata } from "@/lib/seo/metadata";
+import { SITE_LEGAL_NAME } from "@/lib/seo/constants";
 
 export const metadata: Metadata = buildPageMetadata({
   title: "Terms & Conditions",
@@ -36,7 +37,7 @@ export default function TermsPage() {
         >
           <p>
             These Terms and Conditions (the &ldquo;<strong>Terms</strong>&rdquo;)
-            govern the supply of services by <strong>SpeedyVan</strong> (&ldquo;we&rdquo;,
+            govern the supply of services by <strong>{SITE_LEGAL_NAME}</strong>, trading as SpeedyVan (&ldquo;we&rdquo;,
             &ldquo;us&rdquo;, &ldquo;our&rdquo;) to you (the &ldquo;Customer&rdquo;)
             when you book any service through our website, mobile interface or
             telephone. By placing a booking you confirm that you have read,
@@ -45,6 +46,7 @@ export default function TermsPage() {
 
           <h2>1. About us</h2>
           <ul>
+            <li><strong>Legal entity:</strong> {SITE_LEGAL_NAME}</li>
             <li><strong>Trading name:</strong> SpeedyVan</li>
             <li>
               <strong>Registered office:</strong> 1 Barrack Street, Office 2.18,

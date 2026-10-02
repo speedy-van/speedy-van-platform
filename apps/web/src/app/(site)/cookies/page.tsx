@@ -9,7 +9,7 @@ export const metadata: Metadata = buildPageMetadata({
   path: "/cookies",
 });
 
-const LAST_UPDATED = "21 September 2026";
+const LAST_UPDATED = "2 October 2026";
 
 export default function CookiesPage() {
   return (
@@ -54,16 +54,23 @@ export default function CookiesPage() {
             in, secure your booking session, and remember your cookie choices.
             These are not controlled by the optional-cookie choice.
           </p>
+          <p>
+            We also use short-lived operational session storage to show our
+            admin team live website activity and abandoned booking drafts. This
+            does not enable Google Analytics, Google Ads or Meta advertising
+            cookies.
+          </p>
           <h3>Analytics</h3>
           <p>
-            When enabled, Google Analytics 4 helps us understand which pages
-            are most useful and how visitors find us. It is loaded only after
-            you select Accept optional.
+            The Google tag may load in consent-denied mode so Google can detect
+            the tag and respect your consent state. Google Analytics 4 page
+            measurement is only enabled after you select Accept optional.
           </p>
           <h3>Marketing</h3>
           <p>
-            When enabled, Meta (Facebook) Pixel measures the effectiveness of
-            our advertising. It is loaded only after you select Accept optional.
+            When enabled, Google Ads conversion measurement and Meta
+            (Facebook) Pixel help us measure advertising effectiveness. These
+            advertising events are only enabled after you select Accept optional.
           </p>
 
           <h2>3. Managing your preferences</h2>

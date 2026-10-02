@@ -65,6 +65,22 @@ async function findOrCreateCustomer(email: string, name: string, phone: string) 
   });
 }
 
+async function resolveBookingReference(preferredReference?: string): Promise<string> {
+  const candidates = [
+    preferredReference,
+    generateBookingReference(),
+    generateBookingReference(),
+    generateBookingReference(),
+  ].filter((reference): reference is string => Boolean(reference));
+
+  for (const reference of candidates) {
+    const existing = await db.booking.findUnique({ where: { reference }, select: { id: true } });
+    if (!existing) return reference;
+  }
+
+  return generateBookingReference();
+}
+
 export async function createBooking(input: CreateBookingInput): Promise<{
   booking: Booking;
   clientSecret: string | null;
@@ -161,7 +177,7 @@ export async function createBooking(input: CreateBookingInput): Promise<{
   }
 
   // 4. Create booking
-  const reference = generateBookingReference();
+  const reference = await resolveBookingReference(input.draftReference);
   const booking = await db.booking.create({
     data: {
       reference,

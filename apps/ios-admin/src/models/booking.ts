@@ -34,6 +34,8 @@ export type BookingListItem = {
   status: BookingStatus;
   createdAt: string;
   driver?: BookingDriver | null;
+  isDraft?: boolean;
+  checkoutStage?: string;
 };
 
 export type BookingItem = {

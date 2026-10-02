@@ -68,7 +68,7 @@ function startProcess(name, color, command, args, cwd, extraEnv = {}) {
 }
 
 console.log(`${BOLD}Starting SpeedyVan dev servers...${RESET}`);
-console.log(`  ${CYAN}web${RESET}  → http://localhost:3002`);
+console.log(`  ${CYAN}web${RESET}  → http://localhost:3000`);
 console.log(`  ${INDIGO}api${RESET}  → http://localhost:4000\n`);
 
 // Load .env.local files for each app so vars are injected directly into the
@@ -81,7 +81,7 @@ const apiCli = path.join(root, "apps", "api", "node_modules", "tsx", "dist", "cl
 const webProc = startProcess(
   "web", CYAN,
   process.execPath,
-  [webCli, "dev", "-p", "3002"],
+  [webCli, "dev", "-p", "3000"],
   path.join(root, "apps", "web"),
   webEnv
 );

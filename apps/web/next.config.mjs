@@ -1,8 +1,26 @@
+const stripePublishableKey =
+  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY ||
+  (process.env.STRIPE_PUBLISHABLE_KEY?.startsWith("pk_") ? process.env.STRIPE_PUBLISHABLE_KEY : "");
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   transpilePackages: ["@speedy-van/shared", "@speedy-van/config"],
+  env: stripePublishableKey
+    ? { NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: stripePublishableKey }
+    : {},
   images: {
     formats: ["image/avif", "image/webp"],
+    localPatterns: [
+      {
+        pathname: "/**",
+        search: "",
+      },
+      {
+        pathname: "/logo.png",
+        search: "?v=amber-20260921-1",
+      },
+    ],
+    qualities: [60, 70, 75],
   },
   poweredByHeader: false,
   eslint: {

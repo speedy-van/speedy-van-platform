@@ -4,9 +4,7 @@ import { StickyBookBar } from "@/components/booking/StickyBookBar";
 import { ScrollReveal } from "@/components/ScrollReveal";
 import { LiveActivityFeed } from "@/components/LiveActivityFeed";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
-import { ExitIntentPopup } from "@/components/ExitIntentPopup";
 import { LocationPersonalization } from "@/components/LocationPersonalization";
-import { SofaItemPopup } from "@/components/SofaItemPopup";
 import { BackToTopButton } from "@/components/BackToTopButton";
 
 export default function SiteLayout({
@@ -25,8 +23,6 @@ export default function SiteLayout({
       <LiveActivityFeed />
       <WhatsAppButton />
       <BackToTopButton />
-      <ExitIntentPopup />
-      <SofaItemPopup />
     </>
   );
 }
