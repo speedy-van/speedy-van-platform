@@ -10,17 +10,20 @@ import {
   type ReactNode,
 } from "react";
 import type { BedroomCount, InventoryMode, InventoryRoom } from "./room-inventory";
-import { resolveBookingService } from "./booking-service-options";
+import {
+  getBookingServiceOption,
+  normalizeBookingIntentId,
+  resolveBookingService,
+  type BookingIntentId,
+} from "./booking-service-options";
 import { getBookingPricingKey, getQuoteSelection } from "./booking-quote";
+import { getApiBaseUrl } from "./api-base";
 import type { PricingResult } from "@/components/booking/quote-response";
 
 export const BOOKING_DRAFT_STORAGE_KEY = "sv_booking_draft_v1";
 export const BOOKING_SERVER_DRAFT_SESSION_KEY = "sv_booking_draft_session_v1";
 export const BOOKING_DRAFT_TTL_MS = 24 * 60 * 60 * 1000; // 24h
-const API_BASE =
-  process.env.NODE_ENV === "development"
-    ? "http://localhost:4000"
-    : (process.env.NEXT_PUBLIC_API_URL ?? "https://api.speedyvan.uk");
+const API_BASE = getApiBaseUrl();
 
 // ─── Types ─────────────────────────────────────────────────────────────────
 
@@ -271,14 +274,34 @@ function invalidateQuote(state: BookingState, keepCalendar = false): BookingStat
   };
 }
 
+const BOOKING_INTENT_NAME_MATCHES: BookingIntentId[] = [
+  "house-removals",
+  "flat-removals",
+  "man-and-van",
+  "furniture",
+  "storage",
+  "student-move",
+  "small-moves",
+  "office",
+  "business",
+  "packing-service",
+  "other",
+];
+
+function intentFromServiceName(name: string): BookingIntentId | null {
+  const normalized = name.trim().toLowerCase();
+  if (!normalized) return null;
+  return BOOKING_INTENT_NAME_MATCHES.find((id) => getBookingServiceOption(id)?.label.trim().toLowerCase() === normalized) ?? null;
+}
+
 function serviceEntryIdentity(service: Pick<BookingState, "serviceSlug" | "entryServiceSlug" | "serviceName">): string {
-  const entry = resolveBookingService(service.entryServiceSlug);
-  const canonical = resolveBookingService(service.serviceSlug);
-  const name = service.serviceName.trim().toLowerCase();
-  // Public aliases share a booking service; distinct flat/small/intercity intents retain their names.
-  const isDefaultName = [entry?.serviceName, canonical?.serviceName]
-    .some((candidate) => candidate?.trim().toLowerCase() === name);
-  return [service.serviceSlug, entry?.entryServiceSlug ?? service.entryServiceSlug, isDefaultName ? "" : name].join(":");
+  const entryIntent = normalizeBookingIntentId(service.entryServiceSlug);
+  const slugIntent = normalizeBookingIntentId(service.serviceSlug);
+  const namedIntent = intentFromServiceName(service.serviceName);
+  const intent = namedIntent ?? entryIntent ?? slugIntent ?? service.entryServiceSlug;
+  const normalizedIntent = intent === "other" && service.serviceSlug === "man-and-van" ? "man-and-van" : intent;
+  const resolved = resolveBookingService(normalizedIntent) ?? resolveBookingService(service.serviceSlug);
+  return [resolved?.serviceSlug ?? service.serviceSlug, normalizedIntent].join(":");
 }
 
 export function bookingReducer(state: BookingState, action: BookingAction): BookingState {
@@ -479,7 +502,7 @@ export function restoreBookingDraft(raw: string | null, now = Date.now()): Booki
       quoteStatus: "stale",
       checkoutLocked: draft.checkoutLocked === true,
       bookingId: draft.checkoutLocked === true ? text("bookingId") : "",
-      bookingRef: text("bookingRef"),
+      bookingRef: draft.checkoutLocked === true ? text("bookingRef") : "",
     };
     const requested = typeof draft.step === "number" && Number.isInteger(draft.step) && draft.step >= 1 && draft.step <= 5 ? draft.step as BookingState["step"] : 2;
     state.step = state.checkoutLocked ? 5 : getReachableBookingStep(state, requested);
@@ -557,8 +580,9 @@ export function BookingProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     if (!ready || !state.serviceSlug || state.step <= 1 || state.checkoutLocked) return;
+    if (typeof window.setTimeout !== "function" || typeof window.clearTimeout !== "function" || typeof fetch !== "function") return;
 
-    const controller = new AbortController();
+    const controller = typeof AbortController === "function" ? new AbortController() : null;
     const timeout = window.setTimeout(() => {
       let sessionKey = "";
       try {
@@ -571,7 +595,7 @@ export function BookingProvider({ children }: { children: ReactNode }) {
         method: "POST",
         credentials: "include",
         headers: { "Content-Type": "application/json" },
-        signal: controller.signal,
+        ...(controller ? { signal: controller.signal } : {}),
         body: JSON.stringify({
           payload: serialiseBookingDraft(state),
           email: state.customerEmail || undefined,
@@ -604,7 +628,7 @@ export function BookingProvider({ children }: { children: ReactNode }) {
 
     return () => {
       window.clearTimeout(timeout);
-      controller.abort();
+      controller?.abort();
     };
   }, [ready, state]);
 

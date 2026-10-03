@@ -6,6 +6,7 @@ import { AREAS, getAreaBySlug } from "@/lib/areas";
 import { getAreaGuide } from "@/lib/area-guides";
 import { AreaExpansionLinks } from "@/components/areas/AreaExpansionLinks";
 import { AreaGuideContent } from "@/components/areas/AreaGuideContent";
+import { NearbyAreaContent } from "@/components/areas/NearbyAreaContent";
 import { SERVICES, getServicePriceLabel } from "@/lib/services";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { buildBreadcrumbSchema } from "@/lib/seo/schemas";
@@ -236,6 +237,8 @@ export default async function AreaPage({ params }: Props) {
           </ul>
         </div>
       </section>
+
+      <NearbyAreaContent area={area} />
 
       {/* Local move planning */}
       <section

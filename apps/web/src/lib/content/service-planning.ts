@@ -117,11 +117,11 @@ export const SERVICE_PLANNING: Partial<Record<string, ServicePlanning>> = {
   },
   "office-removal": {
     suitableFor:
-      "Office removals suit desks, chairs, filing cabinets and boxed business equipment moving to another workplace. Commercial relocation enquiries can also cover studios, shops and suitable stock; specialist machinery or regulated goods need assessment before acceptance.",
+      "Office removals suit desks, chairs, filing cabinets and boxed office equipment moving to another workplace. If the job is a shop, studio, commercial stock room or wider business move, use business removals so the scope is reviewed separately.",
     vehicleAndCrew:
       "Send the inventory, equipment dimensions and both building access arrangements. The loading bay, goods lift, floor plan and permitted moving hours help determine crew and vehicle needs. Tell us about heavy cabinets or equipment that cannot use the normal access route.",
     pricing:
-      "A business removal quote depends on the furniture and equipment, route, crew time, access windows and agreed packing or dismantling. Evening or weekend work is subject to availability. Include staged moves and extra premises in the scope before confirmation.",
+      "An office removal quote depends on the office furniture and equipment, route, crew time, access windows and agreed packing or dismantling. Evening or weekend work is subject to availability. Include staged moves and extra workplace areas in the scope before confirmation.",
     notIncluded: [
       "IT disconnection, data migration, system configuration or reconnection.",
       "Handling confidential records without an agreed packing and handover plan.",
@@ -139,6 +139,60 @@ export const SERVICE_PLANNING: Partial<Record<string, ServicePlanning>> = {
       {
         title: "Agree building access",
         body: "Confirm lift and loading bay reservations with building management. Share any access paperwork or restrictions before the move is accepted.",
+      },
+    ],
+  },
+  "business-removals": {
+    suitableFor:
+      "Business removals suit commercial moves that are wider than an office desk move: shops, studios, business furniture, boxed stock, display pieces and suitable equipment. Specialist machinery, regulated goods and hazardous materials need separate assessment before acceptance.",
+    vehicleAndCrew:
+      "The business inventory, release contact, service entrance, loading bay, lift and access window determine the vehicle and crew. Tell us whether items are packed, palletised, boxed, loose, fragile or displayed so handling can be assessed before confirmation.",
+    pricing:
+      "Business relocation pricing uses the commercial inventory, route, crew time, access constraints, date and any agreed packing, dismantling or additional stops. Shops, studios and wider commercial loads should be described as business removals so the quote keeps the right scope and labels.",
+    notIncluded: [
+      "Specialist machinery installation, regulated goods, hazardous materials or waste disposal.",
+      "IT system disconnection, data migration or reconnection.",
+      "Moving unlisted stock, fixtures or extra premises that were not included in the agreed scope.",
+    ],
+    preparation: [
+      {
+        title: "List commercial items clearly",
+        body: "Separate stock, shelving, display furniture, business equipment and boxed files. Mark fragile items and anything that must stay upright.",
+      },
+      {
+        title: "Confirm business access",
+        body: "Ask the premises manager about loading bays, goods lifts, alarm procedures and moving hours. Provide the release contact and destination contact before booking.",
+      },
+      {
+        title: "Plan business continuity",
+        body: "Identify what must move first and what can wait. Keep tills, records, keys and essential equipment controlled by your team unless separate handling is agreed.",
+      },
+    ],
+  },
+  "storage-transport": {
+    suitableFor:
+      "Storage transport suits belongings moving into or out of a booked storage unit: furniture, boxes, student belongings, small loads and temporary moves between tenancies. It is transport only, not storage-space rental.",
+    vehicleAndCrew:
+      "The unit floor, lift, trolley access, facility opening hours and home access determine the crew and vehicle. Include the unit number or release process privately in the booking details where needed, but do not publish full access codes.",
+    pricing:
+      "Storage transport is priced from the storage moving intent using the route, load, access, crew and any additional stops. Add both the home and storage facility details before confirming so the quote covers the whole job.",
+    notIncluded: [
+      "Storage-space rental, insurance or facility fees.",
+      "Packing, dismantling, assembly or extra helpers unless included in the quote.",
+      "Waiting for facility access that was not included in the agreed scope.",
+    ],
+    preparation: [
+      {
+        title: "Check the unit access",
+        body: "Confirm opening hours, gate entry, lift size, unit floor and whether trolleys are available. Share any access process needed for collection or delivery.",
+      },
+      {
+        title: "Separate storage loads",
+        body: "Label what goes into storage and what travels to the final address. List furniture, boxes and bags instead of describing the load only by unit size.",
+      },
+      {
+        title: "Keep the route clear",
+        body: "At home and at the facility, leave a clear route for bulky pieces. Measure sofas, wardrobes and beds against the unit corridor and lift as well as the property.",
       },
     ],
   },

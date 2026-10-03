@@ -1,6 +1,11 @@
 export const DEFAULT_API_BASE = "https://api.speedyvan.uk";
 const DEV_API_PORT = "4000";
 
+function envValue(key: string): string | undefined {
+  if (typeof process === "undefined") return undefined;
+  return process.env[key];
+}
+
 function withoutTrailingSlash(value: string): string {
   return value.replace(/\/+$/, "");
 }
@@ -24,14 +29,16 @@ function isLocalNetworkHost(hostname: string): boolean {
 }
 
 export function getApiBaseUrl(): string {
-  const configured = process.env.NEXT_PUBLIC_API_URL;
+  const configured = envValue("NEXT_PUBLIC_API_URL");
   if (configured) return withoutTrailingSlash(configured);
 
+  const isDevelopment = envValue("NODE_ENV") === "development";
+
   if (typeof window === "undefined") {
-    return process.env.NODE_ENV === "development" ? `http://localhost:${DEV_API_PORT}` : DEFAULT_API_BASE;
+    return isDevelopment ? `http://localhost:${DEV_API_PORT}` : DEFAULT_API_BASE;
   }
 
-  if (process.env.NODE_ENV === "development") {
+  if (isDevelopment) {
     const { hostname, protocol } = window.location;
     if (isLoopbackHost(hostname)) return `http://localhost:${DEV_API_PORT}`;
     if (protocol === "http:" && isLocalNetworkHost(hostname)) return `http://${hostname}:${DEV_API_PORT}`;

@@ -1,7 +1,18 @@
 import type { InventoryMode } from "./room-inventory";
 import { SERVICES, getBookableService } from "./services";
 
-export type BookingIntentId = "house-removals" | "furniture" | "storage" | "office" | "other";
+export type BookingIntentId =
+  | "house-removals"
+  | "flat-removals"
+  | "man-and-van"
+  | "furniture"
+  | "storage"
+  | "student-move"
+  | "small-moves"
+  | "office"
+  | "business"
+  | "packing-service"
+  | "other";
 
 export interface BookingServiceOption {
   id: BookingIntentId;
@@ -94,24 +105,24 @@ export const BOOKING_SERVICE_OPTIONS: BookingServiceOption[] = [
   {
     id: "office",
     label: "Office",
-    description: "Small office moves and business relocations.",
+    description: "Desks, chairs, files and boxed office equipment.",
     serviceSlug: "office-removal",
     imageSlug: "office-removal",
     inventoryMode: "items",
-    pathBadge: "Business inventory",
+    pathBadge: "Office inventory",
     scopeBadge: "Downtime-aware",
     journeyTitle: "Plan the office move",
     journeyDescription:
-      "Confirm business addresses, loading access, and building constraints before adding desks, chairs, equipment, and crates.",
+      "Confirm office addresses, loading access, and building constraints before adding desks, chairs, equipment, and crates.",
     pickupTitle: "Current workplace",
     dropoffTitle: "New workplace",
-    pickupPlaceholder: "e.g. office, clinic, studio, or shop address",
-    dropoffPlaceholder: "e.g. new office or business address",
+    pickupPlaceholder: "e.g. current office or workplace address",
+    dropoffPlaceholder: "e.g. new office or workplace address",
     inventoryTitle: "Office items",
     inventoryDescription:
       "Add desks, chairs, files, boxes, equipment, and any extra helpers needed for the relocation.",
     inventoryCta: "date and time",
-    summaryNote: "Priced for a business relocation or office move.",
+    summaryNote: "Priced for an office relocation with item and access planning.",
   },
   {
     id: "other",
@@ -137,25 +148,170 @@ export const BOOKING_SERVICE_OPTIONS: BookingServiceOption[] = [
   },
 ];
 
-const OPTION_BY_ID = new Map(BOOKING_SERVICE_OPTIONS.map((option) => [option.id, option]));
+const CONTEXTUAL_BOOKING_SERVICE_OPTIONS: BookingServiceOption[] = [
+  {
+    id: "flat-removals",
+    label: "Flat removals",
+    description: "Studios, apartments, shared flats and upper-floor moves.",
+    serviceSlug: "man-and-van",
+    imageSlug: "flat-removals",
+    inventoryMode: "rooms",
+    pathBadge: "Flat inventory",
+    scopeBadge: "Stairs and lifts",
+    journeyTitle: "Plan the flat move",
+    journeyDescription:
+      "Confirm the collection and delivery access first, including floors, lifts, shared stairs and loading distance.",
+    pickupTitle: "Current flat",
+    dropoffTitle: "New flat",
+    pickupPlaceholder: "e.g. flat, stair, floor and street address",
+    dropoffPlaceholder: "e.g. new flat or delivery address",
+    inventoryTitle: "Flat contents",
+    inventoryDescription:
+      "Choose the flat size and add rooms, boxes, furniture, dismantling or extra help needed for the move.",
+    inventoryCta: "date and time",
+    summaryNote: "Priced for a flat move with room and access planning.",
+  },
+  {
+    id: "man-and-van",
+    label: "Man and van",
+    description: "Flexible van-with-driver help for smaller loads.",
+    serviceSlug: "man-and-van",
+    imageSlug: "man-and-van",
+    inventoryMode: "items",
+    pathBadge: "Flexible item list",
+    scopeBadge: "Van with driver",
+    journeyTitle: "Plan the man and van job",
+    journeyDescription:
+      "Confirm the route, access and what is moving so the quote can match the actual load and lifting help.",
+    pickupTitle: "Pickup",
+    dropoffTitle: "Delivery",
+    pickupPlaceholder: "e.g. pickup address",
+    dropoffPlaceholder: "e.g. drop-off address",
+    inventoryTitle: "Items to move",
+    inventoryDescription:
+      "Add furniture, boxes, bags, appliances or notes that describe the job, then include any extra help needed.",
+    inventoryCta: "date and time",
+    summaryNote: "Priced as man and van transport with item inventory.",
+  },
+  {
+    id: "student-move",
+    label: "Student moves",
+    description: "Halls, shared flats, suitcases, boxes and storage stops.",
+    serviceSlug: "student-move",
+    imageSlug: "student-move",
+    inventoryMode: "items",
+    pathBadge: "Student load",
+    scopeBadge: "Term timing",
+    journeyTitle: "Plan the student move",
+    journeyDescription:
+      "Confirm halls, flat, family-home or storage addresses, including check-in windows, floors and access at both ends.",
+    pickupTitle: "Collection address",
+    dropoffTitle: "Delivery address",
+    pickupPlaceholder: "e.g. halls, shared flat, family home or storage unit",
+    dropoffPlaceholder: "e.g. new accommodation, storage or home address",
+    inventoryTitle: "Student belongings",
+    inventoryDescription:
+      "Add boxes, suitcases, small furniture, bikes or screens, then include storage or extra helper needs.",
+    inventoryCta: "date and time",
+    summaryNote: "Priced for student belongings, accommodation timing and storage context.",
+  },
+  {
+    id: "small-moves",
+    label: "Small moves",
+    description: "Single rooms, partial loads and a few bulky items.",
+    serviceSlug: "man-and-van",
+    imageSlug: "man-and-van",
+    inventoryMode: "rooms",
+    pathBadge: "Small-load planner",
+    scopeBadge: "Partial move",
+    journeyTitle: "Plan the small move",
+    journeyDescription:
+      "Confirm the route and access, then list the room, bulky items or part load so the quote reflects the actual work.",
+    pickupTitle: "Collection point",
+    dropoffTitle: "Delivery point",
+    pickupPlaceholder: "e.g. room, home, storage unit or seller address",
+    dropoffPlaceholder: "e.g. delivery address",
+    inventoryTitle: "Small move contents",
+    inventoryDescription:
+      "Add the room contents, boxes, bulky pieces or storage items and any extra lifting help needed.",
+    inventoryCta: "date and time",
+    summaryNote: "Priced for a smaller move while preserving the specific service context.",
+  },
+  {
+    id: "business",
+    label: "Business removals",
+    description: "Shops, studios, commercial furniture and business equipment.",
+    serviceSlug: "office-removal",
+    imageSlug: "business-removals",
+    inventoryMode: "items",
+    pathBadge: "Business inventory",
+    scopeBadge: "Commercial access",
+    journeyTitle: "Plan the business move",
+    journeyDescription:
+      "Confirm the commercial premises, service entrance, access window and destination before adding stock, displays, furniture or equipment.",
+    pickupTitle: "Current business address",
+    dropoffTitle: "New business address",
+    pickupPlaceholder: "e.g. shop, studio, clinic, unit, or business address",
+    dropoffPlaceholder: "e.g. new premises or delivery address",
+    inventoryTitle: "Business items",
+    inventoryDescription:
+      "Add commercial furniture, boxed stock, display pieces, shelving, equipment and any extra moving help needed.",
+    inventoryCta: "date and time",
+    summaryNote: "Priced for a business or commercial relocation using item and access details.",
+  },
+  {
+    id: "packing-service",
+    label: "Packing service",
+    description: "Packing help when included with a suitable move.",
+    serviceSlug: "packing-service",
+    imageSlug: "packing-service",
+    inventoryMode: "rooms",
+    pathBadge: "Packing scope",
+    scopeBadge: "Add-on planning",
+    journeyTitle: "Plan the packing and move",
+    journeyDescription:
+      "Confirm the route and access first, then identify which rooms, fragile items or furniture preparation need packing help.",
+    pickupTitle: "Property to pack",
+    dropoffTitle: "Move destination",
+    pickupPlaceholder: "e.g. current home, flat or office address",
+    dropoffPlaceholder: "e.g. destination address",
+    inventoryTitle: "Packing scope",
+    inventoryDescription:
+      "Add the rooms, boxes, fragile items and furniture preparation that need packing or dismantling help.",
+    inventoryCta: "date and time",
+    summaryNote: "Priced for packing support as part of a suitable moving job.",
+  },
+];
+
+const ALL_BOOKING_SERVICE_OPTIONS = [
+  ...BOOKING_SERVICE_OPTIONS,
+  ...CONTEXTUAL_BOOKING_SERVICE_OPTIONS,
+];
+
+const OPTION_BY_ID = new Map(ALL_BOOKING_SERVICE_OPTIONS.map((option) => [option.id, option]));
 
 const INTENT_ALIASES: Record<string, BookingIntentId> = {
   house: "house-removals",
   "house-removals": "house-removals",
   "house-removal": "house-removals",
   "long-distance-removals": "house-removals",
-  "packing-service": "house-removals",
+  "packing-service": "packing-service",
+  "flat-removals": "flat-removals",
+  "man-and-van": "man-and-van",
+  "small-moves": "small-moves",
+  "student-move": "student-move",
   furniture: "furniture",
   "furniture-delivery": "furniture",
   "ikea-delivery": "furniture",
   storage: "storage",
+  "storage-transport": "storage",
   office: "office",
   "office-removal": "office",
+  business: "business",
+  "business-removals": "business",
+  "commercial-removals": "business",
+  "commercial-relocation": "business",
   other: "other",
-  "man-and-van": "other",
-  "flat-removals": "other",
-  "small-moves": "other",
-  "student-move": "other",
   "piano-moving": "other",
   "same-day-delivery": "other",
   "same-day": "other",
@@ -181,6 +337,12 @@ export function getBookingServiceOptionForState(
 
 export function getBookingServiceStartingFrom(option: BookingServiceOption): number | null {
   return SERVICES.find((service) => service.slug === option.serviceSlug)?.startingFrom ?? null;
+}
+
+export function getBookingHrefForService(serviceSlug?: string | null): string {
+  return serviceSlug && resolveBookingService(serviceSlug)
+    ? `/book?service=${encodeURIComponent(serviceSlug)}`
+    : "/book";
 }
 
 /** Resolve the existing public service links and the homepage service choices. */

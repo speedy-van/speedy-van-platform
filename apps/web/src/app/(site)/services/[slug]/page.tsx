@@ -10,6 +10,7 @@ import {
   type ServiceFaq,
 } from "@/lib/services";
 import { FEATURED_AREAS } from "@/lib/areas";
+import { getBookingHrefForService } from "@/lib/booking-service-options";
 import { localServiceHref } from "@/lib/seo/local-service-links";
 import { SERVICE_BOOKING_STEPS, SERVICE_PLANNING } from "@/lib/content/service-planning";
 import { SERVICE_SEARCH_CONTENT } from "@/lib/content/service-search-content";
@@ -45,7 +46,17 @@ const SERVICE_DECISION_LINKS = [
   {
     slug: "office-removal",
     label: "Office Removals",
-    body: "better for business moves with equipment, access windows and downtime planning.",
+    body: "better for desks, chairs, files, boxed office equipment and workplace handover.",
+  },
+  {
+    slug: "business-removals",
+    label: "Business Removals",
+    body: "better for shops, studios, commercial furniture, boxed stock and suitable business equipment.",
+  },
+  {
+    slug: "storage-transport",
+    label: "Storage Transport",
+    body: "better for moving boxes, furniture and student belongings into or out of a storage unit.",
   },
 ];
 
@@ -125,6 +136,7 @@ export default async function ServicePage({ params }: Props) {
   const planning = SERVICE_PLANNING[service.slug];
   const featuredAreas = FEATURED_AREAS;
   const canonical = absoluteUrl(`/services/${slug}`);
+  const bookingHref = getBookingHrefForService(service.slug);
 
   return (
     <>
@@ -186,7 +198,7 @@ export default async function ServicePage({ params }: Props) {
             </p>
             <div className="mt-8 flex flex-wrap items-center gap-3">
               <Link
-                href={`/book?service=${service.slug}`}
+                href={bookingHref}
                 className="inline-flex items-center justify-center rounded-lg px-8 py-4 text-base font-black text-black transition-transform motion-safe:hover:scale-105"
                 style={{ background: "linear-gradient(135deg, #F59E0B 0%, #EA580C 100%)" }}
               >
@@ -276,7 +288,7 @@ export default async function ServicePage({ params }: Props) {
                   Guide price · Your quote depends on the move
                 </p>
                 <Link
-                  href={`/book?service=${service.slug}`}
+                  href={bookingHref}
                   className="mt-4 block rounded-lg px-5 py-3 text-center font-black text-black transition-transform motion-safe:hover:scale-105"
                   style={{ background: "linear-gradient(135deg, #F59E0B 0%, #EA580C 100%)" }}
                 >
@@ -543,7 +555,7 @@ export default async function ServicePage({ params }: Props) {
           </p>
           <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
             <Link
-              href={`/book?service=${service.slug}`}
+              href={bookingHref}
               className="inline-flex items-center justify-center gap-2 rounded-lg px-8 py-4 font-black text-black transition-transform motion-safe:hover:scale-105"
               style={{ background: "linear-gradient(135deg, #F59E0B 0%, #EA580C 100%)" }}
             >

@@ -1,6 +1,6 @@
 import Link from "next/link";
 import type { Area } from "@/lib/areas";
-import { LOCAL_SERVICE_PAGES } from "@/lib/content/city-service-pages";
+import { LOCAL_SERVICE_PAGES } from "@/lib/content/local-service-pages";
 import { MOVING_ROUTE_PAGES } from "@/lib/content/moving-route-pages";
 import { movingTextLink } from "./MovingContentPage";
 

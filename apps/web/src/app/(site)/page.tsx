@@ -289,8 +289,12 @@ export default function HomePage() {
                 id="hero-heading"
                 className="text-3xl sm:text-4xl font-black leading-tight tracking-tight text-white"
               >
-                Book your van in <span className="text-amber-400">3 steps</span>
+                Man and Van & Removals Across Scotland
               </h1>
+
+              <p className="mt-3 max-w-2xl text-base leading-7 text-white/70">
+                Book your van in 3 steps: pick a service, add addresses and date, then review and pay online.
+              </p>
 
               <ol className="mt-4 flex flex-col sm:flex-row gap-2 sm:gap-6" aria-label="How to book">
                 {[

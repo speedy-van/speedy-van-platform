@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { LOCAL_SERVICE_PAGES } from "@/lib/content/city-service-pages";
+import { LOCAL_SERVICE_PAGES } from "@/lib/content/local-service-pages";
 import { movingTextLink } from "./MovingContentPage";
 
 export function ServiceExpansionLinks({ serviceSlug }: { serviceSlug: string }) {
