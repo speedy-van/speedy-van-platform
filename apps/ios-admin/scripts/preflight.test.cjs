@@ -20,7 +20,7 @@ test("ios-admin release preflight accepts the authoritative app root", () => {
 
   assert.equal(result.status, 0, result.stderr || result.stdout);
   assert.match(result.stdout, /root=apps\\ios-admin|root=apps\/ios-admin/);
-  assert.match(result.stdout, /build=48/);
+  assert.match(result.stdout, /build=49/);
 });
 
 test("ios-admin release preflight keeps worklets out of manifest and lockfile", () => {
