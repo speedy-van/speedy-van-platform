@@ -1,7 +1,7 @@
 import { Hono } from "hono";
 import { zValidator } from "@hono/zod-validator";
 import { z } from "zod";
-import { db } from "@speedy-van/db";
+import { db, type Prisma } from "@speedy-van/db";
 import { ok, fail, paginated } from "@speedy-van/shared";
 import { requireAdmin } from "../../middleware/auth";
 import { cancelBooking } from "../../services/booking.service";
@@ -31,8 +31,14 @@ function numberValue(source: Record<string, unknown>, key: string): number {
   return typeof value === "number" && Number.isFinite(value) ? value : 0;
 }
 
-function booleanValue(source: Record<string, unknown>, key: string): boolean {
-  return source[key] === true;
+function optionalNumberValue(source: Record<string, unknown>, key: string): number | null {
+  const value = source[key];
+  return typeof value === "number" && Number.isFinite(value) ? value : null;
+}
+
+function optionalBooleanValue(source: Record<string, unknown>, key: string): boolean | null {
+  const value = source[key];
+  return typeof value === "boolean" ? value : null;
 }
 
 function draftId(id: string): string | null {
@@ -106,6 +112,41 @@ function draftItems(source: Record<string, unknown>) {
   });
 }
 
+function draftFieldAvailability(source: Record<string, unknown>) {
+  const pickupAddress = addressValue(source, "pickup");
+  const dropoffAddress = addressValue(source, "dropoff");
+  return {
+    customerName: text(source, "customerName").length > 0,
+    customerEmail: text(source, "customerEmail").length > 0,
+    customerPhone: text(source, "customerPhone").length > 0,
+    pickupAddress: pickupAddress.length > 0,
+    pickupPostcode: postcodeValue(source, "pickup").length > 0,
+    pickupFloor: optionalNumberValue(source, "pickupFloor") !== null,
+    pickupHasLift: optionalBooleanValue(source, "pickupHasLift") !== null,
+    pickupPropertyType: text(source, "pickupPropertyType").length > 0,
+    pickupCarryMetres: optionalNumberValue(source, "pickupCarryMetres") !== null,
+    dropoffAddress: dropoffAddress.length > 0,
+    dropoffPostcode: postcodeValue(source, "dropoff").length > 0,
+    dropoffFloor: optionalNumberValue(source, "dropoffFloor") !== null,
+    dropoffHasLift: optionalBooleanValue(source, "dropoffHasLift") !== null,
+    dropoffPropertyType: text(source, "dropoffPropertyType").length > 0,
+    dropoffCarryMetres: optionalNumberValue(source, "dropoffCarryMetres") !== null,
+    distanceMiles: optionalNumberValue(source, "distanceMiles") !== null,
+    hasNarrowAccess: optionalBooleanValue(source, "hasNarrowAccess") !== null,
+    hasPermitZone: optionalBooleanValue(source, "hasPermitZone") !== null,
+    helpersCount: optionalNumberValue(source, "helpersCount") !== null,
+    needsPacking: optionalBooleanValue(source, "needsPacking") !== null,
+    needsAssembly: optionalBooleanValue(source, "needsAssembly") !== null,
+    assemblyType: text(source, "assemblyType").length > 0,
+    assemblyQty: optionalNumberValue(source, "assemblyQty") !== null,
+    items: Array.isArray(source.items),
+    price: optionalNumberValue(source, "clientTotal") !== null && numberValue(source, "clientTotal") > 0,
+    scheduledAt: scheduledDateValue(source) !== null,
+    selectedTimeSlot: text(source, "selectedTimeSlot").length > 0,
+    paidAt: false,
+  };
+}
+
 function draftMatchesSearch(source: Record<string, unknown>, q?: string): boolean {
   if (!q) return true;
   const needle = q.trim().toLowerCase();
@@ -142,6 +183,14 @@ function draftToBookingShape(draft: {
   const customerName = text(state, "customerName") || (customerEmail ? "Customer pending name" : "Customer pending");
   const serviceSlug = text(state, "serviceSlug") || "pending";
   const serviceName = text(state, "serviceName") || "Service pending";
+  const pickupFloor = optionalNumberValue(state, "pickupFloor");
+  const pickupHasLift = optionalBooleanValue(state, "pickupHasLift");
+  const dropoffFloor = optionalNumberValue(state, "dropoffFloor");
+  const dropoffHasLift = optionalBooleanValue(state, "dropoffHasLift");
+  const helpersCount = optionalNumberValue(state, "helpersCount");
+  const needsPacking = optionalBooleanValue(state, "needsPacking");
+  const needsAssembly = optionalBooleanValue(state, "needsAssembly");
+  const assemblyQty = optionalNumberValue(state, "assemblyQty");
 
   return {
     id: `${DRAFT_ID_PREFIX}${draft.id}`,
@@ -156,29 +205,38 @@ function draftToBookingShape(draft: {
     pickupPostcode: postcodeValue(state, "pickup"),
     pickupLat: coordinateValue(state, "pickup", "lat"),
     pickupLng: coordinateValue(state, "pickup", "lng"),
-    pickupFloor: numberValue(state, "pickupFloor"),
-    pickupHasLift: booleanValue(state, "pickupHasLift"),
+    pickupFloor,
+    pickupHasLift,
+    pickupPropertyType: text(state, "pickupPropertyType") || null,
+    pickupCarryMetres: optionalNumberValue(state, "pickupCarryMetres"),
     dropoffAddress: addressValue(state, "dropoff") || null,
     dropoffPostcode: postcodeValue(state, "dropoff"),
     dropoffLat: coordinateValue(state, "dropoff", "lat"),
     dropoffLng: coordinateValue(state, "dropoff", "lng"),
-    dropoffFloor: numberValue(state, "dropoffFloor"),
-    dropoffHasLift: booleanValue(state, "dropoffHasLift"),
-    distanceMiles: numberValue(state, "distanceMiles"),
+    dropoffFloor,
+    dropoffHasLift,
+    dropoffPropertyType: text(state, "dropoffPropertyType") || null,
+    dropoffCarryMetres: optionalNumberValue(state, "dropoffCarryMetres"),
+    hasNarrowAccess: optionalBooleanValue(state, "hasNarrowAccess"),
+    hasPermitZone: optionalBooleanValue(state, "hasPermitZone"),
+    distanceMiles: optionalNumberValue(state, "distanceMiles"),
     scheduledAt,
     scheduledDate: scheduledAt,
     selectedDate: scheduledAt,
     selectedTimeSlot: text(state, "selectedTimeSlot") || null,
-    helpersCount: numberValue(state, "helpersCount"),
-    needsPacking: booleanValue(state, "needsPacking"),
-    needsAssembly: booleanValue(state, "needsAssembly"),
+    helpersCount,
+    needsPacking,
+    needsAssembly,
     assemblyType: text(state, "assemblyType") || null,
-    assemblyQty: numberValue(state, "assemblyQty") || 1,
+    assemblyQty,
     price: totalPrice,
     totalPrice,
     isPaid: false,
+    paidAt: null,
+    refundAmount: 0,
     status: "PENDING",
-    notes: `Customer has not finished checkout. Current stage: ${draftStage(state)}.`,
+    notes: null,
+    draftMessage: `Customer has not finished checkout. Current stage: ${draftStage(state)}.`,
     createdAt: draft.savedAt,
     updatedAt: draft.updatedAt,
     driver: null,
@@ -189,6 +247,148 @@ function draftToBookingShape(draft: {
     conversation: null,
     isDraft: true,
     checkoutStage: draftStage(state),
+    fieldAvailability: draftFieldAvailability(state),
+  };
+}
+
+const adminBookingDetailInclude = {
+  items: true,
+  driver: { include: { user: { select: { name: true, email: true, phone: true } } } },
+  trackingEvents: { orderBy: { createdAt: "asc" as const } },
+  statusHistory: { orderBy: { createdAt: "asc" as const } },
+  job: true,
+  conversation: { select: { id: true } },
+} satisfies Prisma.BookingInclude;
+
+type AdminBookingDetailRecord = Prisma.BookingGetPayload<{ include: typeof adminBookingDetailInclude }>;
+
+function bookingFieldAvailability(booking: AdminBookingDetailRecord) {
+  return {
+    customerName: booking.customerName.trim().length > 0,
+    customerEmail: booking.customerEmail.trim().length > 0,
+    customerPhone: booking.customerPhone.trim().length > 0,
+    pickupAddress: booking.pickupAddress.trim().length > 0,
+    pickupPostcode: booking.pickupPostcode.trim().length > 0,
+    pickupFloor: true,
+    pickupHasLift: true,
+    pickupPropertyType: false,
+    pickupCarryMetres: false,
+    dropoffAddress: booking.dropoffAddress.trim().length > 0,
+    dropoffPostcode: booking.dropoffPostcode.trim().length > 0,
+    dropoffFloor: true,
+    dropoffHasLift: true,
+    dropoffPropertyType: false,
+    dropoffCarryMetres: false,
+    distanceMiles: Number.isFinite(booking.distanceMiles),
+    hasNarrowAccess: false,
+    hasPermitZone: false,
+    helpersCount: true,
+    needsPacking: true,
+    needsAssembly: true,
+    assemblyType: booking.needsAssembly ? Boolean(booking.assemblyType) : true,
+    assemblyQty: booking.needsAssembly,
+    items: true,
+    price: Number.isFinite(booking.totalPrice),
+    scheduledAt: Number.isFinite(booking.scheduledAt.getTime()),
+    selectedTimeSlot: Boolean(booking.selectedTimeSlot),
+    paidAt: Boolean(booking.isPaid && booking.paidAt),
+  };
+}
+
+function bookingToAdminDetailShape(booking: AdminBookingDetailRecord) {
+  return {
+    id: booking.id,
+    reference: booking.reference,
+    customerName: booking.customerName,
+    customerEmail: booking.customerEmail,
+    customerPhone: booking.customerPhone,
+    serviceSlug: booking.serviceSlug,
+    serviceName: booking.serviceName,
+    serviceVariant: booking.serviceVariant,
+    pickupAddress: booking.pickupAddress,
+    pickupPostcode: booking.pickupPostcode,
+    pickupLat: booking.pickupLat,
+    pickupLng: booking.pickupLng,
+    pickupFloor: booking.pickupFloor,
+    pickupHasLift: booking.pickupHasLift,
+    pickupPropertyType: null,
+    pickupCarryMetres: null,
+    dropoffAddress: booking.dropoffAddress,
+    dropoffPostcode: booking.dropoffPostcode,
+    dropoffLat: booking.dropoffLat,
+    dropoffLng: booking.dropoffLng,
+    dropoffFloor: booking.dropoffFloor,
+    dropoffHasLift: booking.dropoffHasLift,
+    dropoffPropertyType: null,
+    dropoffCarryMetres: null,
+    hasNarrowAccess: null,
+    hasPermitZone: null,
+    distanceMiles: booking.distanceMiles,
+    scheduledAt: booking.scheduledAt,
+    scheduledDate: booking.selectedDate ?? booking.scheduledAt,
+    selectedDate: booking.selectedDate,
+    selectedTimeSlot: booking.selectedTimeSlot,
+    timeSlot: booking.selectedTimeSlot,
+    helpersCount: booking.helpersCount,
+    needsPacking: booking.needsPacking,
+    needsAssembly: booking.needsAssembly,
+    assemblyType: booking.assemblyType,
+    assemblyQty: booking.assemblyQty,
+    price: booking.price,
+    totalPrice: booking.totalPrice,
+    isPaid: booking.isPaid,
+    paidAt: booking.paidAt,
+    refundAmount: booking.refundAmount,
+    stripePaymentId: booking.stripePaymentId,
+    status: booking.status,
+    notes: booking.notes,
+    createdAt: booking.createdAt,
+    updatedAt: booking.updatedAt,
+    driver: booking.driver
+      ? {
+          id: booking.driver.id,
+          user: {
+            name: booking.driver.user.name,
+            email: booking.driver.user.email,
+            phone: booking.driver.user.phone,
+          },
+        }
+      : null,
+    items: booking.items.map((item) => ({
+      id: item.id,
+      name: item.name,
+      quantity: item.quantity,
+      createdAt: item.createdAt,
+    })),
+    trackingEvents: booking.trackingEvents.map((event) => ({
+      id: event.id,
+      type: event.type,
+      status: event.status,
+      message: event.message,
+      note: event.message,
+      createdAt: event.createdAt,
+      isInternal: event.isInternal,
+    })),
+    statusHistory: booking.statusHistory.map((event) => ({
+      id: event.id,
+      fromStatus: event.fromStatus,
+      toStatus: event.toStatus,
+      note: event.note,
+      createdAt: event.createdAt,
+    })),
+    job: booking.job
+      ? {
+          id: booking.job.id,
+          status: booking.job.status,
+          driverPay: booking.job.driverPay,
+          driverPayStatus: booking.job.driverPayStatus,
+          driverPayNotes: booking.job.driverPayNotes,
+        }
+      : null,
+    conversation: booking.conversation,
+    isDraft: false,
+    checkoutStage: null,
+    fieldAvailability: bookingFieldAvailability(booking),
   };
 }
 
@@ -277,17 +477,10 @@ app.get("/:id", async (c) => {
 
   const booking = await db.booking.findUnique({
     where: { id: c.req.param("id") },
-    include: {
-      items: true,
-      driver: { include: { user: true } },
-      trackingEvents: { orderBy: { createdAt: "asc" } },
-      statusHistory: { orderBy: { createdAt: "asc" } },
-      job: true,
-      conversation: { select: { id: true } },
-    },
+    include: adminBookingDetailInclude,
   });
   if (!booking) return c.json(fail("Not found", "NOT_FOUND"), 404);
-  return c.json(ok(booking));
+  return c.json(ok(bookingToAdminDetailShape(booking)));
 });
 
 app.patch(

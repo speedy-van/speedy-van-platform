@@ -37,6 +37,7 @@ const baseURL = withoutTrailingSlash(
 
 type RequestMethod = "GET" | "POST" | "PATCH" | "DELETE";
 type UnauthorizedHandler = () => void;
+type RequestOptions = { signal?: AbortSignal };
 
 let unauthorizedHandler: UnauthorizedHandler | null = null;
 let unauthorizedStrikeCount = 0;
@@ -117,10 +118,18 @@ async function parseResponse<T>(response: Response, hasToken: boolean): Promise<
   return { data: payload as T };
 }
 
-async function request<T>(method: RequestMethod, path: string, body?: unknown): Promise<{ data: T; pagination?: PaginationMeta }> {
+async function request<T>(
+  method: RequestMethod,
+  path: string,
+  body?: unknown,
+  options: RequestOptions = {}
+): Promise<{ data: T; pagination?: PaginationMeta }> {
   const token = await loadToken();
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
+  const abortFromCaller = () => controller.abort();
+  if (options.signal?.aborted) controller.abort();
+  options.signal?.addEventListener("abort", abortFromCaller);
 
   try {
     const response = await fetch(`${baseURL}${path}`, {
@@ -142,6 +151,7 @@ async function request<T>(method: RequestMethod, path: string, body?: unknown): 
     throw new APIError(error instanceof Error ? error.message : "Network request failed.");
   } finally {
     clearTimeout(timeout);
+    options.signal?.removeEventListener("abort", abortFromCaller);
   }
 }
 
@@ -158,16 +168,16 @@ function pickNamedList<T>(payload: unknown, keys: string[]): T[] {
 }
 
 export const apiClient = {
-  async get<T>(path: string): Promise<T> {
-    const response = await request<T>("GET", path);
+  async get<T>(path: string, options?: RequestOptions): Promise<T> {
+    const response = await request<T>("GET", path, undefined, options);
     return response.data;
   },
-  async getList<T>(path: string, keys: string[] = []): Promise<T[]> {
-    const response = await request<unknown>("GET", path);
+  async getList<T>(path: string, keys: string[] = [], options?: RequestOptions): Promise<T[]> {
+    const response = await request<unknown>("GET", path, undefined, options);
     return pickNamedList<T>(response.data, keys);
   },
-  async getPaginated<T>(path: string): Promise<PaginatedResult<T>> {
-    const response = await request<T[]>("GET", path);
+  async getPaginated<T>(path: string, options?: RequestOptions): Promise<PaginatedResult<T>> {
+    const response = await request<T[]>("GET", path, undefined, options);
     const pagination = isPagination(response.pagination)
       ? response.pagination
       : { page: 1, limit: response.data.length, total: response.data.length };

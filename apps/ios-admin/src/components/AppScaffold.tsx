@@ -135,12 +135,16 @@ export function InfoRow({
   label,
   value,
   mono = false,
-  accent = false
+  accent = false,
+  numberOfLines = 3,
+  selectable = false
 }: {
   label: string;
   value: string;
   mono?: boolean;
   accent?: boolean;
+  numberOfLines?: number;
+  selectable?: boolean;
 }): JSX.Element {
   return (
     <View className="border-b border-slate-100 py-2 last:border-b-0">
@@ -153,7 +157,8 @@ export function InfoRow({
               ? "mt-1 text-lg font-extrabold text-svBrandStrong"
               : "mt-1 text-sm font-bold text-svDark"
         }
-        numberOfLines={3}
+        numberOfLines={numberOfLines}
+        selectable={selectable}
       >
         {value}
       </Text>
