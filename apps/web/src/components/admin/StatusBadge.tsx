@@ -11,7 +11,9 @@ const STATUS_LABELS: Record<string, string> = {
   CLAIMED: "Claimed",
   ACCEPTED: "Accepted",
   new: "New",
+  under_review: "Under Review",
   quoted: "Quoted",
+  closed: "Closed",
   accepted: "Accepted",
   declined: "Declined",
 };
@@ -27,7 +29,9 @@ const STATUS_CLASSES: Record<string, string> = {
   CLAIMED: "bg-amber-500/15 text-amber-400",
   ACCEPTED: "bg-emerald-500/15 text-emerald-400",
   new: "bg-amber-500/15 text-amber-400",
+  under_review: "bg-sky-500/15 text-sky-400",
   quoted: "bg-amber-500/15 text-amber-400",
+  closed: "bg-white/8 text-white/55",
   accepted: "bg-emerald-500/15 text-emerald-400",
   declined: "bg-red-500/15 text-red-400",
 };

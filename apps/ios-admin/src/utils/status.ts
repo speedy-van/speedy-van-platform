@@ -1,4 +1,4 @@
-import type { BookingStatus, EnquiryStatus, JobStatus } from "@/models";
+import type { BookingStatus, EnquiryStatus, JobStatus, StorageEnquiryStatus } from "@/models";
 import { colors } from "@/theme/colors";
 
 export type StatusMeta = {
@@ -60,5 +60,18 @@ export function enquiryStatusMeta(status: EnquiryStatus): StatusMeta {
       return { label: "Accepted", color: colors.svGreen };
     case "declined":
       return { label: "Declined", color: colors.svRed };
+  }
+}
+
+export function storageEnquiryStatusMeta(status: StorageEnquiryStatus): StatusMeta {
+  switch (status) {
+    case "new":
+      return { label: "New", color: colors.svWarning };
+    case "under_review":
+      return { label: "Under Review", color: colors.orange };
+    case "quoted":
+      return { label: "Quoted", color: colors.amber };
+    case "closed":
+      return { label: "Closed", color: colors.muted };
   }
 }

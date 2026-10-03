@@ -1,6 +1,7 @@
 "use client";
 
-import { BOOKING_SERVICE_OPTIONS } from "@/lib/booking-service-options";
+import Link from "next/link";
+import { BOOKING_FLOW_SERVICE_OPTIONS } from "@/lib/booking-service-options";
 import { trackAnalyticsEvent } from "@/lib/analytics";
 
 /** Start the existing quote flow; prices are calculated from the complete job. */
@@ -21,9 +22,21 @@ export function InstantQuoteCalculator() {
         >
           <label htmlFor="iq-service" className="mb-2 block font-semibold">What are you moving?</label>
           <select id="iq-service" name="service" defaultValue="other" className="w-full rounded-lg border border-stone-500 bg-stone-900 px-4 py-3 text-base text-white focus:outline-none focus:ring-2 focus:ring-amber-400">
-            {BOOKING_SERVICE_OPTIONS.map((option) => <option key={option.id} value={option.id}>{option.label} — {option.description}</option>)}
+            {BOOKING_FLOW_SERVICE_OPTIONS.map((option) => <option key={option.id} value={option.id}>{option.label} — {option.description}</option>)}
           </select>
           <p className="mt-4 text-sm leading-relaxed text-stone-300">Stairs, parking, crew size and load size can change the price. If a quote cannot be calculated, contact the team before booking.</p>
+          <p className="mt-3 text-sm text-stone-300">
+            Need storage space as well as transport?{" "}
+            <Link
+              href="/storage/enquiry?source=quote_starter_storage_link"
+              data-track-event="storage_enquiry_click"
+              data-track-location="quote_starter"
+              className="font-bold text-amber-300 underline decoration-amber-300/40 underline-offset-4 hover:text-amber-200"
+            >
+              Request a storage quote
+            </Link>
+            .
+          </p>
           <button type="submit" className="mt-6 inline-flex w-full justify-center rounded-lg bg-amber-400 px-6 py-3 font-bold text-stone-950 hover:bg-amber-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-300 focus-visible:ring-offset-2 focus-visible:ring-offset-stone-950 sm:w-auto">Continue to your quote</button>
         </form>
       </div>

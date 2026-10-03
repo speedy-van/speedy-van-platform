@@ -8,6 +8,7 @@ const NAV = [
   { label: "Dashboard", icon: "▦", href: "/admin" },
   { label: "Bookings", icon: "📅", href: "/admin/bookings" },
   { label: "Enquiries", icon: "🇪🇺", href: "/admin/enquiries" },
+  { label: "Storage Enquiries", icon: "📦", href: "/admin/storage-enquiries" },
   { label: "Drivers", icon: "👤", href: "/admin/drivers" },
   { label: "Services", icon: "📦", href: "/admin/services" },
   { label: "Pricing", icon: "£", href: "/admin/pricing" },

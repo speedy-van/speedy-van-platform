@@ -2,6 +2,13 @@
 // console when RESEND_API_KEY is absent so dev flows still work.
 
 import { SITE } from "@speedy-van/config";
+import {
+  storageDurationLabel,
+  storageStartDateLabel,
+  storageUnitSizeLabel,
+  type StorageDuration,
+  type StorageUnitSize,
+} from "@speedy-van/shared";
 
 const apiKey = process.env.RESEND_API_KEY;
 const FROM = process.env.EMAIL_FROM ?? `Speedy Van <noreply@${SITE.domain}>`;
@@ -25,6 +32,25 @@ async function send(to: string, subject: string, html: string): Promise<void> {
     }
   } catch (err) {
     console.error("[email] send error:", err);
+  }
+}
+
+async function sendOrThrow(to: string, subject: string, html: string): Promise<void> {
+  if (!apiKey) {
+    console.log(`[email] (no-key) → ${to} | ${subject}`);
+    return;
+  }
+
+  const res = await fetch("https://api.resend.com/emails", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${apiKey}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ from: FROM, to, subject, html }),
+  });
+  if (!res.ok) {
+    throw new Error(`Resend failed ${res.status}: ${await res.text()}`);
   }
 }
 
@@ -291,6 +317,191 @@ export async function sendEuropeanEnquiryQuote(quote: {
        }
        <p>To accept this quote or ask any questions, simply reply to this email
        or call us on <strong>07909 032889</strong>.</p>`,
+    ),
+  );
+}
+
+// ─── Storage enquiries ───────────────────────────────────────────────────────
+
+type StorageJson = Record<string, unknown>;
+
+interface StorageEnquiryEmailData {
+  reference: string;
+  firstName: string;
+  lastName: string | null;
+  customerEmail: string;
+  customerPhone: string;
+  storageStartKind: string;
+  storageStartDate: Date | null;
+  storageDuration: string;
+  estimatedUnitSize: string;
+  needsCollectionTransport: boolean;
+  collectionAddress: string | null;
+  collectionPostcode: string;
+  collectionAccess: unknown;
+  storageFacilityKnown: boolean;
+  storageFacility: unknown;
+  needsReturnTransport: boolean;
+  returnDestinationKnown: boolean;
+  returnAddress: string | null;
+  returnPostcode: string | null;
+  returnDateKind: string | null;
+  returnDate: Date | null;
+  itemDescription: string;
+  needsPacking: boolean;
+  needsDismantling: boolean;
+  notes: string | null;
+  quotedTransportPrice?: number | null;
+  quotedStoragePrice?: number | null;
+  quotePeriod?: string | null;
+  quoteNotes?: string | null;
+}
+
+function objectValue(value: unknown): StorageJson | null {
+  return value && typeof value === "object" && !Array.isArray(value) ? value as StorageJson : null;
+}
+
+function storageName(enquiry: Pick<StorageEnquiryEmailData, "firstName" | "lastName">): string {
+  return [enquiry.firstName, enquiry.lastName ?? ""].map((part) => part.trim()).filter(Boolean).join(" ");
+}
+
+function storageDateLabel(kind: string, date: Date | null): string {
+  if (kind === "known" && date) return date.toISOString().slice(0, 10);
+  return storageStartDateLabel({ kind: "undecided" });
+}
+
+function storageReturnDateLabel(kind: string | null, date: Date | null): string {
+  if (!kind) return "Not requested";
+  if (kind === "known" && date) return date.toISOString().slice(0, 10);
+  return "Not decided yet";
+}
+
+function safeDurationLabel(value: string): string {
+  return storageDurationLabel(value as StorageDuration);
+}
+
+function safeUnitSizeLabel(value: string): string {
+  return storageUnitSizeLabel(value as StorageUnitSize);
+}
+
+function safeAddressLine(address: string | null, postcode: string | null | undefined): string {
+  return [address, postcode].map((part) => part?.trim()).filter(Boolean).join(", ") || "-";
+}
+
+function storageAccessSummary(value: unknown): string {
+  const access = objectValue(value);
+  if (!access) return "-";
+  const parts = [
+    typeof access.propertyType === "string" ? access.propertyType.replace("_", " ") : "",
+    typeof access.floor === "number" ? `Floor ${access.floor}` : "",
+    access.hasLift === true ? "Lift available" : access.hasLift === false ? "No lift" : "",
+    typeof access.carryDistanceMetres === "number" ? `${access.carryDistanceMetres}m carry` : "",
+    access.narrowAccess === true ? "Narrow access" : "",
+    access.permitOrRestrictedParking === true ? "Permit/restricted parking" : "",
+    typeof access.accessNotes === "string" && access.accessNotes.trim() ? access.accessNotes.trim() : "",
+  ];
+  return parts.filter(Boolean).map(escapeHtml).join("<br>") || "-";
+}
+
+function storageFacilitySummary(enquiry: StorageEnquiryEmailData): string {
+  if (!enquiry.storageFacilityKnown) return "Not decided yet";
+  const facility = objectValue(enquiry.storageFacility);
+  return safeAddressLine(
+    typeof facility?.address === "string" ? facility.address : null,
+    typeof facility?.postcode === "string" ? facility.postcode : null,
+  );
+}
+
+function storageQuotePriceLines(enquiry: StorageEnquiryEmailData): string {
+  const period = enquiry.quotePeriod ? ` / ${escapeHtml(enquiry.quotePeriod)}` : "";
+  const lines = [
+    enquiry.quotedTransportPrice != null
+      ? `<p><strong>Transport:</strong> &pound;${enquiry.quotedTransportPrice.toFixed(2)}</p>`
+      : "",
+    enquiry.quotedStoragePrice != null
+      ? `<p><strong>Storage:</strong> &pound;${enquiry.quotedStoragePrice.toFixed(2)}${period}</p>`
+      : "",
+  ].filter(Boolean);
+  return lines.join("");
+}
+
+export async function sendStorageEnquiryConfirmation(enquiry: StorageEnquiryEmailData): Promise<void> {
+  await send(
+    enquiry.customerEmail,
+    `Storage enquiry received - ${enquiry.reference}`,
+    baseTemplate(
+      "Storage enquiry received",
+      `<p>Hi ${escapeHtml(storageName(enquiry))},</p>
+       <p>Thanks for sending your storage requirements. We have received enquiry
+       <strong>${escapeHtml(enquiry.reference)}</strong>.</p>
+       <p>The team will review the start date, duration, load size, collection access
+       and storage details before sending a manual quote.</p>
+       <p>If anything is urgent, reply to this email or call us on
+       <strong>07909 032889</strong>.</p>`,
+    ),
+  );
+}
+
+export async function sendStorageEnquiryAdminAlert(enquiry: StorageEnquiryEmailData): Promise<void> {
+  const row = (k: string, v: string): string =>
+    `<tr><td style="padding:4px 8px;color:#475569;font-weight:600;width:170px;">${k}</td><td style="padding:4px 8px;color:#0f172a;">${v}</td></tr>`;
+
+  await send(
+    ADMIN_ENQUIRY_EMAIL,
+    `New storage enquiry - ${enquiry.reference}`,
+    baseTemplate(
+      "New storage enquiry",
+      `<p>A storage quote request has just been submitted.</p>
+       <table style="border-collapse:collapse;width:100%;font-size:14px;">
+         ${row("Reference", escapeHtml(enquiry.reference))}
+         ${row("Customer", escapeHtml(storageName(enquiry)))}
+         ${row("Email", `<a href="mailto:${escapeHtml(enquiry.customerEmail)}">${escapeHtml(enquiry.customerEmail)}</a>`)}
+         ${row("Phone", `<a href="tel:${escapeHtml(enquiry.customerPhone)}">${escapeHtml(enquiry.customerPhone)}</a>`)}
+         ${row("Start", escapeHtml(storageDateLabel(enquiry.storageStartKind, enquiry.storageStartDate)))}
+         ${row("Duration", escapeHtml(safeDurationLabel(enquiry.storageDuration)))}
+         ${row("Estimated size", escapeHtml(safeUnitSizeLabel(enquiry.estimatedUnitSize)))}
+         ${row("Collection", escapeHtml(safeAddressLine(enquiry.collectionAddress, enquiry.collectionPostcode)))}
+         ${row("Collection access", storageAccessSummary(enquiry.collectionAccess))}
+         ${row("Facility", escapeHtml(storageFacilitySummary(enquiry)))}
+         ${row("Return transport", enquiry.needsReturnTransport ? "Yes" : "No")}
+         ${row("Return destination", enquiry.returnDestinationKnown ? escapeHtml(safeAddressLine(enquiry.returnAddress, enquiry.returnPostcode)) : "Not decided yet")}
+         ${row("Return date", escapeHtml(storageReturnDateLabel(enquiry.returnDateKind, enquiry.returnDate)))}
+         ${row("Packing", enquiry.needsPacking ? "Yes" : "No")}
+         ${row("Dismantling", enquiry.needsDismantling ? "Yes" : "No")}
+         ${row("Items", escapeHtml(enquiry.itemDescription).replace(/\n/g, "<br>"))}
+         ${row("Notes", enquiry.notes ? escapeHtml(enquiry.notes).replace(/\n/g, "<br>") : "-")}
+       </table>
+       <p style="margin-top:24px;">
+         <a href="https://www.speedyvan.uk/admin/storage-enquiries"
+            style="background:#4f46e5;color:#ffffff;padding:10px 16px;border-radius:6px;text-decoration:none;font-weight:700;">
+           Open storage enquiries
+         </a>
+       </p>`,
+    ),
+  );
+}
+
+export async function sendStorageEnquiryQuote(enquiry: StorageEnquiryEmailData): Promise<void> {
+  await sendOrThrow(
+    enquiry.customerEmail,
+    `Your storage quote - ${enquiry.reference}`,
+    baseTemplate(
+      "Your storage quote is ready",
+      `<p>Hi ${escapeHtml(storageName(enquiry))},</p>
+       <p>Thanks for your patience. Based on the storage details you shared, here is your quote:</p>
+       <div style="font-size:18px;font-weight:800;color:#0f172a;margin:16px 0;">
+         ${storageQuotePriceLines(enquiry)}
+       </div>
+       <p style="color:#475569;font-size:13px;">
+         This quote is prepared manually from the enquiry details and is not an online booking or payment request.
+       </p>
+       ${
+         enquiry.quoteNotes
+           ? `<p><strong>Notes:</strong><br>${escapeHtml(enquiry.quoteNotes).replace(/\n/g, "<br>")}</p>`
+           : ""
+       }
+       <p>To accept, change details, or ask a question, reply to this email or call
+       <strong>07909 032889</strong>.</p>`,
     ),
   );
 }

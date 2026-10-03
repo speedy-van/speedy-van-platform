@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useBooking } from "@/lib/booking-store";
 import {
-  BOOKING_SERVICE_OPTIONS,
+  BOOKING_FLOW_SERVICE_OPTIONS,
   getBookingServiceOptionForState,
   getBookingServiceStartingFrom,
 } from "@/lib/booking-service-options";
@@ -18,7 +18,7 @@ export function Step1Service() {
   const { state, dispatch } = useBooking();
   const selectedOption = getBookingServiceOptionForState(state.entryServiceSlug, state.serviceSlug);
 
-  function choose(choice: (typeof BOOKING_SERVICE_OPTIONS)[number]) {
+  function choose(choice: (typeof BOOKING_FLOW_SERVICE_OPTIONS)[number]) {
     const currentChoiceKey = selectedOption?.id ?? (state.entryServiceSlug || state.serviceSlug);
     if (currentChoiceKey && currentChoiceKey !== choice.id) {
       dispatch({ type: "SET_ITEMS", items: [] });
@@ -51,7 +51,7 @@ export function Step1Service() {
       </div>
 
       <div className="grid gap-3 md:grid-cols-2">
-        {BOOKING_SERVICE_OPTIONS.map((choice) => {
+        {BOOKING_FLOW_SERVICE_OPTIONS.map((choice) => {
           const selected = selectedOption?.id === choice.id;
           const price = getBookingServiceStartingFrom(choice);
 

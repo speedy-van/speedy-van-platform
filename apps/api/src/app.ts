@@ -35,6 +35,7 @@ import adminVisitorsRoutes from "./routes/admin/visitors";
 import adminNotificationsRoutes from "./routes/admin/notifications";
 import adminServiceFlagsRoutes from "./routes/admin/service-flags";
 import adminEnquiriesRoutes from "./routes/admin/enquiries";
+import adminStorageEnquiriesRoutes from "./routes/admin/storage-enquiries";
 
 const app = new Hono();
 const databaseConfigError = getDatabaseConfigError();
@@ -105,5 +106,6 @@ app.route("/admin/visitors", adminVisitorsRoutes);
 app.route("/admin/notifications", adminNotificationsRoutes);
 app.route("/admin/service-flags", adminServiceFlagsRoutes);
 app.route("/admin/enquiries", adminEnquiriesRoutes);
+app.route("/admin/storage-enquiries", adminStorageEnquiriesRoutes);
 
 export default app;

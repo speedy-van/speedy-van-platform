@@ -99,3 +99,18 @@ export async function notifyNewEuropeanEnquiry(enquiry: {
     { enquiryId: enquiry.id },
   );
 }
+
+export async function notifyNewStorageEnquiry(enquiry: {
+  id: string;
+  reference: string;
+  customerName: string;
+  collectionPostcode: string;
+}): Promise<void> {
+  await notifyAllAdmins(
+    "STORAGE_ENQUIRY",
+    `New storage enquiry: ${enquiry.reference}`,
+    `${enquiry.customerName} requested a storage quote from ${enquiry.collectionPostcode}`,
+    `/admin/storage-enquiries`,
+    { storageEnquiryId: enquiry.id, reference: enquiry.reference },
+  );
+}

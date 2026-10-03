@@ -1,4 +1,4 @@
-import type { BookingStatus, EnquiryStatus, JobStatus } from "@/models";
+import type { BookingStatus, EnquiryStatus, JobStatus, StorageEnquiryStatus } from "@/models";
 
 function query(path: string, params: Record<string, string | number | undefined | null>): string {
   const search = new URLSearchParams();
@@ -43,6 +43,10 @@ export const endpoints = {
     query("/admin/enquiries", params),
   enquiry: (id: string) => `/admin/enquiries/${id}`,
   sendQuote: (id: string) => `/admin/enquiries/${id}/send-quote`,
+  storageEnquiries: (params: { status?: StorageEnquiryStatus | null; page: number; limit: number }) =>
+    query("/admin/storage-enquiries", params),
+  storageEnquiry: (id: string) => `/admin/storage-enquiries/${id}`,
+  sendStorageQuote: (id: string) => `/admin/storage-enquiries/${id}/send-quote`,
   notifications: "/admin/notifications",
   markNotificationsRead: "/admin/notifications/read",
   notification: (id: string) => `/admin/notifications/${id}`,

@@ -1,13 +1,18 @@
 import type { InventoryMode } from "./room-inventory";
 import { SERVICES, getBookableService } from "./services";
 
-export type BookingIntentId = "house-removals" | "furniture" | "storage" | "office" | "other";
+export type BookingIntentId = "house-removals" | "furniture" | "storage" | "storage-transport" | "office" | "other";
+export type BookingServiceMode = "booking" | "storage-enquiry";
 
 export interface BookingServiceOption {
   id: BookingIntentId;
   label: string;
   description: string;
   serviceSlug: string;
+  mode?: BookingServiceMode;
+  href?: string;
+  priceLabel?: string;
+  showOnHomepage?: boolean;
   imageSlug: string;
   inventoryMode: InventoryMode;
   pathBadge: string;
@@ -72,24 +77,51 @@ export const BOOKING_SERVICE_OPTIONS: BookingServiceOption[] = [
   {
     id: "storage",
     label: "Storage",
-    description: "Transport to or from storage. Storage space is not sold here.",
+    description: "Storage space and transport reviewed by manual quote.",
+    serviceSlug: "storage-enquiry",
+    mode: "storage-enquiry",
+    href: "/storage/enquiry?source=home_storage_card",
+    priceLabel: "Manual quote",
+    imageSlug: "storage",
+    inventoryMode: "items",
+    pathBadge: "Storage quote",
+    scopeBadge: "No online payment",
+    journeyTitle: "Plan the storage enquiry",
+    journeyDescription:
+      "Confirm the storage timing, estimated load, collection access, and any return destination so the team can quote manually.",
+    pickupTitle: "Collection point",
+    dropoffTitle: "Storage or return point",
+    pickupPlaceholder: "e.g. home address or storage facility",
+    dropoffPlaceholder: "e.g. storage unit or final address if known",
+    inventoryTitle: "Storage contents",
+    inventoryDescription:
+      "Describe boxes, furniture, and larger pieces so storage size and handling can be reviewed.",
+    inventoryCta: "manual quote",
+    summaryNote: "Manual storage enquiry only. No booking or payment is created.",
+  },
+  {
+    id: "storage-transport",
+    label: "Storage transport",
+    description: "Move items to or from a storage unit you have arranged.",
     serviceSlug: "man-and-van",
+    mode: "booking",
+    showOnHomepage: false,
     imageSlug: "storage",
     inventoryMode: "items",
     pathBadge: "Storage run",
-    scopeBadge: "Unit access matters",
-    journeyTitle: "Plan the storage run",
+    scopeBadge: "Transport only",
+    journeyTitle: "Plan the storage transport",
     journeyDescription:
-      "Confirm the storage facility or home address at each end, including floors, lifts, and access limits.",
+      "Confirm the home or storage facility at each end, including floors, lifts, access limits and unit opening arrangements.",
     pickupTitle: "Collection point",
     dropoffTitle: "Storage or delivery point",
     pickupPlaceholder: "e.g. home address or storage facility",
     dropoffPlaceholder: "e.g. storage unit or final address",
-    inventoryTitle: "Storage load",
+    inventoryTitle: "Storage transport load",
     inventoryDescription:
       "Add boxes, bags, furniture, or loose items so the van size and loading time are priced correctly.",
     inventoryCta: "date and time",
-    summaryNote: "Priced as a storage transport job, not storage rental.",
+    summaryNote: "Priced as transport to or from storage, not storage rental.",
   },
   {
     id: "office",
@@ -138,6 +170,10 @@ export const BOOKING_SERVICE_OPTIONS: BookingServiceOption[] = [
 ];
 
 const OPTION_BY_ID = new Map(BOOKING_SERVICE_OPTIONS.map((option) => [option.id, option]));
+export const BOOKING_FLOW_SERVICE_OPTIONS = BOOKING_SERVICE_OPTIONS.filter(
+  (option) => (option.mode ?? "booking") === "booking",
+);
+export const HOMEPAGE_SERVICE_OPTIONS = BOOKING_SERVICE_OPTIONS.filter((option) => option.showOnHomepage !== false);
 
 const INTENT_ALIASES: Record<string, BookingIntentId> = {
   house: "house-removals",
@@ -149,6 +185,7 @@ const INTENT_ALIASES: Record<string, BookingIntentId> = {
   "furniture-delivery": "furniture",
   "ikea-delivery": "furniture",
   storage: "storage",
+  "storage-transport": "storage-transport",
   office: "office",
   "office-removal": "office",
   other: "other",
@@ -183,12 +220,17 @@ export function getBookingServiceStartingFrom(option: BookingServiceOption): num
   return SERVICES.find((service) => service.slug === option.serviceSlug)?.startingFrom ?? null;
 }
 
+export function getBookingServiceHref(option: BookingServiceOption): string {
+  return option.href ?? `/book?service=${option.id}`;
+}
+
 /** Resolve the existing public service links and the homepage service choices. */
 export function resolveBookingService(value?: string | null) {
   if (!value) return null;
   const service = SERVICES.find((candidate) => candidate.slug === value);
   const option = getBookingServiceOption(value);
   if (!service && !option) return null;
+  if (option && (option.mode ?? "booking") !== "booking") return null;
 
   if (!service && option) {
     return {

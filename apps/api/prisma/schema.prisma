@@ -59,6 +59,7 @@ enum NotificationType {
   PAYMENT_FAILED
   CHAT_MESSAGE
   EUROPEAN_ENQUIRY
+  STORAGE_ENQUIRY
   GENERIC
 }
 
@@ -545,6 +546,59 @@ model EuropeanEnquiry {
 
   @@index([status])
   @@index([createdAt])
+}
+
+// ─── Storage Enquiries (manual quote only, no payment intent) ────────────────
+
+model StorageEnquiry {
+  id                       String    @id @default(cuid())
+  reference                String    @unique // SVS-YYYY-XXXXXX
+  idempotencyKey           String    @unique
+  payloadHash              String
+  status                   String    @default("new") // "new" | "under_review" | "quoted" | "closed"
+  firstName                String
+  lastName                 String?
+  customerEmail            String
+  customerPhone            String
+  storageStartKind         String
+  storageStartDate         DateTime?
+  storageDuration          String
+  estimatedUnitSize        String
+  needsCollectionTransport Boolean   @default(true)
+  collectionAddress        String?
+  collectionPostcode       String
+  collectionAccess         Json
+  storageFacilityKnown     Boolean   @default(false)
+  storageFacility          Json?
+  needsReturnTransport     Boolean   @default(false)
+  returnDestinationKnown   Boolean   @default(false)
+  returnAddress            String?
+  returnPostcode           String?
+  returnDateKind           String?
+  returnDate               DateTime?
+  itemDescription          String    @db.Text
+  needsPacking             Boolean   @default(false)
+  needsDismantling         Boolean   @default(false)
+  notes                    String?   @db.Text
+  source                   Json?
+  snapshot                 Json
+  quotedTransportPrice     Float?
+  quotedStoragePrice       Float?
+  quotePeriod              String?
+  quoteNotes               String?   @db.Text
+  adminNotes               String?   @db.Text
+  quoteSentAt              DateTime?
+  quoteEmailStatus         String?
+  quoteEmailError          String?   @db.Text
+  notificationStatus       String?
+  notificationError        String?   @db.Text
+  createdAt                DateTime  @default(now())
+  updatedAt                DateTime  @updatedAt
+
+  @@index([status, createdAt])
+  @@index([createdAt])
+  @@index([customerEmail])
+  @@index([collectionPostcode])
 }
 
 // ─── Booking V2 — persistent drafts (T13) ────────────────────────────────────

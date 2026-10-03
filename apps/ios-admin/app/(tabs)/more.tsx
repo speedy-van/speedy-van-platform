@@ -132,7 +132,7 @@ export default function MoreRoute() {
             onPress={() => router.push("/visitors")}
           />
           <MoreLink icon="images-outline" title="Images" subtitle="Manage media assets" onPress={() => router.navigate("/images")} />
-          <MoreLink icon="mail-outline" title="Enquiries" subtitle="European quote requests" onPress={() => router.navigate("/enquiries")} />
+          <MoreLink icon="mail-outline" title="Enquiries" subtitle="European and storage quote requests" onPress={() => router.navigate("/enquiries")} />
           <MoreLink icon="notifications-outline" title="Notifications" subtitle="Admin alerts and events" onPress={() => router.navigate("/notifications")} isLast />
         </View>
 

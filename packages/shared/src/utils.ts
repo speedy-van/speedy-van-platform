@@ -8,6 +8,11 @@ export function generateBookingReference(): string {
   return `SVR-${year}-${refSuffix()}`;
 }
 
+export function generateStorageEnquiryReference(): string {
+  const year = new Date().getUTCFullYear();
+  return `SVS-${year}-${refSuffix()}`;
+}
+
 const TOKEN_ALPHABET =
   "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 const tokenGen = customAlphabet(TOKEN_ALPHABET, 64);

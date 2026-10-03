@@ -7,6 +7,8 @@ import NotificationBell from "./NotificationBell";
 const TITLES: Record<string, string> = {
   "/admin": "Dashboard",
   "/admin/bookings": "Bookings",
+  "/admin/enquiries": "European Enquiries",
+  "/admin/storage-enquiries": "Storage Enquiries",
   "/admin/drivers": "Drivers",
   "/admin/pricing": "Pricing",
   "/admin/jobs": "Job Board",

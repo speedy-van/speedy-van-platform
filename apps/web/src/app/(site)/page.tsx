@@ -27,7 +27,8 @@ import {
   SITE_URL,
 } from "@/lib/seo/constants";
 import {
-  BOOKING_SERVICE_OPTIONS,
+  HOMEPAGE_SERVICE_OPTIONS,
+  getBookingServiceHref,
 } from "@/lib/booking-service-options";
 
 export const metadata: Metadata = {
@@ -319,16 +320,16 @@ export default function HomePage() {
                 className="mt-4 grid grid-cols-2 gap-3 lg:grid-cols-5"
                 role="list"
               >
-                {BOOKING_SERVICE_OPTIONS.map((choice, idx) => {
+                {HOMEPAGE_SERVICE_OPTIONS.map((choice, idx) => {
                   const pricedService = SERVICES.find((s) => s.slug === choice.serviceSlug);
                   const imageSrc = getServiceImage(choice.imageSlug);
-                  const isLast = idx === BOOKING_SERVICE_OPTIONS.length - 1;
+                  const isLast = idx === HOMEPAGE_SERVICE_OPTIONS.length - 1;
 
                   return (
                     <li key={choice.id} className={isLast ? "col-span-2 lg:col-span-1" : ""}>
                       <Link
-                        href={`/book?service=${choice.id}`}
-                        data-track-event="quote_click"
+                        href={getBookingServiceHref(choice)}
+                        data-track-event={choice.mode === "storage-enquiry" ? "storage_enquiry_click" : "quote_click"}
                         data-track-location={`hero_service_${choice.id}`}
                         className="group relative flex h-full min-h-[220px] flex-col overflow-hidden rounded-2xl text-left text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:ring-offset-2 focus-visible:ring-offset-stone-950 lg:min-h-[240px]"
                         style={{ animationDelay: `${idx * 0.55}s` }}
@@ -367,9 +368,9 @@ export default function HomePage() {
                             {choice.description}
                           </span>
                           <div className="mt-2 flex flex-wrap items-center gap-1.5">
-                            {pricedService && (
+                            {(choice.priceLabel || pricedService) && (
                               <span className="rounded-full bg-amber-400 px-2.5 py-0.5 text-[11px] font-bold text-stone-950">
-                                From {getServicePriceLabel(pricedService)}
+                                {choice.priceLabel ?? `From ${getServicePriceLabel(pricedService!)}`}
                               </span>
                             )}
                             <span className="hidden lg:inline-flex rounded-full bg-amber-400/10 px-2 py-0.5 text-[10px] font-medium text-amber-300/80 border border-amber-400/20">
