@@ -8,6 +8,7 @@ import { AppErrorBoundary } from "@/components/AppErrorBoundary";
 import { LoadingView } from "@/components/LoadingView";
 import { useNewBookingNotifications } from "@/hooks/useNewBookingNotifications";
 import type { BookingListItem } from "@/models";
+import { VisitorsProvider } from "@/visitors/VisitorsProvider";
 
 export default function RootLayout() {
   return (
@@ -15,8 +16,10 @@ export default function RootLayout() {
       <AuthProvider>
         <AuthGate>
           <BookingAlertProvider>
-            <NewBookingNotificationWatcher />
-            <RootStack />
+            <VisitorsProvider>
+              <NewBookingNotificationWatcher />
+              <RootStack />
+            </VisitorsProvider>
           </BookingAlertProvider>
         </AuthGate>
         <StatusBar style="dark" />
@@ -44,6 +47,7 @@ function RootStack() {
     <Stack screenOptions={{ headerShown: false }}>
       <Stack.Screen name="(auth)" />
       <Stack.Screen name="(tabs)" />
+      <Stack.Screen name="visitors" />
     </Stack>
   );
 }

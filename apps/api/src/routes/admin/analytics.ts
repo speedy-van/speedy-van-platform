@@ -2,8 +2,13 @@ import { Hono } from "hono";
 import { db } from "@speedy-van/db";
 import { ok } from "@speedy-van/shared";
 import { requireAdmin } from "../../middleware/auth";
+import { activeVisitorWhere } from "../../lib/visitor-activity";
 
 const app = new Hono();
+app.use("*", async (c, next) => {
+  c.header("Cache-Control", "no-store");
+  await next();
+});
 app.use("*", requireAdmin);
 
 function startOfDayUTC(d: Date): Date {
@@ -44,7 +49,7 @@ app.get("/overview", async (c) => {
     db.driver.count({ where: { isActive: true } }),
     db.driverJob.count({ where: { status: "AVAILABLE", isPublic: true } }),
     db.driverJob.count({ where: { status: "COMPLETED" } }),
-    db.visitor.count({ where: { isActive: true } }),
+    db.visitor.count({ where: activeVisitorWhere(now) }),
   ]);
 
   return c.json(

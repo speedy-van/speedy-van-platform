@@ -28,5 +28,15 @@ export function trackClick(element: string, metadata: Record<string, unknown> = 
       metadata,
     }),
     keepalive: true,
-  }).catch(() => { /* Optional measurement must not interrupt the action. */ });
+  })
+    .then((response) => {
+      if (response.status === 404) {
+        try {
+          window.sessionStorage.removeItem(SESSION_KEY);
+        } catch {
+          // The next page view or heartbeat will recover the optional session.
+        }
+      }
+    })
+    .catch(() => { /* Optional measurement must not interrupt the action. */ });
 }

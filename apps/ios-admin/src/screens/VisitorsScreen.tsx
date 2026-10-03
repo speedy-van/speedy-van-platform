@@ -1,11 +1,14 @@
 import { Ionicons } from "@expo/vector-icons";
+import { useFocusEffect, useRouter } from "expo-router";
 import type { ComponentProps, ReactNode } from "react";
-import { RefreshControl, ScrollView, Text, View, type DimensionValue } from "react-native";
+import { useCallback } from "react";
+import { Pressable, RefreshControl, ScrollView, Text, View, type DimensionValue } from "react-native";
 import { HeaderMetric, InfoRow, ScreenHeader, ScreenShell, SectionCard } from "@/components/AppScaffold";
 import { EmptyState } from "@/components/EmptyState";
 import { ErrorBanner } from "@/components/ErrorBanner";
 import { KPICard } from "@/components/KPICard";
 import { LoadingView } from "@/components/LoadingView";
+import { VisitorHeaderCounter } from "@/components/VisitorHeaderCounter";
 import { useVisitors } from "@/hooks/useVisitors";
 import type { RealtimeVisitor, VisitorEvent, VisitorWeekEntry } from "@/models";
 import { colors } from "@/theme/colors";
@@ -17,13 +20,21 @@ export function VisitorsScreen() {
   const visitors = useVisitors();
   const data = visitors.data;
   const activeVisitors = data.realtime?.visitors ?? [];
+  const activeCount = visitors.activeCount;
 
-  if (visitors.isLoading && data.realtime === null) return <LoadingView label="Loading website visitors..." />;
+  useFocusEffect(
+    useCallback(() => {
+      void visitors.refreshRealtime();
+      void visitors.refreshHistorical();
+    }, [visitors.refreshHistorical, visitors.refreshRealtime]),
+  );
+
+  if (visitors.realtime.isInitialLoading && data.realtime === null) return <LoadingView label="Loading website visitors..." />;
 
   return (
     <ScreenShell>
       <ScrollView
-        refreshControl={<RefreshControl refreshing={visitors.isLoading} onRefresh={() => void visitors.load()} />}
+        refreshControl={<RefreshControl refreshing={visitors.isRefreshing} onRefresh={() => void visitors.load()} />}
         contentContainerClassName="pb-10"
       >
         <ScreenHeader
@@ -31,24 +42,26 @@ export function VisitorsScreen() {
           subtitle="Live website sessions, traffic today, and the last seven days."
           eyebrow="Realtime"
           icon="pulse"
+          right={<VisitorsHeaderActions />}
         >
           <View className="flex-row flex-wrap gap-2">
-            <HeaderMetric label="Active now" value={String(data.realtime?.count ?? 0)} icon="radio" />
-            <HeaderMetric label="Today" value={String(data.today?.visitors ?? 0)} icon="people" />
+            <HeaderMetric label="Today" value={formatOptionalCount(data.today?.visitors)} icon="people" />
+            <HeaderMetric label="Page views" value={formatOptionalCount(data.today?.pageViews)} icon="document-text" />
           </View>
         </ScreenHeader>
 
         {visitors.error ? <ErrorBanner message={visitors.error} /> : null}
+        {visitors.realtime.stale ? <ErrorBanner message="Live visitors is showing the last successful refresh." /> : null}
 
         <View className="gap-4 p-4">
           <View className="gap-4">
             <View className="flex-row gap-4">
-              <KPICard title="Active Right Now" value={String(data.realtime?.count ?? 0)} icon="radio-outline" color={colors.svGreen} />
-              <KPICard title="Page Views Today" value={String(data.today?.pageViews ?? 0)} icon="document-text-outline" color={colors.svBrand} />
+              <KPICard title="Active Right Now" value={formatOptionalCount(activeCount)} icon="radio-outline" color={colors.svGreen} />
+              <KPICard title="Page Views Today" value={formatOptionalCount(data.today?.pageViews)} icon="document-text-outline" color={colors.svBrand} />
             </View>
             <View className="flex-row gap-4">
-              <KPICard title="Visitors Today" value={String(data.today?.visitors ?? 0)} icon="person-outline" color={colors.svWarning} />
-              <KPICard title="Last 30 Days" value={String(data.month?.visitors ?? 0)} icon="calendar-outline" color={colors.svOlive} />
+              <KPICard title="Visitors Today" value={formatOptionalCount(data.today?.visitors)} icon="person-outline" color={colors.svWarning} />
+              <KPICard title="Last 30 Days" value={formatOptionalCount(data.month?.visitors)} icon="calendar-outline" color={colors.svOlive} />
             </View>
           </View>
 
@@ -57,11 +70,13 @@ export function VisitorsScreen() {
           </SectionCard>
 
           <SectionCard
-            title={`Active visitors (${data.realtime?.count ?? 0})`}
+            title={`Active visitors (${formatOptionalCount(activeCount)})`}
             subtitle="Auto-refreshes every 15 seconds"
             icon="radio-outline"
           >
-            {activeVisitors.length === 0 ? (
+            {data.realtime === null ? (
+              <CompactUnavailable />
+            ) : activeVisitors.length === 0 ? (
               <CompactEmpty />
             ) : (
               <View className="gap-3">
@@ -74,6 +89,33 @@ export function VisitorsScreen() {
         </View>
       </ScrollView>
     </ScreenShell>
+  );
+}
+
+function formatOptionalCount(value: number | null | undefined): string {
+  return typeof value === "number" && Number.isFinite(value) ? value.toLocaleString("en-GB") : "-";
+}
+
+function VisitorsHeaderActions() {
+  const router = useRouter();
+
+  return (
+    <View className="items-end gap-2">
+      <Pressable
+        accessibilityRole="button"
+        accessibilityLabel="Return to previous screen"
+        hitSlop={8}
+        onPress={() => {
+          if (router.canGoBack()) router.back();
+          else router.replace("/more");
+        }}
+        className="h-9 w-9 items-center justify-center rounded-xl"
+        style={{ backgroundColor: "rgba(255,255,255,0.08)", borderWidth: 1, borderColor: "rgba(255,255,255,0.12)" }}
+      >
+        <Ionicons name="chevron-back" size={18} color="#FFFFFF" />
+      </Pressable>
+      <VisitorHeaderCounter />
+    </View>
   );
 }
 
@@ -171,6 +213,18 @@ function CompactEmpty() {
       </View>
       <Text className="mt-3 text-base font-extrabold text-svDark">No active visitors</Text>
       <Text className="mt-1 text-center text-sm text-slate-500">Live sessions will appear here when someone is browsing the website.</Text>
+    </View>
+  );
+}
+
+function CompactUnavailable() {
+  return (
+    <View className="items-center rounded-lg bg-svSoft px-4 py-8">
+      <View className="h-12 w-12 items-center justify-center rounded-lg bg-white">
+        <Ionicons name="cloud-offline-outline" size={24} color={colors.svWarning} />
+      </View>
+      <Text className="mt-3 text-base font-extrabold text-svDark">Live visitors unavailable</Text>
+      <Text className="mt-1 text-center text-sm text-slate-500">Pull to refresh once the visitor API is reachable.</Text>
     </View>
   );
 }

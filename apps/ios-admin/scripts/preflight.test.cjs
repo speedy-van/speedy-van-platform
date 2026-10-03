@@ -42,6 +42,39 @@ test("ios-admin pins query-string to the Expo Router compatible CommonJS API", (
   assert.equal(typeof queryString.stringify, "function");
 });
 
+test("visitor measurement is mounted behind the existing consent policy", () => {
+  const globalProviders = fs.readFileSync(path.join(repoRoot, "apps/web/src/components/layout/GlobalProviders.tsx"), "utf8");
+  const tracker = fs.readFileSync(path.join(repoRoot, "apps/web/src/components/tracking/VisitorTracker.tsx"), "utf8");
+
+  assert.match(globalProviders, /<VisitorTracker\s*\/>/);
+  assert.match(tracker, /useCookieConsent/);
+  assert.match(tracker, /isPublicAnalyticsPath/);
+  assert.match(tracker, /sv-visitor-session/);
+});
+
+test("ios visitors use one provider and are not registered as a hidden tab", () => {
+  const rootLayout = fs.readFileSync(path.join(appRoot, "app/_layout.tsx"), "utf8");
+  const tabsLayout = fs.readFileSync(path.join(appRoot, "app/(tabs)/_layout.tsx"), "utf8");
+  const useVisitors = fs.readFileSync(path.join(appRoot, "src/hooks/useVisitors.ts"), "utf8");
+
+  assert.match(rootLayout, /<VisitorsProvider>/);
+  assert.match(rootLayout, /<Stack\.Screen name="visitors"/);
+  assert.doesNotMatch(tabsLayout, /name="visitors"/);
+  assert.match(useVisitors, /visitors\/VisitorsProvider/);
+  assert.ok(fs.existsSync(path.join(appRoot, "app/visitors.tsx")));
+});
+
+test("ios visitor header counter animates with reduce-motion support", () => {
+  const animatedCount = fs.readFileSync(path.join(appRoot, "src/components/AnimatedVisitorCount.tsx"), "utf8");
+  const headerCounter = fs.readFileSync(path.join(appRoot, "src/components/VisitorHeaderCounter.tsx"), "utf8");
+
+  assert.match(animatedCount, /Animated\.Value/);
+  assert.match(animatedCount, /reduceMotionChanged/);
+  assert.match(animatedCount, /tabular-nums/);
+  assert.match(headerCounter, /useVisitors/);
+  assert.match(headerCounter, /router\.push\("\/visitors"\)/);
+});
+
 test("ios-admin-clean refuses production EAS builds", () => {
   const result = runNode(path.join(cleanRoot, "scripts/reject-production-build.cjs"), cleanRoot);
 

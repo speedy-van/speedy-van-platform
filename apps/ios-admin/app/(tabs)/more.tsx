@@ -7,6 +7,8 @@ import { useEffect, useState } from "react";
 import { Alert, Pressable, ScrollView, Switch, Text, View } from "react-native";
 import { useAuth } from "@/auth/AuthContext";
 import { ActionButton, ScreenHeader, ScreenShell } from "@/components/AppScaffold";
+import { VisitorHeaderCounter } from "@/components/VisitorHeaderCounter";
+import { useVisitors } from "@/hooks/useVisitors";
 import { previewNewBookingSound } from "@/notifications/bookingNotifications";
 import { useNotificationSettings } from "@/notifications/notificationSettings";
 import { colors } from "@/theme/colors";
@@ -22,12 +24,26 @@ function initials(name: string): string {
     .slice(0, 2);
 }
 
+function visitorsBadge(count: number | null, stale: boolean, loading: boolean, error: string | null): string {
+  if (count !== null) return stale ? `${count} stale` : `${count} active`;
+  if (loading) return "Loading";
+  if (error) return "Unavailable";
+  return "";
+}
+
 export default function MoreRoute() {
   const router = useRouter();
   const { logout, user, startupPhase } = useAuth();
+  const visitors = useVisitors();
   const { settings, update } = useNotificationSettings();
   const displayName = user?.name ?? "Admin";
   const [permissionStatus, setPermissionStatus] = useState("Not checked");
+  const visitorRightLabel = visitorsBadge(
+    visitors.activeCount,
+    visitors.realtime.stale,
+    visitors.realtime.isInitialLoading,
+    visitors.realtime.error,
+  );
 
   useEffect(() => {
     let cancelled = false;
@@ -52,6 +68,14 @@ export default function MoreRoute() {
     }
   }
 
+  async function signOut(): Promise<void> {
+    try {
+      await logout();
+    } catch {
+      Alert.alert("Sign out failed", "Please check the connection and try again.");
+    }
+  }
+
   return (
     <ScreenShell>
       <ScreenHeader
@@ -59,6 +83,7 @@ export default function MoreRoute() {
         subtitle="Admin tools, account info, and sign out."
         eyebrow="Workspace"
         icon="grid"
+        right={<VisitorHeaderCounter />}
       />
       <ScrollView contentContainerClassName="gap-4 p-4 pb-8">
         <View
@@ -96,13 +121,19 @@ export default function MoreRoute() {
           className="overflow-hidden rounded-2xl bg-white"
           style={{ borderWidth: 1, borderColor: colors.svLine }}
         >
-          <MoreLink icon="analytics-outline" title="Analytics" subtitle="Revenue and demand trends" onPress={() => router.push("/analytics")} />
-          <MoreLink icon="people-outline" title="Drivers" subtitle="Fleet records and driver actions" onPress={() => router.push("/drivers")} />
-          <MoreLink icon="briefcase-outline" title="Dispatch" subtitle="Published jobs and driver pay" onPress={() => router.push("/jobs")} />
-          <MoreLink icon="pulse-outline" title="Visitors" subtitle="Live website sessions" onPress={() => router.push("/visitors")} />
-          <MoreLink icon="images-outline" title="Images" subtitle="Manage media assets" onPress={() => router.push("/images")} />
-          <MoreLink icon="mail-outline" title="Enquiries" subtitle="European quote requests" onPress={() => router.push("/enquiries")} />
-          <MoreLink icon="notifications-outline" title="Notifications" subtitle="Admin alerts and events" onPress={() => router.push("/notifications")} isLast />
+          <MoreLink icon="analytics-outline" title="Analytics" subtitle="Revenue and demand trends" onPress={() => router.navigate("/analytics")} />
+          <MoreLink icon="people-outline" title="Drivers" subtitle="Fleet records and driver actions" onPress={() => router.navigate("/drivers")} />
+          <MoreLink icon="briefcase-outline" title="Dispatch" subtitle="Published jobs and driver pay" onPress={() => router.navigate("/jobs")} />
+          <MoreLink
+            icon="pulse-outline"
+            title="Visitors"
+            subtitle="Live website sessions"
+            rightLabel={visitorRightLabel}
+            onPress={() => router.push("/visitors")}
+          />
+          <MoreLink icon="images-outline" title="Images" subtitle="Manage media assets" onPress={() => router.navigate("/images")} />
+          <MoreLink icon="mail-outline" title="Enquiries" subtitle="European quote requests" onPress={() => router.navigate("/enquiries")} />
+          <MoreLink icon="notifications-outline" title="Notifications" subtitle="Admin alerts and events" onPress={() => router.navigate("/notifications")} isLast />
         </View>
 
         <View
@@ -145,7 +176,7 @@ export default function MoreRoute() {
           </Text>
           <Text className="mt-1 text-xs font-bold text-slate-500">Startup: {startupPhase}</Text>
         </View>
-        <ActionButton label="Sign Out" icon="log-out-outline" tone="danger" onPress={() => void logout()} />
+        <ActionButton label="Sign Out" icon="log-out-outline" tone="danger" onPress={() => void signOut()} />
       </ScrollView>
     </ScreenShell>
   );
@@ -187,12 +218,14 @@ function MoreLink({
   icon,
   title,
   subtitle,
+  rightLabel,
   onPress,
   isLast = false,
 }: {
   icon: IconName;
   title: string;
   subtitle: string;
+  rightLabel?: string;
   onPress: () => void;
   isLast?: boolean;
 }) {
@@ -212,6 +245,11 @@ function MoreLink({
         <Text className="text-[15px] font-extrabold text-svDark">{title}</Text>
         <Text className="mt-0.5 text-xs text-slate-500">{subtitle}</Text>
       </View>
+      {rightLabel ? (
+        <Text className="text-xs font-extrabold text-svBrandStrong" numberOfLines={1}>
+          {rightLabel}
+        </Text>
+      ) : null}
       <Ionicons name="chevron-forward" size={16} color="#CBD5E1" />
     </Pressable>
   );

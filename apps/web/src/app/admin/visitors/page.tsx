@@ -4,27 +4,51 @@ import { useEffect, useState, useCallback, useRef } from "react";
 import { api } from "@/lib/api";
 import KPICard from "@/components/admin/KPICard";
 
-interface RealtimeData { count: number; visitors: { id: string; page: string; country?: string; city?: string; referrer?: string; sessionStart: string }[] }
-interface TodayData { visitors: number; pageViews: number }
+interface VisitorEvent { page?: string | null }
+interface RealtimeVisitor {
+  id: string;
+  referrer?: string | null;
+  landingPage?: string | null;
+  pageViews: number;
+  createdAt: string;
+  lastActiveAt: string;
+  events: VisitorEvent[];
+}
+interface RealtimeData { count: number; visitors: RealtimeVisitor[]; cappedAt?: number; timezone?: string }
+interface TodayData { visitors: number; pageViews: number; timezone?: string }
 interface WeekDayEntry { date: string; count: number }
-interface WeekData { visitors: WeekDayEntry[] | number }
+interface WeekData { visitors: WeekDayEntry[] | number; timezone?: string }
+
+function currentPage(visitor: RealtimeVisitor): string {
+  return visitor.events.find((event) => Boolean(event.page))?.page ?? visitor.landingPage ?? "/";
+}
 
 export default function VisitorsPage() {
   const [realtime, setRealtime] = useState<RealtimeData | null>(null);
   const [today, setToday] = useState<TodayData | null>(null);
   const [week, setWeek] = useState<WeekData | null>(null);
+  const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const fetchAll = useCallback(async () => {
-    const [rt, td, wk] = await Promise.all([
+    const [rt, td, wk] = await Promise.allSettled([
       api.get<RealtimeData>("/admin/visitors/realtime"),
       api.get<TodayData>("/admin/visitors/today"),
       api.get<WeekData>("/admin/visitors/week"),
     ]);
-    if (rt.success && rt.data) setRealtime(rt.data);
-    if (td.success && td.data) setToday(td.data);
-    if (wk.success && wk.data) setWeek(wk.data);
+
+    const errors: string[] = [];
+    if (rt.status === "fulfilled" && rt.value.success && rt.value.data) setRealtime(rt.value.data);
+    else errors.push(rt.status === "fulfilled" ? rt.value.error ?? "Realtime visitors failed." : "Realtime visitors failed.");
+
+    if (td.status === "fulfilled" && td.value.success && td.value.data) setToday(td.value.data);
+    else errors.push(td.status === "fulfilled" ? td.value.error ?? "Today visitors failed." : "Today visitors failed.");
+
+    if (wk.status === "fulfilled" && wk.value.success && wk.value.data) setWeek(wk.value.data);
+    else errors.push(wk.status === "fulfilled" ? wk.value.error ?? "Weekly visitors failed." : "Weekly visitors failed.");
+
+    setError(errors[0] ?? null);
     setLoading(false);
   }, []);
 
@@ -43,6 +67,12 @@ export default function VisitorsPage() {
         <div className="flex items-center justify-center h-64"><div className="h-8 w-8 border-2 border-amber-500 border-t-transparent rounded-full animate-spin" /></div>
       ) : (
         <>
+          {error ? (
+            <div className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm font-medium text-amber-800">
+              {error} Showing any last successful visitor data that is still available.
+            </div>
+          ) : null}
+
           {/* KPI row */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <KPICard title="Active Right Now" value={realtime?.count ?? 0} icon="🟢" subtitle="Real-time" />
@@ -85,15 +115,15 @@ export default function VisitorsPage() {
                   <div key={v.id} className="px-5 py-3 flex items-start gap-3">
                     <span className="h-2 w-2 rounded-full bg-emerald-400 mt-1.5 flex-shrink-0" />
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium text-slate-800 truncate">{v.page || "/"}</p>
+                      <p className="text-sm font-medium text-slate-800 truncate">{currentPage(v)}</p>
                       <p className="text-xs text-slate-400">
-                        {[v.city, v.country].filter(Boolean).join(", ") || "Unknown location"}
+                        {`${v.pageViews} page view${v.pageViews === 1 ? "" : "s"}`}
                         {v.referrer && ` · from ${v.referrer}`}
                       </p>
                     </div>
                     <span className="text-xs text-slate-400 whitespace-nowrap">
                       {(() => {
-                        const secs = Math.floor((Date.now() - new Date(v.sessionStart).getTime()) / 1000);
+                        const secs = Math.floor((Date.now() - new Date(v.createdAt).getTime()) / 1000);
                         if (secs < 60) return `${secs}s`;
                         return `${Math.floor(secs / 60)}m`;
                       })()}

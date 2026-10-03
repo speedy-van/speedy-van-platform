@@ -27,11 +27,17 @@ export type RealtimeVisitor = {
 export type RealtimeVisitorsResponse = {
   count: number;
   visitors: RealtimeVisitor[];
+  cappedAt?: number;
+  activeWindowSeconds?: number;
+  timezone?: string;
 };
 
 export type VisitorsTodayResponse = {
   visitors: number;
   pageViews: number;
+  date?: string;
+  timezone?: string;
+  metric?: string;
 };
 
 export type VisitorWeekEntry = {
@@ -41,8 +47,12 @@ export type VisitorWeekEntry = {
 
 export type VisitorWeekResponse = {
   visitors: VisitorWeekEntry[];
+  timezone?: string;
+  metric?: string;
 };
 
 export type VisitorsMonthResponse = {
   visitors: number;
+  timezone?: string;
+  metric?: string;
 };

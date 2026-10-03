@@ -157,6 +157,10 @@ export const VisitorEventSchema = z.object({
   element: z.string().optional(),
   metadata: z.record(z.unknown()).optional(),
 });
+export const VisitorExitSchema = z.object({
+  sessionId: z.string(),
+  sentAt: z.string().datetime().optional(),
+});
 
 // ─── Chat ──────────────────────────────────────────────────────────────────
 export const SendMessageSchema = z.object({

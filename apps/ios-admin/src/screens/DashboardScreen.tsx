@@ -4,6 +4,7 @@ import { EmptyState } from "@/components/EmptyState";
 import { ErrorBanner } from "@/components/ErrorBanner";
 import { KPICard } from "@/components/KPICard";
 import { LoadingView } from "@/components/LoadingView";
+import { VisitorHeaderCounter } from "@/components/VisitorHeaderCounter";
 import { useDashboard } from "@/hooks/useDashboard";
 import { colors } from "@/theme/colors";
 import { formatMoney } from "@/utils/format";
@@ -24,6 +25,7 @@ export function DashboardScreen() {
           subtitle="Live admin visibility across bookings, revenue, drivers, jobs, and traffic."
           eyebrow="SpeedyVan Admin"
           icon="speedometer"
+          right={<VisitorHeaderCounter />}
         >
           {data ? (
             <View className="flex-row flex-wrap gap-2">

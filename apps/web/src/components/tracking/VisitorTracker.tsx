@@ -1,7 +1,9 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
+import { isPublicAnalyticsPath } from "@/lib/analytics";
+import { useCookieConsent } from "@/components/layout/CookieConsent";
 
 const API_BASE =
   process.env.NODE_ENV === "development"
@@ -9,92 +11,230 @@ const API_BASE =
     : (process.env.NEXT_PUBLIC_API_URL ?? "https://api.speedyvan.uk");
 
 const SESSION_KEY = "sv-visitor-session";
+const HEARTBEAT_MS = 30_000;
 
-async function post(path: string, body: object) {
+type TrackingResult = {
+  ok: boolean;
+  missingSession: boolean;
+};
+
+function storedSessionId(): string | null {
   try {
-    await fetch(`${API_BASE}${path}`, {
+    return window.sessionStorage.getItem(SESSION_KEY);
+  } catch {
+    return null;
+  }
+}
+
+function saveSessionId(sessionId: string): void {
+  try {
+    window.sessionStorage.setItem(SESSION_KEY, sessionId);
+  } catch {
+    // In-memory tracking still works when storage is unavailable.
+  }
+}
+
+function clearStoredSession(): void {
+  try {
+    window.sessionStorage.removeItem(SESSION_KEY);
+  } catch {
+    // Optional measurement storage must never block consent changes.
+  }
+}
+
+async function postTracking(path: string, body: object, signal?: AbortSignal): Promise<TrackingResult> {
+  try {
+    const response = await fetch(`${API_BASE}${path}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(body),
-      keepalive: true,
+      keepalive: signal ? false : true,
+      signal,
     });
-  } catch { /* Optional measurement must not interrupt navigation. */ }
+    return { ok: response.ok, missingSession: response.status === 404 };
+  } catch {
+    return { ok: false, missingSession: false };
+  }
+}
+
+function readSessionResponse(value: unknown): string | null {
+  if (!value || typeof value !== "object") return null;
+  const envelope = value as { success?: unknown; data?: { sessionId?: unknown } };
+  const id = envelope.data?.sessionId;
+  return envelope.success === true && typeof id === "string" && id ? id : null;
 }
 
 export default function VisitorTracker() {
   const pathname = usePathname();
-  const [sessionId, setSessionId] = useState<string | null>(null);
-  const landingPage = useRef(pathname);
+  const consent = useCookieConsent();
+  const [sessionId, setSessionIdState] = useState<string | null>(null);
+  const sessionIdRef = useRef<string | null>(null);
+  const enabledRef = useRef(false);
   const lastPage = useRef<string | null>(null);
+  const landingPage = useRef<string | null>(null);
+  const creatingSession = useRef<Promise<string | null> | null>(null);
+  const isPublicPath = useMemo(() => Boolean(pathname && isPublicAnalyticsPath(pathname)), [pathname]);
+  const enabled = consent === "accepted" && isPublicPath;
 
-  useEffect(() => {
-    try {
-      const stored = sessionStorage.getItem(SESSION_KEY);
-      if (stored) {
-        setSessionId(stored);
-        return;
-      }
-    } catch { /* An in-memory session still works when storage is unavailable. */ }
-
-    const controller = new AbortController();
-    let active = true;
-    async function initialise() {
-      try {
-        const response = await fetch(`${API_BASE}/tracking/session`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          signal: controller.signal,
-          body: JSON.stringify({
-            userAgent: navigator.userAgent,
-            referrer: document.referrer ? new URL(document.referrer).origin : undefined,
-            landingPage: landingPage.current ?? undefined,
-            screenWidth: window.screen.width,
-          }),
-        });
-        if (!response.ok) return;
-        const result: unknown = await response.json();
-        if (!active || !result || typeof result !== "object") return;
-        const envelope = result as { success?: boolean; data?: { sessionId?: unknown } };
-        const id = envelope.data?.sessionId;
-        if (envelope.success !== true || typeof id !== "string" || !id) return;
-        setSessionId(id);
-        try { sessionStorage.setItem(SESSION_KEY, id); } catch { /* Keep the in-memory session. */ }
-      } catch { /* A failed or cancelled session request is not a customer error. */ }
-    }
-    void initialise();
-    return () => {
-      active = false;
-      controller.abort();
-    };
+  const setSessionId = useCallback((nextSessionId: string | null) => {
+    sessionIdRef.current = nextSessionId;
+    setSessionIdState(nextSessionId);
   }, []);
 
-  useEffect(() => {
-    if (!sessionId) return;
-    const heartbeat = setInterval(() => {
-      if (document.visibilityState === "visible") {
-        void post("/tracking/heartbeat", { sessionId });
+  const clearSession = useCallback(() => {
+    creatingSession.current = null;
+    lastPage.current = null;
+    clearStoredSession();
+    setSessionId(null);
+  }, [setSessionId]);
+
+  const createSession = useCallback(
+    async (forceNew = false, signal?: AbortSignal): Promise<string | null> => {
+      if (!enabledRef.current) return null;
+
+      if (!forceNew) {
+        const current = sessionIdRef.current;
+        if (current) return current;
+
+        const stored = storedSessionId();
+        if (stored) {
+          setSessionId(stored);
+          return stored;
+        }
       }
-    }, 30000);
-    const onExit = () => { void post("/tracking/exit", { sessionId }); };
-    window.addEventListener("pagehide", onExit);
-    return () => {
-      clearInterval(heartbeat);
-      window.removeEventListener("pagehide", onExit);
-    };
-  }, [sessionId]);
+
+      if (creatingSession.current) return creatingSession.current;
+
+      const sessionPromise = (async () => {
+        try {
+          const response = await fetch(`${API_BASE}/tracking/session`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            signal,
+            body: JSON.stringify({
+              userAgent: navigator.userAgent,
+              referrer: document.referrer ? new URL(document.referrer).origin : undefined,
+              landingPage: landingPage.current ?? pathname ?? undefined,
+              screenWidth: window.screen.width,
+            }),
+          });
+          if (!response.ok) return null;
+          const id = readSessionResponse(await response.json());
+          if (!id || !enabledRef.current) return null;
+          saveSessionId(id);
+          setSessionId(id);
+          return id;
+        } catch {
+          return null;
+        } finally {
+          creatingSession.current = null;
+        }
+      })();
+
+      creatingSession.current = sessionPromise;
+      return sessionPromise;
+    },
+    [pathname, setSessionId],
+  );
+
+  const replaceMissingSession = useCallback(
+    async (previousSessionId: string): Promise<string | null> => {
+      if (sessionIdRef.current === previousSessionId) {
+        clearSession();
+      }
+      return createSession(true);
+    },
+    [clearSession, createSession],
+  );
+
+  const sendHeartbeat = useCallback(
+    async (allowRecovery = true) => {
+      const current = sessionIdRef.current;
+      if (!current || !enabledRef.current || document.visibilityState !== "visible") return;
+      const result = await postTracking("/tracking/heartbeat", { sessionId: current });
+      if (result.missingSession && allowRecovery) {
+        const recovered = await replaceMissingSession(current);
+        if (recovered) await sendHeartbeat(false);
+      }
+    },
+    [replaceMissingSession],
+  );
+
+  const trackPageView = useCallback(
+    async (page: string, allowRecovery = true) => {
+      const current = sessionIdRef.current;
+      if (!current || !enabledRef.current) return;
+
+      const key = `${current}:${page}`;
+      if (lastPage.current === key) return;
+      lastPage.current = key;
+
+      const result = await postTracking("/tracking/event", {
+        sessionId: current,
+        type: "page_view",
+        page,
+        metadata: {},
+      });
+      if (result.missingSession && allowRecovery) {
+        const recovered = await replaceMissingSession(current);
+        if (recovered) {
+          lastPage.current = null;
+          await trackPageView(page, false);
+        }
+      }
+    },
+    [replaceMissingSession],
+  );
 
   useEffect(() => {
-    if (!sessionId || !pathname) return;
-    const key = `${sessionId}:${pathname}`;
-    if (lastPage.current === key) return;
-    lastPage.current = key;
-    void post("/tracking/event", {
-      sessionId,
-      type: "page_view",
-      page: pathname,
-      metadata: {},
-    });
-  }, [pathname, sessionId]);
+    enabledRef.current = enabled;
+    if (!enabled) {
+      if (consent !== "accepted") clearSession();
+      return;
+    }
+
+    if (!landingPage.current && pathname) landingPage.current = pathname;
+    const controller = new AbortController();
+    void createSession(false, controller.signal);
+
+    return () => controller.abort();
+  }, [clearSession, consent, createSession, enabled, pathname]);
+
+  useEffect(() => {
+    if (!enabled || !sessionId || !pathname) return;
+    void trackPageView(pathname);
+  }, [enabled, pathname, sessionId, trackPageView]);
+
+  useEffect(() => {
+    if (!enabled || !sessionId) return;
+
+    const heartbeat = window.setInterval(() => {
+      void sendHeartbeat();
+    }, HEARTBEAT_MS);
+
+    const onExit = () => {
+      const current = sessionIdRef.current;
+      if (!current) return;
+      void postTracking("/tracking/exit", { sessionId: current, sentAt: new Date().toISOString() });
+    };
+
+    const onVisible = () => {
+      if (document.visibilityState !== "visible") return;
+      void sendHeartbeat();
+      if (pathname) void trackPageView(pathname);
+    };
+
+    window.addEventListener("pagehide", onExit);
+    window.addEventListener("pageshow", onVisible);
+    document.addEventListener("visibilitychange", onVisible);
+
+    return () => {
+      window.clearInterval(heartbeat);
+      window.removeEventListener("pagehide", onExit);
+      window.removeEventListener("pageshow", onVisible);
+      document.removeEventListener("visibilitychange", onVisible);
+    };
+  }, [enabled, pathname, sendHeartbeat, sessionId, trackPageView]);
 
   return null;
 }
