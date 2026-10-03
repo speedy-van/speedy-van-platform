@@ -22,9 +22,10 @@
 - Production iOS EAS builds pinned to `macos-sequoia-15.6-xcode-26.2` to satisfy Apple's iOS 26 SDK upload requirement.
 - TypeScript validation, Expo Doctor, and local iOS bundle export passed on 2026-09-15.
 - EAS iOS signing credentials are configured and valid for `co.uk.speedy-van.admin`.
-- EAS Submit uploaded build `1.0.0 (48)` to App Store Connect/TestFlight on 2026-10-02.
+- EAS Submit uploaded build `1.0.0 (49)` to App Store Connect/TestFlight on 2026-10-03.
 - New booking local notifications use the bundled `new-booking.wav` sound without enabling the remote push entitlement.
-- Build 48 supersedes build 47 after fixing the Expo Router `queryString.stringify` display crash.
+- Build 48 superseded build 47 after fixing the Expo Router `queryString.stringify` display crash.
+- Build 49 supersedes build 48 after adding the consented live-visitors tracker, API activity repair, shared iOS visitor provider, animated header counter and reliable Visitors/More navigation.
 
 ## Submitted Build
 
@@ -38,17 +39,18 @@ eas submit --platform ios --profile production --latest --non-interactive
 
 Result:
 
-- EAS build ID: `2d02cbf5-a7f4-4475-87cb-fd66738cca83`
-- EAS submission ID: `aafde877-43ec-4c1d-b950-be1f20b93855`
+- EAS build ID: `b3ad8023-0311-4955-aedf-b38969acee93`
+- EAS submission ID: `5fa32633-ff80-4290-9773-25f81bd813e4`
 - App Store Connect app ID: `6812268357`
 - Bundle ID: `co.uk.speedy-van.admin`
-- Version/build: `1.0.0 (48)`
+- Version/build: `1.0.0 (49)`
 - Build image: `macos-sequoia-15.6-xcode-26.2`
 - Build status: `FINISHED`
 - Submit status: `FINISHED`
 - Apple upload result: successfully uploaded package to App Store Connect; Apple may take a few minutes to finish TestFlight processing.
-- Artifact: `https://expo.dev/artifacts/eas/JCkaQcjxKIhPctoKK0zWtoxRhyGTqRpD_UfpovLRLsk.ipa`
-- EAS fingerprint hash: `14571b3b8f0c8d9fc5f6b340efa71e6f1c30b60c`
+- Artifact: `https://expo.dev/artifacts/eas/MdcLmAnoMrRv6gKpXI6dyEDqCVo6X88FjMx_NOjVfOs.ipa`
+- EAS fingerprint hash: `b2fd0f62617288ae86d6fb2f49ae26697df896c2`
+- Git commit: `61aaf78967717607a0a29827382f471bda42be76`
 - App Store Connect distribution URL: `https://appstoreconnect.apple.com/apps/6812268357/distribution`
 
 ## App Store Assets
