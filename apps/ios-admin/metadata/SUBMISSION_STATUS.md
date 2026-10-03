@@ -22,10 +22,11 @@
 - Production iOS EAS builds pinned to `macos-sequoia-15.6-xcode-26.2` to satisfy Apple's iOS 26 SDK upload requirement.
 - TypeScript validation, Expo Doctor, and local iOS bundle export passed on 2026-09-15.
 - EAS iOS signing credentials are configured and valid for `co.uk.speedy-van.admin`.
-- EAS Submit uploaded build `1.0.0 (49)` to App Store Connect/TestFlight on 2026-10-03.
+- EAS Submit uploaded build `1.0.0 (50)` to App Store Connect/TestFlight on 2026-10-03.
 - New booking local notifications use the bundled `new-booking.wav` sound without enabling the remote push entitlement.
 - Build 48 superseded build 47 after fixing the Expo Router `queryString.stringify` display crash.
 - Build 49 supersedes build 48 after adding the consented live-visitors tracker, API activity repair, shared iOS visitor provider, animated header counter and reliable Visitors/More navigation.
+- Build 50 supersedes build 49 after repairing booking detail data completeness, journey/access display, timestamp labelling, extras states and read-only detail loading.
 
 ## Submitted Build
 
@@ -39,19 +40,19 @@ eas submit --platform ios --profile production --latest --non-interactive
 
 Result:
 
-- EAS build ID: `b3ad8023-0311-4955-aedf-b38969acee93`
-- EAS submission ID: `5fa32633-ff80-4290-9773-25f81bd813e4`
+- EAS build ID: `2a65b363-7455-4867-8457-260ee8009dcc`
+- EAS submission ID: `1ff5d098-08a5-406c-8e76-95e3fae067e1`
 - App Store Connect app ID: `6812268357`
 - Bundle ID: `co.uk.speedy-van.admin`
-- Version/build: `1.0.0 (49)`
+- Version/build: `1.0.0 (50)`
 - Build image: `macos-sequoia-15.6-xcode-26.2`
 - Build status: `FINISHED`
 - Submit status: `FINISHED`
 - Apple upload result: successfully uploaded package to App Store Connect; Apple may take a few minutes to finish TestFlight processing.
-- Artifact: `https://expo.dev/artifacts/eas/MdcLmAnoMrRv6gKpXI6dyEDqCVo6X88FjMx_NOjVfOs.ipa`
-- EAS fingerprint hash: `b2fd0f62617288ae86d6fb2f49ae26697df896c2`
-- Git commit: `61aaf78967717607a0a29827382f471bda42be76`
-- App Store Connect distribution URL: `https://appstoreconnect.apple.com/apps/6812268357/distribution`
+- Artifact: `https://expo.dev/artifacts/eas/CfoOblFOzVV1J8_9yz-28nBZ90Dm8oY_GvyxgbBpZwc.ipa`
+- EAS fingerprint hash: `f469e74b2c6b541a2aa5d1c4bc92df58425f05c4`
+- Git commit: `3c11952aee2e7b5947f198f0e812f377f62b367e`
+- App Store Connect TestFlight URL: `https://appstoreconnect.apple.com/apps/6812268357/testflight/ios`
 
 ## App Store Assets
 
