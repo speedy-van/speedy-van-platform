@@ -1909,5 +1909,48 @@ export const LOCAL_SERVICE_PAGES: LocalServicePage[] = [
         "answer": "Keep keys, identification, medication and immediate travel essentials with you. Clearly mark belongings that remain at the old property so they are not packed by mistake."
       }
     ]
+  },
+  {
+    "areaSlug": "fort-william",
+    "serviceSlug": "house-removal",
+    "title": "House removals in Fort William",
+    "description": "Plan a Fort William house removal with a complete inventory, High Street access checks, A82 route planning and clear delivery arrangements.",
+    "introduction": "A Fort William house removal needs more than a bedroom count. List the main rooms, loft, shed, garage and outdoor items, then describe how the van can reach the property and where the load can safely leave the house.",
+    "sections": [
+      {
+        "title": "Check Fort William High Street access before fixing the slot",
+        "body": "Fort William High Street has council-operated automatic bollards and a controlled pedestrian zone. If the collection or delivery address uses the High Street, confirm the permitted access route, loading point and timing with the property contact or council before assuming the van can reach the door.",
+        "source": {
+          "label": "Highland Council Fort William High Street access information",
+          "href": "https://www.highland.gov.uk/news/article/17266/fort-william-high-street-automatic-bollards-begin-operation"
+        }
+      },
+      {
+        "title": "Plan the A82 journey and the final approach separately",
+        "body": "A Fort William move may depend on the A82 for the main route, but the last approach to the house still matters. Note gates, narrow lanes, steep drives, turning space and the distance from the vehicle to the door. Check trunk-road conditions near the move date and provide an alternative contact if access changes.",
+        "source": {
+          "label": "Traffic Scotland A82 and trunk-road updates",
+          "href": "https://www.traffic.gov.scot/traffic-information/roadworks"
+        }
+      },
+      {
+        "title": "Include destination keys, stairs and storage stops",
+        "body": "For a move from Fort William to another part of Britain, give the complete destination address, key handover plan and unloading access. If some belongings go to storage or a second address, separate those items in the inventory before the quote is agreed so the vehicle and loading order reflect the whole job."
+      }
+    ],
+    "faqs": [
+      {
+        "question": "Can a Fort William house removal include garage and shed contents?",
+        "answer": "Yes, but they should be listed separately with access details. Heavy tools, garden equipment and outdoor furniture can change the vehicle space and handling needed."
+      },
+      {
+        "question": "Can the move go from Fort William to England or Wales?",
+        "answer": "Yes. Provide the full destination postcode, inventory, preferred dates and access at both ends so the route, vehicle, crew and timing can be reviewed together."
+      },
+      {
+        "question": "What if the collection address is near the High Street bollards?",
+        "answer": "Confirm the authorised loading point and access window before booking. A removal quote does not itself grant permission to enter a controlled section."
+      }
+    ]
   }
 ];

@@ -7,7 +7,7 @@ import {
   EUROPEAN_COUNTRIES,
   INDICATIVE_PRICES,
 } from "@/lib/european";
-import { SITE_LEGAL_NAME, SITE_URL } from "@/lib/seo/constants";
+import { SITE_NAME, SITE_URL } from "@/lib/seo/constants";
 import { buildPageMetadata } from "@/lib/seo/metadata";
 
 const money = new Intl.NumberFormat("en-GB", {
@@ -116,7 +116,7 @@ export default function EuropeanRemovalsPage() {
         "Door-to-door international removals from Scotland to Europe with packing options, customs paperwork support and written quotes.",
       provider: {
         "@type": "MovingCompany",
-        name: SITE_LEGAL_NAME,
+        name: SITE_NAME,
         url: SITE_URL,
       },
       areaServed: [

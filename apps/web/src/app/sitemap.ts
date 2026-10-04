@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next";
-import { AREAS } from "@/lib/areas";
+import { INDEXABLE_AREAS, isAreaIndexable } from "@/lib/areas";
 import { LOCAL_SERVICE_PAGES } from "@/lib/content/city-service-pages";
 import { MOVING_ROUTE_PAGES } from "@/lib/content/moving-route-pages";
 import { SERVICES } from "@/lib/services";
@@ -34,8 +34,11 @@ const contentUpdatedAt: Record<string, string> = {
   "/areas/glasgow": "2026-09-26",
   "/areas/aberdeen": "2026-09-25",
   "/areas/inverness": "2026-09-25",
+  "/areas": "2026-10-05",
   "/areas/edinburgh": "2026-09-26",
   "/areas/edinburgh/student-move": "2026-09-25",
+  "/areas/isle-of-skye": "2026-10-04",
+  "/areas/fort-william/house-removal": "2026-10-04",
   "/pricing": "2026-09-25",
 };
 
@@ -49,7 +52,7 @@ function sitemapEntry({ path, changeFrequency, priority }: SitemapPage): Sitemap
 }
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const areaPages: SitemapPage[] = AREAS.map((area) => ({
+  const areaPages: SitemapPage[] = INDEXABLE_AREAS.map((area) => ({
     path: `/areas/${area.slug}`,
     changeFrequency: "weekly",
     priority: 0.9,
@@ -76,7 +79,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...areaPages,
     ...servicePages,
     ...internationalPages,
-    ...LOCAL_SERVICE_PAGES.map((page): SitemapPage => ({ path: `/areas/${page.areaSlug}/${page.serviceSlug}`, changeFrequency: "monthly", priority: 0.7 })),
-    ...MOVING_ROUTE_PAGES.map((page): SitemapPage => ({ path: `/moving-routes/${page.slug}`, changeFrequency: "monthly", priority: 0.7 })),
+    ...LOCAL_SERVICE_PAGES.filter((page) => isAreaIndexable(page.areaSlug)).map((page): SitemapPage => ({ path: `/areas/${page.areaSlug}/${page.serviceSlug}`, changeFrequency: "monthly", priority: 0.7 })),
+    ...MOVING_ROUTE_PAGES.filter((page) => isAreaIndexable(page.originSlug)).map((page): SitemapPage => ({ path: `/moving-routes/${page.slug}`, changeFrequency: "monthly", priority: 0.7 })),
   ].map(sitemapEntry);
 }

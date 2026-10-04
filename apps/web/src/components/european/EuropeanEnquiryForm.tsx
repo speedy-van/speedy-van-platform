@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useMemo, useRef, useState } from "react";
 import { api } from "@/lib/api";
 import {
@@ -145,7 +146,7 @@ export default function EuropeanEnquiryForm() {
             aria-label="Call us on 07909 032889"
             className="transition-transform hover:scale-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 rounded-full"
           >
-            <img src="/call-icon.png" alt="Call us" width={52} height={52} />
+            <Image src="/call-icon.png" alt="Call us" width={52} height={52} sizes="52px" />
           </a>
         </div>
       </div>

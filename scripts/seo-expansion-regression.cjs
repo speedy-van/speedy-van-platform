@@ -9,7 +9,7 @@ test("Expansion registries reference real places and services without duplicate 
   assert.equal(new Set(areas.map((entry) => entry.slug)).size, areas.length);
   assert.equal(new Set(sitemap.map((entry) => entry.url)).size, sitemap.length);
   for (const page of localServices) {
-    assert.ok(areas.some((area) => area.slug === page.areaSlug && area.schemaType === "City"));
+    assert.ok(areas.some((area) => area.slug === page.areaSlug && area.indexable !== false));
     assert.ok(services.some((service) => service.slug === page.serviceSlug && service.indexable !== false));
     assert.notEqual(page.serviceSlug, "man-and-van", "The area page already serves this intent");
   }
@@ -45,11 +45,11 @@ test("New guides contain authored planning sections, questions and explicit evid
   }
 });
 
-test("The review inventory reflects 251 implemented URLs and separates the 3500-page target", () => {
+test("The review inventory reflects 125 indexable URLs and separates the 3500-page target", () => {
   const current = inventory();
-  assert.equal(current.implementedTotal, 251);
-  assert.deepEqual(current.counts, { areas: 160, localServices: 48, routes: 19 });
-  assert.equal(current.remainingToResearchAndReview, 3249);
+  assert.equal(current.implementedTotal, 125);
+  assert.deepEqual(current.counts, { areas: 32, localServices: 49, routes: 19 });
+  assert.equal(current.remainingToResearchAndReview, 3375);
   const recorded = JSON.parse(fs.readFileSync(path.join(__dirname, "../docs/seo/scotland-expansion-inventory-2026-09-23.json"), "utf8"));
   assert.deepEqual(recorded, current, "Regenerate the review inventory after changing registered content");
 });
@@ -69,6 +69,12 @@ test("local service links reach only reviewed pages in the sitemap", () => {
   assert.equal(localServiceHref("unknown-city", "house-removal"), undefined);
 });
 
+test("areas hub exposes only indexable area links", () => {
+  const source = fs.readFileSync(path.join(__dirname, "../apps/web/src/app/(site)/areas/page.tsx"), "utf8");
+  assert.match(source, /INDEXABLE_AREAS/);
+  assert.doesNotMatch(source, /import\s+\{[^}]*\bAREAS\b[^}]*\}\s+from\s+"@\/lib\/areas"/);
+});
+
 test("target city guides have valid service choices and unique section anchors", () => {
   const { getAreaGuide } = loadSource("apps/web/src/lib/area-guides.ts");
   for (const city of ["glasgow", "aberdeen", "inverness", "edinburgh"]) {
@@ -86,7 +92,10 @@ test("related local services stay in the same city and resolve to reviewed, dist
   const paths = new Set(sitemap.map(({ url }) => new URL(url).pathname));
   for (const page of localServices) {
     const related = relatedLocalServiceLinks(page.areaSlug, page.serviceSlug);
-    assert.ok(related.length > 0);
+    if (related.length === 0) {
+      assert.equal(localServices.filter((entry) => entry.areaSlug === page.areaSlug).length, 1);
+      continue;
+    }
     assert.equal(new Set(related.map(({ href }) => href)).size, related.length);
     for (const link of related) {
       assert.ok(link.name.trim() && paths.has(link.href));

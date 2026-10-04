@@ -4,7 +4,7 @@ import Image from "next/image";
 import { SERVICES, getServicePriceLabel } from "@/lib/services";
 import { ServiceImageCard } from "@/components/shared/ServiceImageCard";
 import { getServiceImage } from "@/lib/service-images";
-import { AREAS } from "@/lib/areas";
+import { INDEXABLE_AREAS } from "@/lib/areas";
 import { InstantQuoteCalculator } from "@/components/InstantQuoteCalculator";
 import { PostcodeCheck } from "@/components/PostcodeCheck";
 import { LiveAvailability } from "@/components/LiveAvailability";
@@ -19,11 +19,14 @@ import {
 } from "@/lib/seo/schemas";
 import {
   SITE_EMAIL,
+  SITE_COMPANY_NUMBER,
+  SITE_COMPANY_REGISTRATION_COUNTRY,
   SITE_LEGAL_NAME,
   SITE_OG_IMAGE,
   SITE_OG_IMAGE_HEIGHT,
   SITE_OG_IMAGE_WIDTH,
   SITE_PHONE_DISPLAY,
+  SITE_REGISTERED_OFFICE,
   SITE_URL,
 } from "@/lib/seo/constants";
 import {
@@ -36,7 +39,7 @@ export const metadata: Metadata = {
     absolute: "SpeedyVan | Man and Van, Removals & Delivery Across Scotland",
   },
   description:
-    "Man and van Glasgow, Edinburgh, Dundee & Aberdeen from £45/hr. House removals, furniture delivery, office moves and same-day transport across Scotland. Fixed prices, online booking, goods-in-transit cover included.",
+    "Man and van Glasgow, Edinburgh, Dundee & Aberdeen from £45/hr. House removals, furniture delivery, office moves and same-day transport across Scotland. Fixed prices and online booking.",
   alternates: { canonical: SITE_URL },
   openGraph: {
     title: "SpeedyVan | Man and Van & Removals Across Scotland",
@@ -59,14 +62,14 @@ export const metadata: Metadata = {
 
 const TRUST_STATS = [
   { value: "30+", label: "Areas across Scotland" },
-  { value: "£10k", label: "Goods-in-transit cover" },
+  { value: "Cover", label: "Confirmed before booking" },
   { value: "7 days", label: "Available every day" },
   { value: "Fixed", label: "Price shown before you book" },
 ];
 
 const AD_TRUST_POINTS = [
-  { label: "Company", value: `${SITE_LEGAL_NAME} trading as SpeedyVan` },
-  { label: "Office", value: "1 Barrack Street, Office 2.18, Hamilton ML3 0HS" },
+  { label: "Company", value: `${SITE_LEGAL_NAME} trading as SpeedyVan · company no. ${SITE_COMPANY_NUMBER}` },
+  { label: "Registered", value: `${SITE_COMPANY_REGISTRATION_COUNTRY} · ${SITE_REGISTERED_OFFICE}` },
   { label: "Contact", value: `${SITE_PHONE_DISPLAY} · ${SITE_EMAIL}` },
   { label: "Payment", value: "Review the route, access details, date and total before card payment." },
 ];
@@ -290,8 +293,12 @@ export default function HomePage() {
                 id="hero-heading"
                 className="text-3xl sm:text-4xl font-black leading-tight tracking-tight text-white"
               >
-                Book your van in <span className="text-amber-400">3 steps</span>
+                Man and Van &amp; Removals Across Scotland
               </h1>
+
+              <p className="mt-3 max-w-2xl text-base font-semibold text-white/75 sm:text-lg">
+                Book your van in <span className="text-amber-300">3 steps</span> for homes, flats, furniture, offices and manually reviewed storage enquiries.
+              </p>
 
               <ol className="mt-4 flex flex-col sm:flex-row gap-2 sm:gap-6" aria-label="How to book">
                 {[
@@ -409,7 +416,7 @@ export default function HomePage() {
               {[
                 "Online Quotes",
                 "Scottish Coverage",
-                "Goods-in-Transit Cover",
+                "Cover Details Checked",
                 "Homes, Flats & Offices",
               ].map((badge, i) => (
                 <li
@@ -725,7 +732,7 @@ export default function HomePage() {
             "West Scotland",
             "Borders & South West",
           ] as const).map((region) => {
-            const regionAreas = AREAS.filter((a) => a.region === region);
+            const regionAreas = INDEXABLE_AREAS.filter((a) => a.region === region);
             if (regionAreas.length === 0) return null;
             return (
               <div key={region} className="mb-8">
@@ -749,6 +756,14 @@ export default function HomePage() {
               </div>
             );
           })}
+          <div className="mt-10 text-center">
+            <Link
+              href="/areas"
+              className="inline-flex items-center justify-center rounded-xl border border-amber-400/40 px-5 py-3 text-sm font-black text-amber-300 transition hover:bg-amber-400/10 hover:text-amber-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400"
+            >
+              View all areas
+            </Link>
+          </div>
         </div>
       </section>
 
@@ -817,7 +832,7 @@ export default function HomePage() {
           </ul>
 
           <p className="mt-8 text-center text-sm text-white/70">
-            All prices are per hour. Minimum 2-hour booking. Fixed-price quotes available for house removals.
+            Guide rates are starting prices. Minimum 2-hour booking for hourly work. The confirmed quote depends on route, load, access, crew and date, with fixed-price quotes available for larger house removals.
           </p>
         </div>
       </section>

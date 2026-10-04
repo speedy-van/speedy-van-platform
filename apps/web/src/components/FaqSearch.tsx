@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { trackAnalyticsEvent } from "@/lib/analytics";
 
 import { useMemo, useState } from "react";
@@ -63,7 +64,7 @@ export function FaqSearch({ faqs }: { faqs: Faq[] }) {
             data-track-location="faq_no_results"
             className="transition-transform hover:scale-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 rounded-full"
           >
-            <img src="/call-icon.png" alt="Call us instead" width={52} height={52} />
+            <Image src="/call-icon.png" alt="Call us instead" width={52} height={52} sizes="52px" />
           </a>
         </div>
       ) : (

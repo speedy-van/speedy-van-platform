@@ -38,6 +38,16 @@ const nextConfig = {
         destination: "/book",
         permanent: true,
       },
+      {
+        source: "/areas/glasgow/business-removals",
+        destination: "/areas/glasgow/office-removal",
+        permanent: true,
+      },
+      {
+        source: "/areas/glasgow/storage-transport",
+        destination: "/storage/enquiry?source=glasgow_storage_transport",
+        permanent: true,
+      },
     ];
   },
 };

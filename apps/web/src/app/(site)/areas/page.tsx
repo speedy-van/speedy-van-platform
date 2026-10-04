@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { AREAS } from "@/lib/areas";
+import { INDEXABLE_AREAS } from "@/lib/areas";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { buildPageMetadata } from "@/lib/seo/metadata";
 import { buildBreadcrumbSchema } from "@/lib/seo/schemas";
@@ -11,8 +11,8 @@ export const metadata = buildPageMetadata({
 });
 
 export default function AreasPage() {
-  const regions = Array.from(new Set(AREAS.map((area) => area.region)));
-  const cities = AREAS.filter((area) => area.schemaType === "City");
+  const regions = Array.from(new Set(INDEXABLE_AREAS.map((area) => area.region)));
+  const cities = INDEXABLE_AREAS.filter((area) => area.schemaType === "City");
   const regionId = (region: string) => `region-${region.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`;
   const textLink = "rounded-sm text-amber-300 underline underline-offset-4 hover:text-amber-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-300 focus-visible:ring-offset-4 focus-visible:ring-offset-stone-950";
 
@@ -67,7 +67,7 @@ export default function AreasPage() {
             <section key={region} id={regionId(region)} aria-labelledby={`${regionId(region)}-heading`} className="min-w-0 scroll-mt-28 rounded-2xl border border-white/15 bg-white/5 p-5 sm:p-6">
               <h2 id={`${regionId(region)}-heading`} className="text-2xl font-bold">{region}</h2>
               <ul className="mt-4 grid gap-3">
-                {AREAS.filter((area) => area.region === region).map((area) => (
+                {INDEXABLE_AREAS.filter((area) => area.region === region).map((area) => (
                   <li key={area.slug}>
                     <Link href={`/areas/${area.slug}`} className="block rounded-lg px-2 py-3 font-semibold text-amber-300 underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-300">
                       {area.name}{area.postcode && <span className="ml-2 text-sm font-normal text-stone-300">{area.postcode}</span>}

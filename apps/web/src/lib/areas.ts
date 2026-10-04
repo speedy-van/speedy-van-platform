@@ -14,6 +14,7 @@ export interface Area {
   nearbyAreas: string[];
   metaDescription: string;
   schemaType?: "City" | "Place" | "AdministrativeArea";
+  indexable?: boolean;
   moveAdvice?: {
     title: string;
     body: string;
@@ -1563,18 +1564,36 @@ const EXISTING_AREAS: Area[] = [
   }
 ];
 
+const EXPANSION_INDEXABLE: ReadonlySet<string> = new Set<string>([]);
+
+function markExpansionIndexability(areas: unknown): Area[] {
+  if (!Array.isArray(areas)) return [];
+
+  return areas.map((area) => ({
+    ...area,
+    indexable: EXPANSION_INDEXABLE.has(area.slug),
+  }));
+}
+
 export const AREAS: Area[] = [
   ...EXISTING_AREAS,
-  ...EXPANSION_TOWNS_1,
-  ...EXPANSION_TOWNS_2,
-  ...EXPANSION_TOWNS_3,
-  ...EXPANSION_TOWNS_4,
+  ...markExpansionIndexability(EXPANSION_TOWNS_1),
+  ...markExpansionIndexability(EXPANSION_TOWNS_2),
+  ...markExpansionIndexability(EXPANSION_TOWNS_3),
+  ...markExpansionIndexability(EXPANSION_TOWNS_4),
 ];
 
 export function getAreaBySlug(slug: string): Area | undefined {
   return AREAS.find((area) => area.slug === slug);
 }
 
+export function isAreaIndexable(slug: string): boolean {
+  const area = getAreaBySlug(slug);
+  return area?.indexable !== false;
+}
+
+export const INDEXABLE_AREAS: Area[] = AREAS.filter((area) => area.indexable !== false);
+
 export const FEATURED_AREAS = AREAS.filter(
-  (area, index) => index < 10 || ["aberdeen", "inverness"].includes(area.slug)
+  (area, index) => index < 10 || ["aberdeen", "inverness", "hamilton"].includes(area.slug)
 );

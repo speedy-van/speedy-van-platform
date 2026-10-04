@@ -2,7 +2,7 @@ import Link from "next/link";
 import type { Area } from "@/lib/areas";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { buildBreadcrumbSchema } from "@/lib/seo/schemas";
-import { absoluteUrl, SITE_LEGAL_NAME, SITE_URL } from "@/lib/seo/constants";
+import { absoluteUrl, SITE_NAME, SITE_URL } from "@/lib/seo/constants";
 
 export const movingTextLink = "rounded-sm text-amber-300 underline underline-offset-4 hover:text-amber-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-300 focus-visible:ring-offset-4 focus-visible:ring-offset-stone-950";
 
@@ -32,7 +32,7 @@ export function MovingContentPage({ path, title, description, introduction, orig
           name: title,
           description,
           url: absoluteUrl(path),
-          provider: { "@type": "MovingCompany", "@id": `${SITE_URL}/#organization`, name: SITE_LEGAL_NAME, url: SITE_URL },
+          provider: { "@type": "MovingCompany", "@id": `${SITE_URL}/#organization`, name: SITE_NAME, url: SITE_URL },
           areaServed: { "@type": origin.schemaType ?? "Place", name: origin.name },
         },
       ]} />

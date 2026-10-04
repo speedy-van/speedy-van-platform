@@ -1,10 +1,13 @@
-import { AREAS } from "@/lib/areas";
+import { INDEXABLE_AREAS } from "@/lib/areas";
+import { SITE } from "@speedy-van/config";
 import {
+  SITE_COMPANY_NUMBER,
+  SITE_COMPANY_REGISTRY_URL,
   SITE_EMAIL,
+  SITE_FOUNDING_DATE,
   SITE_LEGAL_NAME,
+  SITE_NAME,
   SITE_OG_IMAGE,
-  SITE_OG_IMAGE_HEIGHT,
-  SITE_OG_IMAGE_WIDTH,
   SITE_PHONE_E164,
   SITE_URL,
   absoluteUrl,
@@ -32,29 +35,35 @@ export function buildLocalBusinessSchema(rating?: AggregateRatingData): Schema {
     "@context": "https://schema.org",
     "@type": "MovingCompany",
     "@id": `${SITE_URL}/#organization`,
-    name: SITE_LEGAL_NAME,
-    alternateName: "SpeedyVan",
+    name: SITE_NAME,
+    legalName: SITE_LEGAL_NAME,
+    alternateName: "Speedy Van",
+    identifier: {
+      "@type": "PropertyValue",
+      propertyID: "Companies House",
+      value: SITE_COMPANY_NUMBER,
+    },
     url: SITE_URL,
     telephone: SITE_PHONE_E164,
     email: SITE_EMAIL,
     image: SITE_OG_IMAGE,
     logo: {
       "@type": "ImageObject",
-      url: SITE_OG_IMAGE,
-      width: SITE_OG_IMAGE_WIDTH,
-      height: SITE_OG_IMAGE_HEIGHT,
+      url: absoluteUrl("/brand/logo-512.png"),
+      width: 512,
+      height: 512,
     },
     priceRange: "££",
     currenciesAccepted: "GBP",
     paymentAccepted: "Cash, Bank Transfer, Credit Card",
     description:
       "Man and van, house removals, office relocations, furniture delivery and small moves across Glasgow, Edinburgh, Dundee, Aberdeen, Stirling, Inverness and beyond.",
-    foundingDate: "2024",
+    foundingDate: SITE_FOUNDING_DATE,
     address: {
       "@type": "PostalAddress",
-      streetAddress: "1 Barrack Street, Office 2.18",
+      streetAddress: "1 Barrack Street",
       addressLocality: "Hamilton",
-      postalCode: "ML3 0HS",
+      postalCode: "ML3 0DG",
       addressRegion: "Scotland",
       addressCountry: "GB",
     },
@@ -77,15 +86,16 @@ export function buildLocalBusinessSchema(rating?: AggregateRatingData): Schema {
         closes: "17:00",
       },
     ],
-    areaServed: AREAS.map((area) => ({
+    areaServed: INDEXABLE_AREAS.map((area) => ({
       "@type": area.schemaType ?? "AdministrativeArea",
       name: area.name,
     })),
     sameAs: [
-      "https://www.facebook.com/share/1Dd8NQPV4f/?mibextid=wwXIfr",
-      "https://www.tiktok.com/@speedyvan0",
-      "https://wa.me/447909032889",
+      SITE.social.facebook,
+      SITE.social.tiktok,
+      SITE_COMPANY_REGISTRY_URL,
     ],
+    // TODO: add Google Business Profile and Trustpilot profile URLs after they are claimed.
   };
 
   if (rating && rating.reviewCount > 0) {
@@ -106,8 +116,8 @@ export function buildWebsiteSchema(): Schema {
     "@context": "https://schema.org",
     "@type": "WebSite",
     "@id": `${SITE_URL}/#website`,
-    name: SITE_LEGAL_NAME,
-    alternateName: "SpeedyVan",
+    name: SITE_NAME,
+    alternateName: ["Speedy Van", "speedyvan.uk"],
     url: SITE_URL,
     inLanguage: "en-GB",
     publisher: { "@id": `${SITE_URL}/#organization` },
@@ -145,14 +155,17 @@ export function buildServiceCatalogSchema(items: ServiceCatalogItem[]): Schema {
     url: absoluteUrl("/services"),
     itemListElement: items.map((item) => {
       const url = absoluteUrl(item.url);
-      const service = buildServiceSchema(item.name, item.description, url);
-      delete service["@context"];
       return {
         ...(typeof item.startingFrom === "number"
           ? buildGuideOffer(url, item.startingFrom, item.priceUnit)
           : { "@type": "Offer", url }),
         itemOffered: {
-          ...service,
+          "@type": "Service",
+          "@id": `${url}#service`,
+          name: item.name,
+          description: item.description,
+          url,
+          provider: { "@id": `${SITE_URL}/#organization` },
           potentialAction: {
             "@type": "ReserveAction",
             target: absoluteUrl(item.bookingUrl),
@@ -212,13 +225,10 @@ export function buildServiceSchema(
     provider: {
       "@type": "MovingCompany",
       "@id": `${SITE_URL}/#organization`,
-      name: SITE_LEGAL_NAME,
+      name: SITE_NAME,
       url: SITE_URL,
     },
-    areaServed: AREAS.map((area) => ({
-      "@type": area.schemaType ?? "AdministrativeArea",
-      name: area.name,
-    })),
+    areaServed: { "@type": "AdministrativeArea", name: "Scotland" },
   };
 
   if (typeof startingFrom === "number") {

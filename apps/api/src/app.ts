@@ -51,6 +51,10 @@ function canRunWithoutDatabase(path: string): boolean {
 }
 
 app.use("*", logger());
+app.use("*", async (c, next) => {
+  await next();
+  c.header("X-Robots-Tag", "noindex, nofollow");
+});
 app.use(
   "*",
   cors({

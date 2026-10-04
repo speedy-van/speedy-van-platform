@@ -3,6 +3,7 @@ import Link from "next/link";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { buildLocalBusinessSchema } from "@/lib/seo/schemas";
 import { buildPageMetadata } from "@/lib/seo/metadata";
+import { SITE_REGISTERED_OFFICE } from "@/lib/seo/constants";
 
 export const metadata: Metadata = buildPageMetadata({
   title: "About Our Moving Service in Scotland",
@@ -50,8 +51,8 @@ export default function AboutPage() {
                 <p>
                   SpeedyVan is a Scottish man and van and removals company operating out of Hamilton,
                   South Lanarkshire. We help households, students, and businesses move across
-                  Scotland with clear quotes, professional drivers, and goods-in-transit cover
-                  included as standard.
+                  Scotland with clear quotes, professional drivers, and cover details checked
+                  before booking.
                 </p>
                 <p>
                   We cover over 30 locations across Scotland including Glasgow, Edinburgh, Dundee,
@@ -100,7 +101,7 @@ export default function AboutPage() {
           <ul className="grid grid-cols-1 sm:grid-cols-2 gap-5">
             {[
               { title: "Transparent pricing", body: "Your quote shows the full price before you book. No hidden charges added on move day." },
-              { title: "Goods-in-transit cover", body: "Every move includes goods-in-transit insurance up to £10,000 as standard." },
+              { title: "Cover details checked", body: "Insurance and cover details are confirmed before booking so the scope is clear for your move." },
               { title: "Online booking", body: "Book and pay securely online with no phone calls needed for standard jobs." },
               { title: "7-day availability", body: "We take bookings every day of the week, including weekends and bank holidays." },
               { title: "Scotland-wide coverage", body: "Over 30 locations across Scotland covered, including all major cities and towns." },
@@ -132,9 +133,7 @@ export default function AboutPage() {
             >
               <p className="text-xs font-bold uppercase tracking-wider text-amber-400 mb-2">Address</p>
               <address className="not-italic text-sm leading-relaxed" style={{ color: "rgba(255,255,255,0.70)" }}>
-                1 Barrack Street, Office 2.18<br />
-                Hamilton<br />
-                ML3 0HS, Scotland
+                {SITE_REGISTERED_OFFICE}
               </address>
             </div>
 
