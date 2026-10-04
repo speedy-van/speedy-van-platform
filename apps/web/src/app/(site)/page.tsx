@@ -290,8 +290,12 @@ export default function HomePage() {
                 id="hero-heading"
                 className="text-3xl sm:text-4xl font-black leading-tight tracking-tight text-white"
               >
-                Book your van in <span className="text-amber-400">3 steps</span>
+                Man and Van &amp; Removals Across Scotland
               </h1>
+
+              <p className="mt-3 max-w-2xl text-base font-semibold text-white/75 sm:text-lg">
+                Book your van in <span className="text-amber-300">3 steps</span> for homes, flats, furniture, offices and manually reviewed storage enquiries.
+              </p>
 
               <ol className="mt-4 flex flex-col sm:flex-row gap-2 sm:gap-6" aria-label="How to book">
                 {[
@@ -817,7 +821,7 @@ export default function HomePage() {
           </ul>
 
           <p className="mt-8 text-center text-sm text-white/70">
-            All prices are per hour. Minimum 2-hour booking. Fixed-price quotes available for house removals.
+            Guide rates are starting prices. Minimum 2-hour booking for hourly work. The confirmed quote depends on route, load, access, crew and date, with fixed-price quotes available for larger house removals.
           </p>
         </div>
       </section>

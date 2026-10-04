@@ -36,6 +36,8 @@ const contentUpdatedAt: Record<string, string> = {
   "/areas/inverness": "2026-09-25",
   "/areas/edinburgh": "2026-09-26",
   "/areas/edinburgh/student-move": "2026-09-25",
+  "/areas/isle-of-skye": "2026-10-04",
+  "/areas/fort-william/house-removal": "2026-10-04",
   "/pricing": "2026-09-25",
 };
 

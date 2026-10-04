@@ -451,6 +451,59 @@ export const EXPANSION_TOWNS_1: Area[] = [
     ]
   },
   {
+    "slug": "isle-of-skye",
+    "name": "Isle of Skye",
+    "region": "Highlands",
+    "postcode": "",
+    "schemaType": "Place",
+    "headline": "Man and Van on the Isle of Skye",
+    "description": "For an Isle of Skye move, describe the property access as well as the route on or off the island. A bridge route, ferry option, single-track approach and rural turning space can all affect whether a van can collect safely. Share the inventory, exact address, loading point and destination before arranging a household or furniture move.",
+    "highlights": [
+      "Skye bridge and ferry route checks",
+      "Rural access and turning space reviewed",
+      "Furniture and household moves by quote"
+    ],
+    "nearbyAreas": [
+      "portree",
+      "mallaig",
+      "fort-william",
+      "inverness"
+    ],
+    "metaDescription": "Isle of Skye man and van and removals enquiries. Plan Skye bridge or ferry routing, property access, furniture handling and onward delivery.",
+    "moveAdvice": [
+      {
+        "title": "Choose the Skye route deliberately",
+        "body": "Do not let a map app decide between the Skye Bridge and a ferry route without checking the actual collection, destination and vehicle plan. A ferry may be useful for some journeys, but it is not automatic. Give the full route and preferred date so the road or crossing plan can be assessed before timing is agreed.",
+        "source": {
+          "label": "CalMac port directions and Skye bridge guidance",
+          "href": "https://www.calmac.co.uk/en-gb/faqs/before-you-travel/what-are-the-sat-nav-codes-or-directions-for-your-ports/"
+        }
+      },
+      {
+        "title": "Describe the last road and the final carry",
+        "body": "Many Skye addresses need more than a postcode. Include gate width, driveway surface, turning space, outside steps and the distance from the nearest lawful loading point to the door. For large furniture, send dimensions and access photos before assuming it can leave or enter the property assembled."
+      },
+      {
+        "title": "List every island stop before departure",
+        "body": "If the move combines a Portree property with another Skye collection, a storage unit or a seller handover, include every stop from the start. The order of loading, vehicle capacity and onward delivery window need to be agreed together, especially when the destination is elsewhere in Britain."
+      }
+    ],
+    "faqs": [
+      {
+        "question": "Can an Isle of Skye removal go to mainland Scotland or England?",
+        "answer": "Yes, moves can be quoted from Skye to mainland Scotland and destinations across Britain. Provide the full destination address, item list, access details and any route preference so the vehicle, crew and timing can be reviewed."
+      },
+      {
+        "question": "Is a ferry always needed for a Skye move?",
+        "answer": "No. Skye has a bridge connection, and the best route depends on the actual addresses and vehicle plan. If a ferry is involved, the crossing and vehicle suitability need to be confirmed separately."
+      },
+      {
+        "question": "What access details matter for a rural Skye property?",
+        "answer": "Send the exact entrance, driveway width, surface, turning space, steps and distance from the van to the door. Photos are useful where a lane, gate or narrow approach could affect loading."
+      }
+    ]
+  },
+  {
     "slug": "elgin",
     "name": "Elgin",
     "region": "Grampian",
