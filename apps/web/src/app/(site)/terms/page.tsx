@@ -1,7 +1,12 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { buildPageMetadata } from "@/lib/seo/metadata";
-import { SITE_LEGAL_NAME } from "@/lib/seo/constants";
+import {
+  SITE_COMPANY_NUMBER,
+  SITE_COMPANY_REGISTRATION_COUNTRY,
+  SITE_LEGAL_NAME,
+  SITE_REGISTERED_OFFICE,
+} from "@/lib/seo/constants";
 
 export const metadata: Metadata = buildPageMetadata({
   title: "Terms & Conditions",
@@ -37,7 +42,7 @@ export default function TermsPage() {
         >
           <p>
             These Terms and Conditions (the &ldquo;<strong>Terms</strong>&rdquo;)
-            govern the supply of services by <strong>{SITE_LEGAL_NAME}</strong>, trading as SpeedyVan (&ldquo;we&rdquo;,
+            govern the supply of services by <strong>{SITE_LEGAL_NAME}</strong> (company no. {SITE_COMPANY_NUMBER}), trading as SpeedyVan (&ldquo;we&rdquo;,
             &ldquo;us&rdquo;, &ldquo;our&rdquo;) to you (the &ldquo;Customer&rdquo;)
             when you book any service through our website, mobile interface or
             telephone. By placing a booking you confirm that you have read,
@@ -46,11 +51,11 @@ export default function TermsPage() {
 
           <h2>1. About us</h2>
           <ul>
-            <li><strong>Legal entity:</strong> {SITE_LEGAL_NAME}</li>
+            <li><strong>Legal entity:</strong> {SITE_LEGAL_NAME} (company no. {SITE_COMPANY_NUMBER})</li>
             <li><strong>Trading name:</strong> SpeedyVan</li>
+            <li><strong>Registered in:</strong> {SITE_COMPANY_REGISTRATION_COUNTRY}</li>
             <li>
-              <strong>Registered office:</strong> 1 Barrack Street, Office 2.18,
-              Hamilton ML3 0HS, Scotland
+              <strong>Registered office:</strong> {SITE_REGISTERED_OFFICE}
             </li>
             <li>
               <strong>Email:</strong>{" "}
@@ -177,9 +182,9 @@ export default function TermsPage() {
           <h2>7. Our responsibilities and liability</h2>
           <ul>
             <li>
-              All vehicles are insured for goods in transit up to{" "}
-              <strong>£10,000 per booking</strong> as standard. Higher cover can
-              be arranged in advance on request.
+              Goods-in-transit cover, limits and exclusions are confirmed in
+              writing for your booking. Higher cover can be arranged in advance
+              on request where available.
             </li>
             <li>
               We carry £1,000,000 public liability insurance.
@@ -197,9 +202,9 @@ export default function TermsPage() {
             </li>
             <li>
               Our maximum aggregate liability for any one booking is limited to
-              the value of the goods in transit cover (£10,000 standard) and in
-              no event will we be liable for indirect, consequential or
-              economic loss.
+              the value of the goods-in-transit cover confirmed in writing for
+              that booking and in no event will we be liable for indirect,
+              consequential or economic loss.
             </li>
             <li>
               Nothing in these Terms limits or excludes liability for death or

@@ -1,7 +1,12 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { buildPageMetadata } from "@/lib/seo/metadata";
-import { SITE_LEGAL_NAME } from "@/lib/seo/constants";
+import {
+  SITE_COMPANY_NUMBER,
+  SITE_COMPANY_REGISTRATION_COUNTRY,
+  SITE_LEGAL_NAME,
+  SITE_REGISTERED_OFFICE,
+} from "@/lib/seo/constants";
 
 export const metadata: Metadata = buildPageMetadata({
   title: "Privacy Policy",
@@ -36,8 +41,8 @@ export default function PrivacyPage() {
           style={{ color: "rgba(255,255,255,0.60)" }}
         >
           <p>
-            This Privacy Policy explains how <strong>{SITE_LEGAL_NAME}</strong>, trading as SpeedyVan,
-            {" "}(&ldquo;we&rdquo;, &ldquo;us&rdquo;, &ldquo;our&rdquo;)
+            This Privacy Policy explains how <strong>{SITE_LEGAL_NAME}</strong> (company no. {SITE_COMPANY_NUMBER}),
+            trading as SpeedyVan (&ldquo;we&rdquo;, &ldquo;us&rdquo;, &ldquo;our&rdquo;)
             collects, uses, stores and protects personal information when you
             use our website, book a removal or delivery, or otherwise interact
             with our services. We are committed to processing your data fairly,
@@ -51,11 +56,11 @@ export default function PrivacyPage() {
             across Scotland.
           </p>
           <ul>
-            <li><strong>Legal entity:</strong> {SITE_LEGAL_NAME}</li>
+            <li><strong>Legal entity:</strong> {SITE_LEGAL_NAME} (company no. {SITE_COMPANY_NUMBER})</li>
             <li><strong>Trading name:</strong> SpeedyVan</li>
+            <li><strong>Registered in:</strong> {SITE_COMPANY_REGISTRATION_COUNTRY}</li>
             <li>
-              <strong>Registered office:</strong> 1 Barrack Street, Office 2.18,
-              Hamilton ML3 0HS, Scotland
+              <strong>Registered office:</strong> {SITE_REGISTERED_OFFICE}
             </li>
             <li>
               <strong>Email:</strong>{" "}

@@ -7,6 +7,12 @@ export const SITE = {
   supportEmail: "support@speedyvan.uk",
   phone: "+44 7909 032889",
   address: "1 Barrack Street, Office 2.18, Hamilton ML3 0HS, Scotland",
+  legal: {
+    name: "SPEEDY VAN REMOVALS LTD",
+    companyNumber: "SC865658",
+    registeredOffice: "1 Barrack Street, Hamilton, Scotland, ML3 0DG",
+    foundingDate: "2025-10-08",
+  },
   social: {
     facebook: "https://www.facebook.com/share/1Dd8NQPV4f/?mibextid=wwXIfr",
     tiktok: "https://www.tiktok.com/@speedyvan0",

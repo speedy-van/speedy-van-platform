@@ -41,6 +41,14 @@ function readContent() {
 
 function inventory() {
   const { areas, localServices, routes, sitemap } = readContent();
+  const pages = sitemap.map(({ url }) => {
+    const pathname = new URL(url).pathname;
+    const area = areas.find((entry) => pathname === `/areas/${entry.slug}`);
+    const localService = localServices.find((entry) => pathname === `/areas/${entry.areaSlug}/${entry.serviceSlug}`);
+    const route = routes.find((entry) => pathname === `/moving-routes/${entry.slug}`);
+    const sections = area?.moveAdvice ?? localService?.sections ?? route?.sections ?? [];
+    return { path: pathname, canonical: url, kind: area ? "area" : localService ? "city-service" : route ? "moving-route" : pathname === "/moving-routes" ? "route-hub" : "existing", sources: [...new Set(sections.flatMap((section) => section.source ? [section.source.href] : []))] };
+  });
   return {
     requestedTotal: 3500,
     implementedTotal: sitemap.length,
@@ -48,15 +56,12 @@ function inventory() {
     milestones: [250, 1000, 3500],
     scope: "Collections in Scotland; destinations throughout Britain. Named pages are planning guides, not a real-time availability claim.",
     evidenceLimits: "No measured search demand, Google indexing, local driver allocation, completed jobs or reviews are inferred from this inventory.",
-    counts: { areas: areas.length, localServices: localServices.length, routes: routes.length },
-    pages: sitemap.map(({ url }) => {
-      const pathname = new URL(url).pathname;
-      const area = areas.find((entry) => pathname === `/areas/${entry.slug}`);
-      const localService = localServices.find((entry) => pathname === `/areas/${entry.areaSlug}/${entry.serviceSlug}`);
-      const route = routes.find((entry) => pathname === `/moving-routes/${entry.slug}`);
-      const sections = area?.moveAdvice ?? localService?.sections ?? route?.sections ?? [];
-      return { path: pathname, canonical: url, kind: area ? "area" : localService ? "city-service" : route ? "moving-route" : pathname === "/moving-routes" ? "route-hub" : "existing", sources: [...new Set(sections.flatMap((section) => section.source ? [section.source.href] : []))] };
-    }),
+    counts: {
+      areas: pages.filter((page) => page.kind === "area").length,
+      localServices: pages.filter((page) => page.kind === "city-service").length,
+      routes: pages.filter((page) => page.kind === "moving-route").length,
+    },
+    pages,
   };
 }
 

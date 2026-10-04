@@ -2,15 +2,16 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { AREAS, getAreaBySlug } from "@/lib/areas";
+import { AREAS, getAreaBySlug, isAreaIndexable } from "@/lib/areas";
 import { getAreaGuide } from "@/lib/area-guides";
+import { LOCAL_SERVICE_PAGES } from "@/lib/content/city-service-pages";
 import { AreaExpansionLinks } from "@/components/areas/AreaExpansionLinks";
 import { AreaGuideContent } from "@/components/areas/AreaGuideContent";
 import { SERVICES, getServicePriceLabel } from "@/lib/services";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { buildBreadcrumbSchema } from "@/lib/seo/schemas";
 import { buildPageMetadata } from "@/lib/seo/metadata";
-import { SITE_LEGAL_NAME, SITE_OG_IMAGE, SITE_OG_IMAGE_HEIGHT, SITE_OG_IMAGE_WIDTH, SITE_URL, absoluteUrl } from "@/lib/seo/constants";
+import { SITE_NAME, SITE_OG_IMAGE, SITE_OG_IMAGE_HEIGHT, SITE_OG_IMAGE_WIDTH, SITE_URL, absoluteUrl } from "@/lib/seo/constants";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -31,23 +32,34 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 
   const guide = getAreaGuide(slug);
+  const robots = isAreaIndexable(slug)
+    ? { index: true, follow: true }
+    : { index: false, follow: true };
+
   if (guide) {
-    return buildPageMetadata({
-      title: guide.metadataTitle,
-      description: area.metaDescription,
-      path: `/areas/${slug}`,
-    });
+    return {
+      ...buildPageMetadata({
+        title: guide.metadataTitle,
+        description: area.metaDescription,
+        path: `/areas/${slug}`,
+      }),
+      robots,
+    };
   }
   const canonical = absoluteUrl(`/areas/${slug}`);
+  const metadataTitle = isAreaIndexable(slug) &&
+    !LOCAL_SERVICE_PAGES.some((page) => page.areaSlug === slug && page.serviceSlug === "house-removal")
+    ? `Man and Van & Removals in ${area.name}`
+    : area.headline;
 
   return {
-    title: area.headline,
+    title: metadataTitle,
     description: area.metaDescription,
     alternates: {
       canonical,
     },
     openGraph: {
-      title: `${area.headline} | SpeedyVan`,
+      title: `${metadataTitle} | SpeedyVan`,
       description: area.metaDescription,
       url: canonical,
       images: [
@@ -55,16 +67,17 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
           url: SITE_OG_IMAGE,
           width: SITE_OG_IMAGE_WIDTH,
           height: SITE_OG_IMAGE_HEIGHT,
-          alt: `${area.headline} – SpeedyVan`,
+          alt: `${metadataTitle} – SpeedyVan`,
         },
       ],
     },
     twitter: {
       card: "summary_large_image",
-      title: `${area.headline} | SpeedyVan`,
+      title: `${metadataTitle} | SpeedyVan`,
       description: area.metaDescription,
       images: [SITE_OG_IMAGE],
     },
+    robots,
   };
 }
 
@@ -99,7 +112,7 @@ export default async function AreaPage({ params }: Props) {
             provider: {
               "@type": "MovingCompany",
               "@id": `${SITE_URL}/#organization`,
-              name: SITE_LEGAL_NAME,
+              name: SITE_NAME,
               url: SITE_URL,
             },
             areaServed: {

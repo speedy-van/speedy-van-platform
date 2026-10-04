@@ -85,14 +85,6 @@ export const metadata: Metadata = {
     images: [SITE_OG_IMAGE],
   },
   manifest: "/manifest.json",
-  icons: {
-    icon: [
-      { url: "/logo.png?v=amber-20260921-1", sizes: "any" },
-    ],
-    apple: [
-      { url: "/logo.png?v=amber-20260921-1", sizes: "180x180" },
-    ],
-  },
   appleWebApp: {
     capable: true,
     title: "SpeedyVan",
@@ -116,7 +108,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={manrope.variable} data-scroll-behavior="smooth">
+    <html lang="en-GB" className={manrope.variable} data-scroll-behavior="smooth">
       <body className="font-sans">
         {process.env.NODE_ENV !== "production" ? (
           <Script id="sv-local-sw-cleanup" strategy="beforeInteractive">

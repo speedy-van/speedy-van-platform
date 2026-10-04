@@ -2,11 +2,17 @@ import { SITE } from "@speedy-van/config";
 
 export const SITE_URL = SITE.url.replace(/\/$/, "");
 export const SITE_NAME = "SpeedyVan";
-export const SITE_LEGAL_NAME = "SPEEDYVAN LOGISTICS LTD";
+export const SITE_LEGAL_NAME = SITE.legal.name;
+export const SITE_COMPANY_NUMBER = SITE.legal.companyNumber;
+export const SITE_COMPANY_REGISTRATION_COUNTRY = "Scotland";
+export const SITE_REGISTERED_OFFICE = SITE.legal.registeredOffice;
+export const SITE_FOUNDING_DATE = SITE.legal.foundingDate;
+export const SITE_COMPANY_REGISTRY_URL =
+  `https://find-and-update.company-information.service.gov.uk/company/${SITE_COMPANY_NUMBER}`;
 export const SITE_DOMAIN = SITE.domain;
-export const SITE_OG_IMAGE = `${SITE_URL}/og-image.png?v=amber-20260921-1`;
-export const SITE_OG_IMAGE_WIDTH = 1254;
-export const SITE_OG_IMAGE_HEIGHT = 1254;
+export const SITE_OG_IMAGE = `${SITE_URL}/og-share.jpg?v=20261004`;
+export const SITE_OG_IMAGE_WIDTH = 1200;
+export const SITE_OG_IMAGE_HEIGHT = 630;
 export const SITE_PHONE_DISPLAY = "07909 032889";
 export const SITE_PHONE_HREF = "tel:07909032889";
 export const SITE_PHONE_E164 = "+44 7909 032889";

@@ -5,7 +5,12 @@ import { CookieSettingsButton } from "./CookieConsent";
 import { Logo } from "./Logo";
 import { SERVICES } from "@/lib/services";
 import { FEATURED_AREAS } from "@/lib/areas";
-import { SITE_LEGAL_NAME } from "@/lib/seo/constants";
+import {
+  SITE_COMPANY_NUMBER,
+  SITE_COMPANY_REGISTRATION_COUNTRY,
+  SITE_LEGAL_NAME,
+  SITE_REGISTERED_OFFICE,
+} from "@/lib/seo/constants";
 
 const QUICK_LINKS = [
   { href: "/about", label: "About us" },
@@ -171,7 +176,7 @@ export function Footer() {
         {/* NAP — critical for local SEO consistency */}
         <div className="mt-12 pt-8 border-t" style={{ borderColor: "rgba(255,255,255,0.08)" }}>
           <address className="not-italic text-xs leading-5 text-center sm:text-left" style={{ color: "rgba(255,255,255,0.30)" }}>
-            <strong className="text-white/40">{SITE_LEGAL_NAME}</strong> trading as SpeedyVan · 1 Barrack Street, Office 2.18, Hamilton, ML3 0HS, Scotland ·{" "}
+            <strong className="text-white/40">{SITE_LEGAL_NAME}</strong> trading as SpeedyVan · Registered in {SITE_COMPANY_REGISTRATION_COUNTRY}, company no. {SITE_COMPANY_NUMBER} · Registered office: {SITE_REGISTERED_OFFICE} ·{" "}
             <a href="tel:07909032889" className="hover:text-white/60 transition-colors">07909 032889</a> ·{" "}
             <a href="mailto:hello@speedyvan.uk" className="hover:text-white/60 transition-colors">hello@speedyvan.uk</a>
           </address>
