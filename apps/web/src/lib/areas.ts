@@ -1564,14 +1564,10 @@ const EXISTING_AREAS: Area[] = [
   }
 ];
 
-const EXPANSION_INDEXABLE: ReadonlySet<string> = new Set<string>([]);
-
-function markExpansionIndexability(areas: unknown): Area[] {
-  if (!Array.isArray(areas)) return [];
-
+function markExpansionIndexability(areas: Area[]): Area[] {
   return areas.map((area) => ({
     ...area,
-    indexable: EXPANSION_INDEXABLE.has(area.slug),
+    indexable: area.indexable ?? true,
   }));
 }
 
