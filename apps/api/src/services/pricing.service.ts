@@ -24,7 +24,7 @@ import { getWeatherSurchargesByDate } from "./weather.service";
 import { issueQuoteToken } from "../lib/quote-token";
 import { getDatabaseConfigError } from "../lib/database-config";
 
-const CALENDAR_DAYS = 14;
+const CALENDAR_DAYS = 28;
 
 type ConfigCache = { values: Record<string, Record<string, number>>; loadedAt: number };
 const CACHE_TTL_MS = 5 * 60 * 1000;
@@ -411,7 +411,7 @@ export async function calculatePrice(input: PricingCalculateInput): Promise<Pric
       (baseAdjusted + distanceCost + pickupFloorCost + dropoffFloorCost + inventory.total + access.total + addons.total) * 100,
     ) / 100;
 
-  // 14-day x 3-slot price calendar
+  // 28-day x 3-slot price calendar
   const today = currentBookingDate(new Date());
   const days: DayPrice[] = [];
   const allPrices: number[] = [];
