@@ -45,11 +45,11 @@ test("New guides contain authored planning sections, questions and explicit evid
   }
 });
 
-test("The review inventory reflects 125 indexable URLs and separates the 3500-page target", () => {
+test("The review inventory reflects 254 indexable URLs and separates the 3500-page target", () => {
   const current = inventory();
-  assert.equal(current.implementedTotal, 125);
-  assert.deepEqual(current.counts, { areas: 32, localServices: 49, routes: 19 });
-  assert.equal(current.remainingToResearchAndReview, 3375);
+  assert.equal(current.implementedTotal, 254);
+  assert.deepEqual(current.counts, { areas: 161, localServices: 49, routes: 19 });
+  assert.equal(current.remainingToResearchAndReview, 3246);
   const recorded = JSON.parse(fs.readFileSync(path.join(__dirname, "../docs/seo/scotland-expansion-inventory-2026-09-23.json"), "utf8"));
   assert.deepEqual(recorded, current, "Regenerate the review inventory after changing registered content");
 });

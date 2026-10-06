@@ -55,7 +55,7 @@ const sitemapXml = await fetchText("/sitemap.xml");
 const sitemapLocs = [...sitemapXml.matchAll(/<loc>([^<]+)<\/loc>/g)].map((match) => match[1]);
 assert(sitemapLocs.length > 0, "Sitemap has no URLs");
 for (const slug of ["thurso", "wick", "mallaig", "isle-of-skye"]) {
-  assert(!sitemapLocs.some((url) => new URL(url).pathname === `/areas/${slug}`), `Sitemap includes non-indexable area /areas/${slug}`);
+  assert(sitemapLocs.some((url) => new URL(url).pathname === `/areas/${slug}`), `Sitemap is missing indexable area /areas/${slug}`);
 }
 console.log(`sitemap URL count: ${sitemapLocs.length}`);
 
@@ -63,7 +63,7 @@ const glasgowRobots = robotsContent(await fetchText("/areas/glasgow"));
 assert(glasgowRobots.includes("index") && !glasgowRobots.includes("noindex") && glasgowRobots.includes("follow"), `/areas/glasgow robots meta was "${glasgowRobots}"`);
 
 const thursoRobots = robotsContent(await fetchText("/areas/thurso"));
-assert(thursoRobots.includes("noindex") && thursoRobots.includes("follow"), `/areas/thurso robots meta was "${thursoRobots}"`);
+assert(thursoRobots.includes("index") && !thursoRobots.includes("noindex") && thursoRobots.includes("follow"), `/areas/thurso robots meta was "${thursoRobots}"`);
 console.log(`robots ok: glasgow="${glasgowRobots}", thurso="${thursoRobots}"`);
 
 const homeHtml = await fetchText("/");
