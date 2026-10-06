@@ -518,6 +518,58 @@ function CheckoutForm({ onComplete, stripePromise }: CheckoutFormProps) {
         </div>
       )}
 
+      {/* ── Your details ── */}
+      <div className="rounded-2xl p-5 space-y-4" style={cardStyle}>
+        <h2 className="text-base font-black text-white">Your details</h2>
+        <div>
+          <label htmlFor="booking-customer-name" className="block text-sm font-medium text-white/60 mb-1.5">Full name</label>
+          <input
+            id="booking-customer-name"
+            type="text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            required
+            disabled={submitting || state.checkoutLocked}
+            autoComplete="name"
+            className="min-h-12 w-full rounded-xl px-4 py-3 text-base text-white placeholder-white/30 focus:outline-none focus:ring-2 focus:ring-amber-400"
+            style={inputStyle}
+            placeholder="Jane Smith"
+          />
+        </div>
+        <div>
+          <label htmlFor="booking-customer-email" className="block text-sm font-medium text-white/60 mb-1.5">Email address</label>
+          <input
+            id="booking-customer-email"
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+            disabled={submitting || state.checkoutLocked}
+            autoComplete="email"
+            inputMode="email"
+            className="min-h-12 w-full rounded-xl px-4 py-3 text-base text-white placeholder-white/30 focus:outline-none focus:ring-2 focus:ring-amber-400"
+            style={inputStyle}
+            placeholder="jane@example.com"
+          />
+        </div>
+        <div>
+          <label htmlFor="booking-customer-phone" className="block text-sm font-medium text-white/60 mb-1.5">Phone number</label>
+          <input
+            id="booking-customer-phone"
+            type="tel"
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
+            required
+            disabled={submitting || state.checkoutLocked}
+            autoComplete="tel-national"
+            inputMode="tel"
+            className="min-h-12 w-full rounded-xl px-4 py-3 text-base text-white placeholder-white/30 focus:outline-none focus:ring-2 focus:ring-amber-400"
+            style={inputStyle}
+            placeholder="+44 7700 900000"
+          />
+        </div>
+      </div>
+
       {/* ── Payment details ── */}
       {!paymentUnavailable && (!stripePromise || !stripe || !elements) ? (
         <div role="status" className="rounded-2xl p-5 text-sm text-amber-100" style={cardStyle}>
@@ -576,58 +628,6 @@ function CheckoutForm({ onComplete, stripePromise }: CheckoutFormProps) {
           <p className="mt-1 text-amber-100/65">Please contact us to arrange your booking. No online payment has been confirmed.</p>
         </div>
       )}
-
-      {/* ── Your details ── */}
-      <div className="rounded-2xl p-5 space-y-4" style={cardStyle}>
-        <h2 className="text-base font-black text-white">Your details</h2>
-        <div>
-          <label htmlFor="booking-customer-name" className="block text-sm font-medium text-white/60 mb-1.5">Full name</label>
-          <input
-            id="booking-customer-name"
-            type="text"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            required
-            disabled={submitting || state.checkoutLocked}
-            autoComplete="name"
-            className="min-h-12 w-full rounded-xl px-4 py-3 text-base text-white placeholder-white/30 focus:outline-none focus:ring-2 focus:ring-amber-400"
-            style={inputStyle}
-            placeholder="Jane Smith"
-          />
-        </div>
-        <div>
-          <label htmlFor="booking-customer-email" className="block text-sm font-medium text-white/60 mb-1.5">Email address</label>
-          <input
-            id="booking-customer-email"
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-            disabled={submitting || state.checkoutLocked}
-            autoComplete="email"
-            inputMode="email"
-            className="min-h-12 w-full rounded-xl px-4 py-3 text-base text-white placeholder-white/30 focus:outline-none focus:ring-2 focus:ring-amber-400"
-            style={inputStyle}
-            placeholder="jane@example.com"
-          />
-        </div>
-        <div>
-          <label htmlFor="booking-customer-phone" className="block text-sm font-medium text-white/60 mb-1.5">Phone number</label>
-          <input
-            id="booking-customer-phone"
-            type="tel"
-            value={phone}
-            onChange={(e) => setPhone(e.target.value)}
-            required
-            disabled={submitting || state.checkoutLocked}
-            autoComplete="tel-national"
-            inputMode="tel"
-            className="min-h-12 w-full rounded-xl px-4 py-3 text-base text-white placeholder-white/30 focus:outline-none focus:ring-2 focus:ring-amber-400"
-            style={inputStyle}
-            placeholder="+44 7700 900000"
-          />
-        </div>
-      </div>
 
       {error && (
         <p role="alert" className="rounded-xl px-4 py-3 text-sm font-medium text-red-300" style={{ background: "rgba(239,68,68,0.10)", boxShadow: "0 0 0 1px rgba(239,68,68,0.20)" }}>
