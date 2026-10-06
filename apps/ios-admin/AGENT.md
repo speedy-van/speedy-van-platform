@@ -23,7 +23,7 @@ Work through each phase in order. Do not skip steps.
 
 ## CONTEXT
 
-**API base URL:** `https://api.speedyvan.uk`
+**API base URL:** `https://www.speedyvan.uk/api`
 
 **Auth:** JWT Bearer token.
 - Login → store token in SecureStore → attach as `Authorization: Bearer <token>` on every request.
@@ -323,7 +323,7 @@ export function useAuth() {
 ```ts
 import { secureStore } from "../auth/secureStore";
 
-const BASE_URL = "https://api.speedyvan.uk";
+const BASE_URL = "https://www.speedyvan.uk/api";
 
 class APIError extends Error {
   constructor(public status: number, message: string) {

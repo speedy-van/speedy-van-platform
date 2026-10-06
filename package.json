@@ -8,7 +8,7 @@
   ],
   "scripts": {
     "dev": "node scripts/dev.js",
-    "build": "npm run build -w packages/db && npm run build -w apps/web && npm run build -w apps/api",
+    "build": "npm run build -w packages/db && npm run build -w apps/web",
     "db:generate": "npm run db:generate -w packages/db",
     "db:push": "npm run db:push -w packages/db",
     "db:seed": "npm run db:seed -w packages/db",

@@ -30,7 +30,7 @@ import {
 } from "react-native";
 
 // ─── Constants ────────────────────────────────────────────────────────────────
-const API_BASE = "https://api.speedyvan.uk";
+const API_BASE = "https://www.speedyvan.uk/api";
 const MAPBOX_TOKEN =
   (process.env as Record<string, string | undefined>)["EXPO_PUBLIC_MAPBOX_TOKEN"] ?? "";
 const NOTIFICATION_SOUND_ASSET = require("./assets/sounds/new-booking.mp3");

@@ -1,5 +1,6 @@
 "use client";
 
+import { getApiBaseUrl } from "@/lib/api-base";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { getUser } from "@/lib/auth-client";
@@ -7,10 +8,7 @@ import { JobCard, type DriverJobCard } from "@/components/driver/JobCard";
 import { DriverTopBar } from "@/components/driver/DriverTopBar";
 import { LocationToggle } from "@/components/driver/LocationToggle";
 
-const API_BASE =
-  process.env.NODE_ENV === "development"
-    ? "http://localhost:4000"
-    : (process.env.NEXT_PUBLIC_API_URL ?? "https://api.speedyvan.uk");
+const API_BASE = getApiBaseUrl();
 
 interface DashboardData {
   todayJobs: number;

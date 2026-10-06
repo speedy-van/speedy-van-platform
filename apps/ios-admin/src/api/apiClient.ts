@@ -3,7 +3,7 @@ import type { ApiEnvelope, PaginatedResult, PaginationMeta } from "@/models";
 import Constants from "expo-constants";
 import { Platform } from "react-native";
 
-const PRODUCTION_API_URL = "https://api.speedyvan.uk";
+const PRODUCTION_API_URL = "https://www.speedyvan.uk/api";
 
 function withoutTrailingSlash(value: string): string {
   return value.replace(/\/+$/, "");
@@ -18,11 +18,11 @@ function getExpoHost(): string | null {
 }
 
 function getDevApiBaseURL(): string {
-  if (Platform.OS === "web") return "http://localhost:4000";
+  if (Platform.OS === "web") return "http://localhost:3000/api";
 
   const hostUri = getExpoHost();
   const host = hostUri?.split(":")[0];
-  return host ? `http://${host}:4000` : "http://localhost:4000";
+  return host ? `http://${host}:3000/api` : "http://localhost:3000/api";
 }
 
 const configuredApiURL = process.env.EXPO_PUBLIC_API_URL;

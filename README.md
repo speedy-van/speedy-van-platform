@@ -57,7 +57,7 @@ npm run db:push
 npm run db:seed
 npm run dev
 # Web:  http://localhost:3000
-# API:  http://localhost:4000
+# API:  http://localhost:3000/api
 ```
 
 ## Dev Accounts (after seed)
@@ -80,7 +80,7 @@ Key variables:
 | `STRIPE_SECRET_KEY` | root `.env.local` | Stripe secret key |
 | `NEXT_PUBLIC_MAPBOX_TOKEN` | root `.env.local` | Mapbox GL token |
 | `RESEND_API_KEY` | root `.env.local` | Resend email key |
-| `NEXT_PUBLIC_API_URL` | root `.env.local` | API base URL (http://localhost:4000 in dev) |
+| `NEXT_PUBLIC_API_URL` | root `.env.local` | Optional same-origin API base override, normally `/api` |
 
 ## Deploy
 
@@ -96,13 +96,10 @@ Production domains: `www.speedyvan.uk`, `speedyvan.uk`, `speedy-van.co.uk`, and 
 
 The `/admin` web app is part of this same Vercel project.
 
-### API (Vercel - `speedy-van-api`)
+### API (served by `speedy-van-web`)
 
-```bash
-cd apps/api && vercel --prod
-```
-
-Uses `apps/api/vercel.json`. Set `DATABASE_URL`, `JWT_SECRET`, `STRIPE_SECRET_KEY`, etc.
+API routes are part of the web project and are served under `https://www.speedyvan.uk/api/*`.
+Set `DATABASE_URL`, `JWT_SECRET`, `QUOTE_SIGNING_SECRET`, `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, `MAPBOX_TOKEN`, and the other server env vars on the web Vercel project.
 
 ### iOS Admin (EAS / TestFlight)
 
@@ -112,13 +109,13 @@ eas build --platform ios --profile production
 eas submit --platform ios --profile production
 ```
 
-The iOS admin app uses `https://api.speedyvan.uk` in production.
+The iOS admin app uses `https://www.speedyvan.uk/api` in production.
 
 ## Scripts
 
 | Command | Description |
 |---------|-------------|
-| `npm run dev` | Start web (:3000) + API (:4000) concurrently |
+| `npm run dev` | Start the web app, including same-origin API routes |
 | `npm run build` | Build all workspaces |
 | `npm run db:generate` | Generate Prisma client |
 | `npm run db:push` | Push schema to Neon DB |

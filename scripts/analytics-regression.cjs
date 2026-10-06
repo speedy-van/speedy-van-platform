@@ -80,6 +80,9 @@ function loadComponent(relativePath, imports = {}, globals = {}) {
         jsxs: (type, props) => ({ type, props }),
         Fragment: "fragment",
       };
+      if (name.startsWith("@/lib/content/")) {
+        return loadComponent(path.join("apps/web/src", `${name.slice(2)}.ts`), imports, globals);
+      }
       // Leave unrelated child components unmounted; no providers or effects run.
       return new Proxy({}, { get: (_target, key) => `${name}:${String(key)}` });
     },

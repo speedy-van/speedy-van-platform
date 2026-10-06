@@ -1,12 +1,11 @@
 "use client";
 
+import { getApiBaseUrl } from "@/lib/api-base";
 import { useEffect, useRef, useState } from "react";
 import { useBooking } from "@/lib/booking-store";
 import { isVerifiedCheckoutRecovery } from "./checkout-session";
 
-const API_BASE = process.env.NODE_ENV === "development"
-  ? "http://localhost:4000"
-  : (process.env.NEXT_PUBLIC_API_URL ?? "https://api.speedyvan.uk");
+const API_BASE = getApiBaseUrl();
 
 /** Resolve a restored checkout through the existing reference-and-email tracking check. */
 export function CheckoutRecovery() {

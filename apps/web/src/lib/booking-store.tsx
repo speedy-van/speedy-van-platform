@@ -1,5 +1,6 @@
 "use client";
 
+import { getApiBaseUrl } from "@/lib/api-base";
 import {
   createContext,
   useContext,
@@ -17,10 +18,7 @@ import type { PricingResult } from "@/components/booking/quote-response";
 export const BOOKING_DRAFT_STORAGE_KEY = "sv_booking_draft_v1";
 export const BOOKING_SERVER_DRAFT_SESSION_KEY = "sv_booking_draft_session_v1";
 export const BOOKING_DRAFT_TTL_MS = 24 * 60 * 60 * 1000; // 24h
-const API_BASE =
-  process.env.NODE_ENV === "development"
-    ? "http://localhost:4000"
-    : (process.env.NEXT_PUBLIC_API_URL ?? "https://api.speedyvan.uk");
+const API_BASE = getApiBaseUrl();
 
 // ─── Types ─────────────────────────────────────────────────────────────────
 
@@ -479,7 +477,7 @@ export function restoreBookingDraft(raw: string | null, now = Date.now()): Booki
       quoteStatus: "stale",
       checkoutLocked: draft.checkoutLocked === true,
       bookingId: draft.checkoutLocked === true ? text("bookingId") : "",
-      bookingRef: text("bookingRef"),
+      bookingRef: draft.checkoutLocked === true ? text("bookingRef") : "",
     };
     const requested = typeof draft.step === "number" && Number.isInteger(draft.step) && draft.step >= 1 && draft.step <= 5 ? draft.step as BookingState["step"] : 2;
     state.step = state.checkoutLocked ? 5 : getReachableBookingStep(state, requested);
@@ -557,6 +555,7 @@ export function BookingProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     if (!ready || !state.serviceSlug || state.step <= 1 || state.checkoutLocked) return;
+    if (typeof AbortController === "undefined" || typeof fetch === "undefined") return;
 
     const controller = new AbortController();
     const timeout = window.setTimeout(() => {

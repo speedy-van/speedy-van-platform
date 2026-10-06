@@ -1,9 +1,7 @@
+import { getApiBaseUrl } from "@/lib/api-base";
 // Centralized API client for all Hono API calls
 
-const API_BASE =
-  process.env.NODE_ENV === "development"
-    ? "http://localhost:4000"
-    : (process.env.NEXT_PUBLIC_API_URL ?? "https://api.speedyvan.uk");
+const API_BASE = getApiBaseUrl();
 
 export interface ApiResponse<T = unknown> {
   success: boolean;

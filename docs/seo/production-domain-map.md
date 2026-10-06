@@ -10,27 +10,27 @@ Verified 21 September 2026 through authenticated hosting inspection, repository 
 
 | Role | Project | ID | Root / output |
 | --- | --- | --- | --- |
-| Public web and web admin | `speedy-van-web` | `prj_OkJrabaUpBmsMqNibYZc5cgnIqFg` | `apps/web`; `.next` (corrected during cloud release) |
-| Web, driver and iOS API | `speedy-van-api` | `prj_QjawXiV1uA0WAOB0eb7x379ydY3f` | `apps/api`; current-source Vercel Node function |
+| Public web, web admin and API | `speedy-van-web` | `prj_OkJrabaUpBmsMqNibYZc5cgnIqFg` | `apps/web`; API served by same-origin `/api/*` route handlers |
+| Retired separate API project | Retired | `prj_QjawXiV1uA0WAOB0eb7x379ydY3f` | Do not deploy; migrate any required domains/env vars to `speedy-van-web` |
 
-Primary origin: `https://www.speedyvan.uk`. API origin: `https://api.speedyvan.uk`. Do not release to the stale duplicate `speedy-van-co-uk-web`.
+Primary origin: `https://www.speedyvan.uk`. API origin: same-origin `/api/*`. Do not release to the stale duplicate `speedy-van-co-uk-web`.
 
 ## Source and build
 
 - Repository: `https://github.com/speedy-van/speedy-van-platform`.
 - Production web deployment: `5jXbcona28QiqxAyY7S1He4F5P6a`, Ready at 16:13:56 UTC on 21 September 2026. Source: `fix/organic-search-and-booking-2026-09-21`, commit `10c781c49970b3f44c8ee61e4063cb0175c51d71`.
-- The coordinated API deployment `3hASzcuv7AutpMFHViDuZe8FL6sa` reached Ready at 16:09:36 UTC from the same source. The current API deployment is `5woPnYouSe8kAHqwCsp1o5QoxzSg`, Ready at 16:27:50 UTC, from `5e5881a27cca0f6a602473c78a25c13369d1afc5`; it adds the tested London calendar-date correction only. See [deployment-2026-09-21.json](deployment-2026-09-21.json) for the release history.
+- Historical API deployments were recorded before the API was embedded into the web app. See [deployment-2026-09-21.json](deployment-2026-09-21.json) for the old release history; do not deploy a separate API project from the current repository.
 - Previous web deployment and rollback point: `4CnN8XEktZw8716F6iX95EbCfgp3`, whose source metadata associated `seo-production-execution-2026-09-17` with commit `5bcc46c180d62db1b8a211ef4db227fb167cce0a`.
 - Implementation base: latest production-branch commit `e43ffc760b57b5d70b655760ee4877f1f759a85a` (ownership documentation; parent is the deployed commit).
 - Repair branch: `fix/organic-search-and-booking-2026-09-21`.
 - The source metadata identifies the deployment association; it does not independently prove that an uploaded bundle contained no uncommitted files. Inspected live routes and relevant source structure agree.
 - Both existing projects were connected to the exact repository after the owner approved its selected-repository access on 21 September 2026. The original production deployments predate this connection. Production branch tracking remains `main`; no branch-tracking or automatic-domain-assignment change was saved.
-- Last known good API deployment: `4mQDCapaoV3vtVeHYnbkyEVMQQNC`, uploaded through the CLI on 26 April 2026. The API project originally had an empty root directory because its historical uploads contained only the API artefact. The authorised Git release now uses `apps/api`. Its include-outside-root setting is enabled and its Node version is 24.
+- Last known separate API rollback point before retirement: `4mQDCapaoV3vtVeHYnbkyEVMQQNC`, uploaded through the CLI on 26 April 2026. The current repository no longer deploys a separate API app.
 - Installed workspace uses npm and `package-lock.json`. This branch uses npm shallow installation to keep React peers local to the web and mobile workspaces. It does not use the older public repository's pnpm layout or `apps/web-v2`.
 - Hosting Node version: 24. The historical web install command was `npm install`; the application-root configuration now uses the committed lockfile through `npm --prefix ../.. ci --include=dev`.
-- Historical web build command: `npx prisma generate --schema=packages/db/prisma/schema.prisma && npm run build -w packages/db && npm run build -w apps/web`. The first cloud preview failed framework detection with the shallow workspace layout. The corrected project root is `apps/web`, outside-root files remain enabled, and the old dashboard build/output/install overrides have been cleared. `apps/web/vercel.json` now defines the root-aware Prisma/database build followed by the web build and preserves the API rewrite.
+- Historical web build command: `npx prisma generate --schema=packages/db/prisma/schema.prisma && npm run build -w packages/db && npm run build -w apps/web`. The first cloud preview failed framework detection with the shallow workspace layout. The corrected project root is `apps/web`, outside-root files remain enabled, and the old dashboard build/output/install overrides have been cleared. `apps/web/vercel.json` now defines the root-aware Prisma/database build followed by the web build. There is no external API rewrite in the current config.
 - Active framework at the base: Next 14.2.35 / React 18. This branch applies a security-motivated Next 15.5.25 / React 19 web upgrade, retains npm/Tailwind and leaves the mobile application's React 18 dependency contract unchanged.
-- The active `apps/web/vercel.json` preserves the `/api/(.*)` rewrite to `https://api.speedyvan.uk/api/$1`. API and browser-only route responsibilities must remain distinct.
+- The active `apps/web/vercel.json` does not rewrite `/api/*` to another project. Next route handlers under `apps/web/src/app/api` pass requests to the embedded Hono API.
 
 Both applications were promoted through the dashboard's **fresh production-environment rebuild** of the exact preview source. This did not merge the repair branch. Automatic approval review rejected a separate production-branch/automatic-domain-assignment setting change; the unsaved form was restored and no retry was made. Production tracking still points to `main`, so a future push to that branch can trigger a different automatic production release. Integrate the repair through normal review before relying on that pipeline; do not assume this manual release changed branch tracking.
 
@@ -57,9 +57,9 @@ The standalone API Prisma schema is synchronised with the existing canonical sch
 
 ## Release dependency
 
-The API project needs its own release for payment validation, cancellation and webhook changes. Releasing only the web does not install the backend safeguards. Preview verification requires non-production API/database/Stripe credentials configured through the existing deployment workflow; no production secrets are stored in this branch.
+Payment validation, cancellation and webhook changes are now released with the web project because the API is embedded in `apps/web`. Preview verification still requires non-production database and Stripe credentials configured through the existing deployment workflow; no production secrets are stored in this branch.
 
-The old API `vercel.json` selected the tracked precompiled `_api.js`; it did not rebuild the changed TypeScript source. This is repaired with a small CommonJS bootstrap and a `vercel-build` hook that regenerates Prisma and bundles the current TypeScript/workspace source. The official builder and emitted Node 24 Lambda were exercised locally; direct unbundled TypeScript proved unsuitable for the existing workspace module configuration. For a Git deployment, set the API project root to `apps/api` and retain include-outside-root so the workspace packages and root lockfile are available. For the existing standalone upload workflow, run `npm run build:standalone -w apps/api`, deploy its isolated output to the existing API project, and retain the empty project root. Do not mix these two root configurations. The standalone build records source hashes and does not read the old bundle.
+Historical API build notes referred to the retired separate backend. The web project now owns `/api/*` directly.
 
 The request adapter now accepts both original root routes and the web rewrite's `/api/*` routes, preserving queries, methods and raw webhook bytes. Before release, live `/health` was HTTP 200 and `/api/health` was HTTP 404. Production `DATABASE_URL`, `NEXTAUTH_SECRET`, `STRIPE_SECRET_KEY` and `STRIPE_WEBHOOK_SECRET` entries were present in the authenticated settings; their values were not revealed or copied.
 

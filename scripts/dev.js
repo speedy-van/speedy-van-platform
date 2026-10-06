@@ -36,7 +36,6 @@ function loadEnvFile(filePath) {
 const root = path.join(__dirname, "..");
 
 const CYAN   = "\x1b[36m";
-const INDIGO = "\x1b[35m";
 const RESET  = "\x1b[0m";
 const BOLD   = "\x1b[1m";
 
@@ -69,14 +68,13 @@ function startProcess(name, color, command, args, cwd, extraEnv = {}) {
 
 console.log(`${BOLD}Starting SpeedyVan dev servers...${RESET}`);
 console.log(`  ${CYAN}web${RESET}  → http://localhost:3000`);
-console.log(`  ${INDIGO}api${RESET}  → http://localhost:4000\n`);
+console.log(`  ${CYAN}api${RESET}  → http://localhost:3000/api`);
+console.log("");
 
 // Load .env.local files for each app so vars are injected directly into the
 // child process environment — no dependency on dotenv-cli being in PATH.
 const webEnv = loadEnvFile(path.join(root, "apps", "web", ".env.local"));
-const apiEnv = loadEnvFile(path.join(root, "apps", "api", ".env.local"));
 const webCli = path.join(root, "apps", "web", "node_modules", "next", "dist", "bin", "next");
-const apiCli = path.join(root, "apps", "api", "node_modules", "tsx", "dist", "cli.mjs");
 
 const webProc = startProcess(
   "web", CYAN,
@@ -86,17 +84,8 @@ const webProc = startProcess(
   webEnv
 );
 
-const apiProc = startProcess(
-  "api", INDIGO,
-  process.execPath,
-  [apiCli, "watch", "src/index.ts"],
-  path.join(root, "apps", "api"),
-  apiEnv
-);
-
 function shutdown() {
   webProc.kill("SIGTERM");
-  apiProc.kill("SIGTERM");
 }
 
 process.on("SIGINT", shutdown);

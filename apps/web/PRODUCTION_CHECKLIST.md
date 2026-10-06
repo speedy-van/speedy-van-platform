@@ -36,7 +36,7 @@
 - [ ] UTM parameter tracking tested
 
 ## iOS App
-- [ ] API URL updated in iOS app to https://api.speedyvan.uk
+- [ ] API URL updated in iOS app to https://www.speedyvan.uk/api
 - [ ] New app build submitted to App Store
 - [ ] App Store listing screenshots updated
 - [ ] App Store description updated with new features
@@ -46,7 +46,7 @@
 - [ ] GoDaddy DNS records updated to Vercel
 - [ ] SSL certificate active (automatic via Vercel)
 - [ ] www redirect configured (www → non-www or vice versa)
-- [ ] api.speedyvan.uk resolving to API Vercel project
+- [ ] Any legacy API domain removed from the retired API project, or attached to the web project if old clients still require it
 - [ ] Old GoDaddy site disabled
 
 ## Environment Variables (Vercel — Web project)
@@ -58,16 +58,15 @@
 - [ ] NEXT_PUBLIC_MAPBOX_TOKEN set
 - [ ] RESEND_API_KEY set
 - [ ] OPENWEATHERMAP_API_KEY set
-- [ ] NEXT_PUBLIC_API_URL=https://api.speedyvan.uk
+- [ ] NEXT_PUBLIC_API_URL unset or set to /api
 - [ ] NEXT_PUBLIC_GA_ID set
 - [ ] NEXT_PUBLIC_FB_PIXEL_ID set
 - [ ] NEXT_PUBLIC_TIKTOK_PIXEL_ID set
 
-## Environment Variables (Vercel — API project)
-- [ ] DATABASE_URL set
-- [ ] JWT_SECRET set (same value as web)
-- [ ] STRIPE_SECRET_KEY set (live)
-- [ ] STRIPE_WEBHOOK_SECRET set
+## Retired API project
+- [ ] Required env vars copied to the web project
+- [ ] Stripe webhook endpoint updated to the web API URL
+- [ ] Retired API project paused or deleted after live checks pass
 - [ ] RESEND_API_KEY set
 - [ ] OPENWEATHERMAP_API_KEY set
 

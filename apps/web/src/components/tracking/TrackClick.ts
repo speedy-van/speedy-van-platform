@@ -1,9 +1,7 @@
+import { getApiBaseUrl } from "@/lib/api-base";
 import { hasAnalyticsConsent } from "@/lib/analytics";
 
-const API_BASE =
-  process.env.NODE_ENV === "development"
-    ? "http://localhost:4000"
-    : (process.env.NEXT_PUBLIC_API_URL ?? "https://api.speedyvan.uk");
+const API_BASE = getApiBaseUrl();
 
 const SESSION_KEY = "sv-visitor-session";
 
