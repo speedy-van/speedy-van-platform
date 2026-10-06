@@ -23,7 +23,7 @@ After the production release, the canonical `/services/man-and-van` inspection s
 
 ## Production ownership
 
-See [production-domain-map.md](production-domain-map.md). The active repository is `speedy-van/speedy-van-platform`, with `apps/web` serving the website and `apps/api` serving the separate API. The older `speedy-van/sv` snapshot is not the implementation base. No applicable tracked `AGENTS.md` was found. A clean isolated checkout preserved unpublished work on the owner's computer.
+See [production-domain-map.md](production-domain-map.md). The active repository is `speedy-van/speedy-van-platform`, with `apps/web` serving the website and same-origin API. The older `speedy-van/sv` snapshot is not the implementation base. No applicable tracked `AGENTS.md` was found. A clean isolated checkout preserved unpublished work on the owner's computer.
 
 ## Revalidation of earlier observations
 

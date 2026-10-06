@@ -1,13 +1,11 @@
+import { getApiBaseUrl } from "@/lib/api-base";
 import type { StorageEnquiryCreateInput } from "@speedy-van/shared";
 
 export const STORAGE_ENQUIRY_DRAFT_KEY = "sv_storage_enquiry_draft_v1";
 export const STORAGE_ENQUIRY_RECEIPT_KEY = "sv_storage_enquiry_receipt_v1";
 export const STORAGE_ENQUIRY_DRAFT_TTL_MS = 24 * 60 * 60 * 1000;
 
-export const STORAGE_ENQUIRY_API_BASE =
-  process.env.NODE_ENV === "development"
-    ? "http://localhost:4000"
-    : (process.env.NEXT_PUBLIC_API_URL ?? "https://api.speedyvan.uk");
+export const STORAGE_ENQUIRY_API_BASE = getApiBaseUrl();
 
 export type StorageEnquiryDraft<T> = {
   savedAt: number;

@@ -1,13 +1,11 @@
 "use client";
 
+import { getApiBaseUrl } from "@/lib/api-base";
 import { useState, useEffect, useRef, useCallback } from "react";
 import { MessageBubble } from "./MessageBubble";
 import { ChatInput } from "./ChatInput";
 
-const API_BASE =
-  process.env.NODE_ENV === "development"
-    ? "http://localhost:4000"
-    : (process.env.NEXT_PUBLIC_API_URL ?? "https://api.speedyvan.uk");
+const API_BASE = getApiBaseUrl();
 
 interface Message {
   id: string;

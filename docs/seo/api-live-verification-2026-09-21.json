@@ -1,6 +1,6 @@
 {
   "checked_at_utc": "2026-09-21T16:10:59.428809+00:00",
-  "base_url": "https://api.speedyvan.uk",
+  "base_url": "retired separate API origin; current API is https://www.speedyvan.uk/api",
   "scope": "Nonmutating public health, database-backed catalogue/flags, calculated quotes, validation and CORS; no bookings, payments, credentials or personal data",
   "passed": 10,
   "failed": 0,

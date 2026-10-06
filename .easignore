@@ -15,7 +15,6 @@ node_modules/
 tmp/
 **/tmp/
 
-/apps/api/
 /apps/web/
 
 /.chrome-seo-check/

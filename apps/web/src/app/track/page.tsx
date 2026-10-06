@@ -1,15 +1,13 @@
 "use client";
 
+import { getApiBaseUrl } from "@/lib/api-base";
 import { Suspense, useState, useCallback, useEffect, useRef } from "react";
 import { useSearchParams } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { ChatWindow } from "@/components/chat/ChatWindow";
 
-const API_BASE =
-  process.env.NODE_ENV === "development"
-    ? "http://localhost:4000"
-    : (process.env.NEXT_PUBLIC_API_URL ?? "https://api.speedyvan.uk");
+const API_BASE = getApiBaseUrl();
 
 const STATUS_LABELS: Record<string, string> = {
   PENDING: "Pending Confirmation",

@@ -49,22 +49,21 @@ In a second terminal, run `python scripts/seo-local-qa.py --base-url http://loca
 
 ## Coordinated release
 
-Choose the API input explicitly. For Git, use root `apps/api` with outside-root files enabled. For the historical standalone CLI workflow, first run `npm run build:standalone -w apps/api`, then deploy `apps/api/dist/standalone` to the existing API project with its empty root. This output contains current source bundles, a locked runtime dependency tree and Prisma schema. Never deploy the tracked legacy `_api.js`, and never reuse web assets built with the local test API origin.
+The separate backend workspace and separate API deployment are retired. Release the web from `apps/web`; the web project serves `/api/*` itself.
 
-1. Record the approved source SHA and last known good web/API deployment IDs. A reviewed branch deployment does not imply a merge.
-2. Release API changes to `speedy-van-api` before or alongside the web. Recovery expects the additive `isPaid` tracking field; older APIs fail closed.
-3. Release web to `speedy-van-web`, using the verified project ID in `production-domain-map.md`, root `apps/web`, outside-root files enabled and `apps/web/vercel.json`. The old dashboard build/output/install overrides are cleared. Do not use the stale duplicate project. Rebuild from source with production environment variables; never promote a locally compiled test-API bundle.
-4. Keep `https://www.speedyvan.uk` as the primary origin. Do not change DNS, payment callback origins or authentication origins as part of this branch.
-5. Verify real canonical/OG URLs, 47 sitemap entries, one-hop permanent HTTPS legacy-host redirects, query preservation, API/method bypass, private-route HTTP noindex and real invalid-route 404s.
-6. Recheck seven service CTAs and original-slug booking intent. Confirm public content is present in initial HTML.
-7. Confirm service-worker update clears old application caches and does not retain booking, tracking, admin or query-bearing responses.
-8. Use Search Console URL Inspection after the release. The sitemap is already submitted; update/reinspect it when the two hubs are live. Indexing-request acceptance is not completion.
+1. Record the approved source SHA and last known good web deployment ID. A reviewed branch deployment does not imply a merge.
+2. Release web to `speedy-van-web`, using the verified project ID in `production-domain-map.md`, root `apps/web`, outside-root files enabled and `apps/web/vercel.json`. The old dashboard build/output/install overrides are cleared. Do not use the stale duplicate project.
+3. Keep `https://www.speedyvan.uk` as the primary origin. Move any required legacy API domain or webhook URL to the web project before deleting the retired API project.
+4. Verify real canonical/OG URLs, sitemap entries, one-hop permanent HTTPS legacy-host redirects, query preservation, API/method bypass, private-route HTTP noindex and real invalid-route 404s.
+5. Recheck seven service CTAs and original-slug booking intent. Confirm public content is present in initial HTML.
+6. Confirm service-worker update clears old application caches and does not retain booking, tracking, admin or query-bearing responses.
+7. Use Search Console URL Inspection after the release. The sitemap is already submitted; update/reinspect it when the two hubs are live. Indexing-request acceptance is not completion.
 
 ## Rollback
 
 Rollback triggers include quote/payment regressions, incorrect canonical origins, private content indexing, mixed React-runtime errors, lost inventory or broken API/mobile contracts.
 
-- Use Vercel's rollback action to restore the recorded web `4CnN8XEktZw8716F6iX95EbCfgp3` and API `4mQDCapaoV3vtVeHYnbkyEVMQQNC` deployments if a full repair rollback is required. For an API-only follow-up, prefer its immediately preceding verified deployment recorded in the release JSON. Consider web/API contracts together; avoid mismatched releases.
+- Use Vercel's rollback action to restore the recorded web `4CnN8XEktZw8716F6iX95EbCfgp3` deployment if a full repair rollback is required. API code now rolls back with the web deployment, so avoid resurrecting the retired separate API project unless the owner explicitly requests it.
 - Revert the repair commit through a normal reviewable Git revert if a code rollback is required. Do not force-push, reset the owner's local tree or overwrite unrelated commits.
 - No schema migration or DNS change is included, so no database rollback is introduced by this branch.
 - Preserve actual payment/refund records and reconcile pending events; never delete them to make a test pass.

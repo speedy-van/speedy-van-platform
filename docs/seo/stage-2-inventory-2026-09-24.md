@@ -59,7 +59,7 @@ Tested via Playwright headless against the running production build:
 
 **Confirmed PASS:** Draft persists across same-origin navigation and is restored on /book load.
 
-**Caveat:** Addresses were not entered. The production build calls `https://api.speedyvan.uk` for geocoding; no results returned from localhost origin. Draft persistence at step 2 is confirmed; full address entry requires the API running locally (dev mode).
+**Caveat:** Addresses were not entered. The current production build serves geocoding from same-origin `/api`; full address entry requires the embedded API route to be available in the running web app.
 
 ### Source citation quality
 - Original citations: 48 (one per page in section 1)

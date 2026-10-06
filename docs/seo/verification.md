@@ -16,7 +16,7 @@ Executed 21 September 2026 on `fix/organic-search-and-booking-2026-09-21`, based
 | `npm run lint` | Passed | API and web; no ESLint errors or warnings. Next reports its separate `next lint` deprecation notice |
 | `npm run test:regression` | 100 passed, 0 failed | 19 booking, 13 analytics, 29 payment/API, 13 service-worker/driver, 1 schema, 6 deployment/handler and 19 pricing-configuration/availability/date checks |
 | API standalone source build and isolated install | Passed | Current workspace sources bundled; pinned runtime install, Prisma generation and actual handler health checks outside the repository |
-| `NEXT_PUBLIC_API_URL=http://127.0.0.1:4000 npm run build` | Passed | Database package, Next 15.5.25 web production build (75 static pages) and API TypeScript build |
+| `npm run build` | Passed | Database package, Next 15.5.25 web production build with embedded same-origin API routes |
 | Local production-build HTTP/HTML QA | 428 passed, 0 failed | All 47 sitemap pages plus private, invalid, redirect, method and preview-host probes |
 | Public production HTTP/HTML QA | 414 passed, 0 failed | All 47 live sitemap pages plus private and invalid routes; no unresolved transport errors in the completed run |
 | Public production host/private-route probes | 18 passed, 0 failed | Legacy/apex HTTPS GET/HEAD, encoded queries, API/method bypass and private headers |
@@ -25,7 +25,7 @@ Executed 21 September 2026 on `fix/organic-search-and-booking-2026-09-21`, based
 | Keyword map validation | Passed | 162 unique phrases; five sampled queries, 157 inferred; 16 existing/new hub targets; volumes unavailable |
 | `git diff --check` | Passed | Whitespace consistency |
 
-The web build deliberately used a local test API origin. No production booking, database migration, seed, payment, refund or analytics event was triggered. A real preview must be rebuilt with its intended non-production API configuration before interactive checkout testing.
+The current web build serves `/api/*` directly from `apps/web`; no separate local API origin is required. No production booking, database migration, seed, payment, refund or analytics event was triggered. A real preview must be rebuilt with its intended non-production database and Stripe configuration before interactive checkout testing.
 
 ## Reproducible page evidence
 
@@ -66,7 +66,7 @@ The existing rollback points are web `4CnN8XEktZw8716F6iX95EbCfgp3` and API `4mQ
 
 Search Console Performance and Page indexing were still processing at 15:06 UTC. [measurement-plan.md](measurement-plan.md) and [measurement-baseline-2026-09-21.json](measurement-baseline-2026-09-21.json) record the separate pre-release search sample and the unavailable account metrics. Performance was rechecked at 15:15 UTC and remained in processing. A release timestamp must be recorded after a verified deployment, not inferred from a GitHub commit.
 
-GitHub authentication and the approved selected-repository access were completed. Both existing Vercel projects are now Git-connected. The connector credential cannot access the required team, so the authorised authenticated dashboard was used. API preview `FC1aEQSyBp9dsTn2bWS9Hmchw1Ka` from `bd9b9945329de45be8356d39c215b84b61e47b57` reached Ready and its build log confirms bundling current source. Web preview `5vfwWqDtJMM7NqtqyWKk6qcbNZ9k` failed because the repository-root build could not detect the workspace-local Next dependency. The web root is now `apps/web`, API root is `apps/api`, outside-root access remains enabled, and application-specific build configuration repairs this mismatch. Direct browser access to the API preview was rejected with `ERR_BLOCKED_BY_CLIENT`; no bypass was attempted. These observations are preview/build evidence, not a production release claim.
+GitHub authentication and the approved selected-repository access were completed. Both old Vercel projects were Git-connected at that time. The connector credential could not access the required team, so the authorised authenticated dashboard was used. API preview `FC1aEQSyBp9dsTn2bWS9Hmchw1Ka` from `bd9b9945329de45be8356d39c215b84b61e47b57` reached Ready before the separate API project was retired. Web preview `5vfwWqDtJMM7NqtqyWKk6qcbNZ9k` failed because the repository-root build could not detect the workspace-local Next dependency. The web root is now `apps/web`; the current source serves API routes from the web app. Direct browser access to the old API preview was rejected with `ERR_BLOCKED_BY_CLIENT`; no bypass was attempted. These observations are preview/build evidence, not a production release claim.
 
 Automatic approval review rejected saving a production-branch/automatic-domain-assignment settings change. The unsaved form was restored; production tracking remains `main`. The release instead uses the supported preview-to-production dashboard workflow, which rebuilds with production environment variables according to the [current platform documentation](https://vercel.com/docs/deployments/promoting-a-deployment). No DNS change was made.
 
@@ -88,7 +88,7 @@ Final booking QA also reproduced a UTC/London boundary defect: at 00:30 BST the 
 
 The original production dependency audit reported 41 findings, including four critical. Security updates include Next 15.5.25, React/React DOM 19.2.8 for the web, NextAuth 4.24.15, Hono 4.13.8 or compatible later 4.x, the 1.x Node adapter fix, and PostCSS 8.5.28. The unused competing sitemap package was removed. The lockfile was rebuilt to isolate web/mobile React peers without a mobile SDK migration; npm and the existing UI libraries remain in use.
 
-Current `npm audit --omit=dev --workspace apps/web --workspace apps/api --json`: **0 findings**. This is the dependency advisory result for that selected scope, not proof that the application has no security defects.
+Current `npm audit --omit=dev --workspace apps/web --json`: **0 findings**. This is the dependency advisory result for that selected scope, not proof that the application has no security defects.
 
 Current all-workspace production audit: **25 findings: 14 moderate, 10 high, one critical**, confined to the retained mobile/Expo dependency tree. The critical finding is its `tar` dependency. npm proposes an Expo 57 major upgrade; that mobile release requires its own native build/device verification and was not forced into the website repair. See [dependency-audit.json](dependency-audit.json) for package paths and suggested fixes. Keep this outstanding work visible; do not report the whole repository as vulnerability-free.
 

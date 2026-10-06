@@ -1,5 +1,6 @@
 "use client";
 
+import { getApiBaseUrl } from "@/lib/api-base";
 import { useCallback, useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { DriverTopBar } from "@/components/driver/DriverTopBar";
@@ -7,10 +8,7 @@ import { StatusButton } from "@/components/driver/StatusButton";
 import { LocationToggle } from "@/components/driver/LocationToggle";
 import { ChatWindow } from "@/components/chat/ChatWindow";
 
-const API_BASE =
-  process.env.NODE_ENV === "development"
-    ? "http://localhost:4000"
-    : (process.env.NEXT_PUBLIC_API_URL ?? "https://api.speedyvan.uk");
+const API_BASE = getApiBaseUrl();
 
 const STATUS_LABELS: Record<string, string> = {
   ACCEPTED: "Accepted",

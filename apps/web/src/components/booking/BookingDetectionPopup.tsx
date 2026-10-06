@@ -1,12 +1,10 @@
 "use client";
 
+import { getApiBaseUrl } from "@/lib/api-base";
 import { useState, useEffect } from "react";
 import Link from "next/link";
 
-const API_BASE =
-  process.env.NODE_ENV === "development"
-    ? "http://localhost:4000"
-    : (process.env.NEXT_PUBLIC_API_URL ?? "https://api.speedyvan.uk");
+const API_BASE = getApiBaseUrl();
 
 const DISMISSED_KEY = "sv-booking-popup-dismissed";
 

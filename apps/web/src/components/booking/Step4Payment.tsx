@@ -1,5 +1,6 @@
 "use client";
 
+import { getApiBaseUrl } from "@/lib/api-base";
 import { useEffect, useState, useRef } from "react";
 import Image from "next/image";
 import type { FormEvent, ReactNode } from "react";
@@ -37,10 +38,7 @@ function getStripeClientPromise(): StripeClientPromise | null {
   }
   return cachedStripePromise;
 }
-const API_BASE =
-  process.env.NODE_ENV === "development"
-    ? "http://localhost:4000"
-    : (process.env.NEXT_PUBLIC_API_URL ?? "https://api.speedyvan.uk");
+const API_BASE = getApiBaseUrl();
 
 const money = new Intl.NumberFormat("en-GB", {
   style: "currency",
