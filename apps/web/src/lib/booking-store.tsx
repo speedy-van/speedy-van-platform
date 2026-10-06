@@ -243,6 +243,7 @@ export type BookingAction =
   | { type: "RETRY_QUOTE" }
   | { type: "START_CHECKOUT" }
   | { type: "CHECKOUT_REJECTED" }
+  | { type: "ABANDON_CHECKOUT" }
   | { type: "CHECKOUT_COMPLETE" }
   | { type: "SET_STEP"; step: 1 | 2 | 3 | 4 | 5 }
   | { type: "RESET_UPSELLS" }
@@ -281,7 +282,7 @@ function serviceEntryIdentity(service: Pick<BookingState, "serviceSlug" | "entry
 
 export function bookingReducer(state: BookingState, action: BookingAction): BookingState {
   // An unresolved checkout must survive Back/Edit, query initialisation and late quotes.
-  if (state.checkoutLocked && !["SET_BOOKING", "CHECKOUT_REJECTED", "CHECKOUT_COMPLETE"].includes(action.type)) {
+  if (state.checkoutLocked && !["SET_BOOKING", "CHECKOUT_REJECTED", "ABANDON_CHECKOUT", "CHECKOUT_COMPLETE"].includes(action.type)) {
     return state;
   }
   switch (action.type) {
@@ -370,6 +371,11 @@ export function bookingReducer(state: BookingState, action: BookingAction): Book
     case "SET_BOOKING": return { ...state, checkoutLocked: true, bookingId: action.bookingId, bookingRef: action.bookingRef, clientSecret: action.clientSecret, clientTotal: action.total };
     case "START_CHECKOUT": return { ...state, checkoutLocked: true };
     case "CHECKOUT_REJECTED": return state.bookingId || state.clientSecret ? state : { ...state, checkoutLocked: false };
+    case "ABANDON_CHECKOUT": {
+      if (state.clientSecret) return state;
+      const released = invalidateQuote({ ...state, checkoutLocked: false, bookingId: "", bookingRef: "", clientSecret: "" });
+      return { ...released, step: getReachableBookingStep(released, 4) };
+    }
     case "CHECKOUT_COMPLETE": return INITIAL_BOOKING_STATE;
     case "SET_STEP": {
       const step = getReachableBookingStep(state, action.step);

@@ -38,7 +38,7 @@ const { bookingReducer, getReachableBookingStep, INITIAL_BOOKING_STATE, restoreB
 const { resolveBookingService } = sourceModule(path.join(root, "apps/web/src/lib/booking-service-options.ts"));
 const { stepInfo } = sourceModule(path.join(root, "apps/web/src/lib/booking-steps.ts"));
 const { parsePricingResult } = sourceModule(path.join(root, "apps/web/src/components/booking/quote-response.ts"));
-const { completeCardPayment, parseBookingPaymentSession, isVerifiedCheckoutRecovery } = sourceModule(path.join(root, "apps/web/src/components/booking/checkout-session.ts"));
+const { completeCardPayment, parseBookingPaymentSession, isVerifiedCheckoutRecovery, isReleasableCheckoutRecovery } = sourceModule(path.join(root, "apps/web/src/components/booking/checkout-session.ts"));
 const now = Date.parse("2026-09-21T12:00:00Z");
 const address = { address: "Test address, Glasgow", postcode: "G1 1AA", lat: 55.86, lng: -4.25 };
 const state = {
@@ -549,11 +549,19 @@ test("unresolved checkout rejects Back/Edit, reset and stale quote responses wit
   }
 });
 
-test("only a known pre-payment rejection unlocks editing; an established intent remains protected", () => {
+test("only a known pre-payment rejection unlocks editing; an established intent remains protected until recovery releases it", () => {
   const started = bookingReducer({ ...state, clientSecret: "", bookingId: "", bookingRef: "" }, { type: "START_CHECKOUT" });
   assert.equal(bookingReducer(started, { type: "CHECKOUT_REJECTED" }).checkoutLocked, false);
   const established = bookingReducer(started, { type: "SET_BOOKING", bookingId: "booking_test", bookingRef: "reference_test", clientSecret: "secret_test", total: 120 });
   assert.equal(bookingReducer(established, { type: "CHECKOUT_REJECTED" }).checkoutLocked, true);
+  assert.strictEqual(bookingReducer(established, { type: "ABANDON_CHECKOUT" }), established);
+  const released = bookingReducer({ ...established, clientSecret: "", clientTotal: 0, quoteStatus: "stale" }, { type: "ABANDON_CHECKOUT" });
+  assert.equal(released.checkoutLocked, false);
+  assert.equal(released.clientSecret, "");
+  assert.equal(released.bookingId, "");
+  assert.equal(released.bookingRef, "");
+  assert.equal(released.quoteStatus, "stale");
+  assert.equal(released.step, 4);
   assert.deepEqual(bookingReducer(established, { type: "CHECKOUT_COMPLETE" }), INITIAL_BOOKING_STATE);
 });
 
@@ -627,6 +635,20 @@ test("restored checkout is released only for the matching server-verified paid b
   }
   assert.equal(isVerifiedCheckoutRecovery(null, session.bookingRef, session.bookingId), false);
   assert.equal(isVerifiedCheckoutRecovery({ isPaid: true, status: "CONFIRMED" }, "", ""), false);
+});
+
+test("restored checkout can be unlocked only after matching unpaid recovery states", () => {
+  for (const status of ["PENDING", "CANCELLED"]) {
+    assert.equal(isReleasableCheckoutRecovery({ reference: session.bookingRef, bookingId: session.bookingId, status, isPaid: false }, session.bookingRef, session.bookingId), true);
+  }
+  for (const change of [
+    { isPaid: true }, { isPaid: undefined }, { status: "CONFIRMED" }, { status: "ASSIGNED" },
+    { reference: "another-reference" }, { bookingId: "another-booking" },
+  ]) {
+    assert.equal(isReleasableCheckoutRecovery({ reference: session.bookingRef, bookingId: session.bookingId, status: "PENDING", isPaid: false, ...change }, session.bookingRef, session.bookingId), false);
+  }
+  assert.equal(isReleasableCheckoutRecovery({ reference: session.bookingRef, status: "PENDING", isPaid: false }, session.bookingRef, ""), true);
+  assert.equal(isReleasableCheckoutRecovery(null, session.bookingRef, session.bookingId), false);
 });
 
 test("payment succeeds only after Stripe success and the server confirmation", async () => {

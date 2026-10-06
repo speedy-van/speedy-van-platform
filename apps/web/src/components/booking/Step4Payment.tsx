@@ -695,6 +695,7 @@ export function Step4Payment() {
   const { state, dispatch } = useBooking();
   const router = useRouter();
   const [stripePromise, setStripePromise] = useState<StripeClientPromise | null>(null);
+  const needsCheckoutRecovery = state.checkoutLocked && !state.clientSecret;
 
   useEffect(() => {
     setStripePromise(getStripeClientPromise());
@@ -721,9 +722,13 @@ export function Step4Payment() {
         <h1 className="sr-only">Review and pay</h1>
       </div>
 
-      <CheckoutForm onComplete={handleComplete} stripePromise={stripePromise} />
+      {needsCheckoutRecovery ? (
+        <CheckoutRecovery />
+      ) : (
+        <CheckoutForm onComplete={handleComplete} stripePromise={stripePromise} />
+      )}
 
-      {state.checkoutLocked && (
+      {state.checkoutLocked && !needsCheckoutRecovery && (
         <div role="status" className="rounded-2xl border border-amber-500/30 bg-amber-500/10 p-4 text-sm leading-6 text-amber-100">
           <p className="font-bold text-white">Check this booking before starting another payment</p>
           <p className="mt-1">
@@ -737,7 +742,6 @@ export function Step4Payment() {
         </div>
       )}
 
-      <CheckoutRecovery />
       <BookingReview />
     </div>
   );

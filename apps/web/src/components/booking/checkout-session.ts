@@ -20,13 +20,29 @@ export function parseBookingPaymentSession(value: unknown): BookingPaymentSessio
 
 /** Release a restored checkout only after its authenticated tracking response confirms payment. */
 export function isVerifiedCheckoutRecovery(value: unknown, reference: string, bookingId: string): boolean {
-  if (!reference || !value || typeof value !== "object") return false;
-  const booking = value as Record<string, unknown>;
-  return booking.reference === reference &&
-    (!bookingId || booking.bookingId === bookingId) &&
-    booking.isPaid === true &&
+  const booking = matchingRecoveredBooking(value, reference, bookingId);
+  if (!booking) return false;
+  return booking.isPaid === true &&
     typeof booking.status === "string" &&
     ["CONFIRMED", "ASSIGNED", "EN_ROUTE", "ARRIVED", "IN_PROGRESS", "COMPLETED"].includes(booking.status);
+}
+
+function matchingRecoveredBooking(value: unknown, reference: string, bookingId: string): Record<string, unknown> | null {
+  if (!reference || !value || typeof value !== "object") return null;
+  const booking = value as Record<string, unknown>;
+  if (booking.reference !== reference) return null;
+  if (bookingId && booking.bookingId !== bookingId) return null;
+  return booking;
+}
+
+/** A checked unpaid/cancelled checkout can release the local lock without risking a double payment. */
+export function isReleasableCheckoutRecovery(value: unknown, reference: string, bookingId: string): boolean {
+  const booking = matchingRecoveredBooking(value, reference, bookingId);
+  if (!booking) return false;
+  return booking.reference === reference &&
+    booking.isPaid === false &&
+    typeof booking.status === "string" &&
+    ["PENDING", "CANCELLED"].includes(booking.status);
 }
 
 /** Reuse the same intent on a card retry and confirm only a succeeded payment. */
