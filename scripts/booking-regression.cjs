@@ -908,3 +908,10 @@ test("server geocode can use the existing public Mapbox token as a runtime fallb
   assert.match(source, /process\.env\.MAPBOX_TOKEN\?\.trim\(\)/);
   assert.match(source, /process\.env\.NEXT_PUBLIC_MAPBOX_TOKEN\?\.trim\(\)/);
 });
+
+test("server geocode filters search suggestions to United Kingdom addresses", () => {
+  const source = fs.readFileSync(path.join(root, "apps/web/src/server/api/routes/geocode.ts"), "utf8");
+  assert.match(source, /function isUnitedKingdomFeature/);
+  assert.match(source, /features\?: MapboxFeature\[\]/);
+  assert.match(source, /\.filter\(isUnitedKingdomFeature\)\.map/);
+});
