@@ -42,7 +42,7 @@ export function CheckoutRecovery() {
         if (controller.signal.aborted) return;
         if (payload?.success && payload.data?.found === false) {
           if (!state.bookingId && !state.clientSecret) {
-            dispatch({ type: "CHECKOUT_REJECTED" });
+            dispatch({ type: "RELEASE_MISSING_CHECKOUT" });
             return;
           }
           setMissingBookingChecked(true);
@@ -52,7 +52,7 @@ export function CheckoutRecovery() {
         if (!response.ok || !payload?.success) {
           if (payload?.code === "NOT_FOUND") {
             if (!state.bookingId && !state.clientSecret) {
-              dispatch({ type: "CHECKOUT_REJECTED" });
+              dispatch({ type: "RELEASE_MISSING_CHECKOUT" });
               return;
             }
             setMissingBookingChecked(true);

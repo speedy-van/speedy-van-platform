@@ -569,6 +569,13 @@ test("only a known pre-payment rejection unlocks editing; an established intent 
   assert.equal(released.bookingRef, "");
   assert.equal(released.quoteStatus, "stale");
   assert.equal(released.step, 4);
+  const missingValid = bookingReducer({ ...started, bookingRef: "missing-reference", clientTotal: 120, quoteStatus: "valid", step: 5 }, { type: "RELEASE_MISSING_CHECKOUT" });
+  assert.equal(missingValid.checkoutLocked, false);
+  assert.equal(missingValid.step, 5);
+  assert.equal(missingValid.clientTotal, 120);
+  const missingStale = bookingReducer({ ...started, bookingRef: "missing-reference", clientTotal: 0, quoteStatus: "stale", step: 5 }, { type: "RELEASE_MISSING_CHECKOUT" });
+  assert.equal(missingStale.checkoutLocked, false);
+  assert.equal(missingStale.step, 4);
   assert.deepEqual(bookingReducer(established, { type: "CHECKOUT_COMPLETE" }), INITIAL_BOOKING_STATE);
 });
 
@@ -663,7 +670,7 @@ test("checkout recovery checks missing bookings without producing a 404 network 
   const routeSource = fs.readFileSync(path.join(root, "apps/web/src/server/api/routes/booking.ts"), "utf8");
   assert.match(recoverySource, /&recovery=1/);
   assert.match(recoverySource, /payload\.data\?\.found === false/);
-  assert.match(recoverySource, /dispatch\(\{ type: "CHECKOUT_REJECTED" \}\)/);
+  assert.match(recoverySource, /dispatch\(\{ type: "RELEASE_MISSING_CHECKOUT" \}\)/);
   assert.match(routeSource, /recovery: z\.literal\("1"\)\.optional\(\)/);
   assert.match(routeSource, /return c\.json\(ok\(\{ found: false, reference \}\)\)/);
 });
