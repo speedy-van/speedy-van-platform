@@ -35,11 +35,16 @@ export function CheckoutRecovery() {
     async function checkBooking() {
       try {
         const response = await fetch(
-          `${API_BASE}/booking/track/${encodeURIComponent(state.bookingRef)}?email=${encodeURIComponent(state.customerEmail.trim())}`,
+          `${API_BASE}/booking/track/${encodeURIComponent(state.bookingRef)}?email=${encodeURIComponent(state.customerEmail.trim())}&recovery=1`,
           { signal: controller.signal, cache: "no-store" },
         );
         const payload = await response.json();
         if (controller.signal.aborted) return;
+        if (payload?.success && payload.data?.found === false) {
+          setMissingBookingChecked(true);
+          setMessage("No booking was found for this interrupted checkout. Unlock your quote to continue.");
+          return;
+        }
         if (!response.ok || !payload?.success) {
           if (payload?.code === "NOT_FOUND") {
             setMissingBookingChecked(true);

@@ -658,6 +658,15 @@ test("restored checkout can be unlocked only after matching unpaid recovery stat
   assert.equal(isReleasableCheckoutRecovery(null, session.bookingRef, session.bookingId), false);
 });
 
+test("checkout recovery checks missing bookings without producing a 404 network error", () => {
+  const recoverySource = fs.readFileSync(path.join(root, "apps/web/src/components/booking/CheckoutRecovery.tsx"), "utf8");
+  const routeSource = fs.readFileSync(path.join(root, "apps/web/src/server/api/routes/booking.ts"), "utf8");
+  assert.match(recoverySource, /&recovery=1/);
+  assert.match(recoverySource, /payload\.data\?\.found === false/);
+  assert.match(routeSource, /recovery: z\.literal\("1"\)\.optional\(\)/);
+  assert.match(routeSource, /return c\.json\(ok\(\{ found: false, reference \}\)\)/);
+});
+
 test("payment succeeds only after Stripe success and the server confirmation", async () => {
   const order = [];
   const stripe = {

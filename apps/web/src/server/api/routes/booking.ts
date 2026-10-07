@@ -300,15 +300,18 @@ app.get("/check", zValidator("query", z.object({ email: z.string().email() })), 
 
 app.get(
   "/track/:reference",
-  zValidator("query", z.object({ email: z.string().email() })),
+  zValidator("query", z.object({ email: z.string().email(), recovery: z.literal("1").optional() })),
   async (c) => {
     const reference = c.req.param("reference");
-    const { email } = c.req.valid("query");
+    const { email, recovery } = c.req.valid("query");
     c.header("Cache-Control", "private, no-store");
     try {
       const data = await getBookingForTracking(reference, email);
       return c.json(ok(data));
     } catch {
+      if (recovery === "1") {
+        return c.json(ok({ found: false, reference }));
+      }
       return c.json(fail("Booking not found", "NOT_FOUND"), 404);
     }
   },
