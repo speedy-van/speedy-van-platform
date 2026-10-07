@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useBooking } from "@/lib/booking-store";
 import { LEGACY_PRIMARY_CTA_ID, STEP_PRIMARY_CTA_ID, stepInfo } from "@/lib/booking-steps";
 import { useRouter } from "next/navigation";
@@ -13,7 +13,8 @@ const money = new Intl.NumberFormat("en-GB", {
 export function BookingActionBar() {
   const { state, dispatch } = useBooking();
   const router = useRouter();
-  const [primaryState, setPrimaryState] = useState({ disabled: false, processing: false });
+  const [primaryState, setPrimaryState] = useState({ disabled: true, processing: false });
+  const focusTimeout = useRef<number | null>(null);
   const current = stepInfo(state.step);
 
   function primaryButton(): HTMLButtonElement | null {
@@ -24,16 +25,41 @@ export function BookingActionBar() {
   }
 
   useEffect(() => {
-    const button = primaryButton();
-    if (!button) {
-      setPrimaryState({ disabled: true, processing: false });
-      return;
-    }
-    const sync = () => setPrimaryState({ disabled: button.disabled, processing: button.textContent?.includes("Processing") ?? false });
-    sync();
-    const observer = new MutationObserver(sync);
-    observer.observe(button, { attributes: true, attributeFilter: ["disabled"], childList: true, subtree: true, characterData: true });
-    return () => observer.disconnect();
+    let observedButton: HTMLButtonElement | null = null;
+    const sync = () => {
+      const button = primaryButton();
+      const next = {
+        disabled: !button || button.disabled,
+        processing: button?.textContent?.includes("Processing") ?? false,
+      };
+      setPrimaryState((previous) =>
+        previous.disabled === next.disabled && previous.processing === next.processing ? previous : next,
+      );
+    };
+    const buttonObserver = new MutationObserver(sync);
+    const bindButton = () => {
+      const button = primaryButton();
+      if (button !== observedButton) {
+        buttonObserver.disconnect();
+        observedButton = button;
+        if (button) {
+          buttonObserver.observe(button, { attributes: true, attributeFilter: ["disabled"], childList: true, subtree: true, characterData: true });
+        }
+      }
+      sync();
+    };
+    // Recovery and lazy-loaded steps replace the submit button without changing the step.
+    const treeObserver = new MutationObserver(bindButton);
+    treeObserver.observe(document.body, { childList: true, subtree: true });
+    bindButton();
+    return () => {
+      buttonObserver.disconnect();
+      treeObserver.disconnect();
+      if (focusTimeout.current !== null) {
+        window.clearTimeout(focusTimeout.current);
+        focusTimeout.current = null;
+      }
+    };
   }, [state.step]);
   const totalItems = state.items.reduce((total, item) => total + item.quantity, 0);
   const disabled =
@@ -71,7 +97,11 @@ export function BookingActionBar() {
     }
     if (current.isPay && button.dataset.actionBarBehaviour !== "click") {
       button.scrollIntoView({ behavior: "smooth", block: "center" });
-      window.setTimeout(() => button.focus({ preventScroll: true }), 200);
+      if (focusTimeout.current !== null) window.clearTimeout(focusTimeout.current);
+      focusTimeout.current = window.setTimeout(() => {
+        focusTimeout.current = null;
+        if (button.isConnected) button.focus({ preventScroll: true });
+      }, 200);
       return;
     }
     button.click();
