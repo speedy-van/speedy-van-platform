@@ -61,6 +61,14 @@ export function BookingActionBar() {
     if (disabled) return;
     const button = primaryButton();
     if (!button || button.disabled) return;
+    if (current.isPay && button.dataset.actionBarBehaviour === "submit") {
+      if (button.form?.requestSubmit) {
+        button.form.requestSubmit(button);
+      } else {
+        button.click();
+      }
+      return;
+    }
     if (current.isPay && button.dataset.actionBarBehaviour !== "click") {
       button.scrollIntoView({ behavior: "smooth", block: "center" });
       window.setTimeout(() => button.focus({ preventScroll: true }), 200);

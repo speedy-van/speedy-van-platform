@@ -673,7 +673,7 @@ function CheckoutForm({ onComplete, stripePromise }: CheckoutFormProps) {
       {/* ── Pay CTA ── */}
       <button
         id={STEP_PRIMARY_CTA_ID}
-        data-action-bar-behaviour="click"
+        data-action-bar-behaviour="submit"
         type="submit"
         disabled={submitting || creationUncertain || paymentUnavailable || !stripe || !elements || state.quoteStatus !== "valid" || state.clientTotal <= 0}
         className="hidden"

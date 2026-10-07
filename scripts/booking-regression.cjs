@@ -350,6 +350,13 @@ test("SDK rejection retains unavailable UI and cannot enable payment or create a
   assert.equal(fixture.calls.length, 1);
 });
 
+test("sticky payment action submits the checkout form directly instead of clicking a hidden button", () => {
+  const actionBar = fs.readFileSync(path.join(root, "apps/web/src/components/booking/BookingActionBar.tsx"), "utf8");
+  const payment = fs.readFileSync(path.join(root, "apps/web/src/components/booking/Step4Payment.tsx"), "utf8");
+  assert.match(payment, /data-action-bar-behaviour="submit"/);
+  assert.match(actionBar, /button\.form\.requestSubmit\(button\)/);
+});
+
 test("direct entry begins at the service selector; unknown service links do not invent a service", () => {
   assert.equal(INITIAL_BOOKING_STATE.step, 1);
   assert.equal(resolveBookingService("not-a-service"), null);
