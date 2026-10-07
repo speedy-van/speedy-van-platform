@@ -15,18 +15,21 @@ export function CheckoutRecovery() {
   const [loading, setLoading] = useState(false);
   const [abandoning, setAbandoning] = useState(false);
   const [checkedBooking, setCheckedBooking] = useState<unknown>(null);
+  const [missingBookingChecked, setMissingBookingChecked] = useState(false);
   const [message, setMessage] = useState("");
   const [abandonError, setAbandonError] = useState("");
   const needsRecovery = restoredAttempt.current && state.checkoutLocked && !state.clientSecret;
   const canCheck = needsRecovery && Boolean(state.bookingRef && state.customerEmail);
   const verified = isVerifiedCheckoutRecovery(checkedBooking, state.bookingRef, state.bookingId);
   const releasable = isReleasableCheckoutRecovery(checkedBooking, state.bookingRef, state.bookingId);
+  const canReleaseMissingBooking = missingBookingChecked && !checkedBooking;
 
   useEffect(() => {
     if (!canCheck) return;
     const controller = new AbortController();
     setLoading(true);
     setCheckedBooking(null);
+    setMissingBookingChecked(false);
     setMessage("");
 
     async function checkBooking() {
@@ -38,6 +41,11 @@ export function CheckoutRecovery() {
         const payload = await response.json();
         if (controller.signal.aborted) return;
         if (!response.ok || !payload?.success) {
+          if (payload?.code === "NOT_FOUND") {
+            setMissingBookingChecked(true);
+            setMessage("No booking was found for this interrupted checkout. Unlock your quote to continue.");
+            return;
+          }
           setMessage("We couldn't verify this booking. Please retry or contact us with your booking reference.");
           return;
         }
@@ -74,12 +82,13 @@ export function CheckoutRecovery() {
   }
 
   async function releaseInterruptedCheckout() {
-    if (!isReleasableCheckoutRecovery(checkedBooking, state.bookingRef, state.bookingId) || abandoning) return;
+    const canReleaseCheckedBooking = isReleasableCheckoutRecovery(checkedBooking, state.bookingRef, state.bookingId);
+    if ((!canReleaseCheckedBooking && !canReleaseMissingBooking) || abandoning) return;
     setAbandoning(true);
     setAbandonError("");
     try {
       const booking = checkedBooking as Record<string, unknown>;
-      if (booking.status === "PENDING") {
+      if (canReleaseCheckedBooking && booking.status === "PENDING") {
         const response = await fetch(`${API_BASE}/booking/track/${encodeURIComponent(state.bookingRef)}/cancel`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -120,7 +129,7 @@ export function CheckoutRecovery() {
           {message && <p className="mt-2" role="status">{message}</p>}
           {abandonError && <p className="mt-2 text-red-200" role="alert">{abandonError}</p>}
           <div className="mt-3 flex flex-wrap gap-3">
-            {releasable && (
+            {(releasable || canReleaseMissingBooking) && (
               <button type="button" disabled={abandoning} onClick={releaseInterruptedCheckout} className="min-h-11 rounded-xl bg-amber-400 px-4 font-bold text-black focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white disabled:opacity-40">
                 {abandoning ? "Unlocking..." : "Cancel interrupted checkout and continue"}
               </button>
