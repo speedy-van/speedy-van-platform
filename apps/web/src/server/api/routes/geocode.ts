@@ -11,10 +11,14 @@ import {
 
 const app = new Hono();
 
-const MAPBOX_TOKEN = process.env.MAPBOX_TOKEN;
+function getMapboxToken(): string | undefined {
+  return process.env.MAPBOX_TOKEN?.trim() || process.env.NEXT_PUBLIC_MAPBOX_TOKEN?.trim() || undefined;
+}
+
+const MAPBOX_TOKEN = getMapboxToken();
 
 if (!MAPBOX_TOKEN) {
-  console.warn("[geocode] MAPBOX_TOKEN not set; geocoding endpoints will return 503.");
+  console.warn("[geocode] MAPBOX_TOKEN/NEXT_PUBLIC_MAPBOX_TOKEN not set; geocoding endpoints will return 503.");
 }
 
 app.get("/search", zValidator("query", GeocodeSearchSchema), async (c) => {

@@ -902,3 +902,9 @@ test("unavailable old appointments cannot become payable and quote calendars nev
   assert.equal(saved.quoteRequestId, "");
   flow.unmount();
 });
+
+test("server geocode can use the existing public Mapbox token as a runtime fallback", () => {
+  const source = fs.readFileSync(path.join(root, "apps/web/src/server/api/routes/geocode.ts"), "utf8");
+  assert.match(source, /process\.env\.MAPBOX_TOKEN\?\.trim\(\)/);
+  assert.match(source, /process\.env\.NEXT_PUBLIC_MAPBOX_TOKEN\?\.trim\(\)/);
+});
