@@ -663,6 +663,7 @@ test("checkout recovery checks missing bookings without producing a 404 network 
   const routeSource = fs.readFileSync(path.join(root, "apps/web/src/server/api/routes/booking.ts"), "utf8");
   assert.match(recoverySource, /&recovery=1/);
   assert.match(recoverySource, /payload\.data\?\.found === false/);
+  assert.match(recoverySource, /dispatch\(\{ type: "CHECKOUT_REJECTED" \}\)/);
   assert.match(routeSource, /recovery: z\.literal\("1"\)\.optional\(\)/);
   assert.match(routeSource, /return c\.json\(ok\(\{ found: false, reference \}\)\)/);
 });

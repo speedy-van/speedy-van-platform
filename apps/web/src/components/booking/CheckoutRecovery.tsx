@@ -41,12 +41,20 @@ export function CheckoutRecovery() {
         const payload = await response.json();
         if (controller.signal.aborted) return;
         if (payload?.success && payload.data?.found === false) {
+          if (!state.bookingId && !state.clientSecret) {
+            dispatch({ type: "CHECKOUT_REJECTED" });
+            return;
+          }
           setMissingBookingChecked(true);
           setMessage("No booking was found for this interrupted checkout. Unlock your quote to continue.");
           return;
         }
         if (!response.ok || !payload?.success) {
           if (payload?.code === "NOT_FOUND") {
+            if (!state.bookingId && !state.clientSecret) {
+              dispatch({ type: "CHECKOUT_REJECTED" });
+              return;
+            }
             setMissingBookingChecked(true);
             setMessage("No booking was found for this interrupted checkout. Unlock your quote to continue.");
             return;
@@ -76,7 +84,7 @@ export function CheckoutRecovery() {
     }
     void checkBooking();
     return () => controller.abort();
-  }, [canCheck, retry, state.bookingId, state.bookingRef, state.customerEmail]);
+  }, [canCheck, dispatch, retry, state.bookingId, state.bookingRef, state.clientSecret, state.customerEmail]);
 
   if (!needsRecovery) return null;
 
