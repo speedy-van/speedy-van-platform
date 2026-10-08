@@ -11,10 +11,22 @@ import {
 
 const app = new Hono();
 
-const MAPBOX_TOKEN = process.env.MAPBOX_TOKEN;
+function getMapboxToken(): string | undefined {
+  return process.env.MAPBOX_TOKEN?.trim() || process.env.NEXT_PUBLIC_MAPBOX_TOKEN?.trim() || undefined;
+}
+
+const MAPBOX_TOKEN = getMapboxToken();
+
+type MapboxContext = { id: string; text: string; short_code?: string };
+type MapboxFeature = { place_name?: string; center?: [number, number]; context?: MapboxContext[] };
+
+function isUnitedKingdomFeature(feature: MapboxFeature): boolean {
+  const country = feature.context?.find((entry) => entry.id.startsWith("country"));
+  return country?.short_code?.toLowerCase() === "gb" || /,\s*United Kingdom$/i.test(feature.place_name ?? "");
+}
 
 if (!MAPBOX_TOKEN) {
-  console.warn("[geocode] MAPBOX_TOKEN not set; geocoding endpoints will return 503.");
+  console.warn("[geocode] MAPBOX_TOKEN/NEXT_PUBLIC_MAPBOX_TOKEN not set; geocoding endpoints will return 503.");
 }
 
 app.get("/search", zValidator("query", GeocodeSearchSchema), async (c) => {
@@ -29,10 +41,10 @@ app.get("/search", zValidator("query", GeocodeSearchSchema), async (c) => {
     const res = await fetch(url);
     if (!res.ok) return c.json(fail("Geocoding failed", "MAPBOX_ERROR"), 502);
     const json = (await res.json()) as {
-      features?: { place_name?: string; center?: [number, number]; context?: { id: string; text: string }[] }[];
+      features?: MapboxFeature[];
     };
     const results: GeocodeResult[] =
-      json.features?.map((f) => {
+      json.features?.filter(isUnitedKingdomFeature).map((f) => {
         const postcodeCtx = f.context?.find((c) => c.id.startsWith("postcode"));
         return {
           address: f.place_name ?? "",

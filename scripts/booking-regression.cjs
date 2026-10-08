@@ -38,7 +38,7 @@ const { bookingReducer, getReachableBookingStep, INITIAL_BOOKING_STATE, restoreB
 const { resolveBookingService } = sourceModule(path.join(root, "apps/web/src/lib/booking-service-options.ts"));
 const { stepInfo } = sourceModule(path.join(root, "apps/web/src/lib/booking-steps.ts"));
 const { parsePricingResult } = sourceModule(path.join(root, "apps/web/src/components/booking/quote-response.ts"));
-const { completeCardPayment, parseBookingPaymentSession, isVerifiedCheckoutRecovery } = sourceModule(path.join(root, "apps/web/src/components/booking/checkout-session.ts"));
+const { completeCardPayment, parseBookingPaymentSession, isVerifiedCheckoutRecovery, isReleasableCheckoutRecovery } = sourceModule(path.join(root, "apps/web/src/components/booking/checkout-session.ts"));
 const now = Date.parse("2026-09-21T12:00:00Z");
 const address = { address: "Test address, Glasgow", postcode: "G1 1AA", lat: 55.86, lng: -4.25 };
 const state = {
@@ -350,6 +350,13 @@ test("SDK rejection retains unavailable UI and cannot enable payment or create a
   assert.equal(fixture.calls.length, 1);
 });
 
+test("sticky payment action submits the checkout form directly instead of clicking a hidden button", () => {
+  const actionBar = fs.readFileSync(path.join(root, "apps/web/src/components/booking/BookingActionBar.tsx"), "utf8");
+  const payment = fs.readFileSync(path.join(root, "apps/web/src/components/booking/Step4Payment.tsx"), "utf8");
+  assert.match(payment, /data-action-bar-behaviour="submit"/);
+  assert.match(actionBar, /button\.form\.requestSubmit\(button\)/);
+});
+
 test("direct entry begins at the service selector; unknown service links do not invent a service", () => {
   assert.equal(INITIAL_BOOKING_STATE.step, 1);
   assert.equal(resolveBookingService("not-a-service"), null);
@@ -549,11 +556,26 @@ test("unresolved checkout rejects Back/Edit, reset and stale quote responses wit
   }
 });
 
-test("only a known pre-payment rejection unlocks editing; an established intent remains protected", () => {
+test("only a known pre-payment rejection unlocks editing; an established intent remains protected until recovery releases it", () => {
   const started = bookingReducer({ ...state, clientSecret: "", bookingId: "", bookingRef: "" }, { type: "START_CHECKOUT" });
   assert.equal(bookingReducer(started, { type: "CHECKOUT_REJECTED" }).checkoutLocked, false);
   const established = bookingReducer(started, { type: "SET_BOOKING", bookingId: "booking_test", bookingRef: "reference_test", clientSecret: "secret_test", total: 120 });
   assert.equal(bookingReducer(established, { type: "CHECKOUT_REJECTED" }).checkoutLocked, true);
+  assert.strictEqual(bookingReducer(established, { type: "ABANDON_CHECKOUT" }), established);
+  const released = bookingReducer({ ...established, clientSecret: "", clientTotal: 0, quoteStatus: "stale" }, { type: "ABANDON_CHECKOUT" });
+  assert.equal(released.checkoutLocked, false);
+  assert.equal(released.clientSecret, "");
+  assert.equal(released.bookingId, "");
+  assert.equal(released.bookingRef, "");
+  assert.equal(released.quoteStatus, "stale");
+  assert.equal(released.step, 4);
+  const missingValid = bookingReducer({ ...started, bookingRef: "missing-reference", clientTotal: 120, quoteStatus: "valid", step: 5 }, { type: "RELEASE_MISSING_CHECKOUT" });
+  assert.equal(missingValid.checkoutLocked, false);
+  assert.equal(missingValid.step, 5);
+  assert.equal(missingValid.clientTotal, 120);
+  const missingStale = bookingReducer({ ...started, bookingRef: "missing-reference", clientTotal: 0, quoteStatus: "stale", step: 5 }, { type: "RELEASE_MISSING_CHECKOUT" });
+  assert.equal(missingStale.checkoutLocked, false);
+  assert.equal(missingStale.step, 4);
   assert.deepEqual(bookingReducer(established, { type: "CHECKOUT_COMPLETE" }), INITIAL_BOOKING_STATE);
 });
 
@@ -627,6 +649,30 @@ test("restored checkout is released only for the matching server-verified paid b
   }
   assert.equal(isVerifiedCheckoutRecovery(null, session.bookingRef, session.bookingId), false);
   assert.equal(isVerifiedCheckoutRecovery({ isPaid: true, status: "CONFIRMED" }, "", ""), false);
+});
+
+test("restored checkout can be unlocked only after matching unpaid recovery states", () => {
+  for (const status of ["PENDING", "CANCELLED"]) {
+    assert.equal(isReleasableCheckoutRecovery({ reference: session.bookingRef, bookingId: session.bookingId, status, isPaid: false }, session.bookingRef, session.bookingId), true);
+  }
+  for (const change of [
+    { isPaid: true }, { isPaid: undefined }, { status: "CONFIRMED" }, { status: "ASSIGNED" },
+    { reference: "another-reference" }, { bookingId: "another-booking" },
+  ]) {
+    assert.equal(isReleasableCheckoutRecovery({ reference: session.bookingRef, bookingId: session.bookingId, status: "PENDING", isPaid: false, ...change }, session.bookingRef, session.bookingId), false);
+  }
+  assert.equal(isReleasableCheckoutRecovery({ reference: session.bookingRef, status: "PENDING", isPaid: false }, session.bookingRef, ""), true);
+  assert.equal(isReleasableCheckoutRecovery(null, session.bookingRef, session.bookingId), false);
+});
+
+test("checkout recovery checks missing bookings without producing a 404 network error", () => {
+  const recoverySource = fs.readFileSync(path.join(root, "apps/web/src/components/booking/CheckoutRecovery.tsx"), "utf8");
+  const routeSource = fs.readFileSync(path.join(root, "apps/web/src/server/api/routes/booking.ts"), "utf8");
+  assert.match(recoverySource, /&recovery=1/);
+  assert.match(recoverySource, /payload\.data\?\.found === false/);
+  assert.match(recoverySource, /dispatch\(\{ type: "RELEASE_MISSING_CHECKOUT" \}\)/);
+  assert.match(routeSource, /recovery: z\.literal\("1"\)\.optional\(\)/);
+  assert.match(routeSource, /return c\.json\(ok\(\{ found: false, reference \}\)\)/);
 });
 
 test("payment succeeds only after Stripe success and the server confirmation", async () => {
@@ -872,4 +918,17 @@ test("unavailable old appointments cannot become payable and quote calendars nev
   assert.equal(saved.quoteInputKey, "");
   assert.equal(saved.quoteRequestId, "");
   flow.unmount();
+});
+
+test("server geocode can use the existing public Mapbox token as a runtime fallback", () => {
+  const source = fs.readFileSync(path.join(root, "apps/web/src/server/api/routes/geocode.ts"), "utf8");
+  assert.match(source, /process\.env\.MAPBOX_TOKEN\?\.trim\(\)/);
+  assert.match(source, /process\.env\.NEXT_PUBLIC_MAPBOX_TOKEN\?\.trim\(\)/);
+});
+
+test("server geocode filters search suggestions to United Kingdom addresses", () => {
+  const source = fs.readFileSync(path.join(root, "apps/web/src/server/api/routes/geocode.ts"), "utf8");
+  assert.match(source, /function isUnitedKingdomFeature/);
+  assert.match(source, /features\?: MapboxFeature\[\]/);
+  assert.match(source, /\.filter\(isUnitedKingdomFeature\)\.map/);
 });

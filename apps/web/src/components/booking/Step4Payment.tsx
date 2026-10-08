@@ -84,6 +84,7 @@ const reviewDate = new Intl.DateTimeFormat("en-GB", {
 
 interface CheckoutFormProps {
   onComplete: (bookingRef: string) => void;
+  onSubmittingChange: (submitting: boolean) => void;
   stripePromise: StripeClientPromise | null;
 }
 
@@ -261,7 +262,7 @@ function BookingReview() {
   );
 }
 
-function CheckoutForm({ onComplete, stripePromise }: CheckoutFormProps) {
+function CheckoutForm({ onComplete, onSubmittingChange, stripePromise }: CheckoutFormProps) {
   const { state, dispatch } = useBooking();
   const stripe = useStripe();
   const elements = useElements();
@@ -326,6 +327,8 @@ function CheckoutForm({ onComplete, stripePromise }: CheckoutFormProps) {
 
     submittingRef.current = true;
     setSubmitting(true);
+    // Keep this form mounted while START_CHECKOUT locks editing during creation.
+    onSubmittingChange(true);
     if (!pendingSession.current) {
       dispatch({ type: "SET_CUSTOMER", name: name.trim(), email: email.trim(), phone: phone.trim() });
     }
@@ -482,7 +485,10 @@ function CheckoutForm({ onComplete, stripePromise }: CheckoutFormProps) {
       }
     } finally {
       submittingRef.current = false;
-      if (mounted.current) setSubmitting(false);
+      if (mounted.current) {
+        setSubmitting(false);
+        onSubmittingChange(false);
+      }
     }
   }
 
@@ -673,7 +679,7 @@ function CheckoutForm({ onComplete, stripePromise }: CheckoutFormProps) {
       {/* ── Pay CTA ── */}
       <button
         id={STEP_PRIMARY_CTA_ID}
-        data-action-bar-behaviour="click"
+        data-action-bar-behaviour="submit"
         type="submit"
         disabled={submitting || creationUncertain || paymentUnavailable || !stripe || !elements || state.quoteStatus !== "valid" || state.clientTotal <= 0}
         className="hidden"
@@ -695,6 +701,9 @@ export function Step4Payment() {
   const { state, dispatch } = useBooking();
   const router = useRouter();
   const [stripePromise, setStripePromise] = useState<StripeClientPromise | null>(null);
+  const [checkoutSubmitting, setCheckoutSubmitting] = useState(false);
+  // A live create request is not a restored or uncertain checkout.
+  const needsCheckoutRecovery = state.checkoutLocked && !state.clientSecret && !checkoutSubmitting;
 
   useEffect(() => {
     setStripePromise(getStripeClientPromise());
@@ -721,9 +730,13 @@ export function Step4Payment() {
         <h1 className="sr-only">Review and pay</h1>
       </div>
 
-      <CheckoutForm onComplete={handleComplete} stripePromise={stripePromise} />
+      {needsCheckoutRecovery ? (
+        <CheckoutRecovery />
+      ) : (
+        <CheckoutForm onComplete={handleComplete} onSubmittingChange={setCheckoutSubmitting} stripePromise={stripePromise} />
+      )}
 
-      {state.checkoutLocked && (
+      {state.checkoutLocked && !needsCheckoutRecovery && !checkoutSubmitting && (
         <div role="status" className="rounded-2xl border border-amber-500/30 bg-amber-500/10 p-4 text-sm leading-6 text-amber-100">
           <p className="font-bold text-white">Check this booking before starting another payment</p>
           <p className="mt-1">
@@ -737,7 +750,6 @@ export function Step4Payment() {
         </div>
       )}
 
-      <CheckoutRecovery />
       <BookingReview />
     </div>
   );

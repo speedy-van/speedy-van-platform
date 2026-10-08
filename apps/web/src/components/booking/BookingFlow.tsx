@@ -16,6 +16,7 @@ import { Step1Service } from "./Step1Service";
 function FlowContent() {
   const { state, ready } = useBooking();
   const [upsellDone, setUpsellDone] = useState(false);
+  const showPayment = state.step === 5 && (upsellDone || state.checkoutLocked);
 
   // Reset upsell progress if the user navigates back from step 5
   useEffect(() => {
@@ -43,8 +44,8 @@ function FlowContent() {
         {state.step === 2 && <JourneyFields />}
         {state.step === 3 && <InventorySelector />}
         {state.step === 4 && <SchedulePicker />}
-        {state.step === 5 && !upsellDone && <UpsellFlow onComplete={() => setUpsellDone(true)} />}
-        {state.step === 5 && upsellDone && <Step4Payment />}
+        {state.step === 5 && !upsellDone && !state.checkoutLocked && <UpsellFlow onComplete={() => setUpsellDone(true)} />}
+        {showPayment && <Step4Payment />}
         <PriceDropToast />
       </BookingShell>
     </>

@@ -1,6 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 
 const PRIMARY_HOST = "www.speedyvan.uk";
+const API_HOST = "api.speedyvan.uk";
 const REDIRECT_HOSTS = new Set([
   "speedyvan.uk",
   "speedy-van.co.uk",
@@ -17,6 +18,12 @@ function shouldPreventIndexing(pathname: string, host: string | undefined): bool
 
 export function middleware(request: NextRequest) {
   const host = request.headers.get("host")?.toLowerCase().split(":")[0];
+
+  if (host === API_HOST && !request.nextUrl.pathname.startsWith("/api")) {
+    const url = request.nextUrl.clone();
+    url.pathname = request.nextUrl.pathname === "/" ? "/api" : `/api${request.nextUrl.pathname}`;
+    return NextResponse.rewrite(url);
+  }
 
   if (request.nextUrl.pathname === "/api" || request.nextUrl.pathname.startsWith("/api/")) {
     return NextResponse.next();
